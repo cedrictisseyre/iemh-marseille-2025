@@ -11,4 +11,5 @@ echo "Addition : $a + $b = $addition<br>";
 echo "Soustraction : $a - $b = $soustraction<br>";
 echo "Multiplication : $a * $b = $multiplication<br>";
 echo "Division : $a / $b = $division<br>";
+echo "Calculs finis<br>";
 ?>
