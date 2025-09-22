@@ -26,6 +26,5 @@
 </head>
 <body>
     <h1>Bienvenue dans la promo IHME !</h1>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Dwayne_Johnson_2019.png" alt="The Rock">
 </body>
 </html>
