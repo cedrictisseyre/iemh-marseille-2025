@@ -1,65 +1,25 @@
-<?php
-// Exemple simple pour montrer l'utilité de PHP : génération dynamique de contenu
-
-// Définir quelques variables dynamiques
-$nom = "PHP";
-$utilite = [
-    "Générer des pages web dynamiques",
-    "Gérer des formulaires et des bases de données",
-    "Créer des sites interactifs",
-    "Automatiser des tâches côté serveur"
-];
-$date = date("d/m/Y H:i:s");
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Découverte de PHP</title>
+    <title>Page d'accueil - Cédric TISSEYRE</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            background: #fff;
-            max-width: 600px;
-            margin: 40px auto;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-            padding: 32px;
-        }
-        h1 {
-            color: #2d6cdf;
-            margin-bottom: 16px;
-        }
-        ul {
-            margin: 16px 0;
-        }
-        .date {
-            color: #888;
-            font-size: 0.95em;
-            margin-top: 24px;
-        }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+        h1 { color: #2c3e50; }
+        .pub { background: #eaf7ff; border-left: 5px solid #3498db; padding: 15px; margin: 20px 0; font-size: 1.1em; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenue sur une page générée avec <?php echo $nom; ?> !</h1>
-        <p>
-            <strong><?php echo $nom; ?></strong> est un langage de programmation côté serveur qui permet de :
-        </p>
-        <ul>
-            <?php foreach ($utilite as $item): ?>
-                <li><?php echo $item; ?></li>
-            <?php endforeach; ?>
-        </ul>
-        <p>
-            Cette page a été générée dynamiquement le <span class="date"><?php echo $date; ?></span>.
-        </p>
+        <h1>Bienvenue sur la page de Cédric TISSEYRE</h1>
+        <p>Cette page est générée en PHP pour le projet IEMH Marseille 2025.</p>
+        <div class="pub">
+            <strong>Publicité :</strong> <br>
+            Découvrez nos solutions innovantes pour l'éducation et la réussite !<br>
+            <a href="https://iemh-marseille.fr" target="_blank">En savoir plus</a>
+        </div>
+        <p>Retrouvez aussi les résultats de <a href="multiplication.php">multiplication</a>.</p>
     </div>
 </body>
 </html>
