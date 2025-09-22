@@ -20,23 +20,6 @@ date_default_timezone_set('Europe/Paris');
             color: #ecf0f1;
         }
 
-        /* Bandeau supérieur */
-        header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header img {
-            height: 60px;
-            object-fit: contain;
-        }
-
         /* Conteneur principal */
         .container {
             text-align: center;
@@ -45,6 +28,21 @@ date_default_timezone_set('Europe/Paris');
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 800px;
+        }
+
+        /* Bandeau interne pour les logos */
+        .logo-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-bar img {
+            height: 60px;
+            object-fit: contain;
         }
 
         h1 {
@@ -64,14 +62,15 @@ date_default_timezone_set('Europe/Paris');
     </style>
 </head>
 <body>
-    <!-- Bandeau avec les logos -->
-    <header>
-        <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/4/4c/Univ_Aix-Marseille_-_Polytech.svg/1200px-Univ_Aix-Marseille_-_Polytech.svg.png" alt="Polytech Marseille">
-        <img src="https://sud.ffse.fr/wp-content/uploads/2023/10/DIRCOM-Logo-FSS.png" alt="Faculté des sciences du sport AMU">
-    </header>
-
     <!-- Contenu principal -->
     <div class="container">
+        <!-- Ligne des logos -->
+        <div class="logo-bar">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/thumb/4/4c/Univ_Aix-Marseille_-_Polytech.svg/1200px-Univ_Aix-Marseille_-_Polytech.svg.png" alt="Polytech Marseille">
+            <img src="https://sud.ffse.fr/wp-content/uploads/2023/10/DIRCOM-Logo-FSS.png" alt="Faculté des sciences du sport AMU">
+        </div>
+
+        <!-- Texte principal -->
         <h1>Date & Heure en Temps Réel</h1>
         <div id="clock">
             <?php echo date("d/m/Y H:i:s"); ?>
