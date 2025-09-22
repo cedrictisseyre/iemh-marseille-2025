@@ -6,24 +6,52 @@ date_default_timezone_set('Europe/Paris');
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Date et Heure en Temps Réel</title>
+    <title>Date & Heure en Temps Réel</title>
     <style>
+        /* Style global */
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-            font-size: 2em;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #ecf0f1;
         }
+
+        /* Conteneur principal */
+        .container {
+            text-align: center;
+            padding: 40px 60px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: #00d9ff;
+        }
+
         #clock {
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #2c3e50;
+            letter-spacing: 2px;
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
-    <h1>Date et Heure en Temps Réel</h1>
-    <div id="clock">
-        <?php echo date("d/m/Y H:i:s"); ?>
+    <div class="container">
+        <h1>Date & Heure en Temps Réel</h1>
+        <div id="clock">
+            <?php echo date("d/m/Y H:i:s"); ?>
+        </div>
     </div>
 
     <script>
@@ -41,8 +69,8 @@ date_default_timezone_set('Europe/Paris');
                 day + "/" + month + "/" + year + " " + hours + ":" + minutes + ":" + seconds;
         }
 
-        setInterval(updateClock, 1000); // mise à jour toutes les secondes
-        updateClock(); // appel initial
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
