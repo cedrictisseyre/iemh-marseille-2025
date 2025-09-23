@@ -1,9 +1,4 @@
 <?php
-
-echo "<pre>";
-print_r($header);  // Montre les noms de colonnes
-print_r($equipements); // Montre les premières lignes
-echo "</pre>";
 // -----------------------------
 // Debug & sécurité
 // -----------------------------
@@ -15,8 +10,8 @@ error_reporting(E_ALL);
 // Configuration
 // -----------------------------
 $csvFile = 'data_csv.csv'; // Chemin vers ton fichier CSV
-$typeRecherche = isset($_POST['type']) ? trim($_POST['type']) : '';
-$communeRecherche = isset($_POST['commune']) ? trim($_POST['commune']) : '';
+$typeRecherche = isset($_POST["Type d'équipement sportif"]) ? trim($_POST["Type d'équipement sportif"]) : '';
+$communeRecherche = isset($_POST['Commune nom']) ? trim($_POST['Commune nom']) : '';
 
 // -----------------------------
 // Lire le CSV de façon sécurisée (PHP 8.2+ compatible)
