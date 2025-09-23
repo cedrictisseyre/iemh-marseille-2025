@@ -33,12 +33,22 @@
 			// Fichiers à la racine du dossier
 			foreach (glob("$dossier/*.{php,html,md,MD,readme,README}", GLOB_BRACE) as $fichier) {
 				$nom = basename($fichier);
-				$liens[] = "<li><a href='$fichier' target='_blank'>$nom</a></li>";
+				$extension = pathinfo($fichier, PATHINFO_EXTENSION);
+				if ($extension === 'php') {
+					$liens[] = "<li><a href='./$fichier' target='_blank'>$nom</a></li>";
+				} else {
+					$liens[] = "<li><a href='./$fichier' target='_blank'>$nom</a></li>";
+				}
 			}
 			// Fichiers dans les sous-dossiers
 			foreach (glob("$dossier/**/*.{php,html,md,MD,readme,README}", GLOB_BRACE) as $fichier) {
 				$nom = str_replace($dossier . '/', '', $fichier);
-				$liens[] = "<li><a href='$fichier' target='_blank'>$nom</a></li>";
+				$extension = pathinfo($fichier, PATHINFO_EXTENSION);
+				if ($extension === 'php') {
+					$liens[] = "<li><a href='./$fichier' target='_blank'>$nom</a></li>";
+				} else {
+					$liens[] = "<li><a href='./$fichier' target='_blank'>$nom</a></li>";
+				}
 			}
 			if (!empty($liens)) {
 				echo "<li><strong>$dossier</strong><ul class='sousmenu'>" . implode('', $liens) . "</ul></li>";
