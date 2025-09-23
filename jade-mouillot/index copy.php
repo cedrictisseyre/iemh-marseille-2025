@@ -1,4 +1,9 @@
 <?php
+
+echo "<pre>";
+print_r($header);  // Montre les noms de colonnes
+print_r($equipements); // Montre les premières lignes
+echo "</pre>";
 // -----------------------------
 // Debug & sécurité
 // -----------------------------
