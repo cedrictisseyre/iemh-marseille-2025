@@ -91,7 +91,7 @@ th { background: #f2f2f2; }
         <tr>
             <td><?= htmlspecialchars($p["Place"]) ?></td>
             <td><?= htmlspecialchars($p["Doss."]) ?></td>
-            <td><?= htmlspecialchars($p["Prénom NOM"]) ?></td>
+            <td><?= htmlspecialchars($p["PrÃ©nom NOM"]) ?></td>
             <td><?= htmlspecialchars($p["M/F"]) ?></td>
             <td><?= htmlspecialchars($p["Cat."]) ?></td>
             <td><?= htmlspecialchars($p["Club"]) ?></td>
