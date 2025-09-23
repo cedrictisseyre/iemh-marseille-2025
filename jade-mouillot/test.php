@@ -8,7 +8,7 @@ function read($csv){
     return $line;
 }
 // Définir le chemin d'accès au fichier CSV
-$csv = 'data_csv.csv';
+$csv = 'ministere-charge-des-sports-datasets-2025-09-23-12-26.csv';
 $csv = read($csv);
 echo '<pre>';
 print_r($csv);

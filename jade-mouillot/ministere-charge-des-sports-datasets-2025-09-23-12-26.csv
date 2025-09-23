@@ -1,0 +1,204 @@
+"id";"title";"slug";"acronym";"url";"organization";"organization_id";"owner";"owner_id";"description";"description_short";"frequency";"license";"temporal_coverage.start";"temporal_coverage.end";"spatial.granularity";"spatial.zones";"featured";"created_at";"last_modified";"tags";"archived";"resources_count";"main_resources_count";"resources_formats";"harvest.backend";"harvest.domain";"harvest.created_at";"harvest.modified_at";"harvest.remote_url";"quality_score";"metric.discussions";"metric.discussions_open";"metric.reuses";"metric.reuses_by_months";"metric.dataservices";"metric.followers";"metric.followers_by_months";"metric.views";"metric.resources_downloads"
+"5c7e67138b4c4151a709037d";"Référentiel d’activités physiques et sportives";"referentiel-dactivites-physiques-et-sportives";"APS";"https://www.data.gouv.fr/datasets/referentiel-dactivites-physiques-et-sportives/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Listing de référence des activités physiques et sportives";"";"annual";"Licence Ouverte / Open Licence version 2.0";"";"";"";"";False;"2019-03-05T13:09:55.140000";"2019-03-05T13:12:13.706000";"activites-physiques-et-sportives,sports";False;1;1;"xlsx";"";"";"";"";"";"0.44";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";4151;301
+"57f669ffc751df746179df72";"Opération balle jaune de la fédération française de tennis - Liste des structures bénéficiaires au 1er septembre 2016";"operation-balle-jaune-de-la-federation-francaise-de-tennis-liste-des-structures-beneficiaires-au-1er-septembre-2016";"";"https://www.data.gouv.fr/datasets/operation-balle-jaune-de-la-federation-francaise-de-tennis-liste-des-structures-beneficiaires-au-1er-septembre-2016/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"L’Opération Balle Jaune intègre les trois volets du développement durable : environnemental, économique et social.
+
+La réduction de l’impact environnemental constitue l’objectif initial, mais la finalité de la démarche va bien au-delà et s’inscrit dans une logique d’économie circulaire : le traitement des balles usagées permet de valoriser un déchet en le transformant en matière première pour la réalisation de surfaces amortissantes. La destination de ces terrains (des structures médico-sociales locales) illustre le volet social de l’opération.
+
+50 000 balles de tennis sont nécessaires pour produire 1 tonne de granulat permettant de réaliser une surface de 100 m².
+
+Quarante structures depuis 2009 sont ainsi dotées de ces terrains aux vertus amortissantes particulièrement adaptées aux publics ayant des difficultés de psychomotricité. Quatre nouveaux projets ont vu le jour en 2015 dans les Yvelines, en Normandie, en Provence, ainsi qu’en Dauphiné-Savoie, et trois depuis le 1er janvier 2016, en Languedoc-Roussillon, en Picardie et en Bretagne.";"";"punctual";"License Not Specified";"";"";"other";"";False;"2016-10-06T17:13:03.539000";"2016-10-06T17:23:48.663000";"developpement-durable,environment,federation-sportives,tennis";False;2;2;"xlsx,docx";"";"";"";"";"";"0.78";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";3405;378
+"57d6708388ee383e857fc1d7";"Référentiel d'indicateurs pour auto-évaluer  l'éco-responsabilité d'événements sportifs";"referentiel-dindicateurs-pour-auto-evaluer-leco-responsabilite-devenements-sportifs";"";"https://www.data.gouv.fr/datasets/referentiel-dindicateurs-pour-auto-evaluer-leco-responsabilite-devenements-sportifs/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Afin de mieux maîtriser les ressources et les énergies, il est essentiel d’opter pour des choix responsables concernant les matériaux et les équipements au sein des fédérations, de leurs clubs, et autour de leurs événements… La mise en place de mesures environnementales permet de réduire les budgets de gestion des clubs et des événements : Baisse des consommations d’eau, d’électricité, prolongation du cycle de vie des équipements…
+
+Le référentiel d'indicateurs pour auto-évaluer l'éco-responsabilité d'événements sportifs se veut un outil d’aide à la priorisation en matière de développement durable pour et dans le sport. Les indicateurs retenus ont été identifiés à partir des démarches suivantes :
+
+- les directives de la Global Reporting Initiative (GRI)
+- l’ISO 20121:2012
+- l’ISO 26000
+- La stratégie nationale de transition écologique vers un développement durable 2014-2020
+- le Manuel 2005 du CIO sur le sport et l’environnement
+- le Développement économique et création locale d’emplois (LEED) de l’OCDE
+- la stratégie nationale de développement durable du sport et la grille d’éco-conditionnalité pour un événement éco-responsable
+
+Ce socle de 166 indicateurs s’organise autour de 12 thèmes couvrant les champs de l’environnement, de l’économie et du social :
+
+1.	Consommation et production 
+2.	Gouvernance et rayonnement
+3.	Retombées économiques 
+4.	Déchets
+5.	Gestion de l'eau
+6.	Transport et mobilité durable
+7.	Changement climatique et énergie
+8.	Conservation et gestion durable de la biodiversité et des ressources naturelles
+9.	Education, formation et recherche
+10.	Santé et bien-être
+11.	Inclusion sociale du sport
+12.	Accessibilité
+";"";"punctual";"Licence Ouverte / Open Licence";"";"";"country";"France";False;"2016-09-12T11:08:19.515000";"2016-09-12T14:40:42.643000";"auto-evaluer,eco-responsabilite,energie,evaluation-environnementale,evenements-sportifs,indicateurs,referentiel";False;2;2;"xlsx,docx";"";"";"";"";"";"0.78";1;1;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";6214;780
+"57d66dc788ee383e857fc1d6";"Facteurs d'émissions d'équipements de sport";"facteurs-demissions-dequipements-de-sport";"";"https://www.data.gouv.fr/datasets/facteurs-demissions-dequipements-de-sport/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Naturellement présents dans l'atmosphère terrestre avec principalement de la vapeur d'eau (H2O), du dioxyde de carbone (CO2) et du méthane (CH4), les Gaz à Effet de Serre (GES) retiennent une large part du rayonnement solaire et permettent ainsi le maintien sur Terre d'une température globale propice à la vie et au développement des espèces vivantes.
+
+Néanmoins depuis le début de l’ère industrielle, le développement économique, historiquement fondé sur l'utilisation de sources d'énergies fossiles (charbon, pétrole, gaz, etc.), conduit à une augmentation des concentrations de GES et fait peser un risque de modifications climatiques majeures.
+
+Le recours à des facteurs d’émissions est le point central de tout exercice Bilan Carbone®.
+
+Un facteur d’émission (FE) est le coefficient permettant de déterminer les quantités d’équivalent carbone engendrées à partir de données d’activité telles que les consommations énergétiques, le km parcouru ou encore les quantités de matériaux utilisés.";"";"punctual";"Licence Ouverte / Open Licence";"";"";"country";"France";False;"2016-09-12T10:56:39.882000";"2016-09-12T13:23:13.797000";"carbone,co2,emission,facteur-d-emission,facteurs-d-emission,gaz-a-effet-de-serre,ges,sport";False;2;2;"xlsx,docx";"";"";"";"";"";"0.78";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";5737;800
+"57d59986c751df097c97bae5";"Liste des médicaments et des substances dopantes";"liste-des-medicaments-et-des-substances-dopantes";"";"https://www.data.gouv.fr/datasets/liste-des-medicaments-et-des-substances-dopantes/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Le ministère de la ville, de la jeunesse et des sports, en liaison avec les autres ministres et organismes intéressés, engage et coordonne les actions de prévention, de surveillance médicale, de recherche et d'éducation mises en œuvre avec le concours, notamment, des fédérations sportives agréées, pour assurer la protection de la santé des sportifs et lutter contre le dopage.
+
+L'Agence Française de Lutte contre le Dopage (AFLD), autorité publique indépendante dotée de la personnalité morale, définit et met en œuvre les actions de lutte contre le dopage. A cette fin, elle coopère avec l'Agence mondiale antidopage, avec les organismes reconnus par celle-ci et disposant de compétences analogues aux siennes et avec les fédérations sportives internationales. Elle publie un rapport d’activités annuels, et celui de 2015 est accessible librement sur internet à partir de la page suivante :
+https://www.afld.fr/wp-content/themes/afld/js/feuilletage/sources/indexPop.htm
+
+
+Elle est associée aux activités internationales dans le domaine de la lutte contre le dopage et apporte son expertise à l'Etat, notamment lors de l'élaboration de la liste des substances ou méthodes interdites en application de la convention internationale contre le dopage dans le sport adoptée à Paris le 19 octobre 2005 ou de tout autre accord ultérieur qui aurait le même objet et qui s'y substituerait.
+
+Les produits dopants font l’objet d’une base qui peut être interrogée sur internet à partir de l’adresse suivante :
+https://medicaments.afld.fr/
+
+";"";"punctual";"Licence Ouverte / Open Licence";"";"";"country";"France";False;"2016-09-11T19:51:02.150000";"2016-09-27T11:04:01.318000";"dopage,medicaments,sante,sport,sportifs,substances-dopantes";False;3;3;"xlsx,html,docx";"";"";"";"";"";"0.78";0;0;2;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;1;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";34271;7845
+"57d59600c751df032a97bae5";"Base des diplômés des métiers du sport 2015";"base-des-diplomes-des-metiers-du-sport-2015";"";"https://www.data.gouv.fr/datasets/base-des-diplomes-des-metiers-du-sport-2015/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Le code du sport indique que « seuls peuvent, contre rémunération, enseigner, animer ou encadrer une activité physique ou sportive ou entraîner ses pratiquants, à titre d'occupation principale ou secondaire, de façon habituelle, saisonnière ou occasionnelle, sous réserve des dispositions du quatrième alinéa du présent article et de l'article L. 212-2 du présent code, les titulaires d'un diplôme, titre à finalité professionnelle ou certificat de qualification : 
+1° Garantissant la compétence de son titulaire en matière de sécurité des pratiquants et des tiers dans l'activité considérée ; 
+2° Et enregistré au répertoire national des certifications professionnelles dans les conditions prévues au II de l'article L. 335-6 du code de l'éducation. » 
+
+Le ministère de la ville, de la jeunesse et des sports dispose d’une base de données dressant la liste de ces diplômes délivrés. Le présent jeu est une extraction de cette base de données, qui liste l’ensemble des diplômes délivrés en 2015.";"";"annual";"Other (Attribution)";"";"";"country";"France";False;"2016-09-11T19:36:00.767000";"2016-10-05T16:22:53.509000";"diplome,diplomes,formation,metiers,sport";False;4;4;"xlsx,html,docx";"";"";"";"";"";"0.89";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;1;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";4399;1313
+"57d59543c751df013097bae5";"« Optimouv » : logiciel d'optimisation des déplacements dans l’organisation des rencontres sportives";"optimouv-logiciel-doptimisation-des-deplacements-dans-lorganisation-des-rencontres-sportives";"";"https://www.data.gouv.fr/datasets/optimouv-logiciel-doptimisation-des-deplacements-dans-lorganisation-des-rencontres-sportives/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Dans le cadre de la COP21, le dispositif « Optimouv » a été lancé officiellement le 4 décembre 2015 par le Secrétaire d’Etat aux Sports, Monsieur Thierry BRAILLARD.
+L’objectif recherché de cet outil est la réduction du nombre de kilomètres parcourus par les clubs et les pratiquants sans réduire le nombre de rencontres sportives. Il s’agit d’un outil d’aide à la décision permettant de proposer des scenarii d’organisation des rencontres sportives optimisant les déplacements.
+
+Avec plus de 2,5 millions de rencontres sportives chaque année soient 50 000 par semaine, l’économie possible est loin d’être négligeable et permettrait ainsi une démarche économique avec la baisse des frais de transport, une démarche de santé avec la baisse de la fatigue liée au transport, une optimisation du temps de pratique par rapport au temps de transport et enfin une démarche environnementale avec la baisse des émissions de gaz à effet de serre.
+
+Le logiciel Optimouv propose des solutions d’organisations des compétitions par des choix du lieu de rencontres optimisés au regard des déplacements tout en tenant compte des contraintes sportives. Cet outil informatique est un outil d’aide à la décision à disposition de l’ensemble des instances sportives organisant les compétitions et les rassemblements, les fédérations, les ligues régionales, les comités départementaux notamment.
+La Fédération Française de Basketball (FFBB) et le Ministère chargé des sports, en partenariat avec l’ADEME et le WWF, ont collaboré à l’étude et au développement de cet outil.  Découvrez la vidéo de présentation sur http://www.ffbb.com/video-optimouv-quest-ce-que-cest
+";"";"punctual";"Licence Ouverte / Open Licence";"";"";"other";"France";False;"2016-09-11T19:32:51.402000";"2016-10-06T16:07:07.565000";"aide-a-la-decision,deplacements,optimouv,rencontres-sportives,transport,transports-deplacements-securite";False;2;2;"html,docx";"";"";"";"";"";"0.89";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";4980;1338
+"57d5947fc751df7e0c97bae5";"Base des Conseillers Techniques Sportifs ";"base-des-conseillers-techniques-sportifs";"";"https://www.data.gouv.fr/datasets/base-des-conseillers-techniques-sportifs/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Depuis les années soixante, le mouvement sportif bénéficie d’un appui technique spécifique à travers l’intervention de fonctionnaires ou d’agents publics rémunérés par l’Etat, appelés Conseillers Techniques Sportifs (CTS). L’exercice de leur mission est réglementé par les articles R131.16 et suivants du code du sport.
+
+Les missions de conseillers techniques sportifs susceptibles d'être exercées auprès des fédérations sportives (…) sont celles de directeur technique national, d'entraîneur national, de conseiller technique national ou de conseiller technique régional. 
+
+Ces missions portent en priorité sur le développement des activités physiques et sportives, et en particulier sur la pratique sportive au sein des associations sportives ainsi que sur la détection de jeunes talents, le perfectionnement de l'élite et la formation des cadres, bénévoles et professionnels. Ils sont chargés de mettre en œuvre la politique sportive définie par la fédération.
+
+Une lettre de mission annuelle ou pluriannuelle fixe, pour chaque agent exerçant une mission de conseiller technique sportif, le contenu détaillé des tâches qui lui sont confiées et ses modalités d'intervention. Elle fixe la durée de ces missions.
+
+Elle est établie par le chef de service, après avis de l'agent intéressé, sur la base de propositions formulées par :
+
+
+- Le président de la fédération, pour les personnels exerçant une mission de directeur technique national ;
+- Le directeur technique national, pour les personnels exerçant une mission d'entraîneur national ou de conseiller technique national ;
+- Le directeur technique national après avis du président de ligue ou de comité régional, pour les personnels exerçant une mission de conseiller technique régional.
+
+Le ministre chargé des sports établit, chaque année, un état du nombre d'agents rémunérés par l'Etat exerçant les missions de CTS et de leur répartition entre les différentes fédérations sportives. 
+C’est état est réalisé à partir d’une base de données, dont le présent jeu est une extraction. Il détaille également la part consacrée par chaque CTS à chaque grande action de la politique sportive de l’Etat.
+
+Le jeu de données CTS_2016 a pour objet de suivre l’exercice des missions de chaque CTS tel que mentionné dans leur lettre de mission. Il est présenté par quotité (pourcentage) du temps de travail de chaque CTS et par type d’action.";"";"annual";"Other (Attribution)";"";"";"country";"France";False;"2016-09-11T19:29:35.208000";"2016-09-12T13:57:37.365000";"conseillers-techniques,modalites-d-intervention,sport";False;3;3;"xlsx,docx";"";"";"";"";"";"0.67";4;4;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";5808;831
+"57d588ddc751df68ed97bae5";"Athlètes inscrits sur la liste des sportifs de haut niveau en 2015";"athletes-inscrits-sur-la-liste-des-sportifs-de-haut-niveau-en-2015";"";"https://www.data.gouv.fr/datasets/athletes-inscrits-sur-la-liste-des-sportifs-de-haut-niveau-en-2015/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Maintenir le rang de la France parmi les grandes nations sportives est un axe important de la politique sportive de l’Etat qui passe par l’obtention de bons résultats lors des rencontres sportives internationales.
+
+Pour favoriser les bons résultats des athlètes français dans les compétitions sportives internationales, le ministère chargé des sports développe une politique de suivi social afin que les sportifs de haut niveau puissent réaliser les performances à la hauteur de leur potentiel, tout en leur garantissant la poursuite d’une formation et d’une insertion professionnelle correspondant à leurs capacités et leurs aspirations.
+
+Le sport de haut niveau repose sur des critères bien établis qui sont :
+la reconnaissance du caractère de haut niveau des disciplines sportives ;
+les compétitions de référence ;
+la liste des sportifs de haut niveau ;
+les parcours de l’excellence sportive.
+
+Le ministre chargé des sports arrête, au vu des propositions des fédérations et après avis de la Commission nationale du sport de haut niveau, la liste des sportifs de haut niveau. Cette liste contient 6 catégories de sportifs:
+
+
+- Senior ;
+- Elite ;
+- Espoir ;
+- Jeune ;
+- Partenaire d’entraînement ;
+- Reconversion.
+
+Le jeu de données « liste des athlètes inscrits sur la liste des Sportifs de Haut Niveau (SHN) en 2016 » correspond à cette liste arrêtée par le ministère chargé des sports pour l’année 2016. Il est également possible d’interroger la base de données depuis la page Internet http://sports.gouv.fr/pratiques-sportives/sport-performance/Sport-de-haut-niveau/article/Liste-des-sportifs-de-haut-niveau";"";"punctual";"Licence Ouverte / Open Licence";"";"";"country";"France";False;"2016-09-11T18:39:57.473000";"2016-09-15T17:46:30.569000";"athletes,competitions-sportives-internati,haut-niveau,sport,sportifs";False;2;2;"xlsx,docx";"";"";"";"";"";"0.78";3;2;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;1;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";6545;1149
+"57d587c5c751df66e397bae5";"Liste des médailles obtenues par des sportifs français aux Jeux Olympiques et paralympiques de 2012 et de 2014";"liste-des-medailles-obtenues-par-des-sportifs-francais-aux-jeux-olympiques-et-paralympiques-de-2012-et-de-2014";"";"https://www.data.gouv.fr/datasets/liste-des-medailles-obtenues-par-des-sportifs-francais-aux-jeux-olympiques-et-paralympiques-de-2012-et-de-2014/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"**Généralités
+**Maintenir le rang de la France parmi les grandes nations sportives est un axe important de la politique sportive de l’Etat et qui passe notamment par l’obtention de bons résultats lors des rencontres sportives internationales, et notamment par l’obtention de médailles lors des Jeux Olympiques (JO) et des Jeux Paralympiques (JP) d’été et d’hiver.
+
+Dans cette optique, la direction des sports dispose des données relatives aux médailles obtenues lors des JO par des athlètes français. Ce sont ces données qui sont restituées dans le jeu de données « liste des médailles obtenus par des sportifs français aux jeux olympiques et paralympiques de 2012 et de 2014 », pour les JO et JP d’été 2012 et pour les JO et JP d’hiver 2014.
+
+**La présentation par médaille
+**L’objet de ce jeu de données étant d’identifier toutes les médailles obtenues par les sportifs français lors des JO, il est présenté par médaille obtenue. Ainsi, un sportif ayant obtenu plusieurs médailles dans différentes épreuves sera répété autant de fois qu’il aura obtenue de médaille. De même lorsqu’une équipe a obtenu un titre, tous les membres de cet équipe sont listés dans le tableau puisqu’ils ont tous obtenus une médaille d’or, quand bien même un seul titre aura été décerné). 
+";"";"punctual";"Licence Ouverte / Open Licence";"";"";"country";"France";False;"2016-09-11T18:35:17.681000";"2016-09-15T17:47:59.271000";"jeux-olympiques,medailles,sport";False;2;2;"xlsx,docx";"";"";"";"";"";"0.78";0;0;6;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";8209;1666
+"57d580c4c751df5b9397bae5";"Subventions « Equipements sportifs » allouées en 2015 dans le cadre de la Dotation d’Equipement des Territoires Ruraux  - DETR";"subventions-equipements-sportifs-allouees-en-2015-dans-le-cadre-de-la-dotation-dequipement-des-territoires-ruraux-detr";"";"https://www.data.gouv.fr/datasets/subventions-equipements-sportifs-allouees-en-2015-dans-le-cadre-de-la-dotation-dequipement-des-territoires-ruraux-detr/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"La participation de l’Etat et de ses établissements au financement d’actions visant la réduction des inégalités d’accès à la pratique sportive en France s’appuie sur plusieurs leviers d’aides publiques comportant des moyens et des conditions particulières.
+
+Depuis 2011, la dotation globale d’équipement des communes (D.G.E.) et la dotation de développement rural (D.D.R.) ont été fusionnées et remplacées par une nouvelle dotation : la dotation d’équipement des territoires ruraux (D.E.T.R.). La DETR permet de financer tout projet dans le domaine économique, social, environnemental et touristique ou favorisant le développement ou le maintien des services publics en milieu rural.
+
+La direction des sports a mené une enquête auprès de ses services départementaux (DDCS et DDCSPP) afin de restituer la part de la DETR consacrée aux équipements sportifs. Le fichier constitué permet ainsi de mieux connaître l’aide de l’Etat consacrée aux projets de construction ou de réhabilitation des équipements sportifs.
+
+
+";"";"annual";"Licence Ouverte / Open Licence";"";"";"fr:commune";"France";False;"2016-09-11T18:05:24.123000";"2016-09-12T13:37:08.970000";"aides-publiques,detr,dge,dotation,dotation-d-equipement-des-territ,dotation-globale-d-equipement,equipements-sportifs,financement,inegalites,politiques-sportive,pratiques-sportives";False;3;3;"xlsx,docx";"";"";"";"";"";"0.67";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";3240;647
+"57d579a4c751df4d2a97bae5";"Subventions allouées en 2015 par le Centre National pour le Développement du Sport (CNDS)";"subventions-allouees-en-2015-par-le-centre-national-pour-le-developpement-du-sport-cnds";"";"https://www.data.gouv.fr/datasets/subventions-allouees-en-2015-par-le-centre-national-pour-le-developpement-du-sport-cnds/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"L’article premier du Code du Sport (L.100-1) dispose que «  les activités physiques et sportives constituent un élément important de l’éducation, de la culture, de l’intégration et de la vie sociale  » et qu’ «  elles contribuent notamment à la lutte contre l’échec scolaire et à la réduction des inégalités sociales et culturelles, ainsi qu’à la santé  ».
+
+Le Centre National pour le Développement du Sport (CNDS), en sa qualité d’opérateur de l’État, participe à la réalisation de ces objectifs. Ses missions sont définies par l’article R411-2 du code du sport qui prévoit notamment que le CNDS contribue :
+
+
+- Au développement de la pratique du sport par le plus grand nombre
+- A l’accès au sport de haut niveau et l’organisation de manifestations sportives
+- Au renforcement de l’encadrement et à la professionnalisation de la pratique sportive
+
+En 2015, le soutien en matière d’investissements du Centre national pour le développement du sport (CNDS) a couvert les champs suivants :
+
+
+- 17,7 M€ consacrés au financement d’équipements sportifs destinés aux quartiers prioritaires de la ville et 8,3 M€ en zone de revitalisation rurale.
+- 14,4 M€ attribués pour le financement de 24 bassins de natation.
+- 132,1 M€ attribués pour le soutien au développement des associations sportives.
+- 4 008 € de subvention moyenne attribuée aux clubs.
+- 5,8 M€ consacrés à l’aide à l’organisation des grands événements sportifs internationaux.
+- 0,6 M€ pour l’aide à la production audiovisuelle du sport féminin et du sport en situation de handicap.
+- 42,3 M€ attribués au titre de l’emploi sportif.
+- 17,64 M€ alloués à des actions en faveur des femmes et des jeunes filles dont 6,21 M€ pour des actions de développement de la pratique et l’accès aux responsabilités.
+- 7,82 M€ attribués au développement de la pratique des personnes en situation de handicap.
+- 7,42 M€ consacrés à la promotion du « sport / santé ».
+
+La « part Equipement sportif » recouvre les subventions nationales accordées par le CNDS pour la construction des équipements sportifs des collectivités territoriales et des associations sportives. Les opérations soutenues à ce titre portent principalement sur la construction et/ou la rénovation d’équipements sportifs dès lors que le caractère sportif de l’équipement est garanti de manière pérenne (y compris la réalisation d’équipements concourant au développement de la pratique) ainsi que la mise en accessibilité des équipements existants. À titre exceptionnel, les subventions du CNDS peuvent porter sur l’acquisition de matériels lourds, nécessaires à la pratique du sport, tels que bateaux et aéronefs.
+
+En plus de la « part Equipement sportif », le CNDS accorde des subventions nationales au titre de la « Part nationale ». Celle-ci recouvre des politiques nationales comme les plans « citoyen du sport » ou « j’apprends à nager », le soutien conventionnel au mouvement sportif (fond de concours, CNOSF, CPSF), le financement de grands évènements sportifs, le subventionnement de productions audiovisuelles, et de projets innovants.
+
+Enfin, La « part territoriale » recouvre les subventions accordées au niveau local. Elles ont pour objet d’aider le développement de la pratique sportive de tous les publics, sur tout le territoire, par le soutien aux projets des associations sportives locales affiliées à des fédérations sportives agréées : clubs, comités départementaux et ligues régionales.
+";"";"annual";"Licence Ouverte / Open Licence";"";"";"fr:commune";"France";False;"2016-09-11T17:35:00.072000";"2016-10-08T18:02:26.236000";"cnds,equipements-sportifs,sport,subvention,subventions";False;6;6;"xlsx,docx";"";"";"";"";"";"0.67";1;1;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";3572;1262
+"57d574d8c751df448697bae5";"Relations géographiques distantes des licences 2013 des fédérations sportives à leur club";"relations-geographiques-distantes-des-licences-2013-des-federations-sportives-a-leur-club";"";"https://www.data.gouv.fr/datasets/relations-geographiques-distantes-des-licences-2013-des-federations-sportives-a-leur-club/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Le recensement annuel des licences auprès des fédérations sportives agréées par le ministère en charge des sports permet de mesurer le niveau et l’évolution dans le temps de la pratique sportive encadrée. Ces statistiques fournissent un éclairage pour les politiques publiques de développement du sport, tant au niveau national que territorial. Il s'agit d'un recensement au lieu d'habitation de la personne et non au lieu de pratique.
+
+Les clubs de prise de licences sont parfois très éloignés du lieu de résidence du licencié. C’est particulièrement notable pour des disciplines dont les conditions de pratique s’adossent à un relief spécifique (littoral, montagne…).
+
+Le Recensement des licences des fédérations sportives permet, en retraçant le lien licencié/club, de restituer ces relations géographiques distantes qui sont potentiellement autant de déplacements motivés par la pratique sportive. 
+
+Les données portent sur 3 fédérations sportives (FF) : FF voile, FF golf et FF d'études et sports sous-marins
+Pour chaque fédération, sont présentés des volumes de licences par couple « commune de résidence du licencié / commune de domiciliation du club »
+";"";"annual";"Licence Ouverte / Open Licence";"";"";"fr:commune";"France";False;"2016-09-11T17:14:32.445000";"2016-09-12T13:30:00.021000";"club,federations,federations-sportives,licences,pratiques-sportives,recensement,sport";False;4;4;"docx,txt";"";"";"";"";"";"0.78";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";4062;839
+"57d4239bc751df60a697bae5";"Emploi d’avenir et CUI - CAE  dans les domaines du sport et de l’animation";"emploi-davenir-et-cui-cae-dans-les-domaines-du-sport-et-de-lanimation";"";"https://www.data.gouv.fr/datasets/emploi-davenir-et-cui-cae-dans-les-domaines-du-sport-et-de-lanimation/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Les emplois d’avenir ont pour ambition d’améliorer l’insertion professionnelle et l’accès à la qualification des jeunes peu ou pas qualifiés, confrontés à des difficultés particulières d’accès à l’emploi.
+
+Le contrat unique d'insertion (CUI) associe formation et aide financière pour faciliter l'embauche de personnes dont les candidatures pour occuper un emploi sont habituellement rejetées. Il se divise en 2 catégories : le contrat initiative emploi (CUI-CIE), qui concerne le secteur marchand, et le contrat d'accompagnement dans l'emploi (CUI-CAE), qui s'adresse au secteur non marchand.
+Les emplois d’avenir sur http://travail-emploi.gouv.fr/emploi/insertion-dans-l-emploi/contrats-aides/article/les-emplois-d-avenir
+Le contrat unique d’insertion - contrat d’accompagnement dans l’emploi (CUI-CAE) sur http://travail-emploi.gouv.fr/emploi/insertion-dans-l-emploi/contrats-aides/article/le-contrat-unique-d-insertion-contrat-d-accompagnement-dans-l-emploi-cui-cae
+
+Le fichier Su EmploiAide_SportAnim_20132015 comptabilise le nombre d’entrées dans les dispositifs Emplois d’avenir et CUI-CAE dans les domaines du sport et de l’animation pour les années 2013, 2014, 2015.
+- ";"";"annual";"Licence Ouverte / Open Licence";"";"";"fr:departement";"France";False;"2016-09-10T17:15:39.616000";"2023-12-14T14:54:02.159000";"aide,cui,emploi,insertion-professionnelle,sport";False;1;1;"xlsx";"";"";"";"";"";"0.67";0;0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";5681;234
+"53698f4da3a729239d2036eb";"Base de données ""Corps & diplômes"" du ministère des sports, de la jeunesse, de l’éducation populaire et de la vie associative";"base-de-donnees-corps-diplomes-du-ministere-des-sports-de-la-jeunesse-de-l-education-populaire-et-de";"";"https://www.data.gouv.fr/datasets/base-de-donnees-corps-diplomes-du-ministere-des-sports-de-la-jeunesse-de-l-education-populaire-et-de/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"Données de la base ""Corps & Diplômes"" produite par le ministère des sports, de la jeunesse, de l’éducation populaire et de la vie associative, regroupant les textes parus au Journal officiel (lois, décrets, arrêtés, ordonnances) depuis 1937 (date de la création du brevet sportif populaire) jusqu’en 1985 (date de la création des corps de professeurs de sports et de conseillers d’éducation populaire et de jeunesse) concernant les corps et les diplômes dans le champ ministériel de la jeunesse et des sports. 
+Cette base de données est le résultat d’un travail initié en mars 2004 par le comité d’histoire et financé par l’INJEP et la délégation à l’emploi et aux formations (DEF).
+Contenu de la base : 338 références.";"";"punctual";"Licence Ouverte / Open Licence";"1937-03-10";"1985-08-14";"other";"France";False;"2013-11-06T22:37:46.523000";"2016-02-17T09:33:37.064000";"arrete,decret,diplomes,jeunesse,lois,ordonnances,sport";False;5;5;"xls,pdf";"";"";"";"";"";"0.89";1;1;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";0;0;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 0, '2025-08': 0}";5082;2938
+"53699ebba3a729239d205f4f";"Recensement des équipements sportifs, espaces et sites de pratiques";"recensement-des-equipements-sportifs-espaces-et-sites-de-pratiques";"Data ES";"https://www.data.gouv.fr/datasets/recensement-des-equipements-sportifs-espaces-et-sites-de-pratiques/";"Ministère chargé des Sports";"534fff95a3a7292c64a77fd8";"";"";"# Présentation du Jeu de Données - Équipements Sportifs et lieux de pratiques
+
+## Introduction
+
+Le recensement des équipements sportifs est une initiative du ministère chargé des sports, en place depuis 2006, visant à documenter et à soutenir le développement de la pratique sportive en France. Cette initiative est désormais renforcée par le lancement de ce site Internet construit autour de Data ES, une base de données regroupant plus de 330 000 lieux de pratiques sportives accessibles au public en France métropolitaine et en outre-mer.
+
+## Description du Jeu de Données
+
+* **Source des Données :** Les données sont directement extraites du site [Equipements](https://equipements.sports.gouv.fr).
+* **Taille du Jeu de Données :** Le jeu de données contient des informations sur plus de 330,000 équipements sportifs en France.
+* **Contenu du Jeu de Données :** Le jeu de données comprend des informations détaillées sur une variété d’équipements sportifs, y compris leur emplacement géographique, leur type, et d’autres caractéristiques.
+* **Statut de Mise à Jour :** Actuellement, le format du jeu de données est en cours de mise à jour pour correspondre au [schéma des équipements](https://schema.data.gouv.fr/scdl/equipements/). **Des modifications sont donc prévues à l’avenir !** Les dernières mises à jour peuvent être consultées sur le site.
+
+## Méthodologie de Collecte
+
+La collecte des données est effectuée par nos équipes d’enquêteurs. Pour plus d’informations sur la méthodologie de collecte, vous pouvez consulter nos guides méthodologiques en visitant <https://equipements.sports.gouv.fr/pages/methodologie/> (en bas de page).
+
+## Utilisation Potentielle
+
+Ce jeu de données sur les équipements sportifs en France peut être utilisé pour diverses applications, telles que :
+
+* Analyse de la distribution des équipements sportifs en France.
+* Évaluation de la disponibilité d’installations sportives dans différentes régions.
+* Planification d’infrastructures sportives locales.
+
+## Conclusion
+
+Ce jeu de données revêt une grande importance pour le développement de la pratique sportive en France. Il offre une mine d’informations précieuses sur les équipements sportifs à travers le pays et peut être un outil précieux pour les chercheurs, les planificateurs et les passionnés de sport. Nous encourageons les utilisateurs à explorer davantage ces données pour mieux comprendre le paysage sportif en France.
+
+Pour nous contacter, rendez-vous sur [ce lien](https://equipements.sports.gouv.fr/pages/contact/).
+";"";"daily";"Licence Ouverte / Open Licence version 2.0";"2005-01-01";"2024-06-27";"poi";"France";False;"2013-07-08T11:01:49.849000";"2025-09-17T15:13:40.967000";"activite-sportive,data-es,equipement-sportif,recensement,rnb,sport,uai";False;7;0;"pdf,zip,csv,.csv";"";"";"";"";"";"1.00";37;26;51;"{'2024-08': 0, '2024-09': 1, '2024-10': 1, '2024-11': 0, '2024-12': 1, '2025-01': 1, '2025-02': 0, '2025-03': 0, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 1, '2025-08': 0}";0;32;"{'2024-08': 0, '2024-09': 0, '2024-10': 0, '2024-11': 0, '2024-12': 0, '2025-01': 0, '2025-02': 0, '2025-03': 1, '2025-04': 0, '2025-05': 0, '2025-06': 0, '2025-07': 1, '2025-08': 0}";61181;41072
