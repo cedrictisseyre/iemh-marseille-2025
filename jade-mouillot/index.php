@@ -2,16 +2,16 @@
 // -----------------------------
 // Configuration
 // -----------------------------
-$csvFile = 'data_csv.csv'; // Le chemin vers ton fichier CSV
+$csvFile = 'data_csv.csv'; // Chemin vers ton fichier CSV
 $typeRecherche = isset($_POST['type']) ? trim($_POST['type']) : '';
-$regionRecherche = isset($_POST['region']) ? trim($_POST['region']) : '';
+$communeRecherche = isset($_POST['commune']) ? trim($_POST['commune']) : '';
 
 // -----------------------------
 // Lire le CSV
 // -----------------------------
 $equipements = [];
 if (($handle = fopen($csvFile, 'r')) !== false) {
-    $header = fgetcsv($handle, 1000, ';'); // Premier ligne = en-têtes
+    $header = fgetcsv($handle, 1000, ';'); // La première ligne contient les en-têtes
     while (($row = fgetcsv($handle, 1000, ';')) !== false) {
         $equipement = array_combine($header, $row);
         $equipements[] = $equipement;
@@ -20,13 +20,27 @@ if (($handle = fopen($csvFile, 'r')) !== false) {
 }
 
 // -----------------------------
-// Filtrer les équipements
+// Lister types et communes
+// -----------------------------
+$types = [];
+$communes = [];
+foreach ($equipements as $e) {
+    $types[$e['type_equipement']] = true;
+    $communes[$e['commune']] = true;
+}
+$types = array_keys($types);
+sort($types);
+$communes = array_keys($communes);
+sort($communes);
+
+// -----------------------------
+// Filtrer selon le formulaire
 // -----------------------------
 $results = [];
 foreach ($equipements as $e) {
     $matchType = $typeRecherche === '' || stripos($e['type_equipement'], $typeRecherche) !== false;
-    $matchRegion = $regionRecherche === '' || stripos($e['region'], $regionRecherche) !== false;
-    if ($matchType && $matchRegion) {
+    $matchCommune = $communeRecherche === '' || stripos($e['commune'], $communeRecherche) !== false;
+    if ($matchType && $matchCommune) {
         $results[] = $e;
     }
 }
@@ -38,7 +52,7 @@ foreach ($equipements as $e) {
     <meta charset="UTF-8">
     <title>Recherche Équipements Sportifs</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+        body { font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }
         input, button { margin: 5px; padding: 5px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
@@ -48,10 +62,23 @@ foreach ($equipements as $e) {
 <body>
     <h2>Recherche Équipements Sportifs</h2>
 
-    <!-- Formulaire -->
     <form method="post" action="">
-        Type d'équipement : <input type="text" name="type" value="<?= htmlspecialchars($typeRecherche) ?>" placeholder="ex: piscine"><br>
-        Région : <input type="text" name="region" value="<?= htmlspecialchars($regionRecherche) ?>" placeholder="ex: Provence-Alpes-Côte d'Azur"><br>
+        Type d'équipement : 
+        <select name="type">
+            <option value="">-- Tous --</option>
+            <?php foreach ($types as $t): ?>
+                <option value="<?= htmlspecialchars($t) ?>" <?= $t==$typeRecherche?'selected':'' ?>><?= htmlspecialchars($t) ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        Commune : 
+        <select name="commune">
+            <option value="">-- Toutes --</option>
+            <?php foreach ($communes as $c): ?>
+                <option value="<?= htmlspecialchars($c) ?>" <?= $c==$communeRecherche?'selected':'' ?>><?= htmlspecialchars($c) ?></option>
+            <?php endforeach; ?>
+        </select>
+
         <button type="submit">Rechercher</button>
     </form>
 
