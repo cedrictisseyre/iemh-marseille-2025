@@ -3,23 +3,15 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Nom du fichier CSV
-$csvFile = __DIR__ . "/TRIATHLON DES COLLINES 2024.csv";
-$delimiter = ","; // ou "," selon ton fichier
+$csvFile = __DIR__ . "/resultats.csv";
+$delimiter = ";"; // adapte si ton CSV utilise ","
 
 $participants = [];
 
-// Lecture CSV
 if (($handle = fopen($csvFile, "r")) !== false) {
-    // Lecture de l'en-tête (avec échappement explicit)
     $header = fgetcsv($handle, 1000, $delimiter, '"', '\\');
+    $header = array_map(fn($h) => trim(utf8_encode($h)), $header);
 
-    // Normaliser les en-têtes (corriger encodage si besoin)
-    $header = array_map(function($h) {
-        return trim(utf8_encode($h)); // au cas où encodage ISO-8859-1
-    }, $header);
-
-    // Charger toutes les lignes
     while (($row = fgetcsv($handle, 1000, $delimiter, '"', '\\')) !== false) {
         if (count($row) === count($header)) {
             $participants[] = array_combine($header, $row);
@@ -28,22 +20,22 @@ if (($handle = fopen($csvFile, "r")) !== false) {
     fclose($handle);
 }
 
-// Récupération catégorie depuis GET
+// Filtres depuis GET
 $selectedCat = $_GET['cat'] ?? "";
+$searchName  = trim($_GET['name'] ?? "");
 
-// Extraire toutes les catégories disponibles
+// Liste unique des catégories
 $cats = array_unique(array_column($participants, "Cat."));
 sort($cats);
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Résultats CSV - Filtre Catégorie</title>
+<title>Résultats CSV - Filtres</title>
 <style>
 body { font-family: Arial, sans-serif; margin: 20px; }
-select, button { padding: 6px; margin-top: 6px; }
+select, input, button { padding: 6px; margin-top: 6px; }
 table { border-collapse: collapse; margin-top: 15px; width: 100%; }
 td, th { border: 1px solid #ddd; padding: 8px; }
 th { background: #f2f2f2; }
@@ -54,7 +46,7 @@ th { background: #f2f2f2; }
 <h1>Résultats sportifs</h1>
 
 <form method="get">
-    <label for="cat">Choisir une catégorie :</label>
+    <label for="cat">Catégorie :</label>
     <select name="cat" id="cat">
         <option value="">-- Toutes --</option>
         <?php foreach ($cats as $cat): ?>
@@ -63,14 +55,20 @@ th { background: #f2f2f2; }
             </option>
         <?php endforeach; ?>
     </select>
+
+    <label for="name">Nom / Prénom contient :</label>
+    <input type="text" name="name" id="name" value="<?= htmlspecialchars($searchName) ?>">
+
     <button type="submit">Filtrer</button>
 </form>
 
-<?php if ($selectedCat): ?>
-    <h2>Résultats pour la catégorie : <?= htmlspecialchars($selectedCat) ?></h2>
+<h2>
+<?php if ($selectedCat || $searchName): ?>
+    Résultats filtrés
 <?php else: ?>
-    <h2>Résultats pour toutes les catégories</h2>
+    Tous les résultats
 <?php endif; ?>
+</h2>
 
 <table>
     <tr>
@@ -84,7 +82,12 @@ th { background: #f2f2f2; }
         <th>Ecart</th>
     </tr>
     <?php foreach ($participants as $p): ?>
-        <?php if ($selectedCat === "" || $p["Cat."] === $selectedCat): ?>
+        <?php
+        $ok = true;
+        if ($selectedCat !== "" && $p["Cat."] !== $selectedCat) $ok = false;
+        if ($searchName !== "" && stripos($p["Prénom NOM"], $searchName) === false) $ok = false;
+        ?>
+        <?php if ($ok): ?>
         <tr>
             <td><?= htmlspecialchars($p["Place"]) ?></td>
             <td><?= htmlspecialchars($p["Doss."]) ?></td>
