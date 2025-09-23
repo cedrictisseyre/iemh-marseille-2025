@@ -117,12 +117,9 @@ foreach ($equipements as $e) {
             </tr>
             <?php foreach ($results as $r): ?>
                 <tr>
-                    <td><?= htmlspecialchars($r['nom'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($r['type_equipement'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($r['adresse'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($r['code_postal'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($r['commune'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($r['region'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r["Type d'équipement sportif"] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['Commune Nom'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['Commune Code'] ?? '') ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
