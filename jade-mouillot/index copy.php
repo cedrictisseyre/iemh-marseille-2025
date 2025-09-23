@@ -23,8 +23,7 @@ if (!file_exists($csvFile)) {
 }
 
 if (($handle = fopen($csvFile, 'r')) !== false) {
-    $header = fgetcsv($handle, 1000, ';');
-
+    $header = fgetcsv($handle, 1000, ';', '"', '\\'); // ajout du paramètre $escape
     if ($header === false) {
         die("Erreur : le CSV est vide ou mal formé.");
     }
@@ -33,9 +32,6 @@ if (($handle = fopen($csvFile, 'r')) !== false) {
         if (count($row) === count($header)) {
             $equipement = array_combine($header, $row);
             $equipements[] = $equipement;
-        } else {
-            // Ignorer les lignes incorrectes
-            continue;
         }
     }
     fclose($handle);
