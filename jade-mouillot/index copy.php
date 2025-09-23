@@ -1,5 +1,12 @@
 <?php
 // -----------------------------
+// Debug & sécurité
+// -----------------------------
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// -----------------------------
 // Configuration
 // -----------------------------
 $csvFile = 'data_csv.csv'; // Chemin vers ton fichier CSV
@@ -7,14 +14,29 @@ $typeRecherche = isset($_POST['type']) ? trim($_POST['type']) : '';
 $communeRecherche = isset($_POST['commune']) ? trim($_POST['commune']) : '';
 
 // -----------------------------
-// Lire le CSV
+// Lire le CSV de façon sécurisée
 // -----------------------------
 $equipements = [];
+
+if (!file_exists($csvFile)) {
+    die("Erreur : le fichier CSV '$csvFile' est introuvable.");
+}
+
 if (($handle = fopen($csvFile, 'r')) !== false) {
-    $header = fgetcsv($handle, 1000, ';'); // La première ligne contient les en-têtes
+    $header = fgetcsv($handle, 1000, ';');
+
+    if ($header === false) {
+        die("Erreur : le CSV est vide ou mal formé.");
+    }
+
     while (($row = fgetcsv($handle, 1000, ';')) !== false) {
-        $equipement = array_combine($header, $row);
-        $equipements[] = $equipement;
+        if (count($row) === count($header)) {
+            $equipement = array_combine($header, $row);
+            $equipements[] = $equipement;
+        } else {
+            // Ignorer les lignes incorrectes
+            continue;
+        }
     }
     fclose($handle);
 }
@@ -25,8 +47,8 @@ if (($handle = fopen($csvFile, 'r')) !== false) {
 $types = [];
 $communes = [];
 foreach ($equipements as $e) {
-    $types[$e['type_equipement']] = true;
-    $communes[$e['commune']] = true;
+    if (isset($e['type_equipement'])) $types[$e['type_equipement']] = true;
+    if (isset($e['commune'])) $communes[$e['commune']] = true;
 }
 $types = array_keys($types);
 sort($types);
@@ -38,14 +60,13 @@ sort($communes);
 // -----------------------------
 $results = [];
 foreach ($equipements as $e) {
-    $matchType = $typeRecherche === '' || stripos($e['type_equipement'], $typeRecherche) !== false;
-    $matchCommune = $communeRecherche === '' || stripos($e['commune'], $communeRecherche) !== false;
+    $matchType = $typeRecherche === '' || (isset($e['type_equipement']) && stripos($e['type_equipement'], $typeRecherche) !== false);
+    $matchCommune = $communeRecherche === '' || (isset($e['commune']) && stripos($e['commune'], $communeRecherche) !== false);
     if ($matchType && $matchCommune) {
         $results[] = $e;
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -95,12 +116,12 @@ foreach ($equipements as $e) {
             </tr>
             <?php foreach ($results as $r): ?>
                 <tr>
-                    <td><?= htmlspecialchars($r['nom']) ?></td>
-                    <td><?= htmlspecialchars($r['type_equipement']) ?></td>
-                    <td><?= htmlspecialchars($r['adresse']) ?></td>
-                    <td><?= htmlspecialchars($r['code_postal']) ?></td>
-                    <td><?= htmlspecialchars($r['commune']) ?></td>
-                    <td><?= htmlspecialchars($r['region']) ?></td>
+                    <td><?= htmlspecialchars($r['nom'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['type_equipement'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['adresse'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['code_postal'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['commune'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($r['region'] ?? '') ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
