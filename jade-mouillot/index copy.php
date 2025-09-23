@@ -29,7 +29,7 @@ if (($handle = fopen($csvFile, 'r')) !== false) {
         die("Erreur : le CSV est vide ou mal formé.");
     }
 
-    while (($row = fgetcsv($handle, 1000, ';')) !== false) {
+    while (($row = fgetcsv($handle, 1000, ';', '"', '\\')) !== false) {
         if (count($row) === count($header)) {
             $equipement = array_combine($header, $row);
             $equipements[] = $equipement;
