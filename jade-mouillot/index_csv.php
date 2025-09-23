@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 // Nom du fichier CSV
 $csvFile = __DIR__ . "/TRIATHLON DES COLLINES 2024.csv";
-$delimiter = ";"; // ou "," selon ton fichier
+$delimiter = ","; // ou "," selon ton fichier
 
 $participants = [];
 
