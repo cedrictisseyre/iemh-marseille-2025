@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$csvFile = __DIR__ . "/resultats.csv";
+$csvFile ="TRIATHLON DES COLLINES 2024.csv";
 $delimiter = ";"; // adapte si ton CSV utilise ","
 
 $participants = [];
