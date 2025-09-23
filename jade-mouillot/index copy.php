@@ -48,8 +48,8 @@ if (($handle = fopen($csvFile, 'r')) !== false) {
 $types = [];
 $communes = [];
 foreach ($equipements as $e) {
-    if (isset($e['type_equipement'])) $types[$e['type_equipement']] = true;
-    if (isset($e['commune'])) $communes[$e['commune']] = true;
+    if (isset($e["Type d'équipement sportif"])) $types[$e["Type d'équipement sportif"]] = true;
+    if (isset($e['Commune nom'])) $communes[$e['Commune nom']] = true;
 }
 $types = array_keys($types);
 sort($types);
@@ -61,8 +61,8 @@ sort($communes);
 // -----------------------------
 $results = [];
 foreach ($equipements as $e) {
-    $matchType = $typeRecherche === '' || (isset($e['type_equipement']) && stripos($e['type_equipement'], $typeRecherche) !== false);
-    $matchCommune = $communeRecherche === '' || (isset($e['commune']) && stripos($e['commune'], $communeRecherche) !== false);
+    $matchType = $typeRecherche === '' || (isset($e["Type d'équipement sportif"]) && stripos($e["Type d'équipement sportif"], $typeRecherche) !== false);
+    $matchCommune = $communeRecherche === '' || (isset($e['Commune nom']) && stripos($e['Commune nom'], $communeRecherche) !== false);
     if ($matchType && $matchCommune) {
         $results[] = $e;
     }
@@ -94,7 +94,7 @@ foreach ($equipements as $e) {
         </select>
 
         Commune : 
-        <select name="commune">
+        <select name="Commune nom">
             <option value="">-- Toutes --</option>
             <?php foreach ($communes as $c): ?>
                 <option value="<?= htmlspecialchars($c) ?>" <?= $c==$communeRecherche?'selected':'' ?>><?= htmlspecialchars($c) ?></option>
