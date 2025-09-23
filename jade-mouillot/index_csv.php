@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 $csvFile ="TRIATHLON DES COLLINES 2024.csv";
-$delimiter = ";"; // adapte si ton CSV utilise ","
+$delimiter = ","; // adapte si ton CSV utilise ","
 
 $participants = [];
 
