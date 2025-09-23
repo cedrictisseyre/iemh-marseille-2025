@@ -14,7 +14,7 @@ $typeRecherche = isset($_POST['type']) ? trim($_POST['type']) : '';
 $communeRecherche = isset($_POST['commune']) ? trim($_POST['commune']) : '';
 
 // -----------------------------
-// Lire le CSV de façon sécurisée
+// Lire le CSV de façon sécurisée (PHP 8.2+ compatible)
 // -----------------------------
 $equipements = [];
 
@@ -23,7 +23,9 @@ if (!file_exists($csvFile)) {
 }
 
 if (($handle = fopen($csvFile, 'r')) !== false) {
-    $header = fgetcsv($handle, 1000, ';', '"', '\\'); // ajout du paramètre $escape
+    // Ajouter explicitement le paramètre $escape pour PHP 8.2+
+    $header = fgetcsv($handle, 1000, ';', '"', '\\');
+
     if ($header === false) {
         die("Erreur : le CSV est vide ou mal formé.");
     }
@@ -32,6 +34,9 @@ if (($handle = fopen($csvFile, 'r')) !== false) {
         if (count($row) === count($header)) {
             $equipement = array_combine($header, $row);
             $equipements[] = $equipement;
+        } else {
+            // Ignorer les lignes incorrectes
+            continue;
         }
     }
     fclose($handle);
