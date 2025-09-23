@@ -1,127 +1,84 @@
 <?php
-// ------------------------------
-// CONFIGURATION
-// ------------------------------
-$apiKey = "VOTRE_CLE_API_ICI";  // Remplacer par votre clé World Triathlon API
-$baseUrl = "https://api.triathlon.org/v1/events";
+// -----------------------------
+// Configuration
+// -----------------------------
+$csvFile = 'data_csv.csv'; // Le chemin vers ton fichier CSV
+$typeRecherche = isset($_POST['type']) ? trim($_POST['type']) : '';
+$regionRecherche = isset($_POST['region']) ? trim($_POST['region']) : '';
 
-// Tolérance (en %) pour comparer les distances
-$tol_swim = 20;  // ex: ±20%
-$tol_bike = 15;
-$tol_run  = 15;
-
-// ------------------------------
-// VARIABLES DU FORMULAIRE
-// ------------------------------
-$swim = $bike = $run = 0;
-$total = null;
-$events = [];
-$filteredEvents = [];
-
-// ------------------------------
-// FONCTION DE VERIFICATION
-// ------------------------------
-function estProche($valeur, $cible, $tolerancePercent) {
-    if ($valeur <= 0 || $cible <= 0) return false;
-    $diff = abs($valeur - $cible);
-    $tol = $cible * ($tolerancePercent / 100);
-    return $diff <= $tol;
+// -----------------------------
+// Lire le CSV
+// -----------------------------
+$equipements = [];
+if (($handle = fopen($csvFile, 'r')) !== false) {
+    $header = fgetcsv($handle, 1000, ';'); // Premier ligne = en-têtes
+    while (($row = fgetcsv($handle, 1000, ';')) !== false) {
+        $equipement = array_combine($header, $row);
+        $equipements[] = $equipement;
+    }
+    fclose($handle);
 }
 
-// ------------------------------
-// TRAITEMENT DU FORMULAIRE
-// ------------------------------
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $swim = floatval($_POST["swim"]);
-    $bike = floatval($_POST["bike"]);
-    $run  = floatval($_POST["run"]);
-
-    $total = $swim + $bike + $run;
-
-    // ------------------------------
-    // APPEL API POUR RECUPERER EVENTS
-    // ------------------------------
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $baseUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "apikey: $apiKey",
-        "Accept: application/json"
-    ]);
-
-    $response = curl_exec($ch);
-    if ($response !== false) {
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        if ($httpCode == 200) {
-            $data = json_decode($response, true);
-            $events = $data["data"] ?? [];
-        }
-    }
-    curl_close($ch);
-
-    // ------------------------------
-    // FILTRAGE DES EVENEMENTS
-    // ------------------------------
-    foreach ($events as $event) {
-        // ⚠️ L’API World Triathlon peut ne pas toujours fournir les distances précises.
-        // Ici on suppose qu’on a "swim_distance", "bike_distance", "run_distance".
-        if (isset($event["swim_distance"], $event["bike_distance"], $event["run_distance"])) {
-            if (
-                estProche($event["swim_distance"], $swim, $tol_swim) &&
-                estProche($event["bike_distance"], $bike, $tol_bike) &&
-                estProche($event["run_distance"],  $run,  $tol_run)
-            ) {
-                $filteredEvents[] = $event;
-            }
-        }
+// -----------------------------
+// Filtrer les équipements
+// -----------------------------
+$results = [];
+foreach ($equipements as $e) {
+    $matchType = $typeRecherche === '' || stripos($e['type_equipement'], $typeRecherche) !== false;
+    $matchRegion = $regionRecherche === '' || stripos($e['region'], $regionRecherche) !== false;
+    if ($matchType && $matchRegion) {
+        $results[] = $e;
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Triathlons similaires</title>
+    <title>Recherche Équipements Sportifs</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .container { max-width: 600px; margin: auto; padding: 20px; }
-        input, button { margin: 8px; padding: 8px; }
-        .event { text-align: left; margin: 15px 0; padding: 10px; border-bottom: 1px solid #ddd; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px; }
+        input, button { margin: 5px; padding: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f0f0f0; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Calculateur Triathlon + Événements similaires</h2>
+    <h2>Recherche Équipements Sportifs</h2>
 
-        <!-- Formulaire -->
-        <form method="post" action="">
-            Natation (km): <input type="number" step="0.1" name="swim" value="<?= $swim ?>"><br>
-            Vélo (km): <input type="number" step="0.1" name="bike" value="<?= $bike ?>"><br>
-            Course à pied (km): <input type="number" step="0.1" name="run" value="<?= $run ?>"><br>
-            <button type="submit">Calculer & Chercher</button>
-        </form>
+    <!-- Formulaire -->
+    <form method="post" action="">
+        Type d'équipement : <input type="text" name="type" value="<?= htmlspecialchars($typeRecherche) ?>" placeholder="ex: piscine"><br>
+        Région : <input type="text" name="region" value="<?= htmlspecialchars($regionRecherche) ?>" placeholder="ex: Provence-Alpes-Côte d'Azur"><br>
+        <button type="submit">Rechercher</button>
+    </form>
 
-        <!-- Résultat calcul -->
-        <?php if ($total !== null): ?>
-            <p><strong>Distance totale : <?= $total ?> km</strong></p>
-        <?php endif; ?>
-
-        <!-- Résultats filtrés -->
-        <?php if (!empty($filteredEvents)): ?>
-            <h3>Événements similaires trouvés :</h3>
-            <?php foreach ($filteredEvents as $event): ?>
-                <div class="event">
-                    <strong><?= htmlspecialchars($event["name"]) ?></strong><br>
-                    Date : <?= htmlspecialchars($event["start_date"] ?? "N/A") ?><br>
-                    Lieu : <?= htmlspecialchars($event["country"]["name"] ?? "Inconnu") ?><br>
-                    Distances : 🏊 <?= $event["swim_distance"] ?> km,
-                                🚴 <?= $event["bike_distance"] ?> km,
-                                🏃 <?= $event["run_distance"] ?> km
-                </div>
+    <?php if (!empty($results)): ?>
+        <h3>Résultats :</h3>
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Adresse</th>
+                <th>Code postal</th>
+                <th>Commune</th>
+                <th>Région</th>
+            </tr>
+            <?php foreach ($results as $r): ?>
+                <tr>
+                    <td><?= htmlspecialchars($r['nom']) ?></td>
+                    <td><?= htmlspecialchars($r['type_equipement']) ?></td>
+                    <td><?= htmlspecialchars($r['adresse']) ?></td>
+                    <td><?= htmlspecialchars($r['code_postal']) ?></td>
+                    <td><?= htmlspecialchars($r['commune']) ?></td>
+                    <td><?= htmlspecialchars($r['region']) ?></td>
+                </tr>
             <?php endforeach; ?>
-        <?php elseif ($total !== null): ?>
-            <p>Aucun triathlon trouvé proche de vos distances.</p>
-        <?php endif; ?>
-    </div>
+        </table>
+    <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+        <p>Aucun équipement trouvé pour ces critères.</p>
+    <?php endif; ?>
 </body>
 </html>
