@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -90,7 +89,7 @@
             echo "Âge : $age ans<br>";
             echo "Taille : $taille cm<br>";
             echo "Poids : $poids kg<br>";
-            echo "Niveau d'activité : $niveau_activite (NAP = $nap)<br>";
+            echo "Niveau d\'activité : $niveau_activite (NAP = $nap)<br>";
             echo "Métabolisme de base estimé (Mifflin-St Jeor 1990) : " . round($mb, 2) . " kcal/jour<br>";
             echo "<strong>Dépense énergétique journalière estimée : " . round($dej, 2) . " kcal/jour</strong>";
             echo '</div>';
