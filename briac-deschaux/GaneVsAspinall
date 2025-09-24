@@ -15,8 +15,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       margin: 0;
       padding: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: url("https://www.venueswest.wa.gov.au/images/default-source/venueswest/rac-arena/ufc-at-rac-arena.jpg?sfvrsn=301aebd2_3&Quality=High&Method=CropCropArguments&ScaleUp=true&Width=887&Height=396&Signature=3A99FF8C2EF444A783BCADBDE631D348A8C5F568") no-repeat center center fixed;
-      background-size: cover;
+      background: #0a0a0a;
       color: #fff;
       text-align: center;
     }
@@ -47,7 +46,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 40px 20px;
     }
@@ -59,33 +58,33 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     }
 
     .fighter img {
-      width: 100%;
-      max-width: 400px;
+      width: 85%; /* légèrement réduit */
+      max-width: 320px;
     }
 
     .fighter h2 {
-      font-size: 2rem;
+      font-size: 1.8rem;
       margin-top: 10px;
       font-weight: bold;
       color: #ffffff;
     }
 
     .fighter p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #d9d9d9;
     }
 
     /* --- COMPARATIF --- */
     .stats {
       width: 30%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.8);
       border: 2px solid #d4af37; /* or */
       border-radius: 15px;
       padding: 20px;
     }
 
     .stats h3 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin-bottom: 20px;
       color: #d4af37; /* doré */
       text-transform: uppercase;
@@ -94,12 +93,12 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     .stats table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #fff;
     }
 
     .stats td {
-      padding: 12px;
+      padding: 10px;
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
 
@@ -126,7 +125,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
   <!-- LOGO UFC -->
   <header>
     <img src="https://apinew.goalzo.co.il/admin/images/teams-logos/ufc%20321.png" alt="UFC Logo">
-    <h2><?php echo $eventDate->format('d F Y - H:i'); ?> (heure de Paris)</h2>
+    <h2>29 octobre 2025 à 3h (heure française)</h2>
   </header>
 
   <!-- FIGHT CARD -->
@@ -168,7 +167,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     <!-- Ciryl Gane à droite -->
     <div class="fighter">
       <img src="https://ufc.com/images/styles/event_fight_card_upper_body_of_standing_athlete/s3/2025-01/5/GANE_CIRYL_R_03-05.png?itok=4FOqAw9r" alt="Cyril Gane">
-      <h2>Cyril Gane</h2>
+      <h2>Ciryl Gane</h2>
       <p>Record : 12-2-0</p>
     </div>
   </div>
