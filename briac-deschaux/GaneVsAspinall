@@ -1,8 +1,5 @@
 <?php
 date_default_timezone_set('Europe/Paris');
-
-// Date du combat : 29 octobre 2025 à 03h00 du matin
-$eventDate = new DateTime("2025-10-29 03:00:00");
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -14,7 +11,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       margin: 0;
       padding: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: url("de3a41e1-4019-4b96-807c-0867403e5478.png") no-repeat center center fixed;
+      background: url("https://www.venueswest.wa.gov.au/images/default-source/venueswest/rac-arena/ufc-at-rac-arena.jpg?sfvrsn=301aebd2_3&Quality=High&Method=CropCropArguments&ScaleUp=true&Width=887&Height=396&Signature=3A99FF8C2EF444A783BCADBDE631D348A8C5F568") no-repeat center center fixed;
       background-size: cover;
       color: #fff;
       text-align: center;
@@ -26,6 +23,13 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
 
     header img {
       height: 90px;
+    }
+
+    header h2 {
+      margin-top: 10px;
+      font-size: 1.5rem;
+      font-weight: normal;
+      color: #ffd700;
     }
 
     .fight-card {
@@ -62,7 +66,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
 
     .stats {
       width: 30%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       border-radius: 15px;
       padding: 25px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.6);
@@ -96,20 +100,13 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     .stats td:not(:first-child) {
       text-align: center;
     }
-
-    .countdown {
-      margin-top: 40px;
-      font-size: 2rem;
-      font-weight: bold;
-      color: #ffd700;
-      text-shadow: 0 0 10px rgba(255,215,0,0.9);
-    }
   </style>
 </head>
 <body>
 
   <header>
     <img src="https://apinew.goalzo.co.il/admin/images/teams-logos/ufc%20321.png" alt="UFC Logo">
+    <h2>29 octobre 2025 - 03h00</h2>
     <h1>UFC 321 - Gane vs Aspinall</h1>
   </header>
 
@@ -155,34 +152,6 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       <p>Record : 14-3-0</p>
     </div>
   </div>
-
-  <!-- Compte à rebours -->
-  <div class="countdown" id="countdown"></div>
-
-  <script>
-    const eventDate = new Date("<?php echo $eventDate->format('Y-m-d\TH:i:s'); ?>").getTime();
-
-    function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = eventDate - now;
-
-      if (distance <= 0) {
-        document.getElementById("countdown").innerHTML = "Le combat a commencé !";
-        return;
-      }
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      document.getElementById("countdown").innerHTML =
-        days + "j " + hours + "h " + minutes + "m " + seconds + "s avant le combat";
-    }
-
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-  </script>
 
 </body>
 </html>
