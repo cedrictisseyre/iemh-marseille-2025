@@ -57,8 +57,14 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       text-align: center;
     }
 
-    .fighter img {
-      width: 85%; /* légèrement réduit */
+    /* Aspinall légèrement plus grand que Gane */
+    .fighter.aspinall img {
+      width: 95%; /* boosté pour compenser */
+      max-width: 340px;
+    }
+
+    .fighter.gane img {
+      width: 85%;
       max-width: 320px;
     }
 
@@ -131,7 +137,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
   <!-- FIGHT CARD -->
   <div class="fight-card">
     <!-- Tom Aspinall à gauche -->
-    <div class="fighter">
+    <div class="fighter aspinall">
       <img src="https://ufc.com/images/styles/event_fight_card_upper_body_of_standing_athlete/s3/2025-01/5/ASPINALL_TOM_BELT_L_07-27.png?itok=bFXwFyX_" alt="Tom Aspinall">
       <h2>Tom Aspinall</h2>
       <p>Record : 14-3-0</p>
@@ -165,7 +171,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     </div>
 
     <!-- Ciryl Gane à droite -->
-    <div class="fighter">
+    <div class="fighter gane">
       <img src="https://ufc.com/images/styles/event_fight_card_upper_body_of_standing_athlete/s3/2025-01/5/GANE_CIRYL_R_03-05.png?itok=4FOqAw9r" alt="Cyril Gane">
       <h2>Ciryl Gane</h2>
       <p>Record : 12-2-0</p>
@@ -176,3 +182,4 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
 
 </body>
 </html>
+
