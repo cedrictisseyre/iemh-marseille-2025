@@ -134,7 +134,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
   <div class="fight-card">
     <!-- FIGHTER 1 -->
     <div class="fighter">
-      <img src="https://static.actu.fr/uploads/2020/12/25374-201231102616714-0.jpg" alt="Cyril Gane">
+      <img src="https://res.cloudinary.com/fanaticsio/image/fetch/f_auto,q_auto,g_face/https://theallstar.io/wp-content/uploads/2021/07/715442Fprofile-galery2Ffullbodyleft-picture2FGANE_CYRIL_L_06-26.png" alt="Cyril Gane">
       <h2>Cyril Gane</h2>
       <p>Record : 12-2-0</p>
     </div>
