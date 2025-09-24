@@ -1,0 +1,172 @@
+<?php
+date_default_timezone_set('Europe/Paris');
+
+// Date du combat : par exemple le 9 mars 2025
+$eventDate = new DateTime("2025-03-09 06:00:00"); 
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>UFC 321 - Gane vs Aspinall</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            text-align: center;
+        }
+
+        header {
+            padding: 20px;
+        }
+
+        header img {
+            height: 80px;
+        }
+
+        .fight-card {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40px auto;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .fighter {
+            width: 25%;
+            text-align: center;
+        }
+
+        .fighter img {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 10px;
+            border: 2px solid #00d9ff;
+        }
+
+        .fighter h2 {
+            margin: 10px 0 5px;
+            font-size: 1.5rem;
+            color: #00d9ff;
+        }
+
+        .fighter p {
+            font-size: 1.1rem;
+        }
+
+        .stats {
+            width: 30%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #00d9ff;
+        }
+
+        .stats table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.2rem;
+        }
+
+        .stats td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .countdown {
+            margin-top: 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/UFC_Logo.svg/2560px-UFC_Logo.svg.png" alt="UFC Logo">
+        <h1>UFC 321 - Gane vs Aspinall</h1>
+    </header>
+
+    <div class="fight-card">
+        <!-- Cyril Gane -->
+        <div class="fighter">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Ciryl_Gane_2021.jpg" alt="Cyril Gane">
+            <h2>Cyril Gane</h2>
+            <p>Record : 12-2-0</p>
+        </div>
+
+        <!-- Stats comparatives -->
+        <div class="stats">
+            <h3>Comparatif</h3>
+            <table>
+                <tr>
+                    <td>Âge</td>
+                    <td>33</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>Taille</td>
+                    <td>193 cm</td>
+                    <td>196 cm</td>
+                </tr>
+                <tr>
+                    <td>Poids</td>
+                    <td>111 kg</td>
+                    <td>116 kg</td>
+                </tr>
+                <tr>
+                    <td>Allonge</td>
+                    <td>206 cm</td>
+                    <td>198 cm</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Tom Aspinall -->
+        <div class="fighter">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/40/Tom_Aspinall_2021.jpg" alt="Tom Aspinall">
+            <h2>Tom Aspinall</h2>
+            <p>Record : 14-3-0</p>
+        </div>
+    </div>
+
+    <!-- Compteur -->
+    <div class="countdown" id="countdown"></div>
+
+    <script>
+        const eventDate = new Date("<?php echo $eventDate->format('Y-m-d H:i:s'); ?>").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            if (distance <= 0) {
+                document.getElementById("countdown").innerHTML = "Le combat a commencé !";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+            document.getElementById("countdown").innerHTML =
+                days + "j " + hours + "h " + minutes + "m avant le combat";
+        }
+
+        setInterval(updateCountdown, 60000); // mise à jour toutes les minutes
+        updateCountdown(); // initial
+    </script>
+
+</body>
+</html>
