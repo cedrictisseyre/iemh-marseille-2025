@@ -10,41 +10,33 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
   <meta charset="UTF-8">
   <title>UFC 321 - Gane vs Aspinall</title>
   <style>
-    /* --- GLOBAL --- */
     body {
       margin: 0;
       padding: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: #0a0a0a;
+      background: url("de3a41e1-4019-4b96-807c-0867403e5478.png") no-repeat center center fixed;
+      background-size: cover;
       color: #fff;
       text-align: center;
     }
 
-    h1, h2, h3 {
-      margin: 0;
-      padding: 0;
-    }
-
-    /* --- HEADER --- */
     header {
       padding: 20px;
     }
 
     header img {
-      height: 100px;
+      height: 90px;
     }
 
-    /* --- MAIN CONTAINER --- */
     .fight-card {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      max-width: 1400px;
+      align-items: flex-start;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 40px 20px;
     }
 
-    /* --- FIGHTERS --- */
     .fighter {
       width: 30%;
       text-align: center;
@@ -52,35 +44,34 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
 
     .fighter img {
       width: 100%;
-      max-width: 400px;
+      max-width: 350px;
       border-radius: 10px;
     }
 
     .fighter h2 {
-      font-size: 2rem;
       margin-top: 10px;
+      font-size: 1.8rem;
       font-weight: bold;
       color: #ffffff;
     }
 
     .fighter p {
       font-size: 1.2rem;
-      color: #d9d9d9;
+      color: #cccccc;
     }
 
-    /* --- COMPARATIF --- */
     .stats {
       width: 30%;
-      background: rgba(255, 215, 0, 0.05); /* léger doré */
-      border: 2px solid #d4af37; /* or */
+      background: rgba(0,0,0,0.8);
       border-radius: 15px;
-      padding: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
     }
 
     .stats h3 {
       font-size: 1.6rem;
       margin-bottom: 20px;
-      color: #d4af37; /* doré */
+      color: #d4af37;
       text-transform: uppercase;
     }
 
@@ -97,7 +88,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     }
 
     .stats td:first-child {
-      color: #d4af37; /* or pour la légende */
+      color: #d4af37;
       font-weight: bold;
       text-align: left;
     }
@@ -106,42 +97,33 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       text-align: center;
     }
 
-    /* --- COUNTDOWN --- */
     .countdown {
       margin-top: 40px;
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: bold;
       color: #ffd700;
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-    }
-
-    /* --- FOOTER TEXT --- */
-    .footer-text {
-      margin-top: 20px;
-      font-size: 1rem;
-      color: #888;
+      text-shadow: 0 0 10px rgba(255,215,0,0.9);
     }
   </style>
 </head>
 <body>
 
-  <!-- LOGO UFC -->
   <header>
     <img src="https://apinew.goalzo.co.il/admin/images/teams-logos/ufc%20321.png" alt="UFC Logo">
+    <h1>UFC 321 - Gane vs Aspinall</h1>
   </header>
 
-  <!-- FIGHT CARD -->
   <div class="fight-card">
-    <!-- FIGHTER 1 -->
+    <!-- Cyril Gane -->
     <div class="fighter">
-      <img src="https://res.cloudinary.com/fanaticsio/image/fetch/f_auto,q_auto,g_face/https://theallstar.io/wp-content/uploads/2021/07/715442Fprofile-galery2Ffullbodyleft-picture2FGANE_CYRIL_L_06-26.png" alt="Cyril Gane">
+      <img src="https://static.actu.fr/uploads/2020/12/25374-201231102616714-0.jpg" alt="Cyril Gane">
       <h2>Cyril Gane</h2>
       <p>Record : 12-2-0</p>
     </div>
 
-    <!-- COMPARATIF -->
+    <!-- Stats comparatives -->
     <div class="stats">
-      <h3>Comparatif</h3>
+      <h3>Tale of the Tape</h3>
       <table>
         <tr>
           <td>Âge</td>
@@ -166,7 +148,7 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
       </table>
     </div>
 
-    <!-- FIGHTER 2 -->
+    <!-- Tom Aspinall -->
     <div class="fighter">
       <img src="https://ufc.com/images/styles/athlete_bio_full_body/s3/2025-01/5/ASPINALL_TOM_BELT_L_07-27.png?itok=es86FDim" alt="Tom Aspinall">
       <h2>Tom Aspinall</h2>
@@ -174,13 +156,11 @@ $eventDate = new DateTime("2025-10-29 03:00:00");
     </div>
   </div>
 
-  <!-- COUNTDOWN -->
+  <!-- Compte à rebours -->
   <div class="countdown" id="countdown"></div>
 
-  <div class="footer-text">UFC 321 - Heavyweight Bout</div>
-
   <script>
-    const eventDate = new Date("<?php echo $eventDate->format('Y-m-d H:i:s'); ?>").getTime();
+    const eventDate = new Date("<?php echo $eventDate->format('Y-m-d\TH:i:s'); ?>").getTime();
 
     function updateCountdown() {
       const now = new Date().getTime();
