@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once 'connexion.php';
 
 // Récupérer les jours et horaires pour l'emploi du temps
 $jours = $pdo->query('SELECT * FROM jours ORDER BY id')->fetchAll();
@@ -52,6 +52,17 @@ $profs = $pdo->query('SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR
 		<div class="tab-content" id="myTabContent">
 			<div class="tab-pane fade show active" id="accueil" role="tabpanel" aria-labelledby="accueil-tab">
 				<p>Bienvenue sur le site du Mastère IHME !</p>
+				<div class="mt-4">
+					<h5>Accès rapide aux données :</h5>
+					<ul>
+						<li><a href="pages/liste_jours.html">Liste des jours</a></li>
+						<li><a href="pages/liste_horaires.html">Liste des horaires</a></li>
+						<li><a href="pages/liste_matieres.html">Liste des matières</a></li>
+						<li><a href="pages/liste_professeurs.html">Liste des professeurs</a></li>
+						<li><a href="pages/liste_salles.html">Liste des salles</a></li>
+						<li><a href="pages/liste_emploi_temps.html">Emploi du temps (brut)</a></li>
+					</ul>
+				</div>
 			</div>
 			<div class="tab-pane fade" id="edt" role="tabpanel" aria-labelledby="edt-tab">
 				<h5>Emploi du temps</h5>

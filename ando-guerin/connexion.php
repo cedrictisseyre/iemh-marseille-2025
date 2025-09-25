@@ -1,12 +1,12 @@
 <?php
-$host = '195.15.235.20;port=3306';
+$host = '195.15.235.20';
 $user = 'root';
 $password = 'INNnsk40374';
 $dbname = 'Andoni_guerin';
 
 try {
-	$conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new PDO("mysql:host=$host;port=3306;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-	die('Erreur de connexion à la base de données : ' . $e->getMessage());
+    die('Erreur de connexion à la base de données : ' . $e->getMessage());
 }
