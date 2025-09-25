@@ -1,3 +1,29 @@
+<?php
+require_once 'config.php';
+
+// Récupérer les jours et horaires pour l'emploi du temps
+$jours = $pdo->query('SELECT * FROM jours ORDER BY id')->fetchAll();
+$horaires = $pdo->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
+
+// Récupérer l'emploi du temps complet (jointure)
+$stmt = $pdo->query('SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, " ", p.nom) AS professeur, s.nom AS salle
+    FROM emploi_temps et
+    JOIN matieres m ON et.matiere_id = m.id
+    LEFT JOIN professeurs p ON et.professeur_id = p.id
+    LEFT JOIN salles s ON et.salle_id = s.id');
+$emploi = [];
+foreach ($stmt as $row) {
+    $emploi[$row['jour_id']][$row['horaire_id']] = $row;
+}
+
+// Récupérer les professeurs et leurs matières
+$profs = $pdo->query('SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR ", ") AS matieres
+    FROM professeurs p
+    LEFT JOIN professeurs_matieres pm ON p.id = pm.professeur_id
+    LEFT JOIN matieres m ON pm.matiere_id = m.id
+    GROUP BY p.id, p.prenom, p.nom
+    ORDER BY p.nom')->fetchAll();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -28,22 +54,40 @@
 				<p>Bienvenue sur le site du Mastère IHME !</p>
 			</div>
 			<div class="tab-pane fade" id="edt" role="tabpanel" aria-labelledby="edt-tab">
-				<p>Exemple d'emploi du temps :</p>
+				<h5>Emploi du temps</h5>
 				<table class="table table-bordered">
-					<thead><tr><th>Jour</th><th>9h-12h</th><th>14h-17h</th></tr></thead>
+					<thead>
+						<tr>
+							<th>Jour / Horaire</th>
+							<?php foreach ($horaires as $horaire): ?>
+								<th><?= htmlspecialchars(substr($horaire['debut'],0,5)) ?> - <?= htmlspecialchars(substr($horaire['fin'],0,5)) ?></th>
+							<?php endforeach; ?>
+						</tr>
+					</thead>
 					<tbody>
-						<tr><td>Lundi</td><td>Mathématiques</td><td>Informatique</td></tr>
-						<tr><td>Mardi</td><td>Physique</td><td>Projet</td></tr>
-						<tr><td>Mercredi</td><td>Anglais</td><td>Libre</td></tr>
+					<?php foreach ($jours as $jour): ?>
+						<tr>
+							<td><?= htmlspecialchars($jour['nom']) ?></td>
+							<?php foreach ($horaires as $horaire): ?>
+								<td>
+								<?php if (isset($emploi[$jour['id']][$horaire['id']])): 
+									$e = $emploi[$jour['id']][$horaire['id']]; ?>
+									<strong><?= htmlspecialchars($e['matiere']) ?></strong><br>
+									<small><?= htmlspecialchars($e['professeur']) ?></small><br>
+									<em><?= htmlspecialchars($e['salle']) ?></em>
+								<?php endif; ?>
+								</td>
+							<?php endforeach; ?>
+						</tr>
+					<?php endforeach; ?>
 					</tbody>
 				</table>
 			</div>
 			<div class="tab-pane fade" id="profs" role="tabpanel" aria-labelledby="profs-tab">
 				<ul>
-					<li>Dr. Dupont (Mathématiques)</li>
-					<li>Mme Martin (Informatique)</li>
-					<li>M. Leroy (Physique)</li>
-					<li>Mme Smith (Anglais)</li>
+				<?php foreach ($profs as $prof): ?>
+					<li><?= htmlspecialchars($prof['prenom'] . ' ' . $prof['nom']) ?> (<?= htmlspecialchars($prof['matieres']) ?>)</li>
+				<?php endforeach; ?>
 				</ul>
 			</div>
 			<div class="tab-pane fade" id="eleves" role="tabpanel" aria-labelledby="eleves-tab">

@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once __DIR__ . '/projet/connexion.php';
+require_once __DIR__ . '/connexion.php';
 $joueurs = [];
 try {
     $sql = 'SELECT * FROM joueurs';
@@ -38,8 +38,8 @@ try {
         </div>
         <p>Accès rapide :</p>
         <ul>
-            <li><a href="projet/joueurs/ajouter_joueur.php">Ajouter un joueur</a></li>
-            <li><a href="projet/joueurs/lire_joueurs.php">Liste des joueurs (JSON)</a></li>
+            <li><a href="joueurs/ajouter_joueur.php">Ajouter un joueur</a></li>
+            <li><a href="joueurs/lire_joueurs.php">Liste des joueurs (JSON)</a></li>
         </ul>
         <h2>Liste des joueurs</h2>
         <?php if (!empty($erreur)) : ?>

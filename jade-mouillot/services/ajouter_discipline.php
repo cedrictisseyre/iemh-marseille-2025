@@ -2,7 +2,7 @@
 require_once '../connexion.php';
 $nom = $_POST['nom'] ?? '';
 if ($nom !== '') {
-    $sql = "INSERT INTO disciplines (nom) VALUES (:nom)";
+    $sql = "INSERT INTO discipline (nom) VALUES (:nom)";
     $stmt = $conn->prepare($sql);
     $result = $stmt->execute([':nom' => $nom]);
     echo $result ? "ok" : "erreur";

@@ -1,5 +1,5 @@
 <?php
-require_once '../connexion.php';
+require_once __DIR__ . '/../connexion.php';
 $sql = 'SELECT * FROM matchs';
 $stmt = $conn->query($sql);
 $matchs = $stmt->fetchAll(PDO::FETCH_ASSOC);

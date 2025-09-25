@@ -6,7 +6,7 @@ $pass = '';    // à adapter selon votre config
 $db = 'chloe_desbordes';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb3", $user, $pass);
+    $pdo = new PDO("mysql:host=$host;dbname=$db; $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die('Erreur de connexion : ' . $e->getMessage());

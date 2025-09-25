@@ -1,5 +1,5 @@
 <?php
-require_once '../connexion.php';
+require_once __DIR__ . '/../connexion.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_match = $_POST['id_match'] ?? null;
     $id_joueur = $_POST['id_joueur'] ?? null;
