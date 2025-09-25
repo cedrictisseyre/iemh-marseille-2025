@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajout d'un joueur</title>
+  <script src="../assets/script.js"></script>
+</head>
+<body>
+  <h1>Ajouter un joueur</h1>
+  <form onsubmit="event.preventDefault(); ajouterJoueur(document.getElementById('nom').value);">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" required>
+    <button type="submit">Ajouter</button>
+  </form>
+</body>
+</html>
