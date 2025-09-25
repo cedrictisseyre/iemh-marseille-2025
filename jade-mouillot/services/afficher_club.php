@@ -1,8 +1,8 @@
 <?php
 require_once '../connexion.php';
-$sql = "SELECT * FROM clubs";
+$sql = "SELECT * FROM club";
 $stmt = $conn->query($sql);
 $cours = $stmt->fetchAll(PDO::FETCH_ASSOC);
 header('Content-Type: application/json');
-echo json_encode($clubs);
+echo json_encode($club);
 ?>
