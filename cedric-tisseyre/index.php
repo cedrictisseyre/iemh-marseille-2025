@@ -25,6 +25,8 @@
             <li><a href="pages/ajout_cours.html">Ajouter un cours</a></li>
             <li><a href="pages/liste_etudiants.html">Liste des étudiants</a></li>
             <li><a href="pages/ajout_etudiant.html">Ajouter un étudiant</a></li>
+            <li><a href="pages/liste_presence.html">Liste des présences</a></li>
+            <li><a href="pages/ajout_presence.html">Ajouter une présence</a></li>
         </ul>
         <p>Retrouvez aussi les résultats de <a href="multiplication.php">multiplication</a>.</p>
     </div>
