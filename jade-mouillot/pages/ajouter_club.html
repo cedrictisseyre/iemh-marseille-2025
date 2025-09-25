@@ -5,11 +5,11 @@
   <title>Ajout d'un club</title>
   <script>
     function ajouterclub() {
-      const id = document.getElementById('id').value;
+      const nom = document.getElementBynom('nom').value;
       fetch('../services/ajouter_club.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ id })
+        body: new URLSearchParams({ nom })
       })
       .then(response => response.text())
       .then(result => {
@@ -22,8 +22,8 @@
 <body>
   <h1>Ajouter un club</h1>
   <form onsubmit="event.preventDefault(); ajouterclub();">
-    <label for="id">Id :</label>
-    <input id="nom" name="nom" required>
+    <label for="nom">nom :</label>
+    <input nom="nom" name="nom" required>
     <button type="submit">Ajouter</button>
   </form>
 </body>
