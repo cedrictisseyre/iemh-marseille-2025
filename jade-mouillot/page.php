@@ -69,14 +69,14 @@
         <div class="dropdown">
             <button class="dropbtn">Menu</button>
             <div class="dropdown-content">
-                <a href="ajouter_sportif.html">Ajouter sportif</a>
-                <a href="ajouter_club.html">Ajouter club</a>
-                <a href="ajouter_course.html">Ajouter course</a>
-                <a href="ajouter_discipline.html">Ajouter discipline</a>
-                <a href="afficher_sportif.html">Lister sportifs</a>
-                <a href="afficher_club.html">Lister Clubs</a>
-                <a href="afficher_course.html">Lister Courses</a>
-                <a href="afficher_discipline.html">Lister Discipline</a>
+                <a href="pages/ajouter_sportif.html">Ajouter sportif</a>
+                <a href="pages/ajouter_club.html">Ajouter club</a>
+                <a href="pages/ajouter_course.html">Ajouter course</a>
+                <a href="pages/ajouter_discipline.html">Ajouter discipline</a>
+                <a href="pages/afficher_sportif.html">Lister sportifs</a>
+                <a href="pages/afficher_club.html">Lister Clubs</a>
+                <a href="pages/afficher_course.html">Lister Courses</a>
+                <a href="pages/afficher_discipline.html">Lister Discipline</a>
             </div>
         </div>
     </div>
