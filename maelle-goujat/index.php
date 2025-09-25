@@ -35,8 +35,8 @@ try {
         <p>Cette page est générée en PHP pour le projet IEMH Marseille 2025.</p>
         <div class="pub">
             <strong>Publicité :</strong> <br>
-            Découvrez nos solutions innovantes pour l'éducation et la réussite !<br>
-            <a href="https://polytech.univ-amu.fr/fr/formations/masteres-specialises/ingenierie-du-sport-ihme" target="_blank">En savoir plus</a>
+            Découvrez le calendrier de la compétition élite 1 féminine pour la saison 2025-2026 !<br>
+            <a href="https://competitions.ffr.fr/competitions/elite-1-feminine/calendrier.html" target="_blank">En savoir plus</a>
         </div>
         <p>Accès rapide :</p>
         <ul>
