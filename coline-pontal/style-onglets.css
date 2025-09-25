@@ -1,0 +1,86 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 650px;
+    margin: 3em auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2em;
+    text-align: center;
+}
+h1 {
+    color: #2563eb;
+    margin-bottom: 1em;
+}
+.tabs {
+    margin-bottom: 2em;
+}
+.tabs a {
+    display: inline-block;
+    padding: 0.7em 2em;
+    margin: 0 0.2em;
+    border-radius: 8px 8px 0 0;
+    background: #e0e7ff;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background 0.2s;
+}
+.tabs a.active {
+    background: #2563eb;
+    color: #fff;
+}
+.tabs a:hover {
+    background: #4338ca;
+    color: #fff;
+}
+.content {
+    background: #f8fafc;
+    border-radius: 0 0 16px 16px;
+    padding: 2em;
+    min-height: 300px;
+}
+.list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2em;
+}
+.list li {
+    margin: 0.7em 0;
+    background: #e0e7ff;
+    border-radius: 8px;
+    padding: 0.7em 1em;
+    color: #334155;
+    font-size: 1.1em;
+}
+form {
+    margin-top: 1em;
+}
+input, select, button {
+    font-size: 1em;
+    padding: 0.5em;
+    margin: 0.3em;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+}
+button {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover {
+    background: #1e40af;
+}
+.success {
+    color: #22c55e;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
