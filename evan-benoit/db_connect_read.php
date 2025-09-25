@@ -8,7 +8,7 @@ $user = 'root'; // nom d'utilisateur MySQL$user = 'root'; // nom d'utilisateur M
 
 $password = ''; // mot de passe MySQL$password = ''; // mot de passe MySQL
 
-$dbname = 'nom_de_votre_base'; // nom de la base de données$dbname = 'nom_de_votre_base'; // nom de la base de données
+$dbname = 'evan_benoit'; // nom de la base de données$dbname = 'nom_de_votre_base'; // nom de la base de données
 
 
 
