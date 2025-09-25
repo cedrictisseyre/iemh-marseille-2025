@@ -1,5 +1,5 @@
 <?php
-$host = "localhost";
+$host = "195.15.235.20";
 $user = "root"; // Ton utilisateur MySQL
 $pass = "INNnsk40374";     // Ton mot de passe MySQL
 $dbname = "briac_deschaux"; // Le nom de ta base
