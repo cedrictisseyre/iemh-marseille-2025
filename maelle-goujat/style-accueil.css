@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+    background: linear-gradient(135deg, #f8fafc 0%, #1a237e 100%);
     margin: 0;
     padding: 0;
 }
@@ -13,13 +13,13 @@ body {
     padding: 2em;
 }
 h1 {
-    color: #2563eb;
+    color: #1a237e;
     margin-bottom: 1em;
     text-align: center;
 }
 .pub {
-    background: #eaf7ff;
-    border-left: 5px solid #3498db;
+    background: #e3e7f7;
+    border-left: 5px solid #1a237e;
     padding: 15px;
     margin: 20px 0;
     font-size: 1.1em;
@@ -32,7 +32,7 @@ ul {
     justify-content: center;
 }
 ul li a {
-    background: #2563eb;
+    background: #1a237e;
     color: #fff;
     border-radius: 8px;
     padding: 0.6em 1.2em;
@@ -41,7 +41,7 @@ ul li a {
     transition: background 0.2s;
 }
 ul li a:hover {
-    background: #1e40af;
+    background: #0d1335;
 }
 table {
     border-collapse: collapse;
@@ -58,11 +58,11 @@ th, td {
     text-align: left;
 }
 th {
-    background: #e0e7ff;
-    color: #2563eb;
+    background: #e3e7f7;
+    color: #1a237e;
 }
 h2 {
-    color: #2563eb;
+    color: #1a237e;
     margin-top: 2em;
 }
 .error {

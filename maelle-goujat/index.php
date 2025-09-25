@@ -42,6 +42,7 @@ try {
         <ul>
             <li><a href="joueurs/ajouter_joueur.php">Ajouter un joueur</a></li>
             <li><a href="joueurs/lire_joueurs.php">Liste des joueurs (JSON)</a></li>
+            <li><a href="equipes/ajouter_equipe.php">Ajouter une équipe</a></li>
         </ul>
         <h2>Liste des joueurs</h2>
         <?php if (!empty($erreur)) : ?>
