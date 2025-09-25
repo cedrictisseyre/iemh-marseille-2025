@@ -8,7 +8,8 @@ function nav($active) {
     $tabs = [
         'clubs' => 'Clubs',
         'championnats' => 'Tournois',
-        'karateka' => 'Karateka'
+        'karateka' => 'Karateka',
+        'inscription' => 'Inscription'
     ];
     echo '<nav class="tabs">';
     foreach ($tabs as $key => $label) {
@@ -94,33 +95,92 @@ function nav($active) {
             ]);
             echo '<p class="success">Karateka ajouté !</p>';
         }
-        // Liste karateka
-        $stmt = $pdo->query("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club");
-        echo '<h2>Liste des karateka</h2><ul class="list">';
-        while ($k = $stmt->fetch()) {
-            echo "<li><strong>{$k['prenom']} {$k['nom']}</strong> ({$k['grade']}) - Club : {$k['nom_club']}</li>";
+        // Historique si karateka sélectionné
+        if (isset($_GET['karateka_id'])) {
+            $kid = intval($_GET['karateka_id']);
+            $stmt = $pdo->prepare("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club WHERE k.id_karateka = ?");
+            $stmt->execute([$kid]);
+            $k = $stmt->fetch();
+            if ($k) {
+                echo "<h2>{$k['prenom']} {$k['nom']}</h2>";
+                echo "<p><strong>Grade :</strong> {$k['grade']}<br><strong>Club :</strong> {$k['nom_club']}</p>";
+                // Historique des participations
+                $stmt2 = $pdo->prepare("SELECT p.*, ch.nom_championnat, ch.lieu, ch.date_championnat FROM participation p JOIN championnat ch ON p.id_championnat = ch.id_championnat WHERE p.id_karateka = ?");
+                $stmt2->execute([$kid]);
+                echo '<h3>Participations</h3><ul class="list">';
+                while ($part = $stmt2->fetch()) {
+                    echo "<li><strong>{$part['nom_championnat']}</strong> ({$part['lieu']}, {$part['date_championnat']})<br>Catégorie : {$part['categorie']}<br>Résultat : {$part['resultat']}</li>";
+                }
+                echo '</ul>';
+                echo '<p><a href="gestion-karate.php?page=karateka">Retour à la liste</a></p>';
+            } else {
+                echo '<p>Karateka introuvable.</p>';
+            }
+        } else {
+            // Liste karateka
+            $stmt = $pdo->query("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club");
+            echo '<h2>Liste des karateka</h2><ul class="list">';
+            while ($k = $stmt->fetch()) {
+                echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>{$k['prenom']} {$k['nom']}</strong></a> ({$k['grade']}) - Club : {$k['nom_club']}</li>";
+            }
+            echo '</ul>';
+            // Liste clubs pour le formulaire
+            $clubs = $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll();
+            ?>
+            <h3>Ajouter un karateka</h3>
+            <form method="post">
+                <input type="hidden" name="add_karateka" value="1">
+                <input type="text" name="nom" placeholder="Nom" required>
+                <input type="text" name="prenom" placeholder="Prénom" required>
+                <input type="date" name="date_naissance" required>
+                <select name="sexe" required>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+                <input type="text" name="grade" placeholder="Grade" required>
+                <select name="id_club" required>
+                    <?php foreach ($clubs as $club): ?>
+                        <option value="<?= $club['id_club'] ?>"><?= htmlspecialchars($club['nom_club']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit">Ajouter</button>
+            </form>
+            <?php
         }
-        echo '</ul>';
-        // Liste clubs pour le formulaire
-        $clubs = $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll();
+    }
+    elseif ($page === 'inscription') {
+        // Ajout d'une participation
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_participation'])) {
+            $stmt = $pdo->prepare("INSERT INTO participation (id_karateka, id_championnat, categorie, resultat) VALUES (?, ?, ?, ?)");
+            $stmt->execute([
+                $_POST['id_karateka'], $_POST['id_championnat'], $_POST['categorie'], $_POST['resultat']
+            ]);
+            echo '<p class="success">Inscription enregistrée !</p>';
+        }
+        // Récupérer les listes déroulantes
+        $karatekas = $pdo->query("SELECT id_karateka, nom, prenom FROM karateka")->fetchAll();
+        $championnats = $pdo->query("SELECT id_championnat, nom_championnat FROM championnat")->fetchAll();
         ?>
-        <h3>Ajouter un karateka</h3>
+        <h2>Inscrire un karateka à une compétition</h2>
         <form method="post">
-            <input type="hidden" name="add_karateka" value="1">
-            <input type="text" name="nom" placeholder="Nom" required>
-            <input type="text" name="prenom" placeholder="Prénom" required>
-            <input type="date" name="date_naissance" required>
-            <select name="sexe" required>
-                <option value="M">Masculin</option>
-                <option value="F">Féminin</option>
-            </select>
-            <input type="text" name="grade" placeholder="Grade" required>
-            <select name="id_club" required>
-                <?php foreach ($clubs as $club): ?>
-                    <option value="<?= $club['id_club'] ?>"><?= htmlspecialchars($club['nom_club']) ?></option>
+            <input type="hidden" name="add_participation" value="1">
+            <label>Karateka :</label>
+            <select name="id_karateka" required>
+                <?php foreach ($karatekas as $k): ?>
+                    <option value="<?= $k['id_karateka'] ?>"><?= htmlspecialchars($k['prenom'].' '.$k['nom']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <button type="submit">Ajouter</button>
+            <label>Championnat :</label>
+            <select name="id_championnat" required>
+                <?php foreach ($championnats as $ch): ?>
+                    <option value="<?= $ch['id_championnat'] ?>"><?= htmlspecialchars($ch['nom_championnat']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <label>Catégorie :</label>
+            <input type="text" name="categorie" placeholder="Catégorie" required>
+            <label>Résultat :</label>
+            <input type="text" name="resultat" placeholder="Résultat" required>
+            <button type="submit">Inscrire</button>
         </form>
         <?php
     }
