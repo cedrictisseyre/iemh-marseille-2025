@@ -6,23 +6,18 @@ body {
 }
 
 header {
-    background: #013369; /* Bleu NFL */
+    background: #013369;
     color: white;
     padding: 10px 20px;
-}
-
-.logo-title {
-    display: flex;
-    align-items: center;
+    text-align: center;
 }
 
 .logo {
     height: 50px;
-    margin-right: 15px;
 }
 
 h1 {
-    margin: 0;
+    margin: 5px 0 0;
 }
 
 .menu {
@@ -38,7 +33,7 @@ h1 {
 }
 
 .menu a.active, .menu a:hover {
-    background: #d50a0a; /* Rouge NFL */
+    background: #d50a0a;
 }
 
 main {
@@ -46,7 +41,6 @@ main {
 }
 
 h2 {
-    margin-top: 0;
     color: #013369;
 }
 
@@ -54,6 +48,7 @@ h2 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
+    margin-top: 20px;
 }
 
 .card {
@@ -66,6 +61,42 @@ h2 {
 .card h3 {
     margin-top: 0;
     color: #d50a0a;
+}
+
+form.formulaire {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+form.formulaire input, form.formulaire select, form.formulaire button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form.formulaire button {
+    background: #013369;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+form.formulaire button:hover {
+    background: #d50a0a;
+}
+
+.success {
+    background: #d4edda;
+    color: #155724;
+    padding: 8px;
+    border-radius: 5px;
+    margin: 10px 0;
 }
 
 footer {
