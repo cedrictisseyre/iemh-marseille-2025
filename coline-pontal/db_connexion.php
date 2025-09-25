@@ -1,7 +1,7 @@
 <?php
 // Connexion à la base de données MySQL
 
-$host = 'localhost';
+$host = '195.15.235.20';
 $user = 'root';
 $password = 'INNnsk40374';
 $dbname = 'coline_pontal'; // Ajoute le nom de la base
