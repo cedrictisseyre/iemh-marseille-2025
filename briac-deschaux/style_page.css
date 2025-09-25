@@ -1,108 +1,22 @@
-body {
-    font-family: Arial, sans-serif;
-    background: #f8f9fa;
-    margin: 0;
-    color: #222;
-}
-
 header {
     background: #013369;
     color: white;
     padding: 10px 20px;
-    text-align: center;
+    text-align: center; /* Centre le contenu */
+}
+
+.logo-title {
+    display: flex;
+    flex-direction: column; /* Met logo puis titre en colonne */
+    align-items: center;
 }
 
 .logo {
-    height: 50px;
+    height: 30px; /* Plus petit que le texte */
+    margin-bottom: 5px; /* Petit espace entre logo et titre */
 }
 
 h1 {
-    margin: 5px 0 0;
-}
-
-.menu {
-    margin-top: 10px;
-}
-
-.menu a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-.menu a.active, .menu a:hover {
-    background: #d50a0a;
-}
-
-main {
-    padding: 20px;
-}
-
-h2 {
-    color: #013369;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.card {
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.card h3 {
-    margin-top: 0;
-    color: #d50a0a;
-}
-
-form.formulaire {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-form.formulaire input, form.formulaire select, form.formulaire button {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-form.formulaire button {
-    background: #013369;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-form.formulaire button:hover {
-    background: #d50a0a;
-}
-
-.success {
-    background: #d4edda;
-    color: #155724;
-    padding: 8px;
-    border-radius: 5px;
-    margin: 10px 0;
-}
-
-footer {
-    background: #013369;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    margin-top: 20px;
+    margin: 0;
+    font-size: 28px; /* Plus grand que le logo */
 }
