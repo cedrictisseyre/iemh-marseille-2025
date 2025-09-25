@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des courses</title>
+  <script src="../assets/script.js"></script>
+</head>
+<body onload="chargercourseses()">
+  <h1>Liste des courses</h1>
+  <div id="courseses-list"></div>
+  <pre id="debug-courseses" style="background:#eee;padding:10px;"></pre>
+  <script>
+    function affichercourseseses(courses) {
+      const div = document.getElementById('courseses-list');
+      div.innerHTML = '';
+      courses.forEach(c => {
+        div.innerHTML += `<p>courses #${c.id} - nom : ${c.nom}</p>`;
+      });
+    }
+    // Surcharge la fonction JS pour afficher les courses
+    window.chargercourseses = function() {
+      fetch('../services/afficher_club.php')
+        .then(response => response.text())
+        .then(text => {
+          document.getElementById('debug-courseses').textContent = text;
+          try {
+            const data = JSON.parse(text);
+            affichercourses(data);
+          } catch (e) {
+            alert('Erreur JSON, voir debug ci-dessus');
+          }
+        });
+    }
+  </script>
+</body>
+</html>

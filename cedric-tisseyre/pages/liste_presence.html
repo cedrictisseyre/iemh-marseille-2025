@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des présences</title>
+  <script>
+    async function chargerPresence() {
+      const r = await fetch('../services/lire_presence.php');
+      const data = r.ok ? await r.json() : [];
+      const div = document.getElementById('presence-list');
+      div.innerHTML = '';
+      data.forEach(p => {
+        div.innerHTML += `<p>${p.nom} présent au cours du ${p.date}</p>`;
+      });
+    }
+    window.onload = chargerPresence;
+  </script>
+</head>
+<body>
+  <h1>Liste des présences</h1>
+  <div id="presence-list"></div>
+</body>
+</html>

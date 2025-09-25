@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des cours</title>
+  <script src="../assets/script.js"></script>
+</head>
+<body onload="chargerCours()">
+  <h1>Liste des cours</h1>
+  <div id="cours-list"></div>
+  <pre id="debug-cours" style="background:#eee;padding:10px;"></pre>
+  <script>
+    function afficherCours(cours) {
+      const div = document.getElementById('cours-list');
+      div.innerHTML = '';
+      cours.forEach(c => {
+        div.innerHTML += `<p>Cours #${c.id} - Date : ${c.date}</p>`;
+      });
+    }
+    // Surcharge la fonction JS pour afficher les cours
+    window.chargerCours = function() {
+      fetch('../services/lire_cours.php')
+        .then(response => response.text())
+        .then(text => {
+          document.getElementById('debug-cours').textContent = text;
+          try {
+            const data = JSON.parse(text);
+            afficherCours(data);
+          } catch (e) {
+            alert('Erreur JSON, voir debug ci-dessus');
+          }
+        });
+    }
+  </script>
+</body>
+</html>

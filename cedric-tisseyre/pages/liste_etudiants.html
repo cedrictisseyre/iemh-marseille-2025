@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Liste des étudiants</title>
+  <script src="../assets/script.js"></script>
+</head>
+<body onload="chargerEtudiants()">
+  <h1>Liste des étudiants</h1>
+  <div id="etudiants-list"></div>
+  <pre id="debug-etudiants" style="background:#eee;padding:10px;"></pre>
+  <script>
+    function afficherEtudiants(etudiants) {
+      const div = document.getElementById('etudiants-list');
+      div.innerHTML = '';
+      etudiants.forEach(e => {
+        div.innerHTML += `<p>Étudiant #${e.id} - Nom : ${e.nom}</p>`;
+      });
+    }
+    window.chargerEtudiants = function() {
+      fetch('../services/lire_etudiants.php')
+        .then(response => response.text())
+        .then(text => {
+          document.getElementById('debug-etudiants').textContent = text;
+          try {
+            const data = JSON.parse(text);
+            afficherEtudiants(data);
+          } catch (e) {
+            alert('Erreur JSON, voir debug ci-dessus');
+          }
+        });
+    }
+  </script>
+</body>
+</html>
