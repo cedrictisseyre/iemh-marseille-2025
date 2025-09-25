@@ -25,8 +25,6 @@ $sportifs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		<tr>
 			<th>ID</th>
 			<th>Nom</th>
-			<th>Prénom</th>
-			<!-- Ajoute d'autres colonnes si besoin -->
 		</tr>
 		<?php foreach ($sportifs as $sportif): ?>
 		<tr>
