@@ -1,9 +1,17 @@
 <?php
-$conn = @new mysqli('127.0.0.1', 'root', 'INNnsk40374', 'maelle_goujat');
+// Connexion à la base de données MySQL
 
-if ($conn->connect_error) {
-    die("Erreur : " . $conn->connect_error);
-} else {
-    echo "Connexion MySQL OK !";
+$host = '195.15.235.20';
+$user = 'root';
+$password = 'INNnsk40374';
+$dbname = 'maelle_goujat'; // Ajoute le nom de la base
+
+try {
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die('Erreur de connexion à la base de données : ' . $e->getMessage());
 }
+
+// ... Utilisez $conn pour vos requêtes SQL ...
 ?>
