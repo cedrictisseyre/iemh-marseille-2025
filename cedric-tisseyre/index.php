@@ -19,6 +19,13 @@
             Découvrez nos solutions innovantes pour l'éducation et la réussite !<br>
             <a href="https://iemh-marseille.fr" target="_blank">En savoir plus</a>
         </div>
+        <p>Accès rapide :</p>
+        <ul>
+            <li><a href="pages/liste_cours.html">Liste des cours</a></li>
+            <li><a href="pages/ajout_cours.html">Ajouter un cours</a></li>
+            <li><a href="pages/liste_etudiants.html">Liste des étudiants</a></li>
+            <li><a href="pages/ajout_etudiant.html">Ajouter un étudiant</a></li>
+        </ul>
         <p>Retrouvez aussi les résultats de <a href="multiplication.php">multiplication</a>.</p>
     </div>
 </body>
