@@ -27,80 +27,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>Page d'accueil - Maëlle GOUJAT</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 900px;
-            margin: 3em auto;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-            padding: 2em;
-        }
-        h1 {
-            color: #2563eb;
-            margin-bottom: 1em;
-            text-align: center;
-        }
-        .pub {
-            background: #eaf7ff;
-            border-left: 5px solid #3498db;
-            padding: 15px;
-            margin: 20px 0;
-            font-size: 1.1em;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            gap: 1em;
-            justify-content: center;
-        }
-        ul li a {
-            background: #2563eb;
-            color: #fff;
-            border-radius: 8px;
-            padding: 0.6em 1.2em;
-            text-decoration: none;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-        ul li a:hover {
-            background: #1e40af;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-            margin-bottom: 2em;
-            background: #f8fafc;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            border: 1px solid #cbd5e1;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background: #e0e7ff;
-            color: #2563eb;
-        }
-        h2 {
-            color: #2563eb;
-            margin-top: 2em;
-        }
-        .error {
-            color: #ef4444;
-            font-weight: bold;
-            margin-bottom: 1em;
-        }
-    </style>
+    <link rel="stylesheet" href="style-accueil.css">
 </head>
 <body>
     <div class="container">
@@ -109,12 +36,12 @@ try {
         <div class="pub">
             <strong>Publicité :</strong> <br>
             Découvrez nos solutions innovantes pour l'éducation et la réussite !<br>
-            <a href="https://iemh-marseille.fr" target="_blank">En savoir plus</a>
+            <a href="https://polytech.univ-amu.fr/fr/formations/masteres-specialises/ingenierie-du-sport-ihme" target="_blank">En savoir plus</a>
         </div>
         <p>Accès rapide :</p>
         <ul>
-            <li><a href="../maelle-goujat/joueurs/ajouter_joueur.php">Ajouter un joueur</a></li>
-            <li><a href="../maelle-goujat/joueurs/lire_joueurs.php">Liste des joueurs (JSON)</a></li>
+            <li><a href="joueurs/ajouter_joueur.php">Ajouter un joueur</a></li>
+            <li><a href="joueurs/lire_joueurs.php">Liste des joueurs (JSON)</a></li>
         </ul>
         <h2>Liste des joueurs</h2>
         <?php if (!empty($erreur)) : ?>
