@@ -5,7 +5,7 @@ $pass = "INNnsk40374";     // Ton mot de passe MySQL
 $dbname = "briac_deschaux"; // Le nom de ta base
 
 // Connexion
-$conn = new mysqli($host, $user, $pass, $briac_deschaux);
+$conn = new mysqli($host, $user, $pass, $dbname);
 
 // Vérifier la connexion
 if ($conn->connect_error) {
