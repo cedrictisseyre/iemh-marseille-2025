@@ -5,27 +5,27 @@ error_reporting(E_ALL);
 require_once 'connexion.php';
 
 // Récupérer les jours et horaires pour l'emploi du temps
-$jours = $pdo->query('SELECT * FROM jours ORDER BY id')->fetchAll();
-$horaires = $pdo->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
+$jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
+$horaires = $conn->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
 
 // Récupérer l'emploi du temps complet (jointure)
-$stmt = $pdo->query('SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, " ", p.nom) AS professeur, s.nom AS salle
-    FROM emploi_temps et
-    JOIN matieres m ON et.matiere_id = m.id
-    LEFT JOIN professeurs p ON et.professeur_id = p.id
-    LEFT JOIN salles s ON et.salle_id = s.id');
+$stmt = $conn->query('SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, " ", p.nom) AS professeur, s.nom AS salle
+	FROM emploi_temps et
+	JOIN matieres m ON et.matiere_id = m.id
+	LEFT JOIN professeurs p ON et.professeur_id = p.id
+	LEFT JOIN salles s ON et.salle_id = s.id');
 $emploi = [];
 foreach ($stmt as $row) {
-    $emploi[$row['jour_id']][$row['horaire_id']] = $row;
+	$emploi[$row['jour_id']][$row['horaire_id']] = $row;
 }
 
 // Récupérer les professeurs et leurs matières
-$profs = $pdo->query('SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR ", ") AS matieres
-    FROM professeurs p
-    LEFT JOIN professeurs_matieres pm ON p.id = pm.professeur_id
-    LEFT JOIN matieres m ON pm.matiere_id = m.id
-    GROUP BY p.id, p.prenom, p.nom
-    ORDER BY p.nom')->fetchAll();
+$profs = $conn->query('SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR ", ") AS matieres
+	FROM professeurs p
+	LEFT JOIN professeurs_matieres pm ON p.id = pm.professeur_id
+	LEFT JOIN matieres m ON pm.matiere_id = m.id
+	GROUP BY p.id, p.prenom, p.nom
+	ORDER BY p.nom')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
