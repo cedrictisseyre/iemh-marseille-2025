@@ -1,5 +1,5 @@
 <?php
-require_once '../connexion.php';
+require_once __DIR__ . '/../connexion.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom'] ?? '';
     $prenom = $_POST['prenom'] ?? '';

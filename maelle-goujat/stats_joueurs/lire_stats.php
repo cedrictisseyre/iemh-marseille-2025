@@ -1,5 +1,5 @@
 <?php
-require_once '../connexion.php';
+require_once __DIR__ . '/../connexion.php';
 $sql = 'SELECT * FROM stats_joueurs';
 $stmt = $conn->query($sql);
 $stats = $stmt->fetchAll(PDO::FETCH_ASSOC);

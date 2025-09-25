@@ -1,5 +1,5 @@
 <?php
-require_once '../connexion.php';
+require_once __DIR__ . '/../connexion.php';
 if (isset($_GET['id_match'])) {
     $id = $_GET['id_match'];
     $sql = 'DELETE FROM matchs WHERE id_match = ?';
