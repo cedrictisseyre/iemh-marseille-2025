@@ -2,7 +2,7 @@
 // Connexion à la base de données
 $host = '195.15.235.20';
 $user = 'root'; // à adapter selon votre config
-$pass = '';    // à adapter selon votre config
+$password = 'INNnsk40374';    // à adapter selon votre config
 $db = 'chloe_desbordes';
 
 try {
