@@ -27,7 +27,7 @@ function nav($active) {
 <body>
 <header>
     <div class="logo-title">
-        <img src="nfl-logo.png" alt="NFL Logo" class="logo">
+        <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" alt="NFL Logo" class="logo">
         <h1>NFL Manager</h1>
     </div>
     <?php nav($page); ?>
