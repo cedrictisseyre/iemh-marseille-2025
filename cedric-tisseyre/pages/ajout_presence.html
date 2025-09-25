@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter une présence</title>
+  <script>
+    async function chargerEtudiants() {
+      const r = await fetch('../services/lire_etudiants.php');
+      return r.ok ? await r.json() : [];
+    }
+    async function chargerCours() {
+      const r = await fetch('../services/lire_cours.php');
+      return r.ok ? await r.json() : [];
+    }
+    async function remplirForm() {
+      const etudiants = await chargerEtudiants();
+      const cours = await chargerCours();
+      const selectE = document.getElementById('id_etudiant');
+      const selectC = document.getElementById('id_cour');
+      etudiants.forEach(e => {
+        selectE.innerHTML += `<option value="${e.id}">${e.nom}</option>`;
+      });
+      cours.forEach(c => {
+        selectC.innerHTML += `<option value="${c.id}">${c.date}</option>`;
+      });
+    }
+    async function ajouterPresence() {
+      const id_etudiant = document.getElementById('id_etudiant').value;
+      const id_cour = document.getElementById('id_cour').value;
+      const r = await fetch('../services/ajouter_presence.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ id_etudiant, id_cour })
+      });
+      const result = await r.text();
+      if (result === 'ok') alert('Présence ajoutée !');
+      else alert('Erreur lors de l’ajout.');
+    }
+    window.onload = remplirForm;
+  </script>
+</head>
+<body>
+  <h1>Ajouter une présence</h1>
+  <form onsubmit="event.preventDefault(); ajouterPresence();">
+    <label for="id_etudiant">Étudiant :</label>
+    <select id="id_etudiant" name="id_etudiant" required></select>
+    <br><br>
+    <label for="id_cour">Cours :</label>
+    <select id="id_cour" name="id_cour" required></select>
+    <br><br>
+    <button type="submit">Ajouter la présence</button>
+  </form>
+</body>
+</html>
