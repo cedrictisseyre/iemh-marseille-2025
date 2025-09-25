@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter une statistique joueur</title>
+</head>
+<body>
+    <h1>Ajouter une statistique joueur</h1>
+    <form>
+        <label>Match :
+            <select name="id_match" required>
+                <option value="1">ID 1 - 2025-09-01</option>
+                <option value="2">ID 2 - 2025-09-10</option>
+            </select>
+        </label><br>
+        <label>Joueur :
+            <select name="id_joueur" required>
+                <option value="1">Dupont Antoine</option>
+                <option value="2">Ollivon Charles</option>
+            </select>
+        </label><br>
+        <label>Essais : <input type="number" name="essais" min="0" value="0"></label><br>
+        <label>Plaquages : <input type="number" name="plaquages" min="0" value="0"></label><br>
+        <label>Passes décisives : <input type="number" name="passes_decisives" min="0" value="0"></label><br>
+        <label>Cartons jaunes : <input type="number" name="cartons_jaunes" min="0" value="0"></label><br>
+        <button type="submit" disabled>Ajouter (démo)</button>
+    </form>
+    <a href="liste_stat_joueur.html">Retour à la liste</a>
+</body>
+</html>

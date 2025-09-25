@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un match</title>
+</head>
+<body>
+    <h1>Ajouter un match</h1>
+    <form>
+        <label>Date : <input type="date" name="date_match" required></label><br>
+        <label>Lieu : <input type="text" name="lieu"></label><br>
+        <label>Équipe domicile :
+            <select name="id_equipe_dom" required>
+                <option value="1">RC Marseille</option>
+                <option value="2">Stade Toulousain</option>
+            </select>
+        </label><br>
+        <label>Équipe extérieure :
+            <select name="id_equipe_ext" required>
+                <option value="2">Stade Toulousain</option>
+                <option value="1">RC Marseille</option>
+            </select>
+        </label><br>
+        <label>Score domicile : <input type="number" name="score_dom" min="0" value="0"></label><br>
+        <label>Score extérieur : <input type="number" name="score_ext" min="0" value="0"></label><br>
+        <button type="submit" disabled>Ajouter (démo)</button>
+    </form>
+    <a href="liste_matchs.html">Retour à la liste</a>
+</body>
+</html>

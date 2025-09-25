@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un joueur</title>
+</head>
+<body>
+    <h1>Ajouter un joueur</h1>
+    <form>
+        <label>Nom : <input type="text" name="nom" required></label><br>
+        <label>Prénom : <input type="text" name="prenom"></label><br>
+        <label>Date de naissance : <input type="date" name="date_naissance"></label><br>
+        <label>Poste : <input type="text" name="poste"></label><br>
+        <label>Équipe :
+            <select name="id_equipe">
+                <option value="1">RC Marseille</option>
+                <option value="2">Stade Toulousain</option>
+            </select>
+        </label><br>
+        <button type="submit" disabled>Ajouter (démo)</button>
+    </form>
+    <a href="liste_joueurs.html">Retour à la liste</a>
+</body>
+</html>
