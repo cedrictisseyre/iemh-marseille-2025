@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajout d'un course</title>
+  <script>
+    function ajoutercourse() {
+      const id = document.getElementById('id').value;
+      fetch('../services/ajouter_course.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ id })
+      })
+      .then(response => response.text())
+      .then(result => {
+        if (result === 'ok') alert('Ajout réussi');
+        else alert('Erreur');
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Ajouter un course</h1>
+  <form onsubmit="event.preventDefault(); ajoutercourse();">
+    <label for="id">Id :</label>
+    <input id="nom" name="nom" required>
+    <button type="submit">Ajouter</button>
+  </form>
+</body>
+</html>

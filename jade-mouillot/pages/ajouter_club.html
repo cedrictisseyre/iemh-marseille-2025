@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajout d'un club</title>
+  <script>
+    function ajouterclub() {
+      const id = document.getElementById('id').value;
+      fetch('../services/ajouter_club.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ id })
+      })
+      .then(response => response.text())
+      .then(result => {
+        if (result === 'ok') alert('Ajout réussi');
+        else alert('Erreur');
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Ajouter un club</h1>
+  <form onsubmit="event.preventDefault(); ajouterclub();">
+    <label for="id">Id :</label>
+    <input id="nom" name="nom" required>
+    <button type="submit">Ajouter</button>
+  </form>
+</body>
+</html>
