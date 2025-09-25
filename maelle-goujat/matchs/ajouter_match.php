@@ -1,5 +1,5 @@
 <?php
-require_once '../connexion.php';
+require_once __DIR__ . '/../connexion.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $date = $_POST['date_match'] ?? '';
     $lieu = $_POST['lieu'] ?? null;
