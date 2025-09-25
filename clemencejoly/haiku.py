@@ -23,4 +23,3 @@ ligne3 = [
 print(random.choice(ligne1))
 print(random.choice(ligne2))
 print(random.choice(ligne3))
-
