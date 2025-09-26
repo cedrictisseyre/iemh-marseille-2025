@@ -41,12 +41,27 @@
 	</style>
 </head>
 <body>
+<?php require_once 'evaluation_etudiant.php'; ?>
 	<div class="container">
 		<h1>IEHM. Marseille, 2025</h1>
+		<div style="background:#f8fcff;border-radius:8px;padding:18px 24px;margin-bottom:24px;box-shadow:0 1px 6px #d0e6f7;">
+			<h2 style="margin-top:0;color:#217dbb;font-size:1.15em;">Critères d'évaluation automatisés indicatifs (Ce n'est pas une note)</h2>
+			<ul style="margin:0 0 8px 0;padding-left:18px;">
+				<li>Nombre de commits (activité et régularité)</li>
+				<li>Présence d’un README ou d’une documentation</li>
+				   <li>Arborescence et fichiers (organisation des dossiers et fichiers)</li>
+				<li>Respect des bonnes pratiques (noms, indentation, commentaires)</li>
+				<li>Fonctionnalité des scripts (exécution sans erreur)</li>
+				<li>Utilisation de la base de données (requêtes, structure, interactions)</li>
+			</ul>
+			<div style="color:#e67e22;font-size:1.05em;margin-top:8px;">Avancement intermédiaire : <strong>2 TD restants</strong> (la note maximale actuelle est limitée)</div>
+		</div>
 		<p>Bienvenue ! Voici la liste des dossiers du projet :</p>
 		<ul class="menu">
 		<?php
-		function explorer($chemin, $niveau = 0) {
+
+
+	function explorer($chemin, $niveau = 0) {
 			$contenu = scandir($chemin);
 			$dossiers = [];
 			$fichiers = [];
@@ -76,9 +91,26 @@
 				echo "<li style='margin-left: {$indent}'><a href='./$url' target='_blank'><span class='icon'>$icon</span>$fichier</a></li>";
 			}
 		}
+		$maxProgress = 14; // plafond dynamique, par exemple 14/20 si 2 TD restants
 		foreach (scandir('.') as $item) {
 			if ($item === '.' || $item === '..' || $item === '.git' || !is_dir($item)) continue;
-			echo "<li><span class='folder'><span class='icon'>📁</span>$item</span>";
+			$commits = getCommitCount($item);
+			$progress = min($commits, $maxProgress);
+			$color = $progress < ($maxProgress/2) ? '#e74c3c' : ($progress < ($maxProgress*0.8) ? '#f39c12' : '#27ae60');
+			$progressBar = "<div class='progress-bar' style='width:120px;height:16px;background:#eee;border-radius:8px;display:inline-block;margin-left:12px;vertical-align:middle;'><div class='progress' style='height:100%;width:" . ($progress*100/$maxProgress) . "%;background:$color;border-radius:8px;transition:width 0.5s;'></div></div> <span style='font-size:0.95em;color:$color;'>$progress/$maxProgress</span>";
+
+			// Utilisation des autres fonctions d'évaluation
+			$readme = hasReadme($item) ? "<span style='color:#27ae60'>README présent</span>" : "<span style='color:#e74c3c'>README absent</span>";
+			   $arboFiles = getFileTreeAndFilesScore($item);
+			$bestPractices = getBestPracticesScore($item);
+			$functionality = getScriptFunctionalityScore($item);
+			$dbUsage = getDatabaseUsageScore($item);
+
+			   $indicateurs = "<div style='font-size:0.95em;color:#555;margin-top:4px;'>"
+				   . "$readme | Arborescence et fichiers : $arboFiles/10 | Pratiques : $bestPractices/10 | Fonctionnalité : $functionality/10 | BDD : $dbUsage/10"
+				   . "</div>";
+
+			echo "<li><span class='folder'><span class='icon'>📁</span>$item</span> $progressBar $indicateurs";
 			echo "<ul class='sousmenu'>";
 			explorer($item);
 			echo "</ul></li>";
