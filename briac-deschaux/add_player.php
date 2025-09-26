@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 include 'database_connexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,3 +24,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 header("Location: index.php?page=joueurs&added=1");
 exit;
+
