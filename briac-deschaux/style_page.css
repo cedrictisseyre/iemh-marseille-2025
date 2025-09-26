@@ -17,6 +17,21 @@ body {
 }
 
 /* ---- HEADER ---- */
+.header {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.header-logo {
+    width: 60px;      /* si image */
+    height: auto;
+    margin-bottom: 0.5em;
+    display: inline-block;
+    /* Pour un emoji, tu peux utiliser :
+    font-size: 2em;
+    */
+}
+
 h1 {
     text-align: center;
     color: #0a2463; /* Bleu NFL foncé */
