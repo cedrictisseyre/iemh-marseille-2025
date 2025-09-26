@@ -94,26 +94,26 @@
 		$maxProgress = 14; // plafond dynamique, par exemple 14/20 si 2 TD restants
 		foreach (scandir('.') as $item) {
 			if ($item === '.' || $item === '..' || $item === '.git' || !is_dir($item)) continue;
-			$commits = getCommitCount($item);
-			$progress = min($commits, $maxProgress);
-			$color = $progress < ($maxProgress/2) ? '#e74c3c' : ($progress < ($maxProgress*0.8) ? '#f39c12' : '#27ae60');
-			$progressBar = "<div class='progress-bar' style='width:120px;height:16px;background:#eee;border-radius:8px;display:inline-block;margin-left:12px;vertical-align:middle;'><div class='progress' style='height:100%;width:" . ($progress*100/$maxProgress) . "%;background:$color;border-radius:8px;transition:width 0.5s;'></div></div> <span style='font-size:0.95em;color:$color;'>$progress/$maxProgress</span>";
+			   $globalScore = getGlobalScore($item); // sur 100
+			   $color = $globalScore < 50 ? '#e74c3c' : ($globalScore < 80 ? '#f39c12' : '#27ae60');
+			   $progressBar = "<div class='progress-bar' style='width:120px;height:16px;background:#eee;border-radius:8px;display:inline-block;margin-left:12px;vertical-align:middle;'><div class='progress' style='height:100%;width:" . ($globalScore) . "%;;background:$color;border-radius:8px;transition:width 0.5s;'></div></div> <span style='font-size:0.95em;color:$color;'>$globalScore/100</span>";
 
-			// Utilisation des autres fonctions d'évaluation
-			$readme = hasReadme($item) ? "<span style='color:#27ae60'>README présent</span>" : "<span style='color:#e74c3c'>README absent</span>";
+			   // Utilisation des autres fonctions d'évaluation
+			   $commits = getCommitCount($item);
+			   $readme = hasReadme($item) ? "<span style='color:#27ae60'>README présent</span>" : "<span style='color:#e74c3c'>README absent</span>";
 			   $arboFiles = getFileTreeAndFilesScore($item);
-			$bestPractices = getBestPracticesScore($item);
-			$functionality = getScriptFunctionalityScore($item);
-			$dbUsage = getDatabaseUsageScore($item);
+			   $bestPractices = getBestPracticesScore($item);
+			   $functionality = getScriptFunctionalityScore($item);
+			   $dbUsage = getDatabaseUsageScore($item);
 
 			   $indicateurs = "<div style='font-size:0.95em;color:#555;margin-top:4px;'>"
-				   . "$readme | Arborescence et fichiers : $arboFiles/10 | Pratiques : $bestPractices/10 | Fonctionnalité : $functionality/10 | BDD : $dbUsage/10"
+				   . "Commits : $commits | $readme | Arborescence et fichiers : $arboFiles/10 | Pratiques : $bestPractices/10 | Fonctionnalité : $functionality/10 | BDD : $dbUsage/10"
 				   . "</div>";
 
-			echo "<li><span class='folder'><span class='icon'>📁</span>$item</span> $progressBar $indicateurs";
-			echo "<ul class='sousmenu'>";
-			explorer($item);
-			echo "</ul></li>";
+			   echo "<li><span class='folder'><span class='icon'>📁</span>$item</span> $progressBar $indicateurs";
+			   echo "<ul class='sousmenu'>";
+			   explorer($item);
+			   echo "</ul></li>";
 		}
 		?>
 		</ul>

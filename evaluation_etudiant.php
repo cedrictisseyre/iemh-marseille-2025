@@ -1,5 +1,46 @@
 <?php
 /**
+ * Calcule un score global sur 100 à partir de tous les critères d'évaluation
+ * @param string $dossier Chemin du dossier étudiant
+ * @return int Score global sur 100
+ */
+function getGlobalScore($dossier) {
+    // Poids des critères (modifiable)
+    $poidsCommits = 20;
+    $poidsReadme = 10;
+    $poidsArboFiles = 20;
+    $poidsBestPractices = 15;
+    $poidsFunctionality = 15;
+    $poidsDbUsage = 20;
+
+    // Commits (max 20 points)
+    $maxCommits = 14; // plafond dynamique, à synchroniser avec index.php
+    $commits = getCommitCount($dossier);
+    $scoreCommits = min($commits, $maxCommits) * $poidsCommits / $maxCommits;
+
+    // README (10 points)
+    $scoreReadme = hasReadme($dossier) ? $poidsReadme : 0;
+
+    // Arborescence et fichiers (20 points)
+    if (function_exists('getFileTreeAndFilesScore')) {
+        $scoreArboFiles = getFileTreeAndFilesScore($dossier) * $poidsArboFiles / 10;
+    } else {
+        $scoreArboFiles = 0;
+    }
+
+    // Bonnes pratiques (15 points)
+    $scoreBestPractices = getBestPracticesScore($dossier) * $poidsBestPractices / 10;
+
+    // Fonctionnalité (15 points)
+    $scoreFunctionality = getScriptFunctionalityScore($dossier) * $poidsFunctionality / 10;
+
+    // Base de données (20 points)
+    $scoreDbUsage = getDatabaseUsageScore($dossier) * $poidsDbUsage / 10;
+
+    $total = $scoreCommits + $scoreReadme + $scoreArboFiles + $scoreBestPractices + $scoreFunctionality + $scoreDbUsage;
+    return round($total);
+}
+/**
  * Fonctions d'évaluation pour un dossier étudiant
  * Chaque fonction retourne un score ou un indicateur pour un critère précis
  * Utiliser ces fonctions pour automatiser l'auto-évaluation des productions
