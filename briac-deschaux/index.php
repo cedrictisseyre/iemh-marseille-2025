@@ -32,35 +32,63 @@ function nav($active) {
     <main>
     <?php
     if ($page === 'joueurs') {
-        // --- Formulaire d'ajout joueur (envoie vers add_player.php) ---
-        echo '<div class="card"><h2>Ajouter un joueur</h2>
-        <form method="post" action="add_player.php">
-            <input type="text" name="prenom" placeholder="Prénom" required>
-            <input type="text" name="nom" placeholder="Nom" required>
-            <select name="poste" required>
-    <option value="QB">Quarterback (QB)</option>
-    <option value="RB">Running Back (RB)</option>
-    <option value="WR">Wide Receiver (WR)</option>
-    <option value="TE">Tight End (TE)</option>
-    <option value="LB">Linebacker (LB)</option>
-    <option value="CB">Cornerback (CB)</option>
-    <option value="S">Safety (S)</option>
-    <option value="K">Kicker (K)</option>
-    <option value="P">Punter (P)</option>
-</select>
-            <input type="number" name="age" placeholder="Âge" required>
-            <input type="number" name="taille_cm" placeholder="Taille (cm)" required>
-            <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
-            <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
-            <select name="id_team" required>
-                <option value="">Sélectionner une équipe</option>';
-                $teams = $pdo->query("SELECT id_team, nom_team FROM team ORDER BY nom_team")->fetchAll();
-                foreach ($teams as $t) {
-                    echo "<option value='{$t['id_team']}'>{$t['nom_team']}</option>";
-                }
-        echo '</select>
-            <button type="submit">Ajouter le joueur</button>
-        </form></div>';
+     // --- Formulaire d'ajout joueur (envoie vers add_player.php) ---
+echo '<div class="card"><h2>Ajouter un joueur</h2>
+<form method="post" action="add_player.php">
+    <input type="text" name="prenom" placeholder="Prénom" required>
+    <input type="text" name="nom" placeholder="Nom" required>
+
+    <label for="poste">Poste</label>
+    <select name="poste" required>
+        <optgroup label="Offense">
+            <option value="QB">Quarterback (QB)</option>
+            <option value="RB">Running Back (RB)</option>
+            <option value="FB">Fullback (FB)</option>
+            <option value="WR">Wide Receiver (WR)</option>
+            <option value="TE">Tight End (TE)</option>
+            <option value="LT">Left Tackle (LT)</option>
+            <option value="LG">Left Guard (LG)</option>
+            <option value="C">Center (C)</option>
+            <option value="RG">Right Guard (RG)</option>
+            <option value="RT">Right Tackle (RT)</option>
+        </optgroup>
+        <optgroup label="Defense">
+            <option value="DE">Defensive End (DE)</option>
+            <option value="DT">Defensive Tackle (DT)</option>
+            <option value="NT">Nose Tackle (NT)</option>
+            <option value="OLB">Outside Linebacker (OLB)</option>
+            <option value="ILB">Inside Linebacker (ILB)</option>
+            <option value="MLB">Middle Linebacker (MLB)</option>
+            <option value="CB">Cornerback (CB)</option>
+            <option value="FS">Free Safety (FS)</option>
+            <option value="SS">Strong Safety (SS)</option>
+        </optgroup>
+        <optgroup label="Special Teams">
+            <option value="K">Kicker (K)</option>
+            <option value="P">Punter (P)</option>
+            <option value="LS">Long Snapper (LS)</option>
+            <option value="KR">Kick Returner (KR)</option>
+            <option value="PR">Punt Returner (PR)</option>
+            <option value="H">Holder (H)</option>
+            <option value="G">Gunner (G)</option>
+        </optgroup>
+    </select>
+
+    <input type="number" name="age" placeholder="Âge" required>
+    <input type="number" name="taille_cm" placeholder="Taille (cm)" required>
+    <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
+    <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
+
+    <select name="id_team" required>
+        <option value="">Sélectionner une équipe</option>';
+        $teams = $pdo->query("SELECT id_team, nom_team FROM team ORDER BY nom_team")->fetchAll();
+        foreach ($teams as $t) {
+            echo "<option value='{$t['id_team']}'>{$t['nom_team']}</option>";
+        }
+echo '</select>
+    <button type="submit">Ajouter le joueur</button>
+</form></div>';
+
 
         // --- Affichage de la liste des joueurs ---
         echo '<h2>Liste des joueurs</h2><div class="grid">';
