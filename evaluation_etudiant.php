@@ -125,13 +125,23 @@ function getBestPracticesScore($dossier) {
  * @return int Score sur 10
  */
 function getScriptFunctionalityScore($dossier) {
-    $score = 10;
     $phpFiles = [];
+    $jsFiles = [];
+    $totalPhpFunctions = 0;
+    $totalPhpLines = 0;
+    $totalJsFunctions = 0;
+    $totalJsLines = 0;
     foreach (scandir($dossier) as $item) {
         if ($item === '.' || $item === '..') continue;
         $fullpath = $dossier . '/' . $item;
-        if (is_file($fullpath) && strtolower(pathinfo($fullpath, PATHINFO_EXTENSION)) === 'php') {
-            $phpFiles[] = $fullpath;
+        if (is_file($fullpath)) {
+            $ext = strtolower(pathinfo($fullpath, PATHINFO_EXTENSION));
+            if ($ext === 'php') {
+                $phpFiles[] = $fullpath;
+            }
+            if ($ext === 'js') {
+                $jsFiles[] = $fullpath;
+            }
         }
     }
     $errors = 0;
@@ -140,8 +150,37 @@ function getScriptFunctionalityScore($dossier) {
         if (strpos($output, 'No syntax errors detected') === false) {
             $errors++;
         }
+        // Comptage des fonctions PHP dans le fichier
+        $content = file_get_contents($file);
+        if ($content !== false) {
+            preg_match_all('/function\s+[a-zA-Z0-9_]+\s*\(/', $content, $matches);
+            $totalPhpFunctions += count($matches[0]);
+            // Comptage du nombre de lignes de code PHP
+            $totalPhpLines += substr_count($content, "\n");
+        }
     }
-    // Score sur 10, pénalité par fichier avec erreur
+    // JS : fonctions et lignes
+    foreach ($jsFiles as $file) {
+        $content = file_get_contents($file);
+        if ($content !== false) {
+            // Fonctions JS classiques : function nom(...)
+            preg_match_all('/function\s+[a-zA-Z0-9_]+\s*\(/', $content, $matches1);
+            // Fonctions fléchées : nom = (...) =>
+            preg_match_all('/[a-zA-Z0-9_]+\s*=\s*\([^)]*\)\s*=>/', $content, $matches2);
+            $totalJsFunctions += count($matches1[0]) + count($matches2[0]);
+            // Lignes JS
+            $totalJsLines += substr_count($content, "\n");
+        }
+    }
+    // Score proportionnel au nombre de fonctionnalités, max 5 (PHP+JS)
+    $maxFonctions = 10; // seuil pour avoir le max
+    $scoreFonctions = ($maxFonctions > 0) ? min($totalPhpFunctions + $totalJsFunctions, $maxFonctions) * 5 / $maxFonctions : 0;
+    // Score proportionnel à la longueur du code, max 5 (PHP+JS)
+    $maxLignes = 200; // seuil pour avoir le max
+    $scoreLignes = ($maxLignes > 0) ? min($totalPhpLines + $totalJsLines, $maxLignes) * 5 / $maxLignes : 0;
+    // Score total sur 10
+    $score = $scoreFonctions + $scoreLignes;
+    // Pénalité par fichier PHP avec erreur
     $score -= min($errors, 10);
     return max($score, 0);
 }
