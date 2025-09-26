@@ -38,8 +38,9 @@ echo '<div class="card"><h2>Ajouter un joueur</h2>
     <input type="text" name="prenom" placeholder="Prénom" required>
     <input type="text" name="nom" placeholder="Nom" required>
 
-    <label for="poste">Poste</label>
+    <label for="poste">
     <select name="poste" required>
+        <option value="">Sélectionner un poste</option>
         <optgroup label="Offense">
             <option value="QB">Quarterback (QB)</option>
             <option value="RB">Running Back (RB)</option>
@@ -79,7 +80,7 @@ echo '<div class="card"><h2>Ajouter un joueur</h2>
     <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
     <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
 
-    <label for="id_team">Équipe</label>
+    <label for="id_team">
     <select name="id_team" required>
         <option value="">Sélectionner une équipe</option>
 
