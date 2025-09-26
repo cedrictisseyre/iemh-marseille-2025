@@ -12,7 +12,6 @@ Projet universitaire visant à créer une base de données MySQL connectée à u
 - PHP 8
 - MySQL / phpMyAdmin
 - HTML5 / CSS3
-- Hébergé localement via XAMPP (ou autre serveur Apache/PHP)
 
 ## 📖 Utilisation
 - **Onglet Joueurs** : ajouter ou consulter les joueurs.
