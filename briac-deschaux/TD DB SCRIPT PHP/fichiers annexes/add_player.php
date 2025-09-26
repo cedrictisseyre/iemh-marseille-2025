@@ -22,6 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-header("Location: index.php?page=joueurs&added=1");
+header("Location: NFL_Stats_Analyzer.php?page=joueurs&added=1");
 exit;
 
