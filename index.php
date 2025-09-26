@@ -11,11 +11,28 @@
 		h1 { color: #2c3e50; }
 		ul.menu, ul.sousmenu { list-style: none; padding-left: 0; margin: 0; }
 		ul.menu > li, ul.sousmenu > li { position: relative; margin: 8px 0; background: #eaf7ff; border-radius: 6px; box-shadow: 0 1px 4px #d0e6f7; transition: background 0.2s; }
+		ul.menu > li { margin-left: 48px; } /* Indentation plus large pour le premier niveau */
 		ul.menu > li:hover, ul.sousmenu > li:hover { background: #d0e6f7; }
 		ul.menu > li > .folder, ul.sousmenu > li > .folder { display: flex; align-items: center; padding: 12px 18px; cursor: pointer; font-size: 1.08em; font-weight: bold; }
 		ul.menu > li > .folder .icon, ul.sousmenu > li > .folder .icon { margin-right: 8px; color: #217dbb; }
-		ul.sousmenu { display: none; position: static; min-width: 220px; background: #f8fcff; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px #ccc; z-index: 10; padding: 8px 0 8px 24px; }
-		ul.menu > li:hover > ul.sousmenu, ul.sousmenu > li:hover > ul.sousmenu { display: block; }
+		ul.sousmenu {
+			display: none;
+			position: static;
+			min-width: 220px;
+			background: #f8fcff;
+			border-radius: 0 0 8px 8px;
+			box-shadow: 0 2px 8px #ccc;
+			z-index: 10;
+			padding: 8px 0 8px 24px;
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.6s cubic-bezier(.4,0,.2,1), padding 0.6s cubic-bezier(.4,0,.2,1);
+		}
+		li.open > ul.sousmenu {
+			display: block;
+			max-height: 1000px;
+			padding: 8px 0 8px 24px;
+		}
 		ul.sousmenu li { margin: 0; padding: 0; }
 		ul.sousmenu a { display: flex; align-items: center; padding: 8px 22px; color: #3498db; text-decoration: none; font-size: 1em; transition: background 0.2s, color 0.2s; border-radius: 4px; }
 		ul.sousmenu a .icon { margin-right: 8px; color: #888; }
@@ -42,8 +59,11 @@
 					$fichiers[] = $item;
 				}
 			}
+			// Indentation responsive en fonction de la largeur de l'écran
+			$baseIndent = 2; // pourcentage réduit
+			$indent = ($baseIndent * ($niveau + 1)) . 'vw';
 			foreach ($dossiers as $dossier) {
-				echo "<li><span class='folder'><span class='icon'>📁</span>$dossier</span>";
+				echo "<li style='margin-left: {$indent}'><span class='folder'><span class='icon'>📁</span>$dossier</span>";
 				// Sous-menu pour le dossier
 				echo "<ul class='sousmenu'>";
 				explorer($chemin . '/' . $dossier, $niveau + 1);
@@ -53,10 +73,9 @@
 				$url = $chemin . '/' . $fichier;
 				$ext = strtolower(pathinfo($fichier, PATHINFO_EXTENSION));
 				$icon = ($ext === 'php') ? '🐘' : (($ext === 'html' || $ext === 'htm') ? '🌐' : (($ext === 'md' || $ext === 'readme') ? '📄' : '📄'));
-				echo "<li><a href='./$url' target='_blank'><span class='icon'>$icon</span>$fichier</a></li>";
+				echo "<li style='margin-left: {$indent}'><a href='./$url' target='_blank'><span class='icon'>$icon</span>$fichier</a></li>";
 			}
 		}
-		// On liste uniquement les dossiers à la racine (sauf .git)
 		foreach (scandir('.') as $item) {
 			if ($item === '.' || $item === '..' || $item === '.git' || !is_dir($item)) continue;
 			echo "<li><span class='folder'><span class='icon'>📁</span>$item</span>";
@@ -66,6 +85,30 @@
 		}
 		?>
 		</ul>
+		<script>
+		// JS pour ouvrir/fermer les sous-menus au clic
+		document.addEventListener('DOMContentLoaded', function() {
+			document.querySelectorAll('.folder').forEach(function(folder) {
+				folder.addEventListener('click', function(e) {
+					e.stopPropagation();
+					var li = folder.parentElement;
+					var wasOpen = li.classList.contains('open');
+					// Ferme tous les autres sous-menus au même niveau
+					if (li.parentElement) {
+						li.parentElement.querySelectorAll('li.open').forEach(function(openLi) {
+							openLi.classList.remove('open');
+						});
+					}
+					// Ouvre ou ferme le menu cliqué
+					if (!wasOpen) {
+						li.classList.add('open');
+					} else {
+						li.classList.remove('open');
+					}
+				});
+			});
+		});
+		</script>
 	</div>
 </body>
 </html>
