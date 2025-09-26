@@ -9,12 +9,12 @@ function nav($active) {
         'stats' => 'Statistiques',
         'classement' => 'Classement'
     ];
-    echo '<div class="menu">';
+    echo '<nav class="nav-tabs">';
     foreach ($tabs as $key => $label) {
         $class = ($active === $key) ? 'active' : '';
         echo "<a href='?page=$key' class='$class'>$label</a>";
     }
-    echo '</div>';
+    echo '</nav>';
 }
 ?>
 <!DOCTYPE html>
@@ -27,12 +27,10 @@ function nav($active) {
 <body>
 <div class="container">
 
-    <!-- HEADER avec logo directement intégré -->
-    <div class="header">
-        <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" 
-             alt="Logo NFL" class="header-logo">
+    <!-- HEADER -->
+    <header class="header">
         <h1>NFL STATS ANALYZER</h1>
-    </div>
+    </header>
 
     <!-- NAV MENU -->
     <?php nav($page); ?>
@@ -41,12 +39,11 @@ function nav($active) {
     <?php
     if ($page === 'joueurs') {
         // --- Formulaire d'ajout joueur ---
-        echo '<div class="card"><h2>Ajouter un joueur</h2>
-        <form method="post" action="add_player.php">
+        echo '<section class="card"><h2>Ajouter un joueur</h2>
+        <form method="post" action="add_player.php" class="form-grid">
             <input type="text" name="prenom" placeholder="Prénom" required>
             <input type="text" name="nom" placeholder="Nom" required>
 
-            <label for="poste">
             <select name="poste" required>
                 <option value="">Sélectionner un poste</option>
                 <optgroup label="Offense">
@@ -88,10 +85,8 @@ function nav($active) {
             <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
             <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
 
-            <label for="id_team">
             <select name="id_team" required>
                 <option value="">Sélectionner une équipe</option>
-
                 <optgroup label="NFC East">
                     <option value="1">Dallas Cowboys</option>
                     <option value="2">Philadelphia Eagles</option>
@@ -116,7 +111,6 @@ function nav($active) {
                     <option value="15">Los Angeles Rams</option>
                     <option value="16">Arizona Cardinals</option>
                 </optgroup>
-
                 <optgroup label="AFC East">
                     <option value="17">Buffalo Bills</option>
                     <option value="18">Miami Dolphins</option>
@@ -144,7 +138,7 @@ function nav($active) {
             </select>
 
             <button type="submit">Ajouter le joueur</button>
-        </form></div>';
+        </form></section>';
 
         // --- Affichage des joueurs ---
         echo '<h2>Liste des joueurs</h2><div class="grid">';
@@ -165,8 +159,8 @@ function nav($active) {
     elseif ($page === 'stats') {
         $saison = date('Y');
         // --- Formulaire stats ---
-        echo '<div class="card"><h2>Ajouter des statistiques (Saison '.$saison.')</h2>
-        <form method="post" action="add_stats.php">
+        echo '<section class="card"><h2>Ajouter des statistiques (Saison '.$saison.')</h2>
+        <form method="post" action="add_stats.php" class="form-grid">
             <select name="id_player" required>
                 <option value="">Sélectionner un joueur</option>';
                 $players = $pdo->query("SELECT id_player, prenom, nom FROM player ORDER BY nom")->fetchAll();
@@ -188,7 +182,7 @@ function nav($active) {
             <input type="number" name="fg_reussis" placeholder="FG réussis" min="0">
             <input type="number" name="punts" placeholder="Punts" min="0">
             <button type="submit">Ajouter les stats</button>
-        </form></div>';
+        </form></section>';
 
         // --- Affichage stats ---
         $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste FROM stats s JOIN player p ON s.id_player = p.id_player WHERE s.saison = ? ORDER BY p.nom");
@@ -237,3 +231,4 @@ function nav($active) {
 </footer>
 </body>
 </html>
+
