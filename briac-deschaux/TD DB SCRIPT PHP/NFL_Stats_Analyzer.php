@@ -165,6 +165,53 @@ function nav($active) {
             }
             echo '</div>';
 
+        elseif ($page === 'joueurs') {
+    // --- Formulaire d'ajout joueur ---
+    echo '<div class="card"><h2>Ajouter un joueur</h2>
+    <form method="post" action="add_player.php"> ... </form></div>';
+
+    // --- Récupération joueurs ---
+    $stmt = $pdo->query("SELECT p.*, t.nom_team FROM player p JOIN team t ON p.id_team = t.id_team ORDER BY p.nom");
+    $joueurs = $stmt->fetchAll();
+
+    // --- Définir postes offensifs/défensifs ---
+    $offense = ["QB","RB","FB","WR","TE","LT","LG","C","RG","RT"];
+    $defense = ["DE","DT","NT","OLB","ILB","MLB","CB","FS","SS"];
+
+    echo '<h2>Joueurs offensifs</h2><div class="grid">';
+    foreach ($joueurs as $pl) {
+        if (in_array($pl['poste'], $offense)) {
+            $experience = date('Y') - $pl['annee_debut'];
+            echo "<div class='card'>
+                    <h3>{$pl['prenom']} {$pl['nom']}</h3>
+                    <p><strong>Poste:</strong> {$pl['poste']}</p>
+                    <p><strong>Équipe:</strong> {$pl['nom_team']}</p>
+                    <p>Âge: {$pl['age']} ans</p>
+                    <p>Taille: {$pl['taille_cm']} cm - Poids: {$pl['poids_kg']} kg</p>
+                    <p>Expérience: {$experience} ans</p>
+                  </div>";
+        }
+    }
+    echo '</div>';
+
+    echo '<h2>Joueurs défensifs</h2><div class="grid">';
+    foreach ($joueurs as $pl) {
+        if (in_array($pl['poste'], $defense)) {
+            $experience = date('Y') - $pl['annee_debut'];
+            echo "<div class='card'>
+                    <h3>{$pl['prenom']} {$pl['nom']}</h3>
+                    <p><strong>Poste:</strong> {$pl['poste']}</p>
+                    <p><strong>Équipe:</strong> {$pl['nom_team']}</p>
+                    <p>Âge: {$pl['age']} ans</p>
+                    <p>Taille: {$pl['taille_cm']} cm - Poids: {$pl['poids_kg']} kg</p>
+                    <p>Expérience: {$experience} ans</p>
+                  </div>";
+        }
+    }
+    echo '</div>';
+}
+
+
         } elseif ($page === 'stats') {
 
             $saison = date('Y');
