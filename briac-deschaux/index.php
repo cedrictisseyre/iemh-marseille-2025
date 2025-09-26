@@ -27,8 +27,12 @@ function nav($active) {
 <body>
 <div class="container">
 
-    <!-- HEADER avec logo -->
-    <?php include 'logo_NFL.html'; ?>
+    <!-- HEADER avec logo directement intégré -->
+    <div class="header">
+        <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" 
+             alt="Logo NFL" class="header-logo">
+        <h1>NFL STATS ANALYZER</h1>
+    </div>
 
     <!-- NAV MENU -->
     <?php nav($page); ?>
@@ -160,7 +164,7 @@ function nav($active) {
     }
     elseif ($page === 'stats') {
         $saison = date('Y');
-        // --- Formulaire d'ajout stats ---
+        // --- Formulaire stats ---
         echo '<div class="card"><h2>Ajouter des statistiques (Saison '.$saison.')</h2>
         <form method="post" action="add_stats.php">
             <select name="id_player" required>
@@ -186,7 +190,7 @@ function nav($active) {
             <button type="submit">Ajouter les stats</button>
         </form></div>';
 
-        // --- Affichage des stats ---
+        // --- Affichage stats ---
         $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste FROM stats s JOIN player p ON s.id_player = p.id_player WHERE s.saison = ? ORDER BY p.nom");
         $stmt->execute([$saison]);
         echo "<h2>Statistiques $saison</h2><div class='grid'>";
@@ -233,4 +237,3 @@ function nav($active) {
 </footer>
 </body>
 </html>
-
