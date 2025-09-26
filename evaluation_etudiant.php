@@ -98,8 +98,25 @@ function getFileTreeAndFilesScore($dossier) {
  * @return int Score sur 10
  */
 function getBestPracticesScore($dossier) {
-    // À remplacer par une vraie analyse statique (PHP_CodeSniffer, etc.)
-    return rand(5, 10); // Score sur 10
+    $score = 10;
+    $phpFiles = [];
+    foreach (scandir($dossier) as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $fullpath = $dossier . '/' . $item;
+        if (is_file($fullpath) && strtolower(pathinfo($fullpath, PATHINFO_EXTENSION)) === 'php') {
+            $phpFiles[] = $fullpath;
+        }
+    }
+    $errors = 0;
+    foreach ($phpFiles as $file) {
+        $output = shell_exec('phpcs --standard=PSR12 ' . escapeshellarg($file) . ' 2>&1');
+        if (preg_match_all('/ERROR/', $output, $matches)) {
+            $errors += count($matches[0]);
+        }
+    }
+    // Score sur 10, pénalité par erreur
+    $score -= min($errors, 10);
+    return max($score, 0);
 }
 
 /**
@@ -108,8 +125,25 @@ function getBestPracticesScore($dossier) {
  * @return int Score sur 10
  */
 function getScriptFunctionalityScore($dossier) {
-    // À remplacer par des tests d'exécution ou de couverture
-    return rand(5, 10); // Score sur 10
+    $score = 10;
+    $phpFiles = [];
+    foreach (scandir($dossier) as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $fullpath = $dossier . '/' . $item;
+        if (is_file($fullpath) && strtolower(pathinfo($fullpath, PATHINFO_EXTENSION)) === 'php') {
+            $phpFiles[] = $fullpath;
+        }
+    }
+    $errors = 0;
+    foreach ($phpFiles as $file) {
+        $output = shell_exec('php -l ' . escapeshellarg($file) . ' 2>&1');
+        if (strpos($output, 'No syntax errors detected') === false) {
+            $errors++;
+        }
+    }
+    // Score sur 10, pénalité par fichier avec erreur
+    $score -= min($errors, 10);
+    return max($score, 0);
 }
 
 /**
