@@ -37,7 +37,17 @@ function nav($active) {
         <form method="post" action="add_player.php">
             <input type="text" name="prenom" placeholder="Prénom" required>
             <input type="text" name="nom" placeholder="Nom" required>
-            <input type="text" name="poste" placeholder="Poste" required>
+            <select name="poste" required>
+    <option value="QB">Quarterback (QB)</option>
+    <option value="RB">Running Back (RB)</option>
+    <option value="WR">Wide Receiver (WR)</option>
+    <option value="TE">Tight End (TE)</option>
+    <option value="LB">Linebacker (LB)</option>
+    <option value="CB">Cornerback (CB)</option>
+    <option value="S">Safety (S)</option>
+    <option value="K">Kicker (K)</option>
+    <option value="P">Punter (P)</option>
+</select>
             <input type="number" name="age" placeholder="Âge" required>
             <input type="number" name="taille_cm" placeholder="Taille (cm)" required>
             <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
