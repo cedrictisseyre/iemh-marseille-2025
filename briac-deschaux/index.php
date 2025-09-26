@@ -79,13 +79,61 @@ echo '<div class="card"><h2>Ajouter un joueur</h2>
     <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
     <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
 
+    <label for="id_team">Équipe</label>
     <select name="id_team" required>
-        <option value="">Sélectionner une équipe</option>';
-        $teams = $pdo->query("SELECT id_team, nom_team FROM team ORDER BY nom_team")->fetchAll();
-        foreach ($teams as $t) {
-            echo "<option value='{$t['id_team']}'>{$t['nom_team']}</option>";
-        }
-echo '</select>
+        <option value="">Sélectionner une équipe</option>
+
+        <optgroup label="NFC East">
+            <option value="1">Dallas Cowboys</option>
+            <option value="2">Philadelphia Eagles</option>
+            <option value="3">New York Giants</option>
+            <option value="4">Washington Commanders</option>
+        </optgroup>
+        <optgroup label="NFC North">
+            <option value="5">Green Bay Packers</option>
+            <option value="6">Chicago Bears</option>
+            <option value="7">Minnesota Vikings</option>
+            <option value="8">Detroit Lions</option>
+        </optgroup>
+        <optgroup label="NFC South">
+            <option value="9">Tampa Bay Buccaneers</option>
+            <option value="10">New Orleans Saints</option>
+            <option value="11">Carolina Panthers</option>
+            <option value="12">Atlanta Falcons</option>
+        </optgroup>
+        <optgroup label="NFC West">
+            <option value="13">San Francisco 49ers</option>
+            <option value="14">Seattle Seahawks</option>
+            <option value="15">Los Angeles Rams</option>
+            <option value="16">Arizona Cardinals</option>
+        </optgroup>
+
+        <optgroup label="AFC East">
+            <option value="17">Buffalo Bills</option>
+            <option value="18">Miami Dolphins</option>
+            <option value="19">New England Patriots</option>
+            <option value="20">New York Jets</option>
+        </optgroup>
+        <optgroup label="AFC North">
+            <option value="21">Baltimore Ravens</option>
+            <option value="22">Cincinnati Bengals</option>
+            <option value="23">Cleveland Browns</option>
+            <option value="24">Pittsburgh Steelers</option>
+        </optgroup>
+        <optgroup label="AFC South">
+            <option value="25">Houston Texans</option>
+            <option value="26">Indianapolis Colts</option>
+            <option value="27">Jacksonville Jaguars</option>
+            <option value="28">Tennessee Titans</option>
+        </optgroup>
+        <optgroup label="AFC West">
+            <option value="29">Denver Broncos</option>
+            <option value="30">Kansas City Chiefs</option>
+            <option value="31">Las Vegas Raiders</option>
+            <option value="32">Los Angeles Chargers</option>
+        </optgroup>
+    </select>
+
     <button type="submit">Ajouter le joueur</button>
 </form></div>';
 
