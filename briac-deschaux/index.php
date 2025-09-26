@@ -22,7 +22,7 @@ function nav($active) {
 <head>
     <meta charset="UTF-8">
     <title>NFL Stats Analyzer</title>
-    <link rel="stylesheet" href="style-page.css">
+    <link rel="stylesheet" href="style_page.css">
 </head>
 <body>
 <div class="container">
