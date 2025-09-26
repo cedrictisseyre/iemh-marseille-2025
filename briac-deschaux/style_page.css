@@ -23,7 +23,7 @@ body {
 }
 
 .header-logo {
-    width: 60px;      /* si image */
+    width: 180px;      /* si image */
     height: auto;
     margin-bottom: 0.5em;
     display: inline-block;
