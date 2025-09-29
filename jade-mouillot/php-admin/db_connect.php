@@ -3,7 +3,7 @@ $host = '195.15.235.20';
 $db   = 'jade_mouillot';
 $user = 'root'; // À remplacer
 $pass = 'INNnsk40374'; // À remplacer
-$charset = 'utf8mb3';
+$charset = 'utf8';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
