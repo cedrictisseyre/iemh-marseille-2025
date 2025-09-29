@@ -15,17 +15,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
     echo "<p style='color:green'>Sportif ajouté !</p>";
 }
 
+// Filtres et recherche
+$where = [];
+$params = [];
+if (!empty($_GET['club'])) {
+    $where[] = 's.id_club = ?';
+    $params[] = $_GET['club'];
+}
+if (!empty($_GET['course'])) {
+    $where[] = 's.id_course = ?';
+    $params[] = $_GET['course'];
+}
+if (!empty($_GET['discipline'])) {
+    $where[] = 's.id_discipline = ?';
+    $params[] = $_GET['discipline'];
+}
+if (!empty($_GET['search'])) {
+    $where[] = 's.nom LIKE ?';
+    $params[] = '%' . $_GET['search'] . '%';
+}
 $sql = "SELECT s.id, s.nom, c.nom AS club, co.nom AS course, d.nom AS discipline
         FROM sportif s
         LEFT JOIN club c ON s.id_club = c.id
         LEFT JOIN course co ON s.id_course = co.id
         LEFT JOIN discipline d ON s.id_discipline = d.id";
-$sportifs = $pdo->query($sql)->fetchAll();
+if ($where) {
+    $sql .= ' WHERE ' . implode(' AND ', $where);
+}
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$sportifs = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang=\"fr\">
 <head>
-    <meta charset="UTF-8">
+    <meta charset=\"UTF-8\">
     <title>Gestion des sportifs</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; }
@@ -46,42 +70,65 @@ $sportifs = $pdo->query($sql)->fetchAll();
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="nav">
-        <a href="sportif.php">Sportif</a>
-        <a href="club.php">Club</a>
-        <a href="course.php">Course</a>
-        <a href="discipline.php">Discipline</a>
+<div class=\"container\">
+    <div class=\"nav\">
+        <a href=\"gestion_sportif.php\">Sportif</a>
+        <a href=\"gestion_club.php\">Club</a>
+        <a href=\"gestion_course.php\">Course</a>
+        <a href=\"gestion_discipline.php\">Discipline</a>
     </div>
     <h1>Gestion des sportifs</h1>
     <h2>Ajouter un sportif</h2>
-    <form method="post" class="form-section">
-        <label>Nom : <input type="text" name="nom" required></label>
+    <form method=\"post\" class=\"form-section\">
+        <label>Nom : <input type=\"text\" name=\"nom\" required></label>
         <label>Course :
-            <select name="id_course" required>
+            <select name=\"id_course\" required>
                 <?php foreach ($courses as $course): ?>
-                    <option value="<?= $course['id'] ?>"><?= htmlspecialchars($course['nom']) ?></option>
+                    <option value=\"<?= $course['id'] ?>\"><?= htmlspecialchars($course['nom']) ?></option>
                 <?php endforeach; ?>
             </select>
         </label>
         <label>Discipline :
-            <select name="id_discipline" required>
+            <select name=\"id_discipline\" required>
                 <?php foreach ($disciplines as $discipline): ?>
-                    <option value="<?= $discipline['id'] ?>"><?= htmlspecialchars($discipline['nom']) ?></option>
+                    <option value=\"<?= $discipline['id'] ?>\"><?= htmlspecialchars($discipline['nom']) ?></option>
                 <?php endforeach; ?>
             </select>
         </label>
         <label>Club :
-            <select name="id_club" required>
+            <select name=\"id_club\" required>
                 <?php foreach ($clubs as $club): ?>
-                    <option value="<?= $club['id'] ?>"><?= htmlspecialchars($club['nom']) ?></option>
+                    <option value=\"<?= $club['id'] ?>\"><?= htmlspecialchars($club['nom']) ?></option>
                 <?php endforeach; ?>
             </select>
         </label>
-        <button type="submit" name="ajouter">Ajouter</button>
+        <button type=\"submit\" name=\"ajouter\">Ajouter</button>
     </form>
 
     <h2>Liste des sportifs</h2>
+    <form method="get" style="margin-bottom:20px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <input type="text" name="search" placeholder="Rechercher un nom..." value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>" style="flex:1;min-width:180px;">
+        <select name="club">
+            <option value="">Tous les clubs</option>
+            <?php foreach ($clubs as $club): ?>
+                <option value="<?= $club['id'] ?>" <?= (isset($_GET['club']) && $_GET['club'] == $club['id']) ? 'selected' : '' ?>><?= htmlspecialchars($club['nom']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <select name="course">
+            <option value="">Toutes les courses</option>
+            <?php foreach ($courses as $course): ?>
+                <option value="<?= $course['id'] ?>" <?= (isset($_GET['course']) && $_GET['course'] == $course['id']) ? 'selected' : '' ?>><?= htmlspecialchars($course['nom']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <select name="discipline">
+            <option value="">Toutes les disciplines</option>
+            <?php foreach ($disciplines as $discipline): ?>
+                <option value="<?= $discipline['id'] ?>" <?= (isset($_GET['discipline']) && $_GET['discipline'] == $discipline['id']) ? 'selected' : '' ?>><?= htmlspecialchars($discipline['nom']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit">Filtrer</button>
+        <a href="gestion_sportif.php" style="margin-left:10px; color:#2980b9; text-decoration:underline;">Réinitialiser</a>
+    </form>
     <table>
         <tr>
             <th>ID</th>

@@ -3,19 +3,19 @@ require_once '../db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
     $nom = $_POST['nom'];
-    $stmt = $pdo->prepare("INSERT INTO course (nom) VALUES (?)");
+    $stmt = $pdo->prepare("INSERT INTO club (nom) VALUES (?)");
     $stmt->execute([$nom]);
-    echo "<p style='color:green'>Course ajoutée !</p>";
+    echo "<p style='color:green'>Club ajouté !</p>";
 }
 
-$sql = "SELECT c.id, c.nom FROM course c";
-$courses = $pdo->query($sql)->fetchAll();
+$sql = "SELECT c.id, c.nom FROM club c";
+$clubs = $pdo->query($sql)->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Gestion des courses</title>
+    <title>Gestion des clubs</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; }
         .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -37,25 +37,25 @@ $courses = $pdo->query($sql)->fetchAll();
 <body>
 <div class="container">
     <div class="nav">
-        <a href="sportif.php">Sportif</a>
-        <a href="club.php">Club</a>
-        <a href="course.php">Course</a>
-        <a href="discipline.php">Discipline</a>
+        <a href="gestion_sportif.php">Sportif</a>
+        <a href="gestion_club.php">Club</a>
+        <a href="gestion_course.php">Course</a>
+        <a href="gestion_discipline.php">Discipline</a>
     </div>
-    <h1>Gestion des courses</h1>
-    <h2>Ajouter une course</h2>
+    <h1>Gestion des clubs</h1>
+    <h2>Ajouter un club</h2>
     <form method="post" class="form-section">
         <label>Nom : <input type="text" name="nom" required></label>
         <button type="submit" name="ajouter">Ajouter</button>
     </form>
 
-    <h2>Liste des courses</h2>
+    <h2>Liste des clubs</h2>
     <table>
         <tr>
             <th>ID</th>
             <th>Nom</th>
         </tr>
-        <?php foreach ($courses as $c): ?>
+        <?php foreach ($clubs as $c): ?>
         <tr>
             <td><?= $c['id'] ?></td>
             <td><?= htmlspecialchars($c['nom']) ?></td>
