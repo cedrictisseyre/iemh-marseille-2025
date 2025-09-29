@@ -6,7 +6,7 @@ require_once 'db_connect.php';
 
 $sql = "SELECT c.id, c.nom
         FROM course c";
-$sportifs = $pdo->query($sql)->fetchAll();
+$course = $pdo->query($sql)->fetchAll();
 ?>
 
 <table border="1">
