@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // Connexion à la base de données avec PDO
-require_once __DIR__ . '/bdd_formule1.php';
+require_once __DIR__ . '/../database/bdd_formule1.php';
 
 try {
     // $pdo est déjà défini dans bdd_formule1.php
