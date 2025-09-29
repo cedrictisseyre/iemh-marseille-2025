@@ -69,14 +69,28 @@
         <div class="dropdown">
             <button class="dropbtn">Menu</button>
             <div class="dropdown-content">
-                <a href="pages/ajouter_sportif.html">Ajouter sportif</a>
-                <a href="pages/ajouter_club.html">Ajouter club</a>
-                <a href="pages/ajouter_course.html">Ajouter course</a>
-                <a href="pages/ajouter_discipline.html">Ajouter discipline</a>
-                <a href="pages/afficher_sportif.html">Lister sportifs</a>
-                <a href="pages/afficher_club.html">Lister Clubs</a>
-                <a href="pages/afficher_course.html">Lister Courses</a>
-                <a href="pages/afficher_discipline.html">Lister Discipline</a>
+                <?php
+                $adminDir = __DIR__ . '/php-admin';
+                $files = scandir($adminDir);
+                $menu = [];
+                foreach ($files as $file) {
+                    if (preg_match('/^(ajout|liste)_(.+)\\.php$/', $file, $matches)) {
+                        $type = $matches[1] === 'ajout' ? 'Ajouter' : 'Lister';
+                        $label = ucfirst(str_replace('_', ' ', $matches[2]));
+                        $menu[] = [
+                            'href' => 'php-admin/' . $file,
+                            'text' => $type . ' ' . $label
+                        ];
+                    }
+                }
+                // Tri pour afficher "Ajouter ..." avant "Lister ..."
+                usort($menu, function($a, $b) {
+                    return strcmp($a['text'], $b['text']);
+                });
+                foreach ($menu as $item) {
+                    echo '<a href="' . htmlspecialchars($item['href']) . '">' . htmlspecialchars($item['text']) . '</a>';
+                }
+                ?>
             </div>
         </div>
     </div>
