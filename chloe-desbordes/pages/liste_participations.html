@@ -7,20 +7,6 @@
 </head>
 <body>
         <h1>Liste des participations</h1>
-        <form id="add-participation-form" style="max-width:500px;margin:30px auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 8px rgba(44,62,80,0.08);">
-            <h2 style="text-align:center;color:#2980b9;font-size:1.3em;">Ajouter une participation</h2>
-            <div style="margin-bottom:12px;">
-                <input type="number" name="id_coureur" placeholder="ID Coureur" required style="width:100%;padding:8px;">
-            </div>
-            <div style="margin-bottom:12px;">
-                <input type="number" name="id_course" placeholder="ID Course" required style="width:100%;padding:8px;">
-            </div>
-            <div style="margin-bottom:12px;">
-                <input type="text" name="temps" placeholder="Temps (hh:mm:ss)" required style="width:100%;padding:8px;">
-            </div>
-            <button type="submit" style="background:#2980b9;color:#fff;padding:10px 20px;border:none;border-radius:4px;cursor:pointer;">Ajouter</button>
-            <p id="form-message" style="text-align:center;margin-top:10px;"></p>
-        </form>
         <table id="participations-table" style="display:none">
                 <thead>
                         <tr>
@@ -55,26 +41,6 @@
             }
             chargerParticipations();
 
-            document.getElementById('add-participation-form').addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const form = e.target;
-                    const formData = new FormData(form);
-                    fetch('../../services/ajouter_participation.php', {
-                            method: 'POST',
-                            body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                            document.getElementById('form-message').textContent = data.message;
-                            if (data.success) {
-                                    form.reset();
-                                    chargerParticipations();
-                            }
-                    })
-                    .catch(() => {
-                            document.getElementById('form-message').textContent = 'Erreur lors de l\'ajout.';
-                    });
-            });
             </script>
 </body>
 </html>
