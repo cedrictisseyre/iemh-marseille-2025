@@ -7,7 +7,7 @@ require_once 'db_connect.php';
 $sql = "SELECT s.id, s.nom, c.nom AS club, co.nom AS course, d.nom AS discipline
         FROM sportif s
         LEFT JOIN club c ON s.id_club = c.id
-        LEFT JOIN courses co ON s.id_course = co.id
+        LEFT JOIN course co ON s.id_course = co.id
         LEFT JOIN discipline d ON s.id_discipline = d.id";
 $sportifs = $pdo->query($sql)->fetchAll();
 ?>
