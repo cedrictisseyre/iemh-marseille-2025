@@ -2,9 +2,9 @@
 require_once 'db_connect.php';
 
 // Récupérer les listes pour les clés étrangères
-$clubs = $pdo->query("SELECT id, nom FROM club")->fetchAll();
-$courses = $pdo->query("SELECT id, nom FROM courses")->fetchAll();
-$disciplines = $pdo->query("SELECT id, nom FROM discipline")->fetchAll();
+$club = $pdo->query("SELECT id, nom FROM club")->fetchAll();
+$course = $pdo->query("SELECT id, nom FROM course")->fetchAll();
+$discipline = $pdo->query("SELECT id, nom FROM discipline")->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom'];
@@ -22,19 +22,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     Nom : <input type="text" name="nom" required><br>
     Course :
     <select name="id_course" required>
-        <?php foreach ($courses as $course): ?>
+        <?php foreach ($course as $course): ?>
             <option value="<?= $course['id'] ?>"><?= htmlspecialchars($course['nom']) ?></option>
         <?php endforeach; ?>
     </select><br>
     Discipline :
     <select name="id_discipline" required>
-        <?php foreach ($disciplines as $discipline): ?>
+        <?php foreach ($discipline as $discipline): ?>
             <option value="<?= $discipline['id'] ?>"><?= htmlspecialchars($discipline['nom']) ?></option>
         <?php endforeach; ?>
     </select><br>
     Club :
     <select name="id_club" required>
-        <?php foreach ($clubs as $club): ?>
+        <?php foreach ($club as $club): ?>
             <option value="<?= $club['id'] ?>"><?= htmlspecialchars($club['nom']) ?></option>
         <?php endforeach; ?>
     </select><br>
