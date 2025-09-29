@@ -6,7 +6,33 @@
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-    <h1>Liste des nationalités des coureurs</h1>
-    <p>Cette page affichera la liste des nationalités depuis la base de données.</p>
+        <h1>Liste des nationalités des coureurs</h1>
+        <table id="nationalites-table" style="display:none">
+                <thead>
+                        <tr>
+                                <th>Nationalité</th>
+                        </tr>
+                </thead>
+                <tbody></tbody>
+        </table>
+        <p id="loading">Chargement des nationalités...</p>
+        <script>
+        fetch('../../services/lire_nationalites.php')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('nationalites-table');
+                const tbody = table.querySelector('tbody');
+                document.getElementById('loading').style.display = 'none';
+                table.style.display = '';
+                data.forEach(nat => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${nat.nationalite}</td>`;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(() => {
+                document.getElementById('loading').textContent = 'Erreur de chargement des données.';
+            });
+        </script>
 </body>
 </html>

@@ -6,7 +6,35 @@
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-    <h1>Liste des points ITRA</h1>
-    <p>Cette page affichera la liste des points ITRA depuis la base de données.</p>
+        <h1>Liste des points ITRA</h1>
+        <table id="points-table" style="display:none">
+                <thead>
+                        <tr>
+                                <th>ID</th>
+                                <th>ID Coureur</th>
+                                <th>Points</th>
+                        </tr>
+                </thead>
+                <tbody></tbody>
+        </table>
+        <p id="loading">Chargement des points ITRA...</p>
+        <script>
+        fetch('../../services/lire_points.php')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('points-table');
+                const tbody = table.querySelector('tbody');
+                document.getElementById('loading').style.display = 'none';
+                table.style.display = '';
+                data.forEach(point => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${point.id_point}</td><td>${point.id_coureur}</td><td>${point.points}</td>`;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(() => {
+                document.getElementById('loading').textContent = 'Erreur de chargement des données.';
+            });
+        </script>
 </body>
 </html>
