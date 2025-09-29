@@ -3,15 +3,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // Connexion à la base de données avec PDO
-$host = 'localhost';
-$dbname = 'francoisdcls';
-$username = 'root';
-$password = 'INNnsk40374';
+require_once __DIR__ . '/bdd_formule1.php';
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+    // $pdo est déjà défini dans bdd_formule1.php
     // Récupérer tous les pilotes champions du monde (vainqueurs du championnat)
     $sql = "SELECT p.pilote_id, p.nom, p.prénom FROM pilotes p WHERE p.pilote_id IN (SELECT pilote_id FROM championnats) ORDER BY p.nom, p.prénom";
     $stmt = $pdo->query($sql);
@@ -51,6 +46,15 @@ try {
     }
 } catch (PDOException $e) {
     die("Erreur de connexion : " . $e->getMessage());
+}
+
+// Affichage CLI si exécuté en ligne de commande
+if (php_sapi_name() === 'cli') {
+    echo "Champions trouvés : ".count($champions)."\n";
+    foreach ($champions as $champion) {
+        echo ($champion['prénom'] ?? '').' '.$champion['nom']." (Victoires: ".$champion['nb_victoires'].")\n";
+    }
+    exit;
 }
 ?>
 <!DOCTYPE html>
