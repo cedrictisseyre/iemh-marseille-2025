@@ -70,25 +70,25 @@
             <button class="dropbtn">Menu</button>
             <div class="dropdown-content">
                 <?php
-                $adminDir = __DIR__ . '/php-admin';
+                $adminDir = __DIR__;
                 $files = scandir($adminDir);
                 $menu = [];
                 foreach ($files as $file) {
-                    if (preg_match('/^(ajout|liste)_(.+)\\.php$/', $file, $matches)) {
+                    if (preg_match('/^(ajout|liste)_(.+)\.php$/', $file, $matches)) {
                         $type = $matches[1] === 'ajout' ? 'Ajouter' : 'Lister';
                         $label = ucfirst(str_replace('_', ' ', $matches[2]));
                         $menu[] = [
-                            'href' => 'php-admin/' . $file,
+                            'href' => $file,
                             'text' => $type . ' ' . $label
                         ];
                     }
                 }
                 // Ajouter les pages dynamiques principales
                 $pagesDynamiques = [
-                    ['href' => 'php-admin/sportif.php', 'text' => 'Sportif (ajout + liste)'],
-                    ['href' => 'php-admin/club.php', 'text' => 'Club (ajout + liste)'],
-                    ['href' => 'php-admin/course.php', 'text' => 'Course (ajout + liste)'],
-                    ['href' => 'php-admin/discipline.php', 'text' => 'Discipline (ajout + liste)'],
+                    ['href' => 'sportif.php', 'text' => 'Sportif (ajout + liste)'],
+                    ['href' => 'club.php', 'text' => 'Club (ajout + liste)'],
+                    ['href' => 'course.php', 'text' => 'Course (ajout + liste)'],
+                    ['href' => 'discipline.php', 'text' => 'Discipline (ajout + liste)'],
                 ];
                 foreach ($pagesDynamiques as $item) {
                     echo '<a href="' . htmlspecialchars($item['href']) . '">' . htmlspecialchars($item['text']) . '</a>';
