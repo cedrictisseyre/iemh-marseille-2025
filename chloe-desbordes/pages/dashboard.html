@@ -75,7 +75,7 @@
         });
     });
     // Chargement des données
-    fetch('../../services/lire_coureurs.php')
+  fetch('../services/lire_coureurs.php')
       .then(r => r.json())
       .then(data => {
         const tbody = document.querySelector('#coureurs-table tbody');
@@ -86,7 +86,7 @@
           tbody.appendChild(tr);
         });
       });
-    fetch('../../services/lire_courses.php')
+  fetch('../services/lire_courses.php')
       .then(r => r.json())
       .then(data => {
         const tbody = document.querySelector('#courses-table tbody');
@@ -97,7 +97,7 @@
           tbody.appendChild(tr);
         });
       });
-    fetch('../../services/lire_participations.php')
+  fetch('../services/lire_participations.php')
       .then(r => r.json())
       .then(data => {
         const tbody = document.querySelector('#participations-table tbody');
@@ -108,7 +108,7 @@
           tbody.appendChild(tr);
         });
       });
-    fetch('../../services/lire_points.php')
+  fetch('../services/lire_points.php')
       .then(r => r.json())
       .then(data => {
         const tbody = document.querySelector('#points-table tbody');
@@ -119,7 +119,7 @@
           tbody.appendChild(tr);
         });
       });
-    fetch('../../services/lire_nationalites.php')
+  fetch('../services/lire_nationalites.php')
       .then(r => r.json())
       .then(data => {
         const tbody = document.querySelector('#nationalites-table tbody');
