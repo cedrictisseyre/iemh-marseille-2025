@@ -1,5 +1,5 @@
 <?php
-include '../db_connect.php';
+include '../connexion.php';
 
 $stmt = $pdo->query('SELECT * FROM participations');
 $participations = $stmt->fetchAll();
