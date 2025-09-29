@@ -1,8 +1,7 @@
 <?php
 // Page de démonstration d'appel à une API sportive externe (TheSportsDB)
-$athlete = isset($_GET['athlete']) ? $_GET['athlete'] : 'Lionel Messi';
+$athlete = isset($_GET['athlete']) ? trim($_GET['athlete']) : 'Lionel Messi';
 $url = 'https://www.thesportsdb.com/api/v1/json/1/searchplayers.php?p=' . urlencode($athlete);
-
 $response = @file_get_contents($url);
 $data = $response ? json_decode($response, true) : null;
 ?>
@@ -31,15 +30,22 @@ $data = $response ? json_decode($response, true) : null;
     </form>
     <?php
     if ($data && !empty($data['player'])) {
-        $player = $data['player'][0];
-        echo '<h2>' . htmlspecialchars($player['strPlayer']) . '</h2>';
-        echo '<p>Nationalité : ' . htmlspecialchars($player['strNationality']) . '</p>';
-        echo '<p>Club : ' . htmlspecialchars($player['strTeam']) . '</p>';
-        if (!empty($player['strThumb'])) {
-            echo '<img src="' . htmlspecialchars($player['strThumb']) . '" width="150">';
+        echo '<h2>Résultats pour : ' . htmlspecialchars($athlete) . '</h2>';
+        echo '<ul style="list-style:none;padding:0;">';
+        foreach ($data['player'] as $player) {
+            echo '<li style="margin-bottom:20px;">';
+            echo '<strong>' . htmlspecialchars($player['strPlayer']) . '</strong><br>';
+            echo 'Nationalité : ' . htmlspecialchars($player['strNationality']) . '<br>';
+            echo 'Club : ' . htmlspecialchars($player['strTeam']) . '<br>';
+            if (!empty($player['strThumb'])) {
+                echo '<img src="' . htmlspecialchars($player['strThumb']) . '" width="120">';
+            }
+            echo '</li>';
         }
+        echo '</ul>';
     } elseif ($athlete) {
-        echo '<p>Aucun joueur trouvé.</p>';
+        echo '<p>Aucun joueur trouvé pour "' . htmlspecialchars($athlete) . '".</p>';
+        echo '<p>Essayez un autre nom ou une orthographe différente.</p>';
     }
     ?>
 </div>
