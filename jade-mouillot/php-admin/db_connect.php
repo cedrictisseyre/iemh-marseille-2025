@@ -1,8 +1,8 @@
 <?php
 $host = '195.15.235.20';
 $db   = 'jade_mouillot';
-$user = 'TON_UTILISATEUR'; // À remplacer
-$pass = 'TON_MOT_DE_PASSE'; // À remplacer
+$user = 'root'; // À remplacer
+$pass = 'INNnsk40374'; // À remplacer
 $charset = 'utf8mb3';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
