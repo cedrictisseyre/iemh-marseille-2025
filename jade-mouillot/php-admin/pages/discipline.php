@@ -15,7 +15,7 @@ $disciplines = $pdo->query($sql)->fetchAll();
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Disciplines</title>
+    <title>Gestion des disciplines</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; }
         .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -42,7 +42,8 @@ $disciplines = $pdo->query($sql)->fetchAll();
         <a href="course.php">Course</a>
         <a href="discipline.php">Discipline</a>
     </div>
-    <h1>Ajouter une discipline</h1>
+    <h1>Gestion des disciplines</h1>
+    <h2>Ajouter une discipline</h2>
     <form method="post" class="form-section">
         <label>Nom : <input type="text" name="nom" required></label>
         <button type="submit" name="ajouter">Ajouter</button>
