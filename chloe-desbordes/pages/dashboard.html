@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord UTMB</title>
+    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        .tabs { display: flex; justify-content: center; margin-top: 30px; }
+        .tab-btn {
+            background: #2980b9; color: #fff; border: none; padding: 12px 30px; margin: 0 5px;
+            font-size: 1.1em; border-radius: 6px 6px 0 0; cursor: pointer; transition: background 0.2s;
+        }
+        .tab-btn.active { background: #34495e; }
+        .tab-content { display: none; padding: 30px; background: #fff; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(44,62,80,0.08); margin: 0 auto; max-width: 900px; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <h1>Tableau de bord UTMB</h1>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="coureurs">Coureurs</button>
+        <button class="tab-btn" data-tab="courses">Courses</button>
+        <button class="tab-btn" data-tab="participations">Participations</button>
+        <button class="tab-btn" data-tab="points">Points ITRA</button>
+        <button class="tab-btn" data-tab="nationalites">Nationalités</button>
+    </div>
+    <div id="coureurs" class="tab-content active">
+        <h2>Liste des coureurs</h2>
+        <table id="coureurs-table" style="width:100%">
+            <thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Nationalité</th><th>Date de naissance</th><th>Club</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <p id="loading-coureurs">Chargement...</p>
+    </div>
+    <div id="courses" class="tab-content">
+        <h2>Liste des courses</h2>
+        <table id="courses-table" style="width:100%">
+            <thead><tr><th>ID</th><th>Nom</th><th>Date</th><th>Lieu</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <p id="loading-courses">Chargement...</p>
+    </div>
+    <div id="participations" class="tab-content">
+        <h2>Liste des participations</h2>
+        <table id="participations-table" style="width:100%">
+            <thead><tr><th>ID</th><th>ID Coureur</th><th>ID Course</th><th>Temps</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <p id="loading-participations">Chargement...</p>
+    </div>
+    <div id="points" class="tab-content">
+        <h2>Liste des points ITRA</h2>
+        <table id="points-table" style="width:100%">
+            <thead><tr><th>ID</th><th>ID Coureur</th><th>Points</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <p id="loading-points">Chargement...</p>
+    </div>
+    <div id="nationalites" class="tab-content">
+        <h2>Liste des nationalités</h2>
+        <table id="nationalites-table" style="width:100%">
+            <thead><tr><th>Nationalité</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        <p id="loading-nationalites">Chargement...</p>
+    </div>
+    <script>
+    // Onglets
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+    // Chargement des données
+    fetch('../../services/lire_coureurs.php')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#coureurs-table tbody');
+        document.getElementById('loading-coureurs').style.display = 'none';
+        data.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${c.id_coureur}</td><td>${c.nom}</td><td>${c.prenom}</td><td>${c.nationalite}</td><td>${c.date_naissance}</td><td>${c.club}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    fetch('../../services/lire_courses.php')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#courses-table tbody');
+        document.getElementById('loading-courses').style.display = 'none';
+        data.forEach(c => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${c.id_course}</td><td>${c.nom}</td><td>${c.date}</td><td>${c.lieu}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    fetch('../../services/lire_participations.php')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#participations-table tbody');
+        document.getElementById('loading-participations').style.display = 'none';
+        data.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${p.id_participation}</td><td>${p.id_coureur}</td><td>${p.id_course}</td><td>${p.temps}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    fetch('../../services/lire_points.php')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#points-table tbody');
+        document.getElementById('loading-points').style.display = 'none';
+        data.forEach(pt => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${pt.id_point}</td><td>${pt.id_coureur}</td><td>${pt.points}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    fetch('../../services/lire_nationalites.php')
+      .then(r => r.json())
+      .then(data => {
+        const tbody = document.querySelector('#nationalites-table tbody');
+        document.getElementById('loading-nationalites').style.display = 'none';
+        data.forEach(n => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${n.nationalite}</td>`;
+          tbody.appendChild(tr);
+        });
+      });
+    </script>
+</body>
+</html>
