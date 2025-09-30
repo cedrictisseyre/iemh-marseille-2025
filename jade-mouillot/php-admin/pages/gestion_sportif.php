@@ -180,6 +180,10 @@ $sportifs = $stmt->fetchAll();
             $stmt = $pdo->prepare("INSERT INTO club_membership (sportif_id, club_id, start_date, end_date) VALUES (?, ?, NOW(), NULL)");
             $stmt->execute([$sportif_id, $nouveau_club]);
             echo "<p style='color:green'>Changement de club effectué !</p>";
+            // Rafraîchir la liste des sportifs (pour afficher le club actuel)
+            // Recharger la page sans paramètre POST
+            echo '<script>window.location.href = "gestion_sportif.php?historique=' . $sportif_id . '";</script>';
+            exit;
         }
     $sql = "SELECT cm.start_date, cm.end_date, c.nom AS club_nom
         FROM club_membership cm
