@@ -24,7 +24,7 @@ function nav($active) {
 <head>
     <meta charset="UTF-8">
     <title>Gestion Karaté - Coline Pontal</title>
-    <link rel="stylesheet" href="style-onglets.css">
+    <link rel="stylesheet" href="css/style-onglets.css">
 </head>
 <body>
 <div class="container">
