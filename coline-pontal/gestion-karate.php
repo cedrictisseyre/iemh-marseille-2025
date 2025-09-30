@@ -2,7 +2,7 @@
 // Contrôleur léger placé à la racine du dossier coline-pontal
 include __DIR__ . '/includes/db_connexion.php';
 
-$page = $_GET['page'] ?? 'clubs';
+$page = $_GET['page'] ?? 'home';
 
 include __DIR__ . '/includes/header.php';
 include __DIR__ . '/includes/nav.php';

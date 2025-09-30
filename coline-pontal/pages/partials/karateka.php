@@ -50,7 +50,7 @@ if (isset($_GET['karateka_id'])) {
     echo '</ul>';
     $clubs = $db_ok ? $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll() : [];
     ?>
-    <h3>Ajouter un karateka</h3>
+    <h3 class="add-title">Ajouter un karateka</h3>
     <form method="post" aria-label="Ajouter un karateka">
         <input type="hidden" name="add_karateka" value="1">
         <label for="nom_karateka">Nom :</label>

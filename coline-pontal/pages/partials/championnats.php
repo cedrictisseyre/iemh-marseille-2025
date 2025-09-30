@@ -46,7 +46,7 @@ if (isset($_GET['championnat_id'])) {
 
 ?>
 
-<h3>Ajouter un tournoi</h3>
+<h3 class="add-title">Ajouter un tournoi</h3>
 <form method="post" aria-label="Ajouter un tournoi">
     <input type="hidden" name="add_champ" value="1">
     <label for="nom_championnat">Nom du tournoi :</label>

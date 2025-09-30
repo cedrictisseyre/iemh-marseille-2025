@@ -50,7 +50,7 @@ if (isset($_GET['club_id'])) {
 
 ?>
 
-<h3>Ajouter un club</h3>
+<h3 class="add-title">Ajouter un club</h3>
 <form method="post" aria-label="Ajouter un club">
     <input type="hidden" name="add_club" value="1">
     <label for="nom_club">Nom du club :</label>
