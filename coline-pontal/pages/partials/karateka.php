@@ -20,7 +20,7 @@ if (isset($_GET['karateka_id'])) {
         $stmt2->execute([$kid]);
         echo '<h3>Participations</h3><ul class="list">';
         while ($part = $stmt2->fetch()) {
-            echo "<li><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>" . htmlspecialchars($part['nom_championnat']) . "</strong> (" . htmlspecialchars($part['lieu']) . ", " . htmlspecialchars($part['date_championnat']) . ", " . htmlspecialchars($part['type']) . ")<br>Épreuve : " . htmlspecialchars($part['epreuve']) . " | Sexe : " . htmlspecialchars($part['sexe']) . " | Équipe : " . htmlspecialchars($part['equipe']) . "<br>Catégorie : " . htmlspecialchars($part['categorie']) . " | Résultat : " . htmlspecialchars($part['resultat']) . "</li>";
+            echo "<li><div><strong>" . htmlspecialchars($part['nom_championnat']) . "</strong> (<span class='meta'>" . htmlspecialchars($part['lieu'] . ', ' . $part['date_championnat'] . ', ' . $part['type']) . "</span>)</div><div class='meta'>Épreuve: " . htmlspecialchars($part['epreuve']) . " | Sexe: " . htmlspecialchars($part['sexe']) . " | Équipe: " . htmlspecialchars($part['equipe']) . " | Catégorie: " . htmlspecialchars($part['categorie']) . " | Résultat: " . htmlspecialchars($part['resultat']) . "</div></li>";
         }
         echo '</ul>';
         echo '<p><a href="gestion-karate.php?page=karateka">Retour à la liste</a></p>';

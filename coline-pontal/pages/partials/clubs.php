@@ -26,7 +26,7 @@ if (isset($_GET['club_id'])) {
         $stmt2->execute([$cid]);
         echo '<ul class="list">';
         while ($k = $stmt2->fetch()) {
-            echo "<li><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>" . htmlspecialchars($k['prenom'] . ' ' . $k['nom']) . "</strong> (" . htmlspecialchars($k['grade']) . ")</li>";
+            echo "<li><strong>" . htmlspecialchars($k['prenom'] . ' ' . $k['nom']) . "</strong> (<span class='meta'>" . htmlspecialchars($k['grade']) . "</span>)</li>";
         }
         echo '</ul>';
         echo '<p><a href="gestion-karate.php?page=clubs">Retour à la liste des clubs</a></p>';
