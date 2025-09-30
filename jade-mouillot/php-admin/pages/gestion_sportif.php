@@ -81,12 +81,12 @@ $sportifs = $stmt->fetchAll();
 </head>
 <body>
 <div class=\"container\">
-    <div class=\"nav\">
-        <a href=\"gestion_sportif.php\">Sportif</a>
-        <a href=\"gestion_club.php\">Club</a>
-        <a href=\"gestion_course.php\">Course</a>
-        <a href=\"gestion_discipline.php\">Discipline</a>
-        <a href=\"gestion_participatin.php\">Participation</a>
+    <div class="nav">
+        <a href="gestion_sportif.php">Sportif</a>
+        <a href="gestion_club.php">Club</a>
+        <a href="gestion_course.php">Course</a>
+        <a href="gestion_discipline.php">Discipline</a>
+        <a href="gestion_participation.php">Participation</a>
     </div>
     <h1>Gestion des sportifs</h1>
     <h2>Ajouter un sportif</h2>
