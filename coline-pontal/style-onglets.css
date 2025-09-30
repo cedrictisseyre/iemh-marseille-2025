@@ -20,9 +20,10 @@ h1 {
 .tabs {
     margin-bottom: 2em;
 }
+/* Onglets navigation */
 .tabs a {
     display: inline-block;
-    padding: 0.7em 2em;
+    padding: 1em 2.2em;
     margin: 0 0.2em;
     border-radius: 8px 8px 0 0;
     background: #e0e7ff;
@@ -31,14 +32,17 @@ h1 {
     font-weight: bold;
     font-size: 1.1em;
     transition: background 0.2s;
+    outline: none;
 }
 .tabs a.active {
     background: #2563eb;
     color: #fff;
 }
-.tabs a:hover {
+.tabs a:hover,
+.tabs a:focus-visible {
     background: #4338ca;
     color: #fff;
+    outline: 2px solid #1e40af;
 }
 .content {
     background: #f8fafc;
@@ -51,11 +55,12 @@ h1 {
     padding: 0;
     margin-bottom: 2em;
 }
+/* Liste éléments */
 .list li {
     margin: 0.7em 0;
     background: #e0e7ff;
     border-radius: 8px;
-    padding: 0.7em 1em;
+    padding: 1em 1.2em;
     color: #334155;
     font-size: 1.1em;
 }
@@ -64,10 +69,15 @@ form {
 }
 input, select, button {
     font-size: 1em;
-    padding: 0.5em;
-    margin: 0.3em;
+    padding: 0.7em;
+    margin: 0.5em;
     border-radius: 8px;
     border: 1px solid #cbd5e1;
+    outline: none;
+}
+input:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 2px solid #2563eb;
+    background: #e0e7ff;
 }
 button {
     background: #2563eb;
