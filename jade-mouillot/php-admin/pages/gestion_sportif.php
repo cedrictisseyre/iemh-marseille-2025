@@ -203,23 +203,21 @@ $sportifs = $stmt->fetchAll();
         } else {
             echo '<p>Aucun historique de club pour ce sportif.</p>';
         }
-        // Formulaire de changement de club (si une adhésion en cours existe)
+        // Formulaire de changement de club (toujours affiché)
         $stmt = $pdo->prepare("SELECT club_id FROM club_membership WHERE sportif_id = ? AND end_date IS NULL");
         $stmt->execute([$sportif_id]);
         $adhesion_actuelle = $stmt->fetchColumn();
-        if ($adhesion_actuelle !== false) {
-            echo '<h4>Changer de club</h4>';
-            echo '<form method="post">';
-            echo '<select name="nouveau_club" required>';
-            foreach ($clubs as $club) {
-                if ($club['id'] != $adhesion_actuelle) {
-                    echo '<option value="' . $club['id'] . '">' . htmlspecialchars($club['nom']) . '</option>';
-                }
+        echo '<h4>Changer de club</h4>';
+        echo '<form method="post">';
+        echo '<select name="nouveau_club" required>';
+        foreach ($clubs as $club) {
+            if ($club['id'] != $adhesion_actuelle) {
+                echo '<option value="' . $club['id'] . '">' . htmlspecialchars($club['nom']) . '</option>';
             }
-            echo '</select> ';
-            echo '<button type="submit" name="changer_club">Changer</button>';
-            echo '</form>';
         }
+        echo '</select> ';
+        echo '<button type="submit" name="changer_club">Changer</button>';
+        echo '</form>';
     }
     ?>
 </div>
