@@ -50,12 +50,16 @@ function nav($active) {
         echo '</ul>';
         ?>
         <h3>Ajouter un club</h3>
-        <form method="post">
+        <form method="post" aria-label="Ajouter un club">
             <input type="hidden" name="add_club" value="1">
-            <input type="text" name="nom" placeholder="Nom du club" required>
-            <input type="text" name="ville" placeholder="Ville" required>
-            <input type="text" name="pays" placeholder="Pays" required>
-            <input type="date" name="date_creation" required>
+            <label for="nom_club">Nom du club :</label>
+            <input type="text" id="nom_club" name="nom" placeholder="Nom du club" required>
+            <label for="ville">Ville :</label>
+            <input type="text" id="ville" name="ville" placeholder="Ville" required>
+            <label for="pays">Pays :</label>
+            <input type="text" id="pays" name="pays" placeholder="Pays" required>
+            <label for="date_creation">Date de création :</label>
+            <input type="date" id="date_creation" name="date_creation" required>
             <button type="submit">Ajouter</button>
         </form>
         <?php
@@ -77,12 +81,20 @@ function nav($active) {
         echo '</ul>';
         ?>
         <h3>Ajouter un tournoi</h3>
-        <form method="post">
+        <form method="post" aria-label="Ajouter un tournoi">
             <input type="hidden" name="add_champ" value="1">
-            <input type="text" name="nom" placeholder="Nom du tournoi" required>
-            <input type="text" name="lieu" placeholder="Lieu" required>
-            <input type="date" name="date" required>
-            <input type="text" name="type" placeholder="Type" required>
+            <label for="nom_championnat">Nom du tournoi :</label>
+            <input type="text" id="nom_championnat" name="nom" placeholder="Nom du tournoi" required>
+            <label for="lieu">Lieu :</label>
+            <input type="text" id="lieu" name="lieu" placeholder="Lieu" required>
+            <label for="date_championnat">Date :</label>
+            <input type="date" id="date_championnat" name="date" required>
+            <label for="type">Type :</label>
+            <select id="type" name="type" required>
+                <option value="Régional">Régional</option>
+                <option value="National">National</option>
+                <option value="International">International</option>
+            </select>
             <button type="submit">Ajouter</button>
         </form>
         <?php
@@ -128,17 +140,23 @@ function nav($active) {
             $clubs = $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll();
             ?>
             <h3>Ajouter un karateka</h3>
-            <form method="post">
+            <form method="post" aria-label="Ajouter un karateka">
                 <input type="hidden" name="add_karateka" value="1">
-                <input type="text" name="nom" placeholder="Nom" required>
-                <input type="text" name="prenom" placeholder="Prénom" required>
-                <input type="date" name="date_naissance" required>
-                <select name="sexe" required>
+                <label for="nom_karateka">Nom :</label>
+                <input type="text" id="nom_karateka" name="nom" placeholder="Nom" required>
+                <label for="prenom_karateka">Prénom :</label>
+                <input type="text" id="prenom_karateka" name="prenom" placeholder="Prénom" required>
+                <label for="date_naissance">Date de naissance :</label>
+                <input type="date" id="date_naissance" name="date_naissance" required>
+                <label for="sexe">Sexe :</label>
+                <select id="sexe" name="sexe" required>
                     <option value="M">Masculin</option>
                     <option value="F">Féminin</option>
                 </select>
-                <input type="text" name="grade" placeholder="Grade" required>
-                <select name="id_club" required>
+                <label for="grade">Grade :</label>
+                <input type="text" id="grade" name="grade" placeholder="Grade" required>
+                <label for="id_club">Club :</label>
+                <select id="id_club" name="id_club" required>
                     <?php foreach ($clubs as $club): ?>
                         <option value="<?= $club['id_club'] ?>"><?= htmlspecialchars($club['nom_club']) ?></option>
                     <?php endforeach; ?>
