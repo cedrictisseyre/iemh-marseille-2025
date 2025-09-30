@@ -7,11 +7,12 @@ $courses = $pdo->query("SELECT id, nom FROM course")->fetchAll();
 
 // Ajout d'une participation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
-    $id_sportif = $_POST['id_sportif'];
-    $id_course = $_POST['id_course'];
+    $sportif_id = $_POST['id_sportif'];
+    $course_id = $_POST['id_course'];
     $resultat = $_POST['resultat'];
-    $stmt = $pdo->prepare("INSERT INTO participation (id_sportif, id_course, resultat) VALUES (?, ?, ?)");
-    $stmt->execute([$id_sportif, $id_course, $resultat]);
+    // Ajout avec date du jour
+    $stmt = $pdo->prepare("INSERT INTO participation (sportif_id, course_id, date_participation, resultat) VALUES (?, ?, CURDATE(), ?)");
+    $stmt->execute([$sportif_id, $course_id, $resultat]);
     echo "<p style='color:green'>Participation ajoutée !</p>";
 }
 
@@ -20,16 +21,16 @@ $filtre_sportif = isset($_GET['sportif']) ? $_GET['sportif'] : '';
 $where = '';
 $params = [];
 if ($filtre_sportif) {
-    $where = 'WHERE p.id_sportif = ?';
+    $where = 'WHERE p.sportif_id = ?';
     $params[] = $filtre_sportif;
 }
 
-$sql = "SELECT p.id, s.nom AS sportif, c.nom AS course, p.resultat
-        FROM participation p
-        JOIN sportif s ON p.id_sportif = s.id
-        JOIN course c ON p.id_course = c.id
-        $where
-        ORDER BY s.nom, c.nom";
+$sql = "SELECT p.id, s.nom AS sportif, c.nom AS course, p.resultat, p.date_participation
+    FROM participation p
+    JOIN sportif s ON p.sportif_id = s.id
+    JOIN course c ON p.course_id = c.id
+    $where
+    ORDER BY s.nom, c.nom";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $participations = $stmt->fetchAll();
@@ -104,12 +105,14 @@ $participations = $stmt->fetchAll();
         <tr>
             <th>Sportif</th>
             <th>Course</th>
+            <th>Date</th>
             <th>Résultat</th>
         </tr>
         <?php foreach ($participations as $p): ?>
         <tr>
             <td><?= htmlspecialchars($p['sportif']) ?></td>
             <td><?= htmlspecialchars($p['course']) ?></td>
+            <td><?= htmlspecialchars($p['date_participation']) ?></td>
             <td><?= htmlspecialchars($p['resultat']) ?></td>
         </tr>
         <?php endforeach; ?>
