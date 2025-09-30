@@ -1,3 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
+body {
+    font-family: 'Oswald', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffb74d 100%);
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 700px;
+    margin: 3em auto;
+    background: #fff3e0;
+    border-radius: 24px;
+    box-shadow: 0 6px 32px rgba(255,183,77,0.18);
+    padding: 2.5em;
+    text-align: center;
+    border: 2px solid #ffb74d;
+}
+h1 {
+    color: #e65100;
+    margin-bottom: 1em;
+    font-size: 2.2em;
+    font-family: 'Oswald', 'Segoe UI', Arial, sans-serif;
+    letter-spacing: 1px;
+}
+.tabs {
+    margin-bottom: 2em;
+}
+.tabs a {
+    display: inline-block;
+    padding: 1em 2.2em;
+    margin: 0 0.2em;
+    border-radius: 8px 8px 0 0;
+    background: #ffb74d;
+    color: #e65100;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background 0.2s, transform 0.2s;
+    outline: none;
+}
+.tabs a.active {
+    background: #e65100;
+    color: #fff3e0;
+}
+.tabs a:hover,
+.tabs a:focus-visible {
+    background: #f57c00;
+    color: #fff3e0;
+    outline: 2px solid #e65100;
+    transform: scale(1.05);
+}
+.content {
+    background: #fff8e1;
+    border-radius: 0 0 16px 16px;
+    padding: 2em;
+    min-height: 300px;
+}
+.list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2em;
+}
+.list li {
+    margin: 0.7em 0;
+    background: #fff8e1;
+    border-radius: 12px;
+    padding: 1.2em 1.5em;
+    color: #e65100;
+    font-size: 1.15em;
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    box-shadow: 0 2px 8px rgba(255,183,77,0.08);
+}
+form {
+    margin-top: 1em;
+}
+input, select, button {
+    font-size: 1em;
+    padding: 0.7em;
+    margin: 0.5em;
+    border-radius: 8px;
+    border: 1px solid #ffb74d;
+    outline: none;
+}
+input:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 2px solid #e65100;
+    background: #fff3e0;
+}
+button {
+    background: #f57c00;
+    color: #fff3e0;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(245,124,0,0.08);
+}
+button:hover {
+    background: #e65100;
+    color: #fff3e0;
+    transform: scale(1.05);
+}
+.success {
+    color: #f57c00;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+@media (max-width: 700px) {
+    .container {
+        max-width: 98vw;
+        padding: 1em;
+    }
+    .tabs a {
+        padding: 0.7em 1em;
+        font-size: 1em;
+    }
+    .list li {
+        padding: 0.7em 0.7em;
+        font-size: 1em;
+    }
+    h1, h2 {
+        font-size: 1.2em;
+    }
+}
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
     background: linear-gradient(135deg, #fffbe6 0%, #f5c6cb 100%);
