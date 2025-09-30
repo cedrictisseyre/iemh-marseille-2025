@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>L'annuaire du karaté</title>
-    <link rel="stylesheet" href="../css/style-onglets.css">
+    <link rel="stylesheet" href="css/style-onglets.css">
     <style>
         .site-title{display:flex;align-items:center;gap:0.6rem}
         .site-icon{width:38px;height:38px;flex:0 0 38px}
