@@ -1,6 +1,6 @@
 <?php
 // Inclure la connexion à la BDD
-include __DIR__ . '/includes/db_connexion.php';
+include __DIR__ . '/../includes/db_connexion.php';
 
 $page = $_GET['page'] ?? 'clubs';
 
