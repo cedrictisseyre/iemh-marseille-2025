@@ -28,6 +28,10 @@ body{
 }
 h1{margin:0 0 0.5rem 0;font-size:1.8rem;text-align:center}
 
+/* Titles with small icons */
+.title-with-icons{display:flex;align-items:center;justify-content:center;gap:0.6rem;margin:0.6rem 0;font-size:1.25rem}
+.small-icon{width:18px;height:18px;flex:0 0 18px;vertical-align:middle;fill:var(--primary)}
+
 .tabs{margin:1rem 0 1.5rem}
 .tabs a{
   display:inline-block;

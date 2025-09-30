@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_club'])) {
 }
 
 $stmt = $db_ok ? $pdo->query("SELECT * FROM club") : null;
-echo '<h2>Liste des clubs</h2><ul class="list">';
+echo '<h2 class="title-with-icons"><svg class="small-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2l3 6h6l-5 4 2 6-6-3-6 3 2-6-5-4h6z" fill="currentColor"/></svg>Liste des clubs<svg class="small-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2l3 6h6l-5 4 2 6-6-3-6 3 2-6-5-4h6z" fill="currentColor"/></svg></h2><ul class="list">';
 if ($stmt) {
     while ($club = $stmt->fetch()) {
         echo "<li><a href='gestion-karate.php?page=clubs&club_id={$club['id_club']}'><strong>" . htmlspecialchars($club['nom_club']) . "</strong></a> (" . htmlspecialchars($club['ville']) . ", " . htmlspecialchars($club['pays']) . ")</li>";

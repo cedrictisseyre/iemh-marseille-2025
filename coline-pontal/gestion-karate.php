@@ -23,6 +23,6 @@ if (file_exists($partial)) {
 }
 
 echo '</div>';
-include __DIR__ . '/includes/footer.php';
+// footer retiré volontairement
 
 ?>

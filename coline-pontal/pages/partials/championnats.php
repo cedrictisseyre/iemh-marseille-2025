@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_champ'])) {
 }
 
 $stmt = $db_ok ? $pdo->query("SELECT * FROM championnat") : null;
-echo '<h2>Liste des tournois</h2><ul class="list">';
+echo '<h2 class="title-with-icons"><svg class="small-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 3h12v2a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V3z" fill="currentColor"/><path d="M8 13a4 4 0 0 0 8 0v-1h1a1 1 0 0 1 1 1v3a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-3a1 1 0 0 1 1-1h1v1z" fill="currentColor"/></svg>Liste des tournois<svg class="small-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6 3h12v2a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V3z" fill="currentColor"/><path d="M8 13a4 4 0 0 0 8 0v-1h1a1 1 0 0 1 1 1v3a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-3a1 1 0 0 1 1-1h1v1z" fill="currentColor"/></svg></h2><ul class="list">';
 if ($stmt) {
     while ($ch = $stmt->fetch()) {
         echo "<li><a href='gestion-karate.php?page=championnats&championnat_id={$ch['id_championnat']}'><strong>" . htmlspecialchars($ch['nom_championnat']) . "</strong></a> (" . htmlspecialchars($ch['lieu']) . ", " . htmlspecialchars($ch['date_championnat']) . ", " . htmlspecialchars($ch['type']) . ")</li>";

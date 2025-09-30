@@ -38,7 +38,7 @@ if (isset($_GET['karateka_id'])) {
     }
 } else {
     $stmt = $db_ok ? $pdo->query("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club") : null;
-    echo '<h2>Liste des karateka</h2><ul class="list">';
+    echo '<h2 class="title-with-icons"><svg class="small-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><path d="M4 3c0 0 4 2 8 2s8-2 8-2v3c0 2-2 3-2 3s0 4-1 6-2 3-5 3-4-1-5-3-1-6-1-6-2-1-2-3V3z" fill="currentColor"/></svg>Liste des karatekas<svg class="small-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img"><path d="M4 3c0 0 4 2 8 2s8-2 8-2v3c0 2-2 3-2 3s0 4-1 6-2 3-5 3-4-1-5-3-1-6-1-6-2-1-2-3V3z" fill="currentColor"/></svg></h2><ul class="list">';
     if ($stmt) {
         while ($k = $stmt->fetch()) {
             $label = formatName($k['prenom'], $k['nom']);
