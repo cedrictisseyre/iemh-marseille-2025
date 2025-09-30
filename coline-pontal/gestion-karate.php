@@ -28,7 +28,7 @@ function nav($active) {
 </head>
 <body>
 <div class="container">
-    <h1>Gestion Karaté</h1>
+    <h1>L'annuaire du karaté</h1>
     <?php nav($page); ?>
     <div class="content">
     <?php
@@ -60,7 +60,7 @@ function nav($active) {
                 $stmt2->execute([$cid]);
                 echo '<ul class="list">';
                 while ($k = $stmt2->fetch()) {
-                    echo "<li><strong>{$k['prenom']} {$k['nom']}</strong> ({$k['grade']})</li>";
+                    echo "<li><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>{$k['prenom']} {$k['nom']}</strong> ({$k['grade']})</li>";
                 }
                 echo '</ul>';
                 echo '<p><a href="gestion-karate.php?page=clubs">Retour à la liste des clubs</a></p>';
@@ -111,7 +111,7 @@ function nav($active) {
                 $stmt2->execute([$chid]);
                 echo '<ul class="list">';
                 while ($part = $stmt2->fetch()) {
-                    echo "<li><strong>{$part['prenom']} {$part['nom']}</strong> ({$part['nom_club']})<br>Épreuve : {$part['epreuve']} | Sexe : {$part['sexe']} | Équipe : {$part['equipe']}<br>Catégorie : {$part['categorie']} | Résultat : {$part['resultat']}</li>";
+                    echo "<li><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>{$part['prenom']} {$part['nom']}</strong> ({$part['nom_club']})<br>Épreuve : {$part['epreuve']} | Sexe : {$part['sexe']} | Équipe : {$part['equipe']}<br>Catégorie : {$part['categorie']} | Résultat : {$part['resultat']}</li>";
                 }
                 echo '</ul>';
                 echo '<p><a href="gestion-karate.php?page=championnats">Retour à la liste des tournois</a></p>';
@@ -161,7 +161,7 @@ function nav($active) {
                 $stmt2->execute([$kid]);
                 echo '<h3>Participations</h3><ul class="list">';
                 while ($part = $stmt2->fetch()) {
-                    echo "<li><strong>{$part['nom_championnat']}</strong> ({$part['lieu']}, {$part['date_championnat']}, {$part['type']})<br>Épreuve : {$part['epreuve']} | Sexe : {$part['sexe']} | Équipe : {$part['equipe']}<br>Catégorie : {$part['categorie']} | Résultat : {$part['resultat']}</li>";
+                    echo "<li><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>{$part['nom_championnat']}</strong> ({$part['lieu']}, {$part['date_championnat']}, {$part['type']})<br>Épreuve : {$part['epreuve']} | Sexe : {$part['sexe']} | Équipe : {$part['equipe']}<br>Catégorie : {$part['categorie']} | Résultat : {$part['resultat']}</li>";
                 }
                 echo '</ul>';
                 echo '<p><a href="gestion-karate.php?page=karateka">Retour à la liste</a></p>';
@@ -173,7 +173,7 @@ function nav($active) {
             $stmt = $pdo->query("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club");
             echo '<h2>Liste des karateka</h2><ul class="list">';
             while ($k = $stmt->fetch()) {
-                echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>{$k['prenom']} {$k['nom']}</strong></a> ({$k['grade']}) - Club : {$k['nom_club']}</li>";
+                echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>{$k['prenom']} {$k['nom']}</strong></a> ({$k['grade']}) - Club : {$k['nom_club']}</li>";
             }
             echo '</ul>';
             // Liste clubs pour le formulaire
