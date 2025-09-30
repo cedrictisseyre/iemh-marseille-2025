@@ -1,11 +1,11 @@
 <?php
-// Contrôleur léger: inclut la connexion, header, nav, partials et footer
-include __DIR__ . '/../includes/db_connexion.php';
+// Contrôleur léger placé à la racine du dossier coline-pontal
+include __DIR__ . '/includes/db_connexion.php';
 
 $page = $_GET['page'] ?? 'clubs';
 
-include __DIR__ . '/../includes/header.php';
-include __DIR__ . '/../includes/nav.php';
+include __DIR__ . '/includes/header.php';
+include __DIR__ . '/includes/nav.php';
 render_nav($page);
 echo '<div class="content">';
 
@@ -15,7 +15,7 @@ if (!isset($pdo) || $pdo === null) {
 }
 
 // Charger le partial correspondant
-$partial = __DIR__ . '/partials/' . $page . '.php';
+$partial = __DIR__ . '/pages/partials/' . $page . '.php';
 if (file_exists($partial)) {
     include $partial;
 } else {
@@ -23,6 +23,6 @@ if (file_exists($partial)) {
 }
 
 echo '</div>';
-include __DIR__ . '/../includes/footer.php';
+include __DIR__ . '/includes/footer.php';
 
 ?>
