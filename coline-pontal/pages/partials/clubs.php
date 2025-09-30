@@ -1,17 +1,26 @@
 <?php
 // Section Clubs
+$db_ok = isset($pdo) && $pdo !== null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_club'])) {
-    $stmt = $pdo->prepare("INSERT INTO club (nom_club, ville, pays, date_creation) VALUES (?, ?, ?, ?)");
-    $stmt->execute([
-        $_POST['nom'], $_POST['ville'], $_POST['pays'], $_POST['date_creation']
-    ]);
-    echo '<p class="success">Club ajouté !</p>';
+    if ($db_ok) {
+        $stmt = $pdo->prepare("INSERT INTO club (nom_club, ville, pays, date_creation) VALUES (?, ?, ?, ?)");
+        $stmt->execute([
+            $_POST['nom'], $_POST['ville'], $_POST['pays'], $_POST['date_creation']
+        ]);
+        echo '<p class="success">Club ajouté !</p>';
+    } else {
+        echo '<p class="success" style="color:#b91c1c;">Impossible : pas de connexion DB.</p>';
+    }
 }
 
-$stmt = $pdo->query("SELECT * FROM club");
+$stmt = $db_ok ? $pdo->query("SELECT * FROM club") : null;
 echo '<h2>Liste des clubs</h2><ul class="list">';
-while ($club = $stmt->fetch()) {
-    echo "<li><a href='gestion-karate.php?page=clubs&club_id={$club['id_club']}'><strong>" . htmlspecialchars($club['nom_club']) . "</strong></a> (" . htmlspecialchars($club['ville']) . ", " . htmlspecialchars($club['pays']) . ")</li>";
+if ($stmt) {
+    while ($club = $stmt->fetch()) {
+        echo "<li><a href='gestion-karate.php?page=clubs&club_id={$club['id_club']}'><strong>" . htmlspecialchars($club['nom_club']) . "</strong></a> (" . htmlspecialchars($club['ville']) . ", " . htmlspecialchars($club['pays']) . ")</li>";
+    }
+} else {
+    echo "<li class='meta'>Aucun club listé (connexion DB manquante).</li>";
 }
 echo '</ul>';
 
@@ -22,13 +31,17 @@ if (isset($_GET['club_id'])) {
     $club = $stmt->fetch();
     if ($club) {
         echo "<h3>Karateka du club : " . htmlspecialchars($club['nom_club']) . "</h3>";
-        $stmt2 = $pdo->prepare("SELECT * FROM karateka WHERE id_club = ?");
-        $stmt2->execute([$cid]);
-        echo '<ul class="list">';
-        while ($k = $stmt2->fetch()) {
-            echo "<li><strong>" . htmlspecialchars($k['prenom'] . ' ' . $k['nom']) . "</strong> (<span class='meta'>" . htmlspecialchars($k['grade']) . "</span>)</li>";
+        if ($db_ok) {
+            $stmt2 = $pdo->prepare("SELECT * FROM karateka WHERE id_club = ?");
+            $stmt2->execute([$cid]);
+            echo '<ul class="list">';
+            while ($k = $stmt2->fetch()) {
+                echo "<li><strong>" . htmlspecialchars($k['prenom'] . ' ' . $k['nom']) . "</strong> (<span class='meta'>" . htmlspecialchars($k['grade']) . "</span>)</li>";
+            }
+            echo '</ul>';
+        } else {
+            echo '<p class="meta">Impossible d\'afficher les karateka : connexion DB manquante.</p>';
         }
-        echo '</ul>';
         echo '<p><a href="gestion-karate.php?page=clubs">Retour à la liste des clubs</a></p>';
     } else {
         echo '<p>Club introuvable.</p>';

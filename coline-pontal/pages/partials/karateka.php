@@ -1,40 +1,54 @@
 <?php
 // Section Karateka
+$db_ok = isset($pdo) && $pdo !== null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_karateka'])) {
-    $stmt = $pdo->prepare("INSERT INTO karateka (nom, prenom, date_naissance, sexe, grade, id_club) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([
-        $_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['sexe'], $_POST['grade'], $_POST['id_club']
-    ]);
-    echo '<p class="success">Karateka ajouté !</p>';
+    if ($db_ok) {
+        $stmt = $pdo->prepare("INSERT INTO karateka (nom, prenom, date_naissance, sexe, grade, id_club) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['sexe'], $_POST['grade'], $_POST['id_club']
+        ]);
+        echo '<p class="success">Karateka ajouté !</p>';
+    } else {
+        echo '<p class="success" style="color:#b91c1c;">Impossible : pas de connexion DB.</p>';
+    }
 }
 
 if (isset($_GET['karateka_id'])) {
     $kid = intval($_GET['karateka_id']);
-    $stmt = $pdo->prepare("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club WHERE k.id_karateka = ?");
-    $stmt->execute([$kid]);
+    $stmt = $db_ok ? $pdo->prepare("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club WHERE k.id_karateka = ?") : null;
+    if ($stmt) $stmt->execute([$kid]);
     $k = $stmt->fetch();
     if ($k) {
-        echo "<h2>" . htmlspecialchars($k['prenom'] . ' ' . $k['nom']) . "</h2>";
-        echo "<p><strong>Grade :</strong> " . htmlspecialchars($k['grade']) . "<br><strong>Club :</strong> " . htmlspecialchars($k['nom_club']) . "</p>";
-        $stmt2 = $pdo->prepare("SELECT p.*, ch.nom_championnat, ch.lieu, ch.date_championnat, ch.type FROM participation p JOIN championnat ch ON p.id_championnat = ch.id_championnat WHERE p.id_karateka = ?");
-        $stmt2->execute([$kid]);
-        echo '<h3>Participations</h3><ul class="list">';
-        while ($part = $stmt2->fetch()) {
-            echo "<li><div><strong>" . htmlspecialchars($part['nom_championnat']) . "</strong> (<span class='meta'>" . htmlspecialchars($part['lieu'] . ', ' . $part['date_championnat'] . ', ' . $part['type']) . "</span>)</div><div class='meta'>Épreuve: " . htmlspecialchars($part['epreuve']) . " | Sexe: " . htmlspecialchars($part['sexe']) . " | Équipe: " . htmlspecialchars($part['equipe']) . " | Catégorie: " . htmlspecialchars($part['categorie']) . " | Résultat: " . htmlspecialchars($part['resultat']) . "</div></li>";
+        echo "<h2>" . esc($k['prenom'] . ' ' . $k['nom']) . "</h2>";
+        echo "<p><strong>Grade :</strong> " . esc($k['grade']) . "<br><strong>Club :</strong> " . esc($k['nom_club']) . "</p>";
+        if ($db_ok) {
+            $stmt2 = $pdo->prepare("SELECT p.*, ch.nom_championnat, ch.lieu, ch.date_championnat, ch.type FROM participation p JOIN championnat ch ON p.id_championnat = ch.id_championnat WHERE p.id_karateka = ?");
+            $stmt2->execute([$kid]);
+            echo '<h3>Participations</h3><ul class="list">';
+            while ($part = $stmt2->fetch()) {
+                echo "<li><div><strong>" . esc($part['nom_championnat']) . "</strong> (<span class='meta'>" . esc($part['lieu'] . ', ' . $part['date_championnat'] . ', ' . $part['type']) . "</span>)</div><div class='meta'>Épreuve: " . esc($part['epreuve']) . " | Sexe: " . esc($part['sexe']) . " | Équipe: " . esc($part['equipe']) . " | Catégorie: " . esc($part['categorie']) . " | Résultat: " . esc($part['resultat']) . "</div></li>";
+            }
+            echo '</ul>';
+        } else {
+            echo '<p class="meta">Aucune participation affichable (connexion DB manquante).</p>';
         }
-        echo '</ul>';
         echo '<p><a href="gestion-karate.php?page=karateka">Retour à la liste</a></p>';
     } else {
         echo '<p>Karateka introuvable.</p>';
     }
 } else {
-    $stmt = $pdo->query("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club");
+    $stmt = $db_ok ? $pdo->query("SELECT k.*, c.nom_club FROM karateka k JOIN club c ON k.id_club = c.id_club") : null;
     echo '<h2>Liste des karateka</h2><ul class="list">';
-    while ($k = $stmt->fetch()) {
-        echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><span style='font-size:1.3em; margin-right:0.5em;'>🥋</span><strong>" . htmlspecialchars($k['prenom'] . ' ' . $k['nom']) . "</strong></a> (" . htmlspecialchars($k['grade']) . ") - Club : " . htmlspecialchars($k['nom_club']) . "</li>";
+    if ($stmt) {
+        while ($k = $stmt->fetch()) {
+            $label = formatName($k['prenom'], $k['nom']);
+            echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>" . esc($label) . "</strong></a> (" . esc($k['grade']) . ") - Club : " . esc($k['nom_club']) . "</li>";
+        }
+    } else {
+        echo "<li class='meta'>Aucun karateka listé (connexion DB manquante).</li>";
     }
     echo '</ul>';
-    $clubs = $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll();
+    $clubs = $db_ok ? $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll() : [];
     ?>
     <h3>Ajouter un karateka</h3>
     <form method="post" aria-label="Ajouter un karateka">
@@ -55,7 +69,7 @@ if (isset($_GET['karateka_id'])) {
         <label for="id_club">Club :</label>
         <select id="id_club" name="id_club" required>
             <?php foreach ($clubs as $club): ?>
-                <option value="<?= $club['id_club'] ?>"><?= htmlspecialchars($club['nom_club']) ?></option>
+                <option value="<?= $club['id_club'] ?>"><?= esc($club['nom_club']) ?></option>
             <?php endforeach; ?>
         </select>
         <button type="submit">Ajouter</button>

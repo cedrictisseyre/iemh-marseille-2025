@@ -9,6 +9,11 @@ include __DIR__ . '/../includes/nav.php';
 render_nav($page);
 echo '<div class="content">';
 
+// If DB connection failed, show a notice but continue rendering so CSS is loaded
+if (!isset($pdo) || $pdo === null) {
+    echo '<p class="success" style="color:#b91c1c;">Attention : connexion à la base de données indisponible. Certaines fonctionnalités sont désactivées.</p>';
+}
+
 // Charger le partial correspondant
 $partial = __DIR__ . '/partials/' . $page . '.php';
 if (file_exists($partial)) {

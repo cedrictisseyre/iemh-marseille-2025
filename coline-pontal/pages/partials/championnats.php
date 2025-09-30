@@ -1,17 +1,26 @@
 <?php
 // Section Championnats / Tournois
+$db_ok = isset($pdo) && $pdo !== null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_champ'])) {
-    $stmt = $pdo->prepare("INSERT INTO championnat (nom_championnat, lieu, date_championnat, type) VALUES (?, ?, ?, ?)");
-    $stmt->execute([
-        $_POST['nom'], $_POST['lieu'], $_POST['date'], $_POST['type']
-    ]);
-    echo '<p class="success">Tournoi ajouté !</p>';
+    if ($db_ok) {
+        $stmt = $pdo->prepare("INSERT INTO championnat (nom_championnat, lieu, date_championnat, type) VALUES (?, ?, ?, ?)");
+        $stmt->execute([
+            $_POST['nom'], $_POST['lieu'], $_POST['date'], $_POST['type']
+        ]);
+        echo '<p class="success">Tournoi ajouté !</p>';
+    } else {
+        echo '<p class="success" style="color:#b91c1c;">Impossible : pas de connexion DB.</p>';
+    }
 }
 
-$stmt = $pdo->query("SELECT * FROM championnat");
+$stmt = $db_ok ? $pdo->query("SELECT * FROM championnat") : null;
 echo '<h2>Liste des tournois</h2><ul class="list">';
-while ($ch = $stmt->fetch()) {
-    echo "<li><a href='gestion-karate.php?page=championnats&championnat_id={$ch['id_championnat']}'><strong>" . htmlspecialchars($ch['nom_championnat']) . "</strong></a> (" . htmlspecialchars($ch['lieu']) . ", " . htmlspecialchars($ch['date_championnat']) . ", " . htmlspecialchars($ch['type']) . ")</li>";
+if ($stmt) {
+    while ($ch = $stmt->fetch()) {
+        echo "<li><a href='gestion-karate.php?page=championnats&championnat_id={$ch['id_championnat']}'><strong>" . htmlspecialchars($ch['nom_championnat']) . "</strong></a> (" . htmlspecialchars($ch['lieu']) . ", " . htmlspecialchars($ch['date_championnat']) . ", " . htmlspecialchars($ch['type']) . ")</li>";
+    }
+} else {
+    echo "<li class='meta'>Aucun tournoi listé (connexion DB manquante).</li>";
 }
 echo '</ul>';
 

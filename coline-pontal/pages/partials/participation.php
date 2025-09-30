@@ -1,15 +1,20 @@
 <?php
 // Section Participation
+$db_ok = isset($pdo) && $pdo !== null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_participation'])) {
-    $stmt = $pdo->prepare("INSERT INTO participation (id_karateka, id_championnat, epreuve, sexe, equipe, categorie, resultat) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([
-        $_POST['id_karateka'], $_POST['id_championnat'], $_POST['epreuve'], $_POST['sexe'], $_POST['equipe'], $_POST['categorie'], $_POST['resultat']
-    ]);
-    echo '<p class="success">Participation enregistrée !</p>';
+    if ($db_ok) {
+        $stmt = $pdo->prepare("INSERT INTO participation (id_karateka, id_championnat, epreuve, sexe, equipe, categorie, resultat) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $_POST['id_karateka'], $_POST['id_championnat'], $_POST['epreuve'], $_POST['sexe'], $_POST['equipe'], $_POST['categorie'], $_POST['resultat']
+        ]);
+        echo '<p class="success">Participation enregistrée !</p>';
+    } else {
+        echo '<p class="success" style="color:#b91c1c;">Impossible : pas de connexion DB.</p>';
+    }
 }
 
-$karatekas = $pdo->query("SELECT id_karateka, nom, prenom, sexe FROM karateka")->fetchAll();
-$championnats = $pdo->query("SELECT id_championnat, nom_championnat FROM championnat")->fetchAll();
+$karatekas = $db_ok ? $pdo->query("SELECT id_karateka, nom, prenom, sexe FROM karateka")->fetchAll() : [];
+$championnats = $db_ok ? $pdo->query("SELECT id_championnat, nom_championnat FROM championnat")->fetchAll() : [];
 ?>
 <h2>Ajouter une participation</h2>
 <form method="post" aria-label="Ajouter une participation">
