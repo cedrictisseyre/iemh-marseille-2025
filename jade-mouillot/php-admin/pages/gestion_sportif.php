@@ -173,19 +173,19 @@ $sportifs = $stmt->fetchAll();
         // Traitement du changement de club
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changer_club']) && isset($_POST['nouveau_club'])) {
             $nouveau_club = (int)$_POST['nouveau_club'];
-            // Clôturer l'adhésion courante
-            $stmt = $pdo->prepare("UPDATE club_membership SET end_date = CURDATE() WHERE sportif_id = ? AND end_date IS NULL");
+            // Clôturer l'adhésion courante (date et heure)
+            $stmt = $pdo->prepare("UPDATE club_membership SET end_date = NOW() WHERE sportif_id = ? AND end_date IS NULL");
             $stmt->execute([$sportif_id]);
-            // Créer la nouvelle adhésion
-            $stmt = $pdo->prepare("INSERT INTO club_membership (sportif_id, club_id, start_date, end_date) VALUES (?, ?, CURDATE(), NULL)");
+            // Créer la nouvelle adhésion (date et heure)
+            $stmt = $pdo->prepare("INSERT INTO club_membership (sportif_id, club_id, start_date, end_date) VALUES (?, ?, NOW(), NULL)");
             $stmt->execute([$sportif_id, $nouveau_club]);
             echo "<p style='color:green'>Changement de club effectué !</p>";
         }
-        $sql = "SELECT cm.start_date, cm.end_date, c.nom AS club_nom
-                FROM club_membership cm
-                JOIN club c ON cm.club_id = c.id
-                WHERE cm.sportif_id = ?
-                ORDER BY cm.start_date DESC";
+    $sql = "SELECT cm.start_date, cm.end_date, c.nom AS club_nom
+        FROM club_membership cm
+        JOIN club c ON cm.club_id = c.id
+        WHERE cm.sportif_id = ?
+        ORDER BY cm.start_date DESC";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$sportif_id]);
         $historique = $stmt->fetchAll();
