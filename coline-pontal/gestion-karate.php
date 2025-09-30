@@ -45,9 +45,29 @@ function nav($active) {
         $stmt = $pdo->query("SELECT * FROM club");
         echo '<h2>Liste des clubs</h2><ul class="list">';
         while ($club = $stmt->fetch()) {
-            echo "<li><strong>{$club['nom_club']}</strong> ({$club['ville']}, {$club['pays']})</li>";
+            echo "<li><a href='gestion-karate.php?page=clubs&club_id={$club['id_club']}'><strong>{$club['nom_club']}</strong></a> ({$club['ville']}, {$club['pays']})</li>";
         }
         echo '</ul>';
+        // Si club sélectionné
+        if (isset($_GET['club_id'])) {
+            $cid = intval($_GET['club_id']);
+            $stmt = $pdo->prepare("SELECT * FROM club WHERE id_club = ?");
+            $stmt->execute([$cid]);
+            $club = $stmt->fetch();
+            if ($club) {
+                echo "<h3>Karateka du club : {$club['nom_club']}</h3>";
+                $stmt2 = $pdo->prepare("SELECT * FROM karateka WHERE id_club = ?");
+                $stmt2->execute([$cid]);
+                echo '<ul class="list">';
+                while ($k = $stmt2->fetch()) {
+                    echo "<li><strong>{$k['prenom']} {$k['nom']}</strong> ({$k['grade']})</li>";
+                }
+                echo '</ul>';
+                echo '<p><a href="gestion-karate.php?page=clubs">Retour à la liste des clubs</a></p>';
+            } else {
+                echo '<p>Club introuvable.</p>';
+            }
+        }
         ?>
         <h3>Ajouter un club</h3>
         <form method="post" aria-label="Ajouter un club">
@@ -76,9 +96,29 @@ function nav($active) {
         $stmt = $pdo->query("SELECT * FROM championnat");
         echo '<h2>Liste des tournois</h2><ul class="list">';
         while ($ch = $stmt->fetch()) {
-            echo "<li><strong>{$ch['nom_championnat']}</strong> ({$ch['lieu']}, {$ch['date_championnat']})</li>";
+            echo "<li><a href='gestion-karate.php?page=championnats&championnat_id={$ch['id_championnat']}'><strong>{$ch['nom_championnat']}</strong></a> ({$ch['lieu']}, {$ch['date_championnat']}, {$ch['type']})</li>";
         }
         echo '</ul>';
+        // Si championnat sélectionné
+        if (isset($_GET['championnat_id'])) {
+            $chid = intval($_GET['championnat_id']);
+            $stmt = $pdo->prepare("SELECT * FROM championnat WHERE id_championnat = ?");
+            $stmt->execute([$chid]);
+            $champ = $stmt->fetch();
+            if ($champ) {
+                echo "<h3>Participants au championnat : {$champ['nom_championnat']}</h3>";
+                $stmt2 = $pdo->prepare("SELECT p.*, k.nom, k.prenom, k.grade, c.nom_club FROM participation p JOIN karateka k ON p.id_karateka = k.id_karateka JOIN club c ON k.id_club = c.id_club WHERE p.id_championnat = ?");
+                $stmt2->execute([$chid]);
+                echo '<ul class="list">';
+                while ($part = $stmt2->fetch()) {
+                    echo "<li><strong>{$part['prenom']} {$part['nom']}</strong> ({$part['nom_club']})<br>Épreuve : {$part['epreuve']} | Sexe : {$part['sexe']} | Équipe : {$part['equipe']}<br>Catégorie : {$part['categorie']} | Résultat : {$part['resultat']}</li>";
+                }
+                echo '</ul>';
+                echo '<p><a href="gestion-karate.php?page=championnats">Retour à la liste des tournois</a></p>';
+            } else {
+                echo '<p>Championnat introuvable.</p>';
+            }
+        }
         ?>
         <h3>Ajouter un tournoi</h3>
         <form method="post" aria-label="Ajouter un tournoi">
@@ -117,11 +157,11 @@ function nav($active) {
                 echo "<h2>{$k['prenom']} {$k['nom']}</h2>";
                 echo "<p><strong>Grade :</strong> {$k['grade']}<br><strong>Club :</strong> {$k['nom_club']}</p>";
                 // Historique des participations
-                $stmt2 = $pdo->prepare("SELECT p.*, ch.nom_championnat, ch.lieu, ch.date_championnat FROM participation p JOIN championnat ch ON p.id_championnat = ch.id_championnat WHERE p.id_karateka = ?");
+                $stmt2 = $pdo->prepare("SELECT p.*, ch.nom_championnat, ch.lieu, ch.date_championnat, ch.type FROM participation p JOIN championnat ch ON p.id_championnat = ch.id_championnat WHERE p.id_karateka = ?");
                 $stmt2->execute([$kid]);
                 echo '<h3>Participations</h3><ul class="list">';
                 while ($part = $stmt2->fetch()) {
-                    echo "<li><strong>{$part['nom_championnat']}</strong> ({$part['lieu']}, {$part['date_championnat']})<br>Catégorie : {$part['categorie']}<br>Résultat : {$part['resultat']}</li>";
+                    echo "<li><strong>{$part['nom_championnat']}</strong> ({$part['lieu']}, {$part['date_championnat']}, {$part['type']})<br>Épreuve : {$part['epreuve']} | Sexe : {$part['sexe']} | Équipe : {$part['equipe']}<br>Catégorie : {$part['categorie']} | Résultat : {$part['resultat']}</li>";
                 }
                 echo '</ul>';
                 echo '<p><a href="gestion-karate.php?page=karateka">Retour à la liste</a></p>';
