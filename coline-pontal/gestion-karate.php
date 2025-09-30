@@ -1,6 +1,6 @@
 <?php
 // Inclure la connexion à la BDD
-include 'db_connexion.php';
+include __DIR__ . '/includes/db_connexion.php';
 
 $page = $_GET['page'] ?? 'clubs';
 
@@ -24,7 +24,7 @@ function nav($active) {
 <head>
     <meta charset="UTF-8">
     <title>Gestion Karaté - Coline Pontal</title>
-    <link rel="stylesheet" href="css/style-onglets.css">
+    <link rel="stylesheet" href="../css/style-onglets.css">
 </head>
 <body>
 <div class="container">
