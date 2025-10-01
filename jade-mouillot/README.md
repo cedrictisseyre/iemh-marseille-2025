@@ -13,17 +13,26 @@ Cette application web permet de gérer dynamiquement les sportifs, clubs, course
 - **Navigation rapide** entre les différentes entités sans repasser par le menu principal
 - **Interface responsive** et facile à utiliser
 
+
 ## Structure du projet
 
 ```
 jade-mouillot/
+├── config/
+│   └── db_connect.php         # Connexion à la base de données
 ├── php-admin/
-│   ├── db_connect.php         # Connexion à la base de données
 │   └── pages/
 │       ├── gestion_sportif.php       # Gestion des sportifs (ajout + liste + historique clubs)
 │       ├── gestion_club.php          # Gestion des clubs (ajout + liste)
 │       ├── gestion_course.php        # Gestion des courses (ajout + liste)
-│       └── gestion_discipline.php    # Gestion des disciplines (ajout + liste)
+│       ├── gestion_discipline.php    # Gestion des disciplines (ajout + liste)
+│       ├── gestion_participation.php # Gestion des participations
+│       └── gestion_sportifs_api.php  # Recherche API externe
+├── assets/                  # Styles, scripts, images
+├── sql/
+│   └── jade_mouillot.sql    # Script de création de la base
+├── docs/
+│   └── README.md            # Documentation
 ```
 
 ## Utilisation
