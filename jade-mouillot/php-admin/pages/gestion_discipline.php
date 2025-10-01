@@ -40,7 +40,7 @@ $disciplines = $pdo->query($sql)->fetchAll();
         <a href="gestion_sportif.php">Sportif</a>
         <a href="gestion_club.php">Club</a>
         <a href="gestion_course.php">Course</a>
-        <a href="gestion_discipline.php">Discipline</a>
+        <a href="gestion_discipline.php"><b>Discipline</b></a>
         <a href="gestion_participation.php">Participation</a>
     </div>
     <h1>Gestion des disciplines</h1>

@@ -39,7 +39,7 @@ $courses = $pdo->query($sql)->fetchAll();
     <div class="nav">
         <a href="gestion_sportif.php">Sportif</a>
         <a href="gestion_club.php">Club</a>
-        <a href="gestion_course.php">Course</a>
+        <a href="gestion_course.php"><b>Course</b></a>
         <a href="gestion_discipline.php">Discipline</a>
         <a href="gestion_participation.php">Participation</a>
     </div>

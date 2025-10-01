@@ -82,7 +82,7 @@ $sportifs = $stmt->fetchAll();
 <body>
 <div class=\"container\">
     <div class="nav">
-        <a href="gestion_sportif.php">Sportif</a>
+        <a href="gestion_sportif.php"><b>Sportif</b></a>
         <a href="gestion_club.php">Club</a>
         <a href="gestion_course.php">Course</a>
         <a href="gestion_discipline.php">Discipline</a>

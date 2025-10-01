@@ -28,7 +28,6 @@ jade-mouillot/
 │       ├── gestion_discipline.php    # Gestion des disciplines (ajout + liste)
 │       ├── gestion_participation.php # Gestion des participations
 │       └── gestion_sportifs_api.php  # Recherche API externe
-├── assets/                  # Styles, scripts, images
 ├── sql/
 │   └── jade_mouillot.sql    # Script de création de la base
 ├── docs/
@@ -54,8 +53,7 @@ jade-mouillot/
 ## Technologies utilisées
 
 - PHP (PDO pour la connexion MySQL)
-- HTML/CSS (interface simple et responsive)
-- MySQL/MariaDB
+- PHPMYADMIN (pour la création de la BDD)
 
 ## Auteur
-Projet réalisé par [cedrictisseyre] et collaborateurs dans le cadre du module IEMH Marseille 2025.
+Projet réalisé par jademouillot (jadeiseng) et collaborateurs dans le cadre du module IEMH Marseille 2025.
