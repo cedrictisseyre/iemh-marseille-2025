@@ -1,5 +1,5 @@
 <?php
-require_once '../db_connect.php';
+require_once '../../config/db_connect.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
     $nom = $_POST['nom'];

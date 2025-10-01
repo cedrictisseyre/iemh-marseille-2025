@@ -1,5 +1,5 @@
 <?php
-require_once '../db_connect.php';
+require_once '../../config/db_connect.php';
 
 
 $clubs = $pdo->query("SELECT id, nom FROM club")->fetchAll();

@@ -1,4 +1,5 @@
 <?php
+require_once '../../config/db_connect.php';
 // Page de démonstration d'appel à une API sportive externe (TheSportsDB)
 $athlete = isset($_GET['athlete']) ? trim($_GET['athlete']) : 'Lionel Messi';
 $url = 'https://www.thesportsdb.com/api/v1/json/1/searchplayers.php?p=' . urlencode($athlete);
