@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter des stats joueur</title>
+</head>
+<body>
+  <h1>Ajouter des stats joueur</h1>
+  <form action="../services/ajouter_stats.php" method="post">
+    Match (ID) : <input type="number" name="game_id" required><br>
+    Joueur (ID) : <input type="number" name="player_id" required><br>
+    Équipe (ID) : <input type="number" name="team_id" required><br>
+    Titulaire : <input type="checkbox" name="starter" value="1"><br>
+    Minutes : <input type="number" name="minutes"><br>
+    Points : <input type="number" name="pts"><br>
+    ... autres stats ...<br>
+    <input type="submit" value="Ajouter">
+  </form>
+</body>
+</html>
