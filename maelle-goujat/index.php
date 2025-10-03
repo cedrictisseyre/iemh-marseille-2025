@@ -45,11 +45,16 @@ try {
             <li><a href="equipes/ajouter_equipe.php">Ajouter une équipe</a></li>
         </ul>
         <h2>Liste des joueurs</h2>
+        <form id="search-joueurs-form" style="margin-bottom:1em;">
+            <input type="text" id="search-joueurs" placeholder="Rechercher un joueur..." aria-label="Rechercher un joueur">
+            <button type="button" id="export-joueurs-csv">Export CSV</button>
+            <button type="button" id="export-joueurs-json">Export JSON</button>
+        </form>
         <?php if (!empty($erreur)) : ?>
             <div class="error">Erreur : <?= htmlspecialchars($erreur) ?></div>
         <?php endif; ?>
         <?php if (count($joueurs) > 0): ?>
-        <table>
+    <table id="table-joueurs">
             <tr>
                 <th>ID</th>
                 <th>Nom</th>
@@ -77,8 +82,13 @@ try {
         <?php endif; ?>
 
         <h2>Liste des équipes</h2>
+        <form id="search-equipes-form" style="margin-bottom:1em;">
+            <input type="text" id="search-equipes" placeholder="Rechercher une équipe..." aria-label="Rechercher une équipe">
+            <button type="button" id="export-equipes-csv">Export CSV</button>
+            <button type="button" id="export-equipes-json">Export JSON</button>
+        </form>
         <?php if (count($equipes) > 0): ?>
-        <table>
+    <table id="table-equipes">
             <tr>
                 <th>ID</th>
                 <th>Nom</th>
@@ -159,5 +169,75 @@ try {
             <p>Aucune statistique trouvée.</p>
         <?php endif; ?>
     </div>
+<script>
+// Filtrage joueurs
+document.getElementById('search-joueurs').addEventListener('input', function() {
+    const value = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#table-joueurs tbody tr');
+    rows.forEach(row => {
+        row.style.display = Array.from(row.children).some(td => td.textContent.toLowerCase().includes(value)) ? '' : 'none';
+    });
+});
+// Filtrage équipes
+document.getElementById('search-equipes').addEventListener('input', function() {
+    const value = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#table-equipes tbody tr');
+    rows.forEach(row => {
+        row.style.display = Array.from(row.children).some(td => td.textContent.toLowerCase().includes(value)) ? '' : 'none';
+    });
+});
+// Export CSV générique
+function exportTableToCSV(tableId, filename) {
+    const table = document.getElementById(tableId);
+    let csv = '';
+    const rows = table.querySelectorAll('tr');
+    rows.forEach(row => {
+        let rowData = Array.from(row.children).map(td => '"' + td.textContent.replace(/"/g, '""') + '"').join(',');
+        csv += rowData + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+// Export JSON générique
+function exportTableToJSON(tableId, filename) {
+    const table = document.getElementById(tableId);
+    const headers = Array.from(table.querySelectorAll('tr')[0].children).map(th => th.textContent);
+    const data = [];
+    table.querySelectorAll('tbody tr').forEach(row => {
+        if (row.style.display === 'none') return;
+        const obj = {};
+        Array.from(row.children).forEach((td, i) => {
+            obj[headers[i]] = td.textContent;
+        });
+        data.push(obj);
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+// Boutons export joueurs
+document.getElementById('export-joueurs-csv').onclick = function() {
+    exportTableToCSV('table-joueurs', 'joueurs.csv');
+};
+document.getElementById('export-joueurs-json').onclick = function() {
+    exportTableToJSON('table-joueurs', 'joueurs.json');
+};
+// Boutons export équipes
+document.getElementById('export-equipes-csv').onclick = function() {
+    exportTableToCSV('table-equipes', 'equipes.csv');
+};
+document.getElementById('export-equipes-json').onclick = function() {
+    exportTableToJSON('table-equipes', 'equipes.json');
+};
+</script>
 </body>
 </html>
