@@ -158,44 +158,7 @@ try {
             </tbody>
         </table>
         </form>
-        <?php else: ?>
-            <p>Aucune équipe trouvée.</p>
-        <?php endif; ?>
-                <tbody>
-                <?php foreach ($equipes as $equipe): ?>
-                <tr>
-                    <td><input type="checkbox" name="ids[]" value="<?= htmlspecialchars($equipe['id_equipe']) ?>" class="check-equipe" aria-label="Sélectionner équipe"></td>
-                    <td><a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a>
-                      <button class="fav-btn" data-type="equipe" data-id="<?= htmlspecialchars($equipe['id_equipe']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
-                    </td>
-                    <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
-                    <td><?= htmlspecialchars($equipe['ville']) ?></td>
-                    <td><?= htmlspecialchars($equipe['pays']) ?></td>
-                    <td>
-                        <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
-                        <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-            </form>
-            <?php else: ?>
-                <p>Aucune équipe trouvée.</p>
-            <?php endif; ?>
-                <td>
-                    <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
-                    <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        </form>
-        <?php else: ?>
-            <p>Aucune équipe trouvée.</p>
-        <?php endif; ?>
+        <!-- Fin affichage équipes -->
 <script>
 // Accessibilité forte (contraste élevé, police dyslexique)
 const accessBtn = document.getElementById('toggle-access');
