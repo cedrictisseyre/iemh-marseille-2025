@@ -257,27 +257,6 @@ document.getElementById('delete-equipes-multi').onclick = function() {
         <?php endif; ?>
         <!-- JS de recherche avancée déplacé dans le <script> final, plus d'affichage parasite -->
     <!-- Bloc dupliqué de la liste des joueurs supprimé -->
-                                <td><?= htmlspecialchars($joueur['prenom']) ?></td>
-                                <td><?= htmlspecialchars($joueur['poste']) ?></td>
-                                <td>
-                                    <?php if ($joueur['id_equipe']): ?>
-                                        <a href="equipes/fiche_equipe.php?id=<?= urlencode($joueur['id_equipe']) ?>" title="Voir fiche équipe">
-                                            <?= htmlspecialchars($joueur['id_equipe']) ?>
-                                        </a>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                        <a href="joueurs/modifier_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-modifier">Modifier</a>
-                                        <a href="joueurs/supprimer_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
-                                </td>
-                        </tr>
-                        <!-- endforeach orphelin supprimé -->
-                        </tbody>
-                </table>
-                </form>
-                <!-- Deuxième occurrence de la liste des joueurs, JS affiché et tableau de matchs dupliqué supprimés -->
 
         <h2>Statistiques des joueurs</h2>
         <?php if (count($stats) > 0): ?>
