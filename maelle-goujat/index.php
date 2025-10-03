@@ -298,40 +298,7 @@ document.getElementById('delete-equipes-multi').onclick = function() {
                         </tbody>
                 </table>
                 </form>
-// Sélection/désélection tout joueurs
-document.getElementById('check-all-joueurs').addEventListener('change', function() {
-    document.querySelectorAll('.check-joueur').forEach(cb => cb.checked = this.checked);
-});
-// Bouton suppression multiple joueurs
-document.getElementById('delete-joueurs-multi').onclick = function() {
-    const checked = document.querySelectorAll('.check-joueur:checked');
-    if (checked.length === 0) { showNotif('Aucun joueur sélectionné'); return; }
-    if (confirm('Supprimer les joueurs sélectionnés ?')) {
-        document.getElementById('form-joueurs-multi').submit();
-    }
-};
-                <th>Date</th>
-                <th>Lieu</th>
-                <th>Équipe dom.</th>
-                <th>Équipe ext.</th>
-                <th>Score dom.</th>
-                <th>Score ext.</th>
-            </tr>
-            <?php foreach ($matchs as $match): ?>
-            <tr>
-                <td><?= htmlspecialchars($match['id_match']) ?></td>
-                <td><?= htmlspecialchars($match['date_match']) ?></td>
-                <td><?= htmlspecialchars($match['lieu']) ?></td>
-                <td><?= htmlspecialchars($match['equipe_dom']) ?></td>
-                <td><?= htmlspecialchars($match['equipe_ext']) ?></td>
-                <td><?= htmlspecialchars($match['score_dom']) ?></td>
-                <td><?= htmlspecialchars($match['score_ext']) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-        <?php else: ?>
-            <p>Aucun match trouvé.</p>
-        <?php endif; ?>
+                <!-- Deuxième occurrence de la liste des joueurs, JS affiché et tableau de matchs dupliqué supprimés -->
 
         <h2>Statistiques des joueurs</h2>
         <?php if (count($stats) > 0): ?>
@@ -360,6 +327,8 @@ document.getElementById('delete-joueurs-multi').onclick = function() {
         <?php else: ?>
             <p>Aucune statistique trouvée.</p>
         <?php endif; ?>
+    <?php // fermeture du container principal ?>
+    </div>
     </div>
 <div id="notif" aria-live="polite" style="position:fixed;top:1em;left:50%;transform:translateX(-50%);z-index:1000;display:none;background:#0ea5e9;color:#fff;padding:0.7em 1.5em;border-radius:6px;font-size:1.1em;box-shadow:0 2px 8px #0002;"></div>
 // Notification globale pour actions CRUD (succès/erreur via query string)
