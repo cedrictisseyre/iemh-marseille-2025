@@ -33,13 +33,8 @@ try {
     <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:3.5em;z-index:10;">🌙</button>
     <button id="toggle-access" aria-label="Activer/désactiver le mode accessibilité forte" style="position:absolute;top:1em;right:1em;z-index:10;">🦾</button>
 // Accessibilité forte (contraste élevé, police dyslexique)
-const accessBtn = document.getElementById('toggle-access');
-accessBtn.onclick = function() {
-    document.body.classList.toggle('access-high');
-    localStorage.setItem('access', document.body.classList.contains('access-high'));
-};
-if (localStorage.getItem('access') === 'true') {
-    document.body.classList.add('access-high');
+        <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:3.5em;z-index:10;">🌙</button>
+        <button id="toggle-access" aria-label="Activer/désactiver le mode accessibilité forte" style="position:absolute;top:1em;right:1em;z-index:10;">🦾</button>
 }
     <div class="container">
         <h1>Bienvenue sur la page de Maëlle GOUJAT</h1>
@@ -126,10 +121,10 @@ if (localStorage.getItem('access') === 'true') {
             </tbody>
         </table>
 
-        </form>
-        <?php else: ?>
-            <p>Aucun joueur trouvé.</p>
-        <?php endif; ?>
+	</form>
+	<?php else: ?>
+		<p>Aucun joueur trouvé.</p>
+	<?php endif; ?>
 
         <h2>Liste des équipes</h2>
         <form id="form-equipes-multi" method="post" action="equipes/supprimer_equipes_multi.php">
@@ -154,6 +149,40 @@ if (localStorage.getItem('access') === 'true') {
                 <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
                 <td><?= htmlspecialchars($equipe['ville']) ?></td>
                 <td><?= htmlspecialchars($equipe['pays']) ?></td>
+                <td>
+                    <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
+                    <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        </form>
+        <?php else: ?>
+            <p>Aucune équipe trouvée.</p>
+        <?php endif; ?>
+                <tbody>
+                <?php foreach ($equipes as $equipe): ?>
+                <tr>
+                    <td><input type="checkbox" name="ids[]" value="<?= htmlspecialchars($equipe['id_equipe']) ?>" class="check-equipe" aria-label="Sélectionner équipe"></td>
+                    <td><a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a>
+                      <button class="fav-btn" data-type="equipe" data-id="<?= htmlspecialchars($equipe['id_equipe']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
+                    </td>
+                    <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
+                    <td><?= htmlspecialchars($equipe['ville']) ?></td>
+                    <td><?= htmlspecialchars($equipe['pays']) ?></td>
+                    <td>
+                        <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
+                        <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            </form>
+            <?php else: ?>
+                <p>Aucune équipe trouvée.</p>
+            <?php endif; ?>
                 <td>
                     <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
                     <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
@@ -213,35 +242,35 @@ document.getElementById('delete-equipes-multi').onclick = function() {
         document.getElementById('form-equipes-multi').submit();
     }
 };
-// Recherche avancée joueurs
-document.getElementById('filter-poste').addEventListener('change', filterJoueurs);
-document.getElementById('filter-equipe').addEventListener('change', filterJoueurs);
-function filterJoueurs() {
-    const poste = document.getElementById('filter-poste').value.toLowerCase();
-    const equipe = document.getElementById('filter-equipe').value;
-    const search = document.getElementById('search-joueurs').value.toLowerCase();
-    document.querySelectorAll('#table-joueurs tbody tr').forEach(row => {
-        const tds = row.children;
-        const matchPoste = !poste || tds[4].textContent.toLowerCase().includes(poste);
-        const matchEquipe = !equipe || (tds[5].querySelector('a') && tds[5].querySelector('a').textContent === equipe) || (tds[5].textContent === equipe);
-        const matchSearch = Array.from(tds).some(td => td.textContent.toLowerCase().includes(search));
-        row.style.display = (matchPoste && matchEquipe && matchSearch) ? '' : 'none';
-    });
-}
-document.getElementById('search-joueurs').addEventListener('input', filterJoueurs);
-// Recherche avancée équipes
-document.getElementById('filter-ville').addEventListener('change', filterEquipes);
-function filterEquipes() {
-    const ville = document.getElementById('filter-ville').value.toLowerCase();
-    const search = document.getElementById('search-equipes').value.toLowerCase();
-    document.querySelectorAll('#table-equipes tbody tr').forEach(row => {
-        const tds = row.children;
-        const matchVille = !ville || tds[3].textContent.toLowerCase().includes(ville);
-        const matchSearch = Array.from(tds).some(td => td.textContent.toLowerCase().includes(search));
-        row.style.display = (matchVille && matchSearch) ? '' : 'none';
-    });
-}
-document.getElementById('search-equipes').addEventListener('input', filterEquipes);
+        // Recherche avancée joueurs
+        document.getElementById('filter-poste').addEventListener('change', filterJoueurs);
+        document.getElementById('filter-equipe').addEventListener('change', filterJoueurs);
+        function filterJoueurs() {
+            const poste = document.getElementById('filter-poste').value.toLowerCase();
+            const equipe = document.getElementById('filter-equipe').value;
+            const search = document.getElementById('search-joueurs').value.toLowerCase();
+            document.querySelectorAll('#table-joueurs tbody tr').forEach(row => {
+                const tds = row.children;
+                const matchPoste = !poste || tds[4].textContent.toLowerCase().includes(poste);
+                const matchEquipe = !equipe || (tds[5].querySelector('a') && tds[5].querySelector('a').textContent === equipe) || (tds[5].textContent === equipe);
+                const matchSearch = Array.from(tds).some(td => td.textContent.toLowerCase().includes(search));
+                row.style.display = (matchPoste && matchEquipe && matchSearch) ? '' : 'none';
+            });
+        }
+        document.getElementById('search-joueurs').addEventListener('input', filterJoueurs);
+        // Recherche avancée équipes
+        document.getElementById('filter-ville').addEventListener('change', filterEquipes);
+        function filterEquipes() {
+            const ville = document.getElementById('filter-ville').value.toLowerCase();
+            const search = document.getElementById('search-equipes').value.toLowerCase();
+            document.querySelectorAll('#table-equipes tbody tr').forEach(row => {
+                const tds = row.children;
+                const matchVille = !ville || tds[3].textContent.toLowerCase().includes(ville);
+                const matchSearch = Array.from(tds).some(td => td.textContent.toLowerCase().includes(search));
+                row.style.display = (matchVille && matchSearch) ? '' : 'none';
+            });
+        }
+        document.getElementById('search-equipes').addEventListener('input', filterEquipes);
 </script>
 
         <h2>Liste des équipes</h2>
