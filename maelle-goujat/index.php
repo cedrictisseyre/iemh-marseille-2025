@@ -1,3 +1,15 @@
+// Raccourcis clavier
+document.addEventListener('keydown', function(e) {
+    if (e.altKey && !e.shiftKey && !e.ctrlKey) {
+        switch (e.key.toLowerCase()) {
+            case 'a': window.location.href = 'index.php'; break; // Alt+A : Accueil
+            case 'd': window.location.href = 'dashboard.php'; break; // Alt+D : Dashboard
+            case 'm': document.getElementById('toggle-dark').click(); break; // Alt+M : Mode sombre
+            case 'j': document.getElementById('search-joueurs').focus(); break; // Alt+J : Recherche joueurs
+            case 'e': document.getElementById('search-equipes').focus(); break; // Alt+E : Recherche équipes
+        }
+    }
+});
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -67,7 +79,10 @@ try {
             </tr>
             <?php foreach ($joueurs as $joueur): ?>
             <tr>
-                                <td><a href="joueurs/fiche_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" title="Voir fiche joueur"><?= htmlspecialchars($joueur['id_joueur']) ?></a></td>
+                                                <td>
+                                                    <a href="joueurs/fiche_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" title="Voir fiche joueur"><?= htmlspecialchars($joueur['id_joueur']) ?></a>
+                                                    <button class="fav-btn" data-type="joueur" data-id="<?= htmlspecialchars($joueur['id_joueur']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
+                                                </td>
                                 <td><?= htmlspecialchars($joueur['nom']) ?></td>
                                 <td><?= htmlspecialchars($joueur['prenom']) ?></td>
                                 <td><?= htmlspecialchars($joueur['poste']) ?></td>
@@ -108,7 +123,10 @@ try {
             </tr>
             <?php foreach ($equipes as $equipe): ?>
             <tr>
-                <td><a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a></td>
+                                <td>
+                                    <a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a>
+                                    <button class="fav-btn" data-type="equipe" data-id="<?= htmlspecialchars($equipe['id_equipe']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
+                                </td>
                 <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
                 <td><?= htmlspecialchars($equipe['ville']) ?></td>
                 <td><?= htmlspecialchars($equipe['pays']) ?></td>
@@ -179,7 +197,105 @@ try {
             <p>Aucune statistique trouvée.</p>
         <?php endif; ?>
     </div>
+<div id="notif" aria-live="polite" style="position:fixed;top:1em;left:50%;transform:translateX(-50%);z-index:1000;display:none;background:#0ea5e9;color:#fff;padding:0.7em 1.5em;border-radius:6px;font-size:1.1em;box-shadow:0 2px 8px #0002;"></div>
 <script>
+// Favoris (localStorage)
+function updateFavButtons() {
+    const favs = JSON.parse(localStorage.getItem('favs')||'{}');
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+        const key = btn.dataset.type + '-' + btn.dataset.id;
+        btn.classList.toggle('fav-active', !!favs[key]);
+        btn.setAttribute('aria-pressed', !!favs[key]);
+    });
+}
+function showNotif(msg) {
+    const notif = document.getElementById('notif');
+    notif.textContent = msg;
+    notif.style.display = 'block';
+    setTimeout(()=>{notif.style.display='none';}, 1800);
+}
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('fav-btn')) {
+        const btn = e.target;
+        const key = btn.dataset.type + '-' + btn.dataset.id;
+        let favs = JSON.parse(localStorage.getItem('favs')||'{}');
+        if (favs[key]) {
+            delete favs[key];
+            showNotif('Retiré des favoris');
+        } else {
+            favs[key] = true;
+            showNotif('Ajouté aux favoris');
+        }
+        localStorage.setItem('favs', JSON.stringify(favs));
+        updateFavButtons();
+    }
+});
+updateFavButtons();
+// Style favoris
+const styleFav = document.createElement('style');
+styleFav.textContent = `.fav-btn{background:none;border:none;color:#64748b;font-size:1.1em;cursor:pointer;vertical-align:middle;transition:color 0.2s;}.fav-btn.fav-active{color:#facc15;text-shadow:0 0 2px #fbbf24;}.fav-btn:focus{outline:2px solid #facc15;}`;
+document.head.appendChild(styleFav);
+// Pagination et tri dynamique
+function makeTableSortableAndPaginated(tableId, rowsPerPage = 10) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const tbody = table.querySelector('tbody') || table;
+    let rows = Array.from(tbody.querySelectorAll('tr'));
+    let currentPage = 1;
+    const totalRows = rows.length;
+    const totalPages = Math.ceil(totalRows / rowsPerPage);
+    // Tri
+    table.querySelectorAll('th').forEach((th, idx) => {
+        th.style.cursor = 'pointer';
+        th.title = 'Trier';
+        th.onclick = function() {
+            const asc = !th.classList.contains('asc');
+            table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
+            th.classList.add(asc ? 'asc' : 'desc');
+            rows.sort((a, b) => {
+                let va = a.children[idx].textContent.trim().toLowerCase();
+                let vb = b.children[idx].textContent.trim().toLowerCase();
+                if (!isNaN(va) && !isNaN(vb)) { va = +va; vb = +vb; }
+                if (va < vb) return asc ? -1 : 1;
+                if (va > vb) return asc ? 1 : -1;
+                return 0;
+            });
+            renderPage(currentPage);
+        };
+    });
+    // Pagination
+    function renderPage(page) {
+        tbody.innerHTML = '';
+        const start = (page - 1) * rowsPerPage;
+        const end = Math.min(start + rowsPerPage, totalRows);
+        for (let i = start; i < end; i++) tbody.appendChild(rows[i]);
+        renderPagination(page);
+    }
+    function renderPagination(page) {
+        let pag = document.getElementById(tableId + '-pagination');
+        if (!pag) {
+            pag = document.createElement('div');
+            pag.id = tableId + '-pagination';
+            pag.className = 'pagination';
+            table.parentNode.appendChild(pag);
+        }
+        pag.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.disabled = (i === page);
+            btn.onclick = () => { currentPage = i; renderPage(i); };
+            pag.appendChild(btn);
+        }
+    }
+    renderPage(currentPage);
+}
+makeTableSortableAndPaginated('table-joueurs', 10);
+makeTableSortableAndPaginated('table-equipes', 10);
+// Style pagination
+const style = document.createElement('style');
+style.textContent = `.pagination{margin:1em 0;text-align:center;}.pagination button{background:#2563eb;color:#fff;border:none;padding:0.4em 0.8em;margin:0 0.2em;border-radius:4px;cursor:pointer;}.pagination button[disabled]{background:#64748b;cursor:default;}`;
+document.head.appendChild(style);
 // Mode sombre
 const darkBtn = document.getElementById('toggle-dark');
 darkBtn.onclick = function() {
