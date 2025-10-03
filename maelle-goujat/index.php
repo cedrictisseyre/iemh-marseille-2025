@@ -256,28 +256,7 @@ document.getElementById('delete-equipes-multi').onclick = function() {
             <p>Aucune équipe trouvée.</p>
         <?php endif; ?>
         <!-- JS de recherche avancée déplacé dans le <script> final, plus d'affichage parasite -->
-        <?php if (count($equipes) > 0): ?>
-                <form id="form-joueurs-multi" method="post" action="joueurs/supprimer_joueurs_multi.php">
-                <table id="table-joueurs">
-                        <thead>
-                        <tr>
-                                <th><input type="checkbox" id="check-all-joueurs" aria-label="Tout sélectionner"></th>
-                                <th>ID</th>
-                                <th>Nom</th>
-                                <th>Prénom</th>
-                                <th>Poste</th>
-                                <th>ID équipe</th>
-                                <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($joueurs as $joueur): ?>
-                        <tr>
-                                <td><input type="checkbox" name="ids[]" value="<?= htmlspecialchars($joueur['id_joueur']) ?>" class="check-joueur" aria-label="Sélectionner joueur"></td>
-                                <td><a href="joueurs/fiche_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" title="Voir fiche joueur"><?= htmlspecialchars($joueur['id_joueur']) ?></a>
-                                    <button class="fav-btn" data-type="joueur" data-id="<?= htmlspecialchars($joueur['id_joueur']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
-                                </td>
-                                <td><?= htmlspecialchars($joueur['nom']) ?></td>
+    <!-- Bloc dupliqué de la liste des joueurs supprimé -->
                                 <td><?= htmlspecialchars($joueur['prenom']) ?></td>
                                 <td><?= htmlspecialchars($joueur['poste']) ?></td>
                                 <td>
@@ -294,7 +273,7 @@ document.getElementById('delete-equipes-multi').onclick = function() {
                                         <a href="joueurs/supprimer_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
                                 </td>
                         </tr>
-                        <?php endforeach; ?>
+                        <!-- endforeach orphelin supprimé -->
                         </tbody>
                 </table>
                 </form>
@@ -328,7 +307,6 @@ document.getElementById('delete-equipes-multi').onclick = function() {
             <p>Aucune statistique trouvée.</p>
         <?php endif; ?>
     <?php // fermeture du container principal ?>
-    </div>
     </div>
 <div id="notif" aria-live="polite" style="position:fixed;top:1em;left:50%;transform:translateX(-50%);z-index:1000;display:none;background:#0ea5e9;color:#fff;padding:0.7em 1.5em;border-radius:6px;font-size:1.1em;box-shadow:0 2px 8px #0002;"></div>
 // Notification globale pour actions CRUD (succès/erreur via query string)
