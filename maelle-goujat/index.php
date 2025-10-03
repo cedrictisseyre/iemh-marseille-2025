@@ -1,17 +1,3 @@
-<script>
-// Raccourcis clavier
-document.addEventListener('keydown', function(e) {
-    if (e.altKey && !e.shiftKey && !e.ctrlKey) {
-        switch (e.key.toLowerCase()) {
-            case 'a': window.location.href = 'index.php'; break; // Alt+A : Accueil
-            case 'd': window.location.href = 'dashboard.php'; break; // Alt+D : Dashboard
-            case 'm': document.getElementById('toggle-dark').click(); break; // Alt+M : Mode sombre
-            case 'j': document.getElementById('search-joueurs').focus(); break; // Alt+J : Recherche joueurs
-            case 'e': document.getElementById('search-equipes').focus(); break; // Alt+E : Recherche équipes
-        }
-    }
-});
-</script>
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -71,42 +57,39 @@ if (localStorage.getItem('access') === 'true') {
             <li><a href="dashboard.php">Tableau de bord</a></li>
         </ul>
         <h2>Liste des joueurs</h2>
-        <form id="search-joueurs-form" style="margin-bottom:1em;display:flex;gap:0.5em;align-items:center;">
+        <form id="search-joueurs-form" style="margin-bottom:1em;display:flex;gap:0.5em;align-items:center;flex-wrap:wrap;">
             <input type="text" id="search-joueurs" placeholder="Rechercher un joueur..." aria-label="Rechercher un joueur">
+            <select id="filter-poste" aria-label="Filtrer par poste">
+                <option value="">Tous postes</option>
+                <option value="Pilier">Pilier</option>
+                <option value="Talonneur">Talonneur</option>
+                <option value="2e ligne">2e ligne</option>
+                <option value="3e ligne">3e ligne</option>
+                <option value="Demi de mêlée">Demi de mêlée</option>
+                <option value="Demi d'ouverture">Demi d'ouverture</option>
+                <option value="Centre">Centre</option>
+                <option value="Ailier">Ailier</option>
+                <option value="Arrière">Arrière</option>
+            </select>
+            <select id="filter-equipe" aria-label="Filtrer par équipe">
+                <option value="">Toutes équipes</option>
+                <?php foreach ($equipes as $equipe): ?>
+                <option value="<?= htmlspecialchars($equipe['id_equipe']) ?>"><?= htmlspecialchars($equipe['nom_equipe']) ?></option>
+                <?php endforeach; ?>
+            </select>
             <button type="button" id="export-joueurs-csv">Export CSV</button>
             <button type="button" id="export-joueurs-json">Export JSON</button>
             <button type="button" id="delete-joueurs-multi" style="background:#ef4444;">Supprimer sélection</button>
         </form>
-            <form id="search-joueurs-form" style="margin-bottom:1em;display:flex;gap:0.5em;align-items:center;flex-wrap:wrap;">
-                <input type="text" id="search-joueurs" placeholder="Rechercher un joueur..." aria-label="Rechercher un joueur">
-                <select id="filter-poste" aria-label="Filtrer par poste">
-                    <option value="">Tous postes</option>
-                    <option value="Pilier">Pilier</option>
-                    <option value="Talonneur">Talonneur</option>
-                    <option value="2e ligne">2e ligne</option>
-                    <option value="3e ligne">3e ligne</option>
-                    <option value="Demi de mêlée">Demi de mêlée</option>
-                    <option value="Demi d'ouverture">Demi d'ouverture</option>
-                    <option value="Centre">Centre</option>
-                    <option value="Ailier">Ailier</option>
-                    <option value="Arrière">Arrière</option>
-                </select>
-                <select id="filter-equipe" aria-label="Filtrer par équipe">
-                    <option value="">Toutes équipes</option>
-                    <?php foreach ($equipes as $equipe): ?>
-                    <option value="<?= htmlspecialchars($equipe['id_equipe']) ?>"><?= htmlspecialchars($equipe['nom_equipe']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" id="export-joueurs-csv">Export CSV</button>
-                <button type="button" id="export-joueurs-json">Export JSON</button>
-                <button type="button" id="delete-joueurs-multi" style="background:#ef4444;">Supprimer sélection</button>
-            </form>
         <?php if (!empty($erreur)) : ?>
             <div class="error">Erreur : <?= htmlspecialchars($erreur) ?></div>
         <?php endif; ?>
         <?php if (count($joueurs) > 0): ?>
-    <table id="table-joueurs">
+        <form id="form-joueurs-multi" method="post" action="joueurs/supprimer_joueurs_multi.php">
+        <table id="table-joueurs">
+            <thead>
             <tr>
+                <th><input type="checkbox" id="check-all-joueurs" aria-label="Tout sélectionner"></th>
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Prénom</th>
@@ -114,56 +97,204 @@ if (localStorage.getItem('access') === 'true') {
                 <th>ID équipe</th>
                 <th>Actions</th>
             </tr>
+            </thead>
+            <tbody>
             <?php foreach ($joueurs as $joueur): ?>
             <tr>
-                                                <td>
-                                                    <a href="joueurs/fiche_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" title="Voir fiche joueur"><?= htmlspecialchars($joueur['id_joueur']) ?></a>
-                                                    <button class="fav-btn" data-type="joueur" data-id="<?= htmlspecialchars($joueur['id_joueur']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
-                                                </td>
-                                <td><?= htmlspecialchars($joueur['nom']) ?></td>
-                                <td><?= htmlspecialchars($joueur['prenom']) ?></td>
-                                <td><?= htmlspecialchars($joueur['poste']) ?></td>
-                                <td>
-                                    <?php if ($joueur['id_equipe']): ?>
-                                        <a href="equipes/fiche_equipe.php?id=<?= urlencode($joueur['id_equipe']) ?>" title="Voir fiche équipe">
-                                            <?= htmlspecialchars($joueur['id_equipe']) ?>
-                                        </a>
-                                    <?php else: ?>
-                                        -
-                                    <?php endif; ?>
-                                </td>
+                <td><input type="checkbox" name="ids[]" value="<?= htmlspecialchars($joueur['id_joueur']) ?>" class="check-joueur" aria-label="Sélectionner joueur"></td>
+                <td><a href="joueurs/fiche_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" title="Voir fiche joueur"><?= htmlspecialchars($joueur['id_joueur']) ?></a>
+                  <button class="fav-btn" data-type="joueur" data-id="<?= htmlspecialchars($joueur['id_joueur']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
+                </td>
+                <td><?= htmlspecialchars($joueur['nom']) ?></td>
+                <td><?= htmlspecialchars($joueur['prenom']) ?></td>
+                <td><?= htmlspecialchars($joueur['poste']) ?></td>
+                <td>
+                  <?php if ($joueur['id_equipe']): ?>
+                    <a href="equipes/fiche_equipe.php?id=<?= urlencode($joueur['id_equipe']) ?>" title="Voir fiche équipe">
+                      <?= htmlspecialchars($joueur['id_equipe']) ?>
+                    </a>
+                  <?php else: ?>
+                    -
+                  <?php endif; ?>
+                </td>
                 <td>
                     <a href="joueurs/modifier_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-modifier">Modifier</a>
                     <a href="joueurs/supprimer_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
                 </td>
             </tr>
             <?php endforeach; ?>
+            </tbody>
         </table>
+
+        </form>
         <?php else: ?>
             <p>Aucun joueur trouvé.</p>
         <?php endif; ?>
 
         <h2>Liste des équipes</h2>
-        <form id="search-equipes-form" style="margin-bottom:1em;">
+        <form id="form-equipes-multi" method="post" action="equipes/supprimer_equipes_multi.php">
+        <table id="table-equipes">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="check-all-equipes" aria-label="Tout sélectionner"></th>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Ville</th>
+                <th>Pays</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($equipes as $equipe): ?>
+            <tr>
+                <td><input type="checkbox" name="ids[]" value="<?= htmlspecialchars($equipe['id_equipe']) ?>" class="check-equipe" aria-label="Sélectionner équipe"></td>
+                <td><a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a>
+                  <button class="fav-btn" data-type="equipe" data-id="<?= htmlspecialchars($equipe['id_equipe']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
+                </td>
+                <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
+                <td><?= htmlspecialchars($equipe['ville']) ?></td>
+                <td><?= htmlspecialchars($equipe['pays']) ?></td>
+                <td>
+                    <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
+                    <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        </form>
+        <?php else: ?>
+            <p>Aucune équipe trouvée.</p>
+        <?php endif; ?>
+<script>
+// Accessibilité forte (contraste élevé, police dyslexique)
+const accessBtn = document.getElementById('toggle-access');
+accessBtn.onclick = function() {
+    document.body.classList.toggle('access-high');
+    localStorage.setItem('access', document.body.classList.contains('access-high'));
+};
+if (localStorage.getItem('access') === 'true') {
+    document.body.classList.add('access-high');
+}
+// Raccourcis clavier
+document.addEventListener('keydown', function(e) {
+    if (e.altKey && !e.shiftKey && !e.ctrlKey) {
+        switch (e.key.toLowerCase()) {
+            case 'a': window.location.href = 'index.php'; break; // Alt+A : Accueil
+            case 'd': window.location.href = 'dashboard.php'; break; // Alt+D : Dashboard
+            case 'm': document.getElementById('toggle-dark').click(); break; // Alt+M : Mode sombre
+            case 'j': document.getElementById('search-joueurs').focus(); break; // Alt+J : Recherche joueurs
+            case 'e': document.getElementById('search-equipes').focus(); break; // Alt+E : Recherche équipes
+        }
+    }
+});
+// Sélection/désélection tout joueurs
+document.getElementById('check-all-joueurs').addEventListener('change', function() {
+    document.querySelectorAll('.check-joueur').forEach(cb => cb.checked = this.checked);
+});
+// Bouton suppression multiple joueurs
+document.getElementById('delete-joueurs-multi').onclick = function() {
+    const checked = document.querySelectorAll('.check-joueur:checked');
+    if (checked.length === 0) { showNotif('Aucun joueur sélectionné'); return; }
+    if (confirm('Supprimer les joueurs sélectionnés ?')) {
+        document.getElementById('form-joueurs-multi').submit();
+    }
+};
+// Sélection/désélection tout équipes
+document.getElementById('check-all-equipes').addEventListener('change', function() {
+    document.querySelectorAll('.check-equipe').forEach(cb => cb.checked = this.checked);
+});
+// Bouton suppression multiple équipes
+document.getElementById('delete-equipes-multi').onclick = function() {
+    const checked = document.querySelectorAll('.check-equipe:checked');
+    if (checked.length === 0) { showNotif('Aucune équipe sélectionnée'); return; }
+    if (confirm('Supprimer les équipes sélectionnées ?')) {
+        document.getElementById('form-equipes-multi').submit();
+    }
+};
+// Recherche avancée joueurs
+document.getElementById('filter-poste').addEventListener('change', filterJoueurs);
+document.getElementById('filter-equipe').addEventListener('change', filterJoueurs);
+function filterJoueurs() {
+    const poste = document.getElementById('filter-poste').value.toLowerCase();
+    const equipe = document.getElementById('filter-equipe').value;
+    const search = document.getElementById('search-joueurs').value.toLowerCase();
+    document.querySelectorAll('#table-joueurs tbody tr').forEach(row => {
+        const tds = row.children;
+        const matchPoste = !poste || tds[4].textContent.toLowerCase().includes(poste);
+        const matchEquipe = !equipe || (tds[5].querySelector('a') && tds[5].querySelector('a').textContent === equipe) || (tds[5].textContent === equipe);
+        const matchSearch = Array.from(tds).some(td => td.textContent.toLowerCase().includes(search));
+        row.style.display = (matchPoste && matchEquipe && matchSearch) ? '' : 'none';
+    });
+}
+document.getElementById('search-joueurs').addEventListener('input', filterJoueurs);
+// Recherche avancée équipes
+document.getElementById('filter-ville').addEventListener('change', filterEquipes);
+function filterEquipes() {
+    const ville = document.getElementById('filter-ville').value.toLowerCase();
+    const search = document.getElementById('search-equipes').value.toLowerCase();
+    document.querySelectorAll('#table-equipes tbody tr').forEach(row => {
+        const tds = row.children;
+        const matchVille = !ville || tds[3].textContent.toLowerCase().includes(ville);
+        const matchSearch = Array.from(tds).some(td => td.textContent.toLowerCase().includes(search));
+        row.style.display = (matchVille && matchSearch) ? '' : 'none';
+    });
+}
+document.getElementById('search-equipes').addEventListener('input', filterEquipes);
+</script>
+
+        <h2>Liste des équipes</h2>
+        <form id="search-equipes-form" style="margin-bottom:1em;display:flex;gap:0.5em;align-items:center;flex-wrap:wrap;">
             <input type="text" id="search-equipes" placeholder="Rechercher une équipe..." aria-label="Rechercher une équipe">
+            <select id="filter-ville" aria-label="Filtrer par ville">
+                <option value="">Toutes villes</option>
+                <?php
+                $villes = array_unique(array_map(function($e) { return $e['ville']; }, $equipes));
+                sort($villes);
+                foreach ($villes as $ville): ?>
+                <option value="<?= htmlspecialchars($ville) ?>"><?= htmlspecialchars($ville) ?></option>
+                <?php endforeach; ?>
+            </select>
             <button type="button" id="export-equipes-csv">Export CSV</button>
             <button type="button" id="export-equipes-json">Export JSON</button>
+            <button type="button" id="delete-equipes-multi" style="background:#ef4444;">Supprimer sélection</button>
         </form>
-            <form id="search-equipes-form" style="margin-bottom:1em;display:flex;gap:0.5em;align-items:center;flex-wrap:wrap;">
-                <input type="text" id="search-equipes" placeholder="Rechercher une équipe..." aria-label="Rechercher une équipe">
-                <select id="filter-ville" aria-label="Filtrer par ville">
-                    <option value="">Toutes villes</option>
-                    <?php
-                    $villes = array_unique(array_map(function($e) { return $e['ville']; }, $equipes));
-                    sort($villes);
-                    foreach ($villes as $ville): ?>
-                    <option value="<?= htmlspecialchars($ville) ?>"><?= htmlspecialchars($ville) ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" id="export-equipes-csv">Export CSV</button>
-                <button type="button" id="export-equipes-json">Export JSON</button>
-                <button type="button" id="delete-equipes-multi" style="background:#ef4444;">Supprimer sélection</button>
-            </form>
+        <?php if (count($equipes) > 0): ?>
+        <form id="form-equipes-multi" method="post" action="equipes/supprimer_equipes_multi.php">
+        <table id="table-equipes">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="check-all-equipes" aria-label="Tout sélectionner"></th>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Ville</th>
+                <th>Pays</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($equipes as $equipe): ?>
+            <tr>
+                <td><input type="checkbox" name="ids[]" value="<?= htmlspecialchars($equipe['id_equipe']) ?>" class="check-equipe" aria-label="Sélectionner équipe"></td>
+                <td><a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a>
+                  <button class="fav-btn" data-type="equipe" data-id="<?= htmlspecialchars($equipe['id_equipe']) ?>" aria-label="Ajouter/retirer des favoris" title="Favori">★</button>
+                </td>
+                <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
+                <td><?= htmlspecialchars($equipe['ville']) ?></td>
+                <td><?= htmlspecialchars($equipe['pays']) ?></td>
+                <td>
+                    <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
+                    <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        </form>
+        <?php else: ?>
+            <p>Aucune équipe trouvée.</p>
+        <?php endif; ?>
 // Recherche avancée joueurs
 document.getElementById('filter-poste').addEventListener('change', filterJoueurs);
 document.getElementById('filter-equipe').addEventListener('change', filterJoueurs);
