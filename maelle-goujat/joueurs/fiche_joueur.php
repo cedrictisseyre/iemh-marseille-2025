@@ -23,7 +23,17 @@ if ($joueur['id_equipe']) {
     <link rel="stylesheet" href="../style-accueil.css">
 </head>
 <body>
-    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:1em;z-index:10;">🌙</button>
+    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:3.5em;z-index:10;">🌙</button>
+    <button id="toggle-access" aria-label="Activer/désactiver le mode accessibilité forte" style="position:absolute;top:1em;right:1em;z-index:10;">🦾</button>
+// Accessibilité forte (contraste élevé, police dyslexique)
+const accessBtn = document.getElementById('toggle-access');
+accessBtn.onclick = function() {
+    document.body.classList.toggle('access-high');
+    localStorage.setItem('access', document.body.classList.contains('access-high'));
+};
+if (localStorage.getItem('access') === 'true') {
+    document.body.classList.add('access-high');
+}
     <div class="container">
         <h1>Fiche joueur : <?= htmlspecialchars($joueur['prenom'] . ' ' . $joueur['nom']) ?>
             <span id="fav-star" title="Favori" style="font-size:1.2em;vertical-align:middle;cursor:pointer;">★</span>

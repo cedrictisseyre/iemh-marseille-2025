@@ -1,3 +1,37 @@
+/* Accessibilité forte : contraste élevé, police dyslexique */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/gh/antijingoist/open-dyslexic/web/OpenDyslexic-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+body.access-high {
+    background: #000 !important;
+    color: #fff !important;
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+    letter-spacing: 0.04em;
+    font-size: 1.1em;
+}
+body.access-high .container, body.access-high table, body.access-high th, body.access-high td {
+    background: #111 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+body.access-high a, body.access-high .btn-modifier, body.access-high .btn-supprimer {
+    color: #ff0 !important;
+    background: #222 !important;
+    border-color: #fff !important;
+}
+body.access-high input, body.access-high select, body.access-high button {
+    background: #222 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+body.access-high #toggle-access {
+    background: #fff;
+    color: #000;
+    border: 2px solid #ff0;
+}
 /* Mode sombre */
 body.dark {
     background: #18181b;

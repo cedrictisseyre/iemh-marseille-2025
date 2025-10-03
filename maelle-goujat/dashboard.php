@@ -13,7 +13,17 @@ $nb_stats = $conn->query('SELECT COUNT(*) FROM stats_joueurs')->fetchColumn();
     <link rel="stylesheet" href="style-accueil.css">
 </head>
 <body>
-    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:1em;z-index:10;">🌙</button>
+    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:3.5em;z-index:10;">🌙</button>
+    <button id="toggle-access" aria-label="Activer/désactiver le mode accessibilité forte" style="position:absolute;top:1em;right:1em;z-index:10;">🦾</button>
+// Accessibilité forte (contraste élevé, police dyslexique)
+const accessBtn = document.getElementById('toggle-access');
+accessBtn.onclick = function() {
+    document.body.classList.toggle('access-high');
+    localStorage.setItem('access', document.body.classList.contains('access-high'));
+};
+if (localStorage.getItem('access') === 'true') {
+    document.body.classList.add('access-high');
+}
     <div class="container">
         <h1>Tableau de bord</h1>
         <ul>
