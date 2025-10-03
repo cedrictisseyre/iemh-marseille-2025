@@ -1,3 +1,4 @@
+<script>
 // Raccourcis clavier
 document.addEventListener('keydown', function(e) {
     if (e.altKey && !e.shiftKey && !e.ctrlKey) {
@@ -10,6 +11,7 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+</script>
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
