@@ -22,7 +22,26 @@ $joueurs = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:1em;z-index:10;">🌙</button>
     <div class="container">
-        <h1>Fiche équipe : <?= htmlspecialchars($equipe['nom_equipe']) ?></h1>
+        <h1>Fiche équipe : <?= htmlspecialchars($equipe['nom_equipe']) ?>
+            <span id="fav-star" title="Favori" style="font-size:1.2em;vertical-align:middle;cursor:pointer;">★</span>
+        </h1>
+<script>
+// Affichage étoile favori sur fiche équipe
+const star = document.getElementById('fav-star');
+const favKey = 'equipe-<?= htmlspecialchars($equipe['id_equipe']) ?>';
+function updateStar() {
+    const favs = JSON.parse(localStorage.getItem('favs')||'{}');
+    star.style.color = favs[favKey] ? '#facc15' : '#64748b';
+    star.setAttribute('aria-pressed', !!favs[favKey]);
+}
+star.onclick = function() {
+    let favs = JSON.parse(localStorage.getItem('favs')||'{}');
+    if (favs[favKey]) { delete favs[favKey]; } else { favs[favKey]=true; }
+    localStorage.setItem('favs', JSON.stringify(favs));
+    updateStar();
+};
+updateStar();
+</script>
         <ul>
             <li><strong>ID :</strong> <?= htmlspecialchars($equipe['id_equipe']) ?></li>
             <li><strong>Ville :</strong> <?= htmlspecialchars($equipe['ville']) ?></li>

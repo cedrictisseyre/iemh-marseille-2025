@@ -200,6 +200,21 @@ try {
         <?php endif; ?>
     </div>
 <div id="notif" aria-live="polite" style="position:fixed;top:1em;left:50%;transform:translateX(-50%);z-index:1000;display:none;background:#0ea5e9;color:#fff;padding:0.7em 1.5em;border-radius:6px;font-size:1.1em;box-shadow:0 2px 8px #0002;"></div>
+// Notification globale pour actions CRUD (succès/erreur via query string)
+const params = new URLSearchParams(window.location.search);
+if (params.has('msg')) {
+    let txt = '';
+    switch(params.get('msg')) {
+        case 'ajout_joueur': txt = 'Joueur ajouté avec succès !'; break;
+        case 'modif_joueur': txt = 'Joueur modifié avec succès !'; break;
+        case 'suppression_joueur': txt = 'Joueur supprimé.'; break;
+        case 'ajout_equipe': txt = 'Équipe ajoutée avec succès !'; break;
+        case 'modif_equipe': txt = 'Équipe modifiée avec succès !'; break;
+        case 'suppression_equipe': txt = 'Équipe supprimée.'; break;
+        case 'erreur': txt = 'Une erreur est survenue.'; break;
+    }
+    if (txt) showNotif(txt);
+}
 <script>
 // Favoris (localStorage)
 function updateFavButtons() {
