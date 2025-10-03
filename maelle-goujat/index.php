@@ -43,6 +43,7 @@ try {
             <li><a href="joueurs/ajouter_joueur.php">Ajouter un joueur</a></li>
             <li><a href="joueurs/lire_joueurs.php">Liste des joueurs (JSON)</a></li>
             <li><a href="equipes/ajouter_equipe.php">Ajouter une équipe</a></li>
+            <li><a href="dashboard.php">Tableau de bord</a></li>
         </ul>
         <h2>Liste des joueurs</h2>
         <form id="search-joueurs-form" style="margin-bottom:1em;">
@@ -65,11 +66,19 @@ try {
             </tr>
             <?php foreach ($joueurs as $joueur): ?>
             <tr>
-                <td><?= htmlspecialchars($joueur['id_joueur']) ?></td>
-                <td><?= htmlspecialchars($joueur['nom']) ?></td>
-                <td><?= htmlspecialchars($joueur['prenom']) ?></td>
-                <td><?= htmlspecialchars($joueur['poste']) ?></td>
-                <td><?= htmlspecialchars($joueur['id_equipe']) ?></td>
+                                <td><a href="joueurs/fiche_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" title="Voir fiche joueur"><?= htmlspecialchars($joueur['id_joueur']) ?></a></td>
+                                <td><?= htmlspecialchars($joueur['nom']) ?></td>
+                                <td><?= htmlspecialchars($joueur['prenom']) ?></td>
+                                <td><?= htmlspecialchars($joueur['poste']) ?></td>
+                                <td>
+                                    <?php if ($joueur['id_equipe']): ?>
+                                        <a href="equipes/fiche_equipe.php?id=<?= urlencode($joueur['id_equipe']) ?>" title="Voir fiche équipe">
+                                            <?= htmlspecialchars($joueur['id_equipe']) ?>
+                                        </a>
+                                    <?php else: ?>
+                                        -
+                                    <?php endif; ?>
+                                </td>
                 <td>
                     <a href="joueurs/modifier_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-modifier">Modifier</a>
                     <a href="joueurs/supprimer_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
@@ -98,7 +107,7 @@ try {
             </tr>
             <?php foreach ($equipes as $equipe): ?>
             <tr>
-                <td><?= htmlspecialchars($equipe['id_equipe']) ?></td>
+                <td><a href="equipes/fiche_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" title="Voir fiche équipe"><?= htmlspecialchars($equipe['id_equipe']) ?></a></td>
                 <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
                 <td><?= htmlspecialchars($equipe['ville']) ?></td>
                 <td><?= htmlspecialchars($equipe['pays']) ?></td>
