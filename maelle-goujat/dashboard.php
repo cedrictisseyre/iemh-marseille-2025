@@ -22,6 +22,18 @@ $nb_stats = $conn->query('SELECT COUNT(*) FROM stats_joueurs')->fetchColumn();
             <li><strong>Nombre de matchs :</strong> <?= $nb_matchs ?></li>
             <li><strong>Nombre de lignes de stats :</strong> <?= $nb_stats ?></li>
         </ul>
+        <h2>Top 5 joueurs (essais marqués)</h2>
+        <canvas id="chart-essais" width="400" height="200" style="background:#fff;border-radius:8px;"></canvas>
+        <?php
+        // Top 5 joueurs avec le plus d'essais
+        $top = $conn->query('SELECT j.nom, j.prenom, SUM(s.essais) as total_essais FROM stats_joueurs s JOIN joueurs j ON s.id_joueur = j.id_joueur GROUP BY s.id_joueur ORDER BY total_essais DESC LIMIT 5')->fetchAll(PDO::FETCH_ASSOC);
+        $labels = [];
+        $data = [];
+        foreach ($top as $row) {
+            $labels[] = $row['prenom'] . ' ' . $row['nom'];
+            $data[] = (int)$row['total_essais'];
+        }
+        ?>
         <form method="post">
             <button type="submit" name="export_all" style="margin-bottom:1em;">Exporter toutes les données (JSON)</button>
         </form>
@@ -51,6 +63,26 @@ darkBtn.onclick = function() {
 if (localStorage.getItem('darkmode') === 'true') {
     document.body.classList.add('dark');
 }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('chart-essais').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: <?= json_encode($labels, JSON_UNESCAPED_UNICODE) ?>,
+        datasets: [{
+            label: 'Essais',
+            data: <?= json_encode($data) ?>,
+            backgroundColor: '#2563eb',
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, ticks: { precision:0 } } }
+    }
+});
 </script>
 </body>
 </html>
