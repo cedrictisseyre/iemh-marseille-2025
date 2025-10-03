@@ -56,6 +56,7 @@ try {
                 <th>Prénom</th>
                 <th>Poste</th>
                 <th>ID équipe</th>
+                <th>Actions</th>
             </tr>
             <?php foreach ($joueurs as $joueur): ?>
             <tr>
@@ -64,6 +65,10 @@ try {
                 <td><?= htmlspecialchars($joueur['prenom']) ?></td>
                 <td><?= htmlspecialchars($joueur['poste']) ?></td>
                 <td><?= htmlspecialchars($joueur['id_equipe']) ?></td>
+                <td>
+                    <a href="joueurs/modifier_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-modifier">Modifier</a>
+                    <a href="joueurs/supprimer_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
+                </td>
             </tr>
             <?php endforeach; ?>
         </table>
@@ -79,6 +84,7 @@ try {
                 <th>Nom</th>
                 <th>Ville</th>
                 <th>Pays</th>
+                <th>Actions</th>
             </tr>
             <?php foreach ($equipes as $equipe): ?>
             <tr>
@@ -86,6 +92,10 @@ try {
                 <td><?= htmlspecialchars($equipe['nom_equipe']) ?></td>
                 <td><?= htmlspecialchars($equipe['ville']) ?></td>
                 <td><?= htmlspecialchars($equipe['pays']) ?></td>
+                <td>
+                    <a href="equipes/modifier_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-modifier">Modifier</a>
+                    <a href="equipes/supprimer_equipe.php?id=<?= urlencode($equipe['id_equipe']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
+                </td>
             </tr>
             <?php endforeach; ?>
         </table>

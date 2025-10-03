@@ -1,3 +1,27 @@
+/* Boutons d'action CRUD */
+.btn-modifier {
+    background: #2563eb;
+    color: #fff;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 0.5em;
+    transition: background 0.2s;
+}
+.btn-modifier:hover, .btn-modifier:focus {
+    background: #1e40af;
+}
+.btn-supprimer {
+    background: #ef4444;
+    color: #fff;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.btn-supprimer:hover, .btn-supprimer:focus {
+    background: #b91c1c;
+}
 input:focus, select:focus, textarea:focus, button:focus {
     outline: 2px solid #1a237e;
     outline-offset: 2px;
