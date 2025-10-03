@@ -23,6 +23,7 @@ if ($joueur['id_equipe']) {
     <link rel="stylesheet" href="../style-accueil.css">
 </head>
 <body>
+    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:1em;z-index:10;">🌙</button>
     <div class="container">
         <h1>Fiche joueur : <?= htmlspecialchars($joueur['prenom'] . ' ' . $joueur['nom']) ?></h1>
         <ul>
@@ -34,5 +35,16 @@ if ($joueur['id_equipe']) {
         </ul>
         <a href="../index.php">Retour à l'accueil</a>
     </div>
+<script>
+// Mode sombre
+const darkBtn = document.getElementById('toggle-dark');
+darkBtn.onclick = function() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('darkmode', document.body.classList.contains('dark'));
+};
+if (localStorage.getItem('darkmode') === 'true') {
+    document.body.classList.add('dark');
+}
+</script>
 </body>
 </html>

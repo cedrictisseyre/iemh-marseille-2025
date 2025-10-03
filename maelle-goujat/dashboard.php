@@ -13,6 +13,7 @@ $nb_stats = $conn->query('SELECT COUNT(*) FROM stats_joueurs')->fetchColumn();
     <link rel="stylesheet" href="style-accueil.css">
 </head>
 <body>
+    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:1em;z-index:10;">🌙</button>
     <div class="container">
         <h1>Tableau de bord</h1>
         <ul>
@@ -23,5 +24,16 @@ $nb_stats = $conn->query('SELECT COUNT(*) FROM stats_joueurs')->fetchColumn();
         </ul>
         <a href="index.php">Retour à l'accueil</a>
     </div>
+<script>
+// Mode sombre
+const darkBtn = document.getElementById('toggle-dark');
+darkBtn.onclick = function() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('darkmode', document.body.classList.contains('dark'));
+};
+if (localStorage.getItem('darkmode') === 'true') {
+    document.body.classList.add('dark');
+}
+</script>
 </body>
 </html>

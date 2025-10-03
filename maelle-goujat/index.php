@@ -30,6 +30,7 @@ try {
     <link rel="stylesheet" href="style-accueil.css">
 </head>
 <body>
+    <button id="toggle-dark" aria-label="Activer/désactiver le mode sombre" style="position:absolute;top:1em;right:1em;z-index:10;">🌙</button>
     <div class="container">
         <h1>Bienvenue sur la page de Maëlle GOUJAT</h1>
         <p>Cette page est générée en PHP pour le projet du mastère spécialisé IHME Marseille 2025.</p>
@@ -179,6 +180,15 @@ try {
         <?php endif; ?>
     </div>
 <script>
+// Mode sombre
+const darkBtn = document.getElementById('toggle-dark');
+darkBtn.onclick = function() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('darkmode', document.body.classList.contains('dark'));
+};
+if (localStorage.getItem('darkmode') === 'true') {
+    document.body.classList.add('dark');
+}
 // Filtrage joueurs
 document.getElementById('search-joueurs').addEventListener('input', function() {
     const value = this.value.toLowerCase();
