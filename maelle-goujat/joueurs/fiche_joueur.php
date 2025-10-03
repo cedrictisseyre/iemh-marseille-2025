@@ -52,7 +52,8 @@ updateStar();
             <li><strong>Poste :</strong> <?= htmlspecialchars($joueur['poste']) ?></li>
             <li><strong>Équipe :</strong> <?= $equipe ? htmlspecialchars($equipe['nom_equipe']) : 'Aucune' ?></li>
         </ul>
-        <a href="../index.php">Retour à l'accueil</a>
+    <button onclick="window.print()" style="margin-right:1em;">Imprimer / PDF</button>
+    <a href="../index.php">Retour à l'accueil</a>
     </div>
 <script>
 // Mode sombre

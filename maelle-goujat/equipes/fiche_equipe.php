@@ -57,7 +57,8 @@ updateStar();
         <?php else: ?>
             <p>Aucun joueur dans cette équipe.</p>
         <?php endif; ?>
-        <a href="../index.php">Retour à l'accueil</a>
+    <button onclick="window.print()" style="margin-right:1em;">Imprimer / PDF</button>
+    <a href="../index.php">Retour à l'accueil</a>
     </div>
 <script>
 // Mode sombre

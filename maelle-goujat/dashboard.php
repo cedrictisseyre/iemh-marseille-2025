@@ -22,6 +22,23 @@ $nb_stats = $conn->query('SELECT COUNT(*) FROM stats_joueurs')->fetchColumn();
             <li><strong>Nombre de matchs :</strong> <?= $nb_matchs ?></li>
             <li><strong>Nombre de lignes de stats :</strong> <?= $nb_stats ?></li>
         </ul>
+        <form method="post">
+            <button type="submit" name="export_all" style="margin-bottom:1em;">Exporter toutes les données (JSON)</button>
+        </form>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['export_all'])) {
+            $data = [
+                'joueurs' => $conn->query('SELECT * FROM joueurs')->fetchAll(PDO::FETCH_ASSOC),
+                'equipes' => $conn->query('SELECT * FROM equipes')->fetchAll(PDO::FETCH_ASSOC),
+                'matchs' => $conn->query('SELECT * FROM matchs')->fetchAll(PDO::FETCH_ASSOC),
+                'stats_joueurs' => $conn->query('SELECT * FROM stats_joueurs')->fetchAll(PDO::FETCH_ASSOC),
+            ];
+            header('Content-Type: application/json');
+            header('Content-Disposition: attachment; filename="export_all.json"');
+            echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+        ?>
         <a href="index.php">Retour à l'accueil</a>
     </div>
 <script>
