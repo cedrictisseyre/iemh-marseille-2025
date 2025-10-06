@@ -3,9 +3,15 @@
 Ce projet propose un site web dynamique permettant de consulter des fiches d'informations sur les pilotes de Formule 1, leurs statistiques et d'autres données issues d'une base MySQL.
 
 ## Fonctionnalités principales
-- Affichage de la liste des champions du monde de F1
-- Détail des victoires et années de titres pour chaque pilote
-- (À venir) Recherche de pilotes, statistiques avancées, comparaisons, fiches détaillées, etc.
+- Page d'accueil centralisée avec navigation
+- Liste des pilotes et fiche détaillée (titres, participations, écuries)
+- Liste des écuries et fiche écurie (pilotes associés)
+- Statistiques globales et classements (top pilotes, top écuries)
+- Recherche dynamique de pilotes (AJAX)
+- Comparaison de deux pilotes (titres, participations, écuries)
+- Palmarès par année (champion et participants)
+- Panthéon des champions du monde (onglets dynamiques)
+- Services API REST (JSON) pour toutes les entités et stats
 
 ## Prérequis
 - PHP >= 8.0 avec extensions PDO et pdo_mysql
@@ -18,20 +24,21 @@ Ce projet propose un site web dynamique permettant de consulter des fiches d'inf
 3. Importer le schéma et les données MySQL si besoin
 4. Lancer le serveur web ou utiliser `php -S localhost:8000` dans le dossier du projet
 
+
 ## Organisation du projet
 
 ```
 francoisdcls/
-├── assets/         # Images, CSS, JS (à créer)
-├── database/       # Connexion et scripts SQL
-├── pages/          # Pages HTML/PHP (fiches, listes, formulaires)
-├── services/       # Scripts PHP pour accès AJAX/API
-├── sites/          # Pages principales (ex: pantheon_pilotes.php)
+├── assets/         # Images, CSS, JS (style.css, logo-f1.svg, stats.js, recherche.js, fiche_pilote.js, pantheon_pilotes.js...)
+├── database/       # Connexion et scripts SQL (bdd_formule1.php)
+├── pages/          # Pages HTML/PHP (index.php, liste_pilotes.php, fiche_pilote.php, liste_ecuries.php, fiche_ecurie.php, statistiques.php, recherche.php, comparer_pilotes.php, palmares_annee.php, pantheon_pilotes.php)
+├── services/       # Scripts PHP pour accès AJAX/API (pilotes.php, ecuries.php, championnats.php, participations.php, recherche_pilotes.php, stats_globales.php, fiche_pilote.php, pantheon_pilotes.php...)
 ```
 
 ## Utilisation
-- Accéder à la page principale pour voir la liste des champions
-- (À venir) Utiliser les fonctionnalités de recherche, statistiques, etc.
+- Accéder à `pages/index.php` pour la navigation principale
+- Utiliser les différents liens pour explorer pilotes, écuries, stats, palmarès, panthéon...
+- Les services du dossier `services/` peuvent être consommés en AJAX ou par des applications externes (format JSON)
 
 ## Auteur
 Projet IEMH Marseille 2025 - François Duclos

@@ -18,24 +18,15 @@ if ($q !== '') {
 <body>
 <header><h1>Recherche de pilotes</h1></header>
 <div class='container'>
-<form method='get'>
-  <input type='text' name='q' value='<?= htmlspecialchars($q) ?>' placeholder='Nom ou prénom...'>
-  <button type='submit'>Rechercher</button>
+
+<form id="form-recherche" autocomplete="off">
+  <input type="text" id="input-recherche" placeholder="Nom ou prénom...">
+  <button type="submit">Rechercher</button>
 </form>
-<?php if($q !== ''): ?>
-  <h2>Résultats pour "<?= htmlspecialchars($q) ?>"</h2>
-  <?php if($results): ?>
-    <ul>
-    <?php foreach($results as $row): ?>
-      <li><a href='fiche_pilote.php?id=<?= $row['pilote_id'] ?>'><?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?></a></li>
-    <?php endforeach; ?>
-    </ul>
-  <?php else: ?>
-    <p>Aucun pilote trouvé.</p>
-  <?php endif; ?>
-<?php endif; ?>
+<div id="resultats-recherche" style="margin-top:1em;"></div>
 <a href='liste_pilotes.php'>Voir tous les pilotes</a>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
+<script src="../assets/recherche.js"></script>
 </body>
 </html>
