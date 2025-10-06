@@ -1,5 +1,4 @@
 <?php
-include '../menu.php';
 require_once '../connexion.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id > 0) {

@@ -1,5 +1,4 @@
 <?php
-include '../menu.php';
 require_once '../connexion.php';
 $stmt = $conn->query('SELECT id_saison, annee, description FROM saisons');
 $saisons = $stmt->fetchAll(PDO::FETCH_ASSOC);

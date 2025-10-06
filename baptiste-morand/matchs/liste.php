@@ -1,5 +1,4 @@
 <?php
-include '../menu.php';
 require_once '../connexion.php';
 $stmt = $conn->query('SELECT id_match, date_match, adversaire, lieu FROM matchs');
 $matchs = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -1,7 +1,5 @@
 <?php
-include 'menu.php';
 require_once 'connexion.php';
-// ...existing code...
 ?>
 <!DOCTYPE html>
 <html lang="fr">

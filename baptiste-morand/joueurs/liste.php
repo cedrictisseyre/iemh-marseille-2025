@@ -1,5 +1,4 @@
 <?php
-include '../menu.php';
 require_once '../connexion.php';
 $stmt = $conn->query('SELECT id_joueur, nom, prenom, poste FROM joueurs');
 $joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
