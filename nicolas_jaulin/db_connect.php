@@ -1,4 +1,9 @@
-<?php
+$php_debug = true;
+if ($php_debug) {
+     ini_set('display_errors', 1);
+     ini_set('display_startup_errors', 1);
+     error_reporting(E_ALL);
+}
 // Connexion à la base de données MySQL
 $host = 'localhost';
 $db   = 'nicolas_jaulin';
