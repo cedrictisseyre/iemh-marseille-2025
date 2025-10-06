@@ -1,9 +1,9 @@
 <?php
 // Galerie photos/vidéos (simulée)
 $galerie = [
-    ['type' => 'photo', 'src' => 'https://images.unsplash.com/photo-1506744038136-46273834b3fb', 'alt' => 'Entraînement karate'],
-    ['type' => 'photo', 'src' => 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308', 'alt' => 'Compétition'],
-    ['type' => 'video', 'src' => 'https://www.youtube.com/embed/2Vv-BfVoq4g', 'alt' => 'Démonstration kata']
+    ['type' => 'photo', 'src' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhShBFNQ-U-iCtIO6yMvUht1WcKCDlPIP9Eg&s', 'alt' => 'Entraînement karate'],
+    ['type' => 'photo', 'src' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPPovZhrM2FePFCb9DO30JFRibLUK8X6WUSw&s', 'alt' => 'Compétition'],
+    ['type' => 'video', 'src' => 'https://www.youtube.com/watch?v=LPt8W7icWhs', 'alt' => 'Démonstration kata']
 ];
 ?>
 <h2>Galerie photos & vidéos</h2>
