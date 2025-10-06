@@ -12,12 +12,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_utilisateur = $_POST['id_utilisateur'] ?? '';
     $id_sport = $_POST['id_sport'] ?? '';
     if ($date && $temps && $id_utilisateur && $id_sport) {
-        $stmt = $pdo->prepare("INSERT INTO activites_sportives (date, temps, id_utilisateur, id_sport) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$date, $temps, $id_utilisateur, $id_sport]);
-        header('Location: index.php');
-        exit;
+        try {
+            $stmt = $pdo->prepare("INSERT INTO activites_sportives (date, temps, id_utilisateur, id_sport) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$date, $temps, $id_utilisateur, $id_sport]);
+            header('Location: index.php');
+            exit;
+        } catch (PDOException $e) {
+            $error = 'Erreur lors de l\'insertion : ' . $e->getMessage();
+            $debug = [
+                'date' => $date,
+                'temps' => $temps,
+                'id_utilisateur' => $id_utilisateur,
+                'id_sport' => $id_sport
+            ];
+        }
     } else {
         $error = 'Tous les champs sont obligatoires.';
+        $debug = [
+            'date' => $date,
+            'temps' => $temps,
+            'id_utilisateur' => $id_utilisateur,
+            'id_sport' => $id_sport
+        ];
     }
 }
 ?>
@@ -32,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1>Ajouter une activité sportive</h1>
     <?php if (!empty($error)) : ?>
         <div class="error"><?= htmlspecialchars($error) ?></div>
+        <?php if (!empty($debug)) : ?>
+            <pre><?= print_r($debug, true) ?></pre>
+        <?php endif; ?>
     <?php endif; ?>
     <form method="post">
         <label>Date : <input type="date" name="date" required></label><br>
