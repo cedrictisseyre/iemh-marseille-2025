@@ -2,7 +2,12 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once 'connect.php';
+try {
+    require_once 'connexion.php'; // Connexion à la base de données
+} catch (Exception $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
 include 'header.php';
 
 //////////////////////////////////////
@@ -13,8 +18,11 @@ if (isset($_GET['delete'])) {
     if ($id_delete > 0) {
         $sql_delete = "DELETE FROM seances WHERE id = :id";
         $stmt = $conn->prepare($sql_delete);
-        $stmt->execute([':id' => $id_delete]);
-        echo "<p style='color: red; text-align: center;'>❌ Séance supprimée avec succès.</p>";
+        if ($stmt->execute([':id' => $id_delete])) {
+            echo "<p style='color: red; text-align: center;'>❌ Séance supprimée avec succès.</p>";
+        } else {
+            echo "<p style='color: red; text-align: center;'>⚠️ Erreur lors de la suppression.</p>";
+        }
     }
 }
 
@@ -31,15 +39,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
         $sql_insert = "INSERT INTO seances (date_seance, type_seance, id_client, id_coach)
                        VALUES (:date_seance, :type_seance, :id_client, :id_coach)";
         $stmt_insert = $conn->prepare($sql_insert);
-        $stmt_insert->execute([
+        if ($stmt_insert->execute([
             ':date_seance' => $date_seance,
             ':type_seance' => $type_seance,
             ':id_client' => $id_client,
             ':id_coach' => $id_coach
-        ]);
-        echo "<p style='color:green; text-align:center;'>✅ Séance ajoutée avec succès !</p>";
+        ])) {
+            echo "<p style='color:green; text-align:center;'>✅ Séance ajoutée avec succès !</p>";
+        } else {
+            echo "<p style='color:red; text-align:center;'>⚠️ Erreur lors de l'ajout.</p>";
+        }
     } else {
-        echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis correctement.</p>";
+        echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis.</p>";
     }
 }
 
@@ -53,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $id_client = intval($_POST['id_client']);
     $id_coach = intval($_POST['id_coach']);
 
-    if (!empty($date_seance) && !empty($type_seance) && $id_client > 0 && $id_coach > 0) {
+    if ($id_update > 0 && !empty($date_seance) && !empty($type_seance) && $id_client > 0 && $id_coach > 0) {
         $sql_update = "UPDATE seances 
                        SET date_seance = :date_seance,
                            type_seance = :type_seance,
@@ -61,41 +72,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
                            id_coach = :id_coach
                        WHERE id = :id";
         $stmt_update = $conn->prepare($sql_update);
-        $stmt_update->execute([
+        if ($stmt_update->execute([
             ':date_seance' => $date_seance,
             ':type_seance' => $type_seance,
             ':id_client' => $id_client,
             ':id_coach' => $id_coach,
             ':id' => $id_update
-        ]);
-        echo "<p style='color:orange; text-align:center;'>✏️ Séance modifiée avec succès.</p>";
+        ])) {
+            echo "<p style='color:orange; text-align:center;'>✏️ Séance modifiée avec succès.</p>";
+        } else {
+            echo "<p style='color:red; text-align:center;'>⚠️ Erreur lors de la modification.</p>";
+        }
     } else {
         echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis pour la modification.</p>";
     }
 }
 
 //////////////////////////////////////
-// 4️⃣ RÉCUPÉRATION DES DONNÉES
+// 4️⃣ RECUPÉRATION DES DONNÉES
 //////////////////////////////////////
-$clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
-$coachs = $conn->query("SELECT id, prenom, specialite FROM coachs ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
+    $coachs = $conn->query("SELECT id, prenom, specialite FROM coachs ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
 
-$sql = "
-    SELECT 
-        s.id,
-        s.date_seance,
-        s.type_seance,
-        CONCAT(c.prenom, ' ', c.nom) AS client,
-        co.prenom AS coach,
-        co.specialite,
-        s.id_client,
-        s.id_coach
-    FROM seances s
-    JOIN clients c ON s.id_client = c.id
-    JOIN coachs co ON s.id_coach = co.id
-    ORDER BY s.date_seance;
-";
-$seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    $sql = "
+        SELECT 
+            s.id,
+            s.date_seance,
+            s.type_seance,
+            CONCAT(c.prenom, ' ', c.nom) AS client,
+            co.prenom AS coach,
+            co.specialite,
+            s.id_client,
+            s.id_coach
+        FROM seances s
+        JOIN clients c ON s.id_client = c.id
+        JOIN coachs co ON s.id_coach = co.id
+        ORDER BY s.date_seance;
+    ";
+    $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    die("Erreur récupération données : " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -170,7 +188,7 @@ $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 <a href="?edit=<?= $s['id'] ?>">Modifier</a>
             </td>
         </tr>
-        <?php if (isset($_GET['edit']) && intval($_GET['edit']) === $s['id']): ?>
+        <?php if (isset($_GET['edit']) && $_GET['edit'] == $s['id']): ?>
         <tr>
             <td colspan="7">
                 <form method="POST" class="edit-form">
