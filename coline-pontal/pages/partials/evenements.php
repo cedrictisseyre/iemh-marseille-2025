@@ -15,8 +15,27 @@ try {
     ];
 }
 
-// Récupérer les événements à venir
-$evenements = $pdo->query('SELECT nom, type, date_event, lieu FROM evenements WHERE date_event >= CURDATE() ORDER BY date_event ASC')->fetchAll(PDO::FETCH_ASSOC);
+// Faux événements ajoutés manuellement
+$evenements = [
+    [
+        'nom' => 'Stage Ceinture Noire 3e Dan',
+        'type' => 'Stage',
+        'date_event' => '2025-10-04 au 2025-10-22',
+        'lieu' => 'Paris'
+    ],
+    [
+        'nom' => 'Championnat d’Europe',
+        'type' => 'Championnat',
+        'date_event' => '2025-12-08',
+        'lieu' => 'Francfort'
+    ],
+    [
+        'nom' => 'Stage Jeunes',
+        'type' => 'Stage',
+        'date_event' => '2025-11-15',
+        'lieu' => 'Lyon'
+    ]
+];
 ?>
 <h2>Actualités</h2>
 <ul>

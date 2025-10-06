@@ -20,3 +20,35 @@ foreach ($stats as $s) {
     echo '<tr><td>' . htmlspecialchars($s['nom']) . '</td><td>' . htmlspecialchars($s['prenom']) . '</td><td>' . $s['participations'] . '</td><td>' . $s['victoires'] . '</td></tr>';
 }
 echo '</table>';
+
+
+// Graphique à barres pour les médailles (données simulées)
+$medailles = [
+    'Or' => 5,
+    'Argent' => 3,
+    'Bronze' => 7
+];
+?>
+<h3>Médailles remportées</h3>
+<canvas id="medaillesChart" width="400" height="200"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('medaillesChart').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Or', 'Argent', 'Bronze'],
+        datasets: [{
+            label: 'Nombre de médailles',
+            data: [<?= $medailles['Or'] ?>, <?= $medailles['Argent'] ?>, <?= $medailles['Bronze'] ?>],
+            backgroundColor: ['gold', 'silver', '#cd7f32']
+        }]
+    },
+    options: {
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+<?php
