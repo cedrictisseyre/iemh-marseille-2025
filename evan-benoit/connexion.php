@@ -1,5 +1,5 @@
 <?php
-// Connexion à la base de données MySQL (phpMyAdmin)
+// Connexion à la base de données MySQL (phpMyAdmin) 
 
 $host = '195.15.235.20';
 $dbname = 'evan_benoit';
