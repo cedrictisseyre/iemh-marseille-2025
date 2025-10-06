@@ -6,7 +6,8 @@ require_once __DIR__ . '/../config.php';
 <head>
     <meta charset="UTF-8">
     <title>Ligue 1 - Base de données</title>
-    <link rel="stylesheet" href="<?= base_path() ?>style.css">
+    <!-- Chemin vers le CSS dans le dossier assets -->
+    <link rel="stylesheet" href="<?= base_path() ?>assets/style.css">
 </head>
 <body>
 <header>
