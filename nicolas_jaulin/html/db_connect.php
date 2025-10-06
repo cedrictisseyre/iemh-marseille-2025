@@ -1,7 +1,7 @@
 <?php
 // Connexion à la base de données MySQL
 $host = 'localhost';
-$db   = 'rugby_bdd';
+$db   = 'nicolas_jaulin';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
