@@ -27,13 +27,6 @@ h1 { color:#2c3e50; }
 <div class="container">
 <h1>Bienvenue sur le site de gestion des sportifs, clubs et courses en France</h1>
 
-<div class="buttons">
-<a href="php-admin/pages/gestion_sportif.php">Sportifs</a>
-<a href="php-admin/pages/gestion_club.php">Clubs</a>
-<a href="php-admin/pages/gestion_course.php">Courses</a>
-<a href="php-admin/pages/gestion_discipline.php">Disciplines</a>
-<a href="php-admin/pages/gestion_participation.php">Participations</a>
-</div>
 </div>
 </body>
 </html>
