@@ -1,3 +1,6 @@
+<?php
+require_once base_path('../config.php'); // pour s'assurer que base_path() est disponible
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>

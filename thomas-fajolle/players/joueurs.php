@@ -1,6 +1,7 @@
 <?php
-require_once base_path('includes/header.php');
+require_once __DIR__ . '/../../config.php';
 require_once base_path('connexion.php');
+require_once base_path('includes/header.php');
 
 // Récupération des joueurs avec leur équipe
 $sql = "SELECT p.*, t.nom AS equipe 
