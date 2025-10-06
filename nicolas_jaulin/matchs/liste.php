@@ -5,7 +5,7 @@
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
     }
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $stmt = $pdo->query('SELECT * FROM Matchs');
 ?>
 <!DOCTYPE html>
