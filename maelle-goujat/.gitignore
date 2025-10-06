@@ -1,0 +1,9 @@
+# Fichiers sensibles et inutiles
+config.php
+.env
+*.log
+node_modules/
+vendor/
+.DS_Store
+.idea/
+.vscode/

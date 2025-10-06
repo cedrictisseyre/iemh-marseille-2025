@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des courses</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+        <h1>Liste des courses</h1>
+        <table id="courses-table" style="display:none">
+                <thead>
+                        <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Date</th>
+                                <th>Lieu</th>
+                        </tr>
+                </thead>
+                <tbody></tbody>
+        </table>
+        <p id="loading">Chargement des courses...</p>
+        <script>
+        function chargerCourses() {
+            fetch('../../services/lire_courses.php')
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.getElementById('courses-table');
+                    const tbody = table.querySelector('tbody');
+                    tbody.innerHTML = '';
+                    document.getElementById('loading').style.display = 'none';
+                    table.style.display = '';
+                    data.forEach(course => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td>${course.id_course}</td><td>${course.nom}</td><td>${course.date}</td><td>${course.lieu}</td>`;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(() => {
+                    document.getElementById('loading').textContent = 'Erreur de chargement des données.';
+                });
+        }
+        chargerCourses();
+
+        </script>
+</body>
+</html>

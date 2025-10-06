@@ -1,0 +1,21 @@
+nom,prenom,photo,ecurie,nb_gp,nb_victoires,nb_podiums,champion
+Verstappen,Max,https://upload.wikimedia.org/wikipedia/commons/6/6e/Max_Verstappen_2017_Malaysia_3.jpg,Red Bull,185,49,90,oui
+Hamilton,Lewis,https://upload.wikimedia.org/wikipedia/commons/8/81/Lewis_Hamilton_2016_Malaysia_2.jpg,Mercedes,332,103,197,oui
+Leclerc,Charles,https://upload.wikimedia.org/wikipedia/commons/5/5d/Charles_Leclerc_2019_Singapore.jpg,Ferrari,123,5,32,non
+Alonso,Fernando,https://upload.wikimedia.org/wikipedia/commons/2/2e/Fernando_Alonso_2016_Malaysia_2.jpg,Aston Martin,380,32,106,oui
+Perez,Sergio,https://upload.wikimedia.org/wikipedia/commons/5/5e/Sergio_Perez_2016_Malaysia_2.jpg,Red Bull,257,6,37,non
+Sainz,Carlos,https://upload.wikimedia.org/wikipedia/commons/2/2e/Carlos_Sainz_2017_Malaysia_2.jpg,Ferrari,184,2,18,non
+Russell,George,https://upload.wikimedia.org/wikipedia/commons/6/6d/George_Russell_2019_Hungary.jpg,Mercedes,104,1,11,non
+Norris,Lando,https://upload.wikimedia.org/wikipedia/commons/2/2e/Lando_Norris_2019_Hungary.jpg,McLaren,104,0,15,non
+Piastri,Oscar,https://upload.wikimedia.org/wikipedia/commons/2/2e/Oscar_Piastri_2023_Austria.jpg,McLaren,22,0,2,non
+Gasly,Pierre,https://upload.wikimedia.org/wikipedia/commons/2/2e/Pierre_Gasly_2019_Hungary.jpg,Alpine,129,1,4,non
+Ocon,Esteban,https://upload.wikimedia.org/wikipedia/commons/2/2e/Esteban_Ocon_2017_Malaysia_2.jpg,Alpine,133,1,3,non
+Bottas,Valtteri,https://upload.wikimedia.org/wikipedia/commons/2/2e/Valtteri_Bottas_2017_Malaysia_2.jpg,Sauber,223,10,67,non
+Zhou,Guanyu,https://upload.wikimedia.org/wikipedia/commons/2/2e/Guanyu_Zhou_2022_Austria.jpg,Sauber,44,0,0,non
+Magnussen,Kevin,https://upload.wikimedia.org/wikipedia/commons/2/2e/Kevin_Magnussen_2017_Malaysia_2.jpg,Haas,163,1,1,non
+Hulkenberg,Nico,https://upload.wikimedia.org/wikipedia/commons/2/2e/Nico_Hulkenberg_2017_Malaysia_2.jpg,Haas,203,0,2,non
+Stroll,Lance,https://upload.wikimedia.org/wikipedia/commons/2/2e/Lance_Stroll_2017_Malaysia_2.jpg,Aston Martin,143,0,3,non
+Tsunoda,Yuki,https://upload.wikimedia.org/wikipedia/commons/2/2e/Yuki_Tsunoda_2021_Austria.jpg,VCARB,64,0,0,non
+Ricciardo,Daniel,https://upload.wikimedia.org/wikipedia/commons/2/2e/Daniel_Ricciardo_2017_Malaysia_2.jpg,VCARB,241,8,32,non
+Albon,Alexander,https://upload.wikimedia.org/wikipedia/commons/2/2e/Alexander_Albon_2019_Hungary.jpg,Williams,81,0,2,non
+Sargeant,Logan,https://upload.wikimedia.org/wikipedia/commons/2/2e/Logan_Sargeant_2022_Austria.jpg,Williams,22,0,0,non

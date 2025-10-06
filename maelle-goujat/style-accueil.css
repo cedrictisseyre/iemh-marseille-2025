@@ -1,0 +1,195 @@
+/* Accessibilité forte : contraste élevé, police dyslexique */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/gh/antijingoist/open-dyslexic/web/OpenDyslexic-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+body.access-high {
+    background: #000 !important;
+    color: #fff !important;
+    font-family: 'OpenDyslexic', Arial, sans-serif !important;
+    letter-spacing: 0.04em;
+    font-size: 1.1em;
+}
+body.access-high .container, body.access-high table, body.access-high th, body.access-high td {
+    background: #111 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+body.access-high a, body.access-high .btn-modifier, body.access-high .btn-supprimer {
+    color: #ff0 !important;
+    background: #222 !important;
+    border-color: #fff !important;
+}
+body.access-high input, body.access-high select, body.access-high button {
+    background: #222 !important;
+    color: #fff !important;
+    border-color: #fff !important;
+}
+body.access-high #toggle-access {
+    background: #fff;
+    color: #000;
+    border: 2px solid #ff0;
+}
+/* Mode sombre */
+body.dark {
+    background: #18181b;
+    color: #f1f5f9;
+}
+body.dark .container {
+    background: #23232a;
+    color: #f1f5f9;
+}
+body.dark table {
+    background: #23232a;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+body.dark th, body.dark td {
+    border-color: #334155;
+}
+body.dark a { color: #60a5fa; }
+body.dark .btn-modifier { background: #1e40af; }
+body.dark .btn-supprimer { background: #b91c1c; }
+body.dark input, body.dark select, body.dark button {
+    background: #18181b;
+    color: #f1f5f9;
+    border-color: #334155;
+}
+body.dark #toggle-dark {
+    background: #23232a;
+    color: #f1f5f9;
+    border: 1px solid #334155;
+}
+/* Accessibilité : focus visible */
+a:focus, button:focus, input:focus, select:focus {
+    outline: 2px solid #0ea5e9;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #0ea5e933;
+}
+/* Champs de recherche et export */
+#search-joueurs, #search-equipes {
+    padding: 0.4em 0.8em;
+    border: 1px solid #2563eb;
+    border-radius: 4px;
+    margin-right: 0.5em;
+    font-size: 1em;
+}
+#export-joueurs-csv, #export-joueurs-json,
+#export-equipes-csv, #export-equipes-json {
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+    margin-right: 0.3em;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+}
+#export-joueurs-csv:hover, #export-joueurs-json:hover,
+#export-equipes-csv:hover, #export-equipes-json:hover {
+    background: #0369a1;
+}
+/* Boutons d'action CRUD */
+.btn-modifier {
+    background: #2563eb;
+    color: #fff;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 0.5em;
+    transition: background 0.2s;
+}
+.btn-modifier:hover, .btn-modifier:focus {
+    background: #1e40af;
+}
+.btn-supprimer {
+    background: #ef4444;
+    color: #fff;
+    padding: 0.3em 0.8em;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.btn-supprimer:hover, .btn-supprimer:focus {
+    background: #b91c1c;
+}
+input:focus, select:focus, textarea:focus, button:focus {
+    outline: 2px solid #1a237e;
+    outline-offset: 2px;
+    background: #e3e7f7;
+}
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #1a237e 100%);
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 3em auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 2em;
+}
+h1 {
+    color: #1a237e;
+    margin-bottom: 1em;
+    text-align: center;
+}
+.pub {
+    background: #e3e7f7;
+    border-left: 5px solid #1a237e;
+    padding: 15px;
+    margin: 20px 0;
+    font-size: 1.1em;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+}
+ul li a {
+    background: #1a237e;
+    color: #fff;
+    border-radius: 8px;
+    padding: 0.6em 1.2em;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+ul li a:hover {
+    background: #0d1335;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 2em;
+    background: #f8fafc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+th, td {
+    border: 1px solid #cbd5e1;
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background: #e3e7f7;
+    color: #1a237e;
+}
+h2 {
+    color: #1a237e;
+    margin-top: 2em;
+}
+.error {
+    color: #ef4444;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
