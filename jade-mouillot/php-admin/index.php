@@ -53,14 +53,14 @@
     <h1>Bienvenue sur le site de gestion des sportifs, clubs et courses en France</h1>
 
     <div class="menu">
-        <a href="gestion_sportif.php">Sportifs</a>
-        <a href="gestion_club.php">Clubs</a>
-        <a href="gestion_course.php">Courses</a>
-        <a href="gestion_discipline.php">Disciplines</a>
-        <a href="gestion_participation.php">Participations</a>
+        <a href="pages/gestion_sportif.php">Sportifs</a>
+        <a href="pages/gestion_club.php">Clubs</a>
+        <a href="pages/gestion_course.php">Courses</a>
+        <a href="pages/gestion_discipline.php">Disciplines</a>
+        <a href="pages/gestion_participation.php">Participations</a>
     </div>
 
-    <p>Utilisez les boutons ci-dessus pour accéder aux différentes sections de gestion. Toutes les données sont affichées à gauche pour une lisibilité optimale.</p>
+    <p>Utilisez les boutons ci-dessus pour accéder aux différentes sections de gestion.</p>
 </div>
 </body>
 </html>
