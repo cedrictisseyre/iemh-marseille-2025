@@ -1,17 +1,5 @@
+<?php
 $host = '195.15.235.20';
-$host = '195.15.235.20';
-$host = '195.15.235.20';
-$user = 'root';
-$password = 'INNnsk40374';
-$dbname = 'Andoni_guerin';
-
-try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die('Erreur de connexion à la base de données : ' . $e->getMessage());
-}
-
 $user = 'root';
 $password = 'INNnsk40374';
 $dbname = 'Andoni_guerin';
