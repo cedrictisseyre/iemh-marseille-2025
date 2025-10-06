@@ -1,7 +1,9 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once 'connect.php';
 include 'header.php';
-
 
 //////////////////////////////////////
 // 1️⃣ SUPPRESSION D'UNE SEANCE
@@ -49,21 +51,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $id_client = $_POST['id_client'];
     $id_coach = $_POST['id_coach'];
 
-    $sql_update = "UPDATE seances 
-                   SET date_seance = :date_seance,
-                       type_seance = :type_seance,
-                       id_client = :id_client,
-                       id_coach = :id_coach
-                   WHERE id = :id";
-    $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->execute([
-        ':date_seance' => $date_seance,
-        ':type_seance' => $type_seance,
-        ':id_client' => $id_client,
-        ':id_coach' => $id_coach,
-        ':id' => $id_update
-    ]);
-    echo "<p style='color:orange; text-align:center;'>✏️ Séance modifiée avec succès.</p>";
+    if (!empty($date_seance) && !empty($type_seance) && !empty($id_client) && !empty($id_coach)) {
+        $sql_update = "UPDATE seances 
+                       SET date_seance = :date_seance,
+                           type_seance = :type_seance,
+                           id_client = :id_client,
+                           id_coach = :id_coach
+                       WHERE id = :id";
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->execute([
+            ':date_seance' => $date_seance,
+            ':type_seance' => $type_seance,
+            ':id_client' => $id_client,
+            ':id_coach' => $id_coach,
+            ':id' => $id_update
+        ]);
+        echo "<p style='color:orange; text-align:center;'>✏️ Séance modifiée avec succès.</p>";
+    } else {
+        echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis pour la modification.</p>";
+    }
 }
 
 //////////////////////////////////////
@@ -195,6 +201,7 @@ $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
         <?php endforeach; ?>
     </table>
-    include 'footer.php';
+
+    <?php include 'footer.php'; ?>
 </body>
 </html>
