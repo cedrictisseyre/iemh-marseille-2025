@@ -32,6 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_sportif']))
     echo "<p style='color:red'>Sportif supprimé !</p>";
 }
 
+// CHANGEMENT DE CLUB
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changer_club'])) {
+    $sportif_id = (int)$_POST['sportif_id'];
+    $nouveau_club = (int)$_POST['nouveau_club'];
+    // Clôturer l’adhésion actuelle
+    $pdo->prepare("UPDATE club_membership SET end_date = CURDATE() WHERE sportif_id = ? AND end_date IS NULL")->execute([$sportif_id]);
+    // Ajouter la nouvelle adhésion
+    $pdo->prepare("INSERT INTO club_membership (sportif_id, club_id, start_date, end_date) VALUES (?, ?, CURDATE(), NULL)")->execute([$sportif_id, $nouveau_club]);
+    echo "<p style='color:green'>Club changé avec succès !</p>";
+}
+
 // FILTRE
 $where = [];
 $params = [];
@@ -59,31 +70,32 @@ $sportifs = $stmt->fetchAll();
 <meta charset="UTF-8">
 <title>Gestion des sportifs</title>
 <style>
-body { font-family: Arial, sans-serif; background: #f4f4f4; margin:0; padding:0; }
-.container { max-width: 900px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-h1,h2,h3,h4 { text-align: left; color:#2c3e50;}
-table { width: 100%; border-collapse: collapse; margin-top: 10px; text-align:left;}
+body { font-family: Arial, sans-serif; background: #f4f4f4; margin:0; padding:0; display:flex; }
+.nav { width: 200px; background:#fff; padding:20px; box-shadow:2px 0 6px rgba(0,0,0,0.1); height:100vh; position:fixed; top:0; left:0; }
+.nav a { display:block; margin-bottom:15px; color:#2980b9; text-decoration:none; font-weight:bold; }
+.nav a:hover { text-decoration:underline; }
+.container { margin-left:220px; padding:20px; flex:1; }
+h1,h2,h3,h4 { text-align:left; color:#2c3e50;}
+table { width:100%; border-collapse: collapse; margin-top:10px; text-align:left;}
 th,td { border:1px solid #ccc; padding:6px; }
 th { background:#2980b9; color:#fff; }
 tr:nth-child(even) { background:#f9f9f9; }
 label, input, select, button { display:block; margin-top:5px; width:100%; }
 button { padding:8px; background:#2980b9; color:#fff; border:none; border-radius:4px; cursor:pointer;}
 button:hover { background:#1abc9c; }
-.nav { margin-bottom:20px; text-align:left; }
-.nav a { margin-right:15px; color:#2980b9; text-decoration:none; font-weight:bold; }
-.nav a:hover { text-decoration:underline; }
+form.inline { display:inline-block; margin:0; padding:0; }
 </style>
 </head>
 <body>
-<div class="container">
 <div class="nav">
-<a href="gestion_sportif.php"><b>Sportif</b></a>
-<a href="gestion_club.php">Club</a>
-<a href="gestion_course.php">Course</a>
-<a href="gestion_discipline.php">Discipline</a>
-<a href="gestion_participation.php">Participation</a>
+<a href="gestion_sportif.php"><b>Sportifs</b></a>
+<a href="gestion_club.php">Clubs</a>
+<a href="gestion_course.php">Courses</a>
+<a href="gestion_discipline.php">Disciplines</a>
+<a href="gestion_participation.php">Participations</a>
 </div>
 
+<div class="container">
 <h1>Gestion des sportifs</h1>
 
 <h2>Ajouter un sportif</h2>
@@ -140,7 +152,7 @@ button:hover { background:#1abc9c; }
 
 <table>
 <tr>
-<th>ID</th><th>Nom</th><th>Club</th><th>Course</th><th>Discipline</th><th>Historique</th><th>Supprimer</th>
+<th>ID</th><th>Nom</th><th>Club</th><th>Course</th><th>Discipline</th><th>Historique</th><th>Changer Club</th><th>Supprimer</th>
 </tr>
 <?php foreach($sportifs as $s): ?>
 <tr>
@@ -150,11 +162,22 @@ button:hover { background:#1abc9c; }
 <td><?= htmlspecialchars($s['course']) ?></td>
 <td><?= htmlspecialchars($s['discipline']) ?></td>
 <td>
-<form method="get" style="display:inline"><input type="hidden" name="historique" value="<?= $s['id'] ?>">
+<form method="get" class="inline"><input type="hidden" name="historique" value="<?= $s['id'] ?>">
 <button type="submit">Voir</button></form>
 </td>
 <td>
-<form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce sportif ?');">
+<form method="post" class="inline">
+<input type="hidden" name="sportif_id" value="<?= $s['id'] ?>">
+<select name="nouveau_club" required>
+<?php foreach($clubs as $cl){
+if($cl['nom'] != $s['club']) echo '<option value="'.$cl['id'].'">'.htmlspecialchars($cl['nom']).'</option>';
+} ?>
+</select>
+<button type="submit" name="changer_club">Changer</button>
+</form>
+</td>
+<td>
+<form method="post" class="inline" onsubmit="return confirm('Supprimer ce sportif ?');">
 <input type="hidden" name="supprimer_sportif" value="<?= $s['id'] ?>">
 <button type="submit">Supprimer</button>
 </form>
