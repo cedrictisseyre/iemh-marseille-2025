@@ -1,3 +1,5 @@
+<?php
+
 // Formate une date au format français
 function formatDateFr(string $date): string {
     return date('d/m/Y', strtotime($date));
@@ -23,8 +25,6 @@ function resizeImage($file, $width, $height) {
     // À implémenter selon la stack
     return $file;
 }
-<?php
-// Petit fichier utilitaire pour augmenter la détection de fonctionnalités
 
 function formatName(string $prenom, string $nom): string {
     return trim($prenom) . ' ' . trim($nom);
@@ -57,5 +57,4 @@ function isValidGrade(string $grade): bool {
     $grades_valides = ['Blanche', 'Jaune', 'Orange', 'Verte', 'Bleue', 'Marron', 'Noire', '1er Dan', '2e Dan', '3e Dan'];
     return in_array($grade, $grades_valides);
 }
-
 ?>
