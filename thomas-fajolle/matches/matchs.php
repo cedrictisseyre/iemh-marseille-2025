@@ -1,9 +1,12 @@
 <?php
-require_once __DIR__ . '/../../config.php';
-require_once base_path('connexion.php');
-require_once base_path('includes/header.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-// Récupération des matchs avec équipes et compétitions
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../connexion.php';
+require_once __DIR__ . '/../includes/header.php';
+
 $sql = "SELECT m.*, 
                ht.nom AS home_team, 
                at.nom AS away_team, 
@@ -13,30 +16,24 @@ $sql = "SELECT m.*,
         JOIN teams at ON m.away_team_id = at.id
         JOIN competitions c ON m.competition_id = c.id
         ORDER BY m.date_match DESC";
-
 $stmt = $pdo->query($sql);
 $matchs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h2>Résultats des matchs</h2>
 <table>
-    <tr>
-        <th>Date</th>
-        <th>Compétition</th>
-        <th>Domicile</th>
-        <th>Score</th>
-        <th>Extérieur</th>
-    </tr>
+    <tr><th>Date</th><th>Compétition</th><th>Domicile</th><th>Score</th><th>Extérieur</th></tr>
     <?php foreach ($matchs as $m): ?>
         <tr>
             <td><?= htmlspecialchars($m['date_match']) ?></td>
             <td><?= htmlspecialchars($m['competition']) ?></td>
             <td><?= htmlspecialchars($m['home_team']) ?></td>
-            <td><?= htmlspecialchars($m['home_score']) . ' - ' . htmlspecialchars($m['away_score']) ?></td>
+            <td><?= $m['home_score'] . ' - ' . $m['away_score'] ?></td>
             <td><?= htmlspecialchars($m['away_team']) ?></td>
         </tr>
     <?php endforeach; ?>
 </table>
 
 <?php
-require_once base_path('includes/footer.php');
+require_once __DIR__ . '/../includes/footer.php';
+?>

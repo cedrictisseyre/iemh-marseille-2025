@@ -1,9 +1,12 @@
 <?php
-require_once __DIR__ . '/../../config.php';       // chemin relatif depuis sous-dossier
-require_once base_path('connexion.php');
-require_once base_path('includes/header.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-// Récupération des équipes
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../connexion.php';
+require_once __DIR__ . '/../includes/header.php';
+
 $sql = "SELECT * FROM teams ORDER BY nom";
 $stmt = $pdo->query($sql);
 $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -11,12 +14,7 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <h2>Liste des équipes</h2>
 <table>
-    <tr>
-        <th>Nom</th>
-        <th>Ville</th>
-        <th>Stade</th>
-        <th>Entraîneur</th>
-    </tr>
+    <tr><th>Nom</th><th>Ville</th><th>Stade</th><th>Entraîneur</th></tr>
     <?php foreach ($equipes as $e): ?>
         <tr>
             <td><?= htmlspecialchars($e['nom']) ?></td>
@@ -28,4 +26,5 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </table>
 
 <?php
-require_once base_path('includes/footer.php');
+require_once __DIR__ . '/../includes/footer.php';
+?>
