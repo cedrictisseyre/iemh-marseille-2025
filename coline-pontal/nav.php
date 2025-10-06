@@ -7,7 +7,8 @@ function render_nav($active) {
         'karateka' => 'Karateka',
         'participation' => 'Participation',
         'tableau_bord' => 'Tableau de bord',
-        'evenements' => 'Événements'
+        'evenements' => 'Événements',
+        'galerie' => 'Galerie'
     ];
     echo '<nav class="tabs" aria-label="Navigation principale">';
     foreach ($tabs as $key => $label) {
