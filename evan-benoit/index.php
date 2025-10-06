@@ -3,15 +3,15 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 try {
-    require_once 'connexion.php'; // Connexion à la base de données
+    require_once __DIR__ . '/connexion.php';
 } catch (Exception $e) {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-include 'header.php';
+include __DIR__ . '/header.php';
 
 //////////////////////////////////////
-// 1️⃣ SUPPRESSION D'UNE SÉANCE
+// SUPPRESSION
 //////////////////////////////////////
 if (isset($_GET['delete'])) {
     $id_delete = intval($_GET['delete']);
@@ -27,7 +27,7 @@ if (isset($_GET['delete'])) {
 }
 
 //////////////////////////////////////
-// 2️⃣ AJOUT D'UNE SÉANCE
+// AJOUT
 //////////////////////////////////////
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
     $date_seance = trim($_POST['date_seance']);
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
 }
 
 //////////////////////////////////////
-// 3️⃣ MODIFICATION D'UNE SÉANCE
+// MODIFICATION
 //////////////////////////////////////
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $id_update = intval($_POST['id']);
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 }
 
 //////////////////////////////////////
-// 4️⃣ RECUPÉRATION DES DONNÉES
+// RÉCUPÉRATION DES DONNÉES
 //////////////////////////////////////
 try {
     $clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
@@ -221,7 +221,5 @@ try {
         <?php endif; ?>
         <?php endforeach; ?>
     </table>
-
-    <?php include 'footer.php'; ?>
 </body>
 </html>
