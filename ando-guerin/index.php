@@ -52,16 +52,56 @@ $profs = $conn->query('SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATO
 		<div class="tab-content" id="myTabContent">
 			<div class="tab-pane fade show active" id="accueil" role="tabpanel" aria-labelledby="accueil-tab">
 				<p>Bienvenue sur le site du Mastère IHME !</p>
-				<div class="mt-4">
-					<h5>Accès rapide aux données :</h5>
-					<ul>
-						<li><a href="pages/liste_jours.html">Liste des jours</a></li>
-						<li><a href="pages/liste_horaires.html">Liste des horaires</a></li>
-						<li><a href="pages/liste_matieres.html">Liste des matières</a></li>
-						<li><a href="pages/liste_professeurs.html">Liste des professeurs</a></li>
-						<li><a href="pages/liste_salles.html">Liste des salles</a></li>
-						<li><a href="pages/liste_emploi_temps.html">Emploi du temps (brut)</a></li>
-					</ul>
+				<div class="row mt-4">
+					<div class="col-md-4">
+						<h5>Jours</h5>
+						<ul class="list-group mb-3">
+							<?php foreach ($jours as $jour): ?>
+								<li class="list-group-item"><?= htmlspecialchars($jour['nom']) ?></li>
+							<?php endforeach; ?>
+						</ul>
+						<h5>Horaires</h5>
+						<ul class="list-group mb-3">
+							<?php foreach ($horaires as $horaire): ?>
+								<li class="list-group-item">
+									<?= htmlspecialchars(substr($horaire['debut'],0,5)) ?> - <?= htmlspecialchars(substr($horaire['fin'],0,5)) ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<h5>Matières</h5>
+						<ul class="list-group mb-3">
+							<?php $matieres = $conn->query('SELECT * FROM matieres ORDER BY nom')->fetchAll();
+							foreach ($matieres as $matiere): ?>
+								<li class="list-group-item"><?= htmlspecialchars($matiere['nom']) ?></li>
+							<?php endforeach; ?>
+						</ul>
+						<h5>Salles</h5>
+						<ul class="list-group mb-3">
+							<?php $salles = $conn->query('SELECT * FROM salles ORDER BY nom')->fetchAll();
+							foreach ($salles as $salle): ?>
+								<li class="list-group-item"><?= htmlspecialchars($salle['nom']) ?></li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+					<div class="col-md-4">
+						<h5>Professeurs</h5>
+						<ul class="list-group mb-3">
+							<?php foreach ($profs as $prof): ?>
+								<li class="list-group-item">
+									<?= htmlspecialchars($prof['prenom'] . ' ' . $prof['nom']) ?> (<?= htmlspecialchars($prof['matieres']) ?>)
+								</li>
+							<?php endforeach; ?>
+						</ul>
+						<h5>Élèves</h5>
+						<ul class="list-group mb-3">
+							<?php $eleves = $conn->query('SELECT * FROM eleves ORDER BY nom, prenom')->fetchAll();
+							foreach ($eleves as $eleve): ?>
+								<li class="list-group-item"><?= htmlspecialchars($eleve['prenom'] . ' ' . $eleve['nom']) ?></li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="tab-pane fade" id="edt" role="tabpanel" aria-labelledby="edt-tab">
