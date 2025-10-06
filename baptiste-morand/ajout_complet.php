@@ -1,44 +1,28 @@
 <?php
 include 'menu.php';
 require_once 'connexion.php';
-
-// Traitement du formulaire
-$message = '';
-// Récupération des saisons et des joueurs existants
-$saisons = $conn->query('SELECT id_saison, annee FROM saisons ORDER BY annee DESC')->fetchAll(PDO::FETCH_ASSOC);
-$joueurs_existants = $conn->query('SELECT id_joueur, nom, prenom, poste FROM joueurs ORDER BY nom, prenom')->fetchAll(PDO::FETCH_ASSOC);
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        // Saison : soit sélectionnée, soit ajoutée
-        if (!empty($_POST['saison_existante'])) {
-            $id_saison = intval($_POST['saison_existante']);
-        } else {
-            $annee = $_POST['annee'] ?? '';
-            $desc = $_POST['description'] ?? '';
-            $stmt = $conn->prepare('INSERT INTO saisons (annee, description) VALUES (?, ?)');
-            $stmt->execute([$annee, $desc]);
-            $id_saison = $conn->lastInsertId();
-        }
-
-        // Ajout match
-        $date_match = $_POST['date_match'] ?? '';
-        $adversaire = $_POST['adversaire'] ?? '';
-        $lieu = $_POST['lieu'] ?? 'domicile';
-        $stmt = $conn->prepare('INSERT INTO matchs (id_saison, date_match, adversaire, lieu) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$id_saison, $date_match, $adversaire, $lieu]);
-        $id_match = $conn->lastInsertId();
-
-        // Ajout stats pour chaque joueur
-        for ($i = 0; $i < 13; $i++) {
-            $id_joueur = $_POST['joueur'][$i]['id_joueur'] ?? '';
-            if ($id_joueur && $id_joueur !== 'new') {
-                // Joueur existant sélectionné
-                $id_joueur = intval($id_joueur);
-                $stmt = $conn->prepare('SELECT nom, prenom, poste FROM joueurs WHERE id_joueur = ?');
-                $stmt->execute([$id_joueur]);
-                $joueur = $stmt->fetch(PDO::FETCH_ASSOC);
-                $nom = $joueur['nom'];
-                $prenom = $joueur['prenom'];
+// ...existing code...
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajout complet</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div style="display:flex;align-items:flex-start;">
+        <img src="assets/logo-montfort.png" alt="Logo Montfort Basket Club" style="height:100px;margin:20px 20px 0 20px;">
+        <div>
+            <h1 style="margin-top:30px; color:#2c3e50;">Statistiques NM3 du Montfort Basket Club</h1>
+        </div>
+    </div>
+    <?php include 'menu.php'; ?>
+    <h2 style="margin-left:30px; color:#2980b9;">Ajout complet</h2>
+    <!-- ...le reste du formulaire et du contenu... -->
+    <?php /* ...existing code... */ ?>
+</body>
+</html>
                 $poste = $joueur['poste'];
             } else {
                 // Nouveau joueur

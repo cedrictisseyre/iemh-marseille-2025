@@ -22,9 +22,16 @@ if ($id > 0) {
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
+    <div style="display:flex;align-items:flex-start;">
+        <img src="../assets/logo-montfort.png" alt="Logo Montfort Basket Club" style="height:100px;margin:20px 20px 0 20px;">
+        <div>
+            <h1 style="margin-top:30px; color:#2c3e50;">Statistiques NM3 du Montfort Basket Club</h1>
+        </div>
+    </div>
+    <?php include '../menu.php'; ?>
+    <h2 style="margin-left:30px; color:#2980b9;">Statistiques du match</h2>
     <?php if ($match): ?>
-        <h1>Statistiques du match du <?php echo htmlspecialchars($match['date_match']); ?> contre <?php echo htmlspecialchars($match['adversaire']); ?> (<?php echo htmlspecialchars($match['lieu']); ?>)</h1>
-        <table border="1">
+        <table border="1" style="margin-left:30px;">
             <tr>
                 <th>Joueur</th><th>Points</th><th>Rebonds</th><th>Passes</th><th>Interceptions</th><th>Contres</th><th>Turnovers</th><th>Fautes</th>
             </tr>
@@ -42,8 +49,7 @@ if ($id > 0) {
             <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p>Match non trouvé.</p>
+        <p style="margin-left:30px;">Match non trouvé.</p>
     <?php endif; ?>
-    
 </body>
 </html>
