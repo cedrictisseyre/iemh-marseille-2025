@@ -48,64 +48,67 @@ $participations = $stmt->fetchAll();
 <meta charset="UTF-8">
 <title>Gestion des participations</title>
 <style>
-body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0;}
-.container { max-width:800px; margin:20px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-h1,h2 { text-align:left; color:#2c3e50; }
-table { width:100%; border-collapse: collapse; margin-top:10px; text-align:left; }
-th, td { border:1px solid #ccc; padding:6px; }
+body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; display:flex; }
+.nav { width:200px; background:#fff; padding:20px; box-shadow:2px 0 6px rgba(0,0,0,0.1); height:100vh; position:fixed; top:0; left:0; }
+.nav a { display:block; margin-bottom:15px; color:#2980b9; text-decoration:none; font-weight:bold; }
+.nav a:hover { text-decoration:underline; }
+.container { margin-left:220px; padding:20px; flex:1; }
+h1,h2,h3,h4 { text-align:left; color:#2c3e50;}
+table { width:100%; border-collapse: collapse; margin-top:10px; text-align:left;}
+th,td { border:1px solid #ccc; padding:6px; }
 th { background:#2980b9; color:#fff; }
 tr:nth-child(even) { background:#f9f9f9; }
 label, select, input, button { display:block; margin-top:5px; width:100%; }
 button { padding:8px; background:#2980b9; color:#fff; border:none; border-radius:4px; cursor:pointer; }
 button:hover { background:#1abc9c; }
-.nav { margin-bottom:20px; text-align:left; }
-.nav a { margin-right:15px; color:#2980b9; text-decoration:none; font-weight:bold; }
-.nav a:hover { text-decoration:underline; }
+form.inline { display:inline-block; margin:0; padding:0; }
 </style>
 </head>
 <body>
-<div class="container">
 <div class="nav">
-<a href="gestion_sportif.php">Sportif</a>
-<a href="gestion_club.php">Club</a>
-<a href="gestion_course.php">Course</a>
-<a href="gestion_discipline.php">Discipline</a>
-<a href="gestion_participation.php"><b>Participation</b></a>
+<a href="gestion_sportif.php">Sportifs</a>
+<a href="gestion_club.php">Clubs</a>
+<a href="gestion_course.php">Courses</a>
+<a href="gestion_discipline.php">Disciplines</a>
+<a href="gestion_participation.php"><b>Participations</b></a>
 </div>
 
+<div class="container">
 <h1>Gestion des participations</h1>
 
 <h2>Ajouter une participation</h2>
 <form method="post">
-<label>Sportif:
-<select name="id_sportif" required>
-<?php foreach($sportifs as $s): ?>
-<option value="<?= $s['id'] ?>"><?= htmlspecialchars($s['nom']) ?></option>
-<?php endforeach; ?>
-</select></label>
+    <label>Sportif:
+        <select name="id_sportif" required>
+        <?php foreach($sportifs as $s): ?>
+            <option value="<?= $s['id'] ?>"><?= htmlspecialchars($s['nom']) ?></option>
+        <?php endforeach; ?>
+        </select>
+    </label>
 
-<label>Course:
-<select name="id_course" required>
-<?php foreach($courses as $c): ?>
-<option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nom']) ?></option>
-<?php endforeach; ?>
-</select></label>
+    <label>Course:
+        <select name="id_course" required>
+        <?php foreach($courses as $c): ?>
+            <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nom']) ?></option>
+        <?php endforeach; ?>
+        </select>
+    </label>
 
-<label>Résultat: <input type="text" name="resultat" placeholder="ex: 1h23, 2ème..." required></label>
-<button type="submit" name="ajouter">Ajouter</button>
+    <label>Résultat: <input type="text" name="resultat" placeholder="ex: 1h23, 2ème..." required></label>
+    <button type="submit" name="ajouter">Ajouter</button>
 </form>
 
 <h2>Liste des participations</h2>
 <form method="get" style="margin-bottom:15px;">
-<label>Filtrer par sportif:
-<select name="sportif" onchange="this.form.submit()">
-<option value="">Tous</option>
-<?php foreach($sportifs as $s): ?>
-<option value="<?= $s['id'] ?>" <?= ($filtre_sportif==$s['id'])?'selected':''?>><?= htmlspecialchars($s['nom']) ?></option>
-<?php endforeach; ?>
-</select>
-<noscript><button type="submit">Filtrer</button></noscript>
-</label>
+    <label>Filtrer par sportif:
+        <select name="sportif" onchange="this.form.submit()">
+            <option value="">Tous</option>
+            <?php foreach($sportifs as $s): ?>
+                <option value="<?= $s['id'] ?>" <?= ($filtre_sportif==$s['id'])?'selected':''?>><?= htmlspecialchars($s['nom']) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <noscript><button type="submit">Filtrer</button></noscript>
+    </label>
 </form>
 
 <table>
@@ -117,7 +120,7 @@ button:hover { background:#1abc9c; }
 <td><?= htmlspecialchars($p['date_participation']) ?></td>
 <td><?= htmlspecialchars($p['resultat']) ?></td>
 <td>
-<form method="post" style="display:inline" onsubmit="return confirm('Supprimer cette participation ?');">
+<form method="post" class="inline" onsubmit="return confirm('Supprimer cette participation ?');">
 <input type="hidden" name="supprimer_participation" value="<?= $p['id'] ?>">
 <button type="submit">Supprimer</button>
 </form>
