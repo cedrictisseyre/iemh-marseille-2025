@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $message = '';
 $matchs = $pdo->query('SELECT id_match, date_match FROM Matchs')->fetchAll();
 $joueurs = $pdo->query('SELECT id_joueur, nom, prenom FROM Joueurs')->fetchAll();
@@ -51,6 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Ajouter</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste_stat_joueur.php">Retour à la liste</a>
+    <a href="../statistiques/liste.php">Retour à la liste</a>
 </body>
 </html>

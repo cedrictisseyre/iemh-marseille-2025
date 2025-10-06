@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nom = $_POST['nom_equipe'] ?? '';
@@ -29,6 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Ajouter</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste.php">Retour à la liste</a>
+    <a href="../equipes/liste.php">Retour à la liste</a>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $message = '';
 $id = $_GET['id'] ?? '';
 $equipes = $pdo->query('SELECT id_equipe, nom_equipe FROM Equipes')->fetchAll();
@@ -23,7 +23,7 @@ if ($id) {
         }
     }
 } else {
-    header('Location: liste.php');
+    header('Location: ../matchs/liste.php');
     exit;
 }
 ?>
@@ -59,6 +59,6 @@ if ($id) {
         <button type="submit">Modifier</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste_matchs.php">Retour à la liste</a>
+    <a href="../matchs/liste.php">Retour à la liste</a>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $message = '';
 $matchs = $pdo->query('SELECT id_match, date_match FROM Matchs')->fetchAll();
 $arbitres = $pdo->query('SELECT id_arbitre, nom, prenom FROM Arbitres')->fetchAll();
@@ -43,6 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Assigner</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste_matchs_arbitres.php">Retour à la liste</a>
+    <a href="../matchs_arbitres/liste.php">Retour à la liste</a>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $message = '';
 $id = $_GET['id'] ?? '';
 if ($id) {
@@ -19,7 +19,7 @@ if ($id) {
         }
     }
 } else {
-    header('Location: liste_arbitres.php');
+    header('Location: ../arbitres/liste.php');
     exit;
 }
 ?>
@@ -38,6 +38,6 @@ if ($id) {
         <button type="submit">Modifier</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste_arbitres.php">Retour à la liste</a>
+    <a href="../arbitres/liste.php">Retour à la liste</a>
 </body>
 </html>
