@@ -1,13 +1,9 @@
+
 <?php
 $host = 'localhost';
-$db   = 'nicolas_jaulin'; // à confirmer dans la liste des bases
+$db   = 'nicolas_jaulin';
 $user = 'root';
-$pass = '<?php
-$host = 'localhost';
-$db   = 'nicolas_jaulin'; // à confirmer dans la liste des bases
-$user = 'root';
-$pass = ''; // à compléter si tu as défini un mot de passe
-$charset = 'INNnsk40374'; // à compléter si tu as défini un mot de passe
+$pass = '';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
