@@ -10,9 +10,10 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="index.php">🏋️ Coaching Sportif</a>
+<a class="navbar-brand" href="dashboard.php">🏋️ Coaching Sportif</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="dashboard.php">Accueil</a></li>
         <li class="nav-item"><a class="nav-link" href="index.php">Séances</a></li>
         <li class="nav-item"><a class="nav-link" href="clients.php">Clients</a></li>
         <li class="nav-item"><a class="nav-link" href="coachs.php">Coachs</a></li>

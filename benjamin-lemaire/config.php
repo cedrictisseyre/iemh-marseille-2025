@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost';
+$host = '195.15.235.20';
 $dbname = 'benjamin_lemaire';
 $user = 'root'; // À adapter si besoin
 $pass = 'INNnsk40374';

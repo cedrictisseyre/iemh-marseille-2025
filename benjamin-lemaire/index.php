@@ -21,6 +21,7 @@ $activites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <h1>Bienvenue sur mon application sportive !</h1>
     <div class="container">
+        <p><a href="add_activity.php" class="btn-ajout">Ajouter une activité</a></p>
         <h2>Liste des activités</h2>
         <table class="table-activites">
             <thead>
