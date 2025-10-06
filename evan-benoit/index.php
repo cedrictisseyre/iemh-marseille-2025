@@ -8,7 +8,7 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-include __DIR__ . '/header.php';
+include __DIR__ . '/header.html';
 
 //////////////////////////////////////
 // SUPPRESSION
