@@ -11,11 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
 // SUPPRESSION DISCIPLINE
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_discipline'])) {
     $id_discipline = (int)$_POST['supprimer_discipline'];
+    // Supprimer la référence dans les sportifs
     $pdo->prepare("UPDATE sportif SET id_discipline=NULL WHERE id_discipline = ?")->execute([$id_discipline]);
     $pdo->prepare("DELETE FROM discipline WHERE id = ?")->execute([$id_discipline]);
     echo "<p style='color:red'>Discipline supprimée !</p>";
 }
 
+// LISTE DES DISCIPLINES
 $disciplines = $pdo->query("SELECT id, nom FROM discipline")->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -24,19 +26,19 @@ $disciplines = $pdo->query("SELECT id, nom FROM discipline")->fetchAll();
 <meta charset="UTF-8">
 <title>Gestion des disciplines</title>
 <style>
-body { font-family: Arial, sans-serif; background:#f4f4f4; }
-.container { max-width:700px;margin:20px auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-h1,h2{text-align:left;color:#2c3e50;}
-table {width:100%; border-collapse: collapse;text-align:left;}
-th,td{border:1px solid #ccc;padding:6px;}
-th{background:#2980b9;color:#fff;}
-tr:nth-child(even){background:#f9f9f9;}
-label,input,button{display:block;margin-top:5px;width:100%;}
-button{padding:8px;background:#2980b9;color:#fff;border:none;border-radius:4px;cursor:pointer;}
-button:hover{background:#1abc9c;}
-.nav a{margin-right:15px;color:#2980b9;text-decoration:none;font-weight:bold;}
-.nav a:hover{text-decoration:underline;}
-.nav{margin-bottom:20px;text-align:left;}
+body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; }
+.container { max-width:700px; margin:20px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+h1,h2 { text-align:left; color:#2c3e50; }
+table { width:100%; border-collapse:collapse; margin-top:10px; text-align:left; }
+th, td { border:1px solid #ccc; padding:6px; }
+th { background:#2980b9; color:#fff; }
+tr:nth-child(even) { background:#f9f9f9; }
+label, input, button { display:block; margin-top:5px; width:100%; }
+button { padding:8px; background:#2980b9; color:#fff; border:none; border-radius:4px; cursor:pointer; }
+button:hover { background:#1abc9c; }
+.nav { margin-bottom:20px; text-align:left; }
+.nav a { margin-right:15px; color:#2980b9; text-decoration:none; font-weight:bold; }
+.nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
