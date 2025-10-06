@@ -20,6 +20,7 @@ $stmt = $pdo->query('SELECT * FROM Matchs');
             <th>Équipe Extérieure</th>
             <th>Score Dom</th>
             <th>Score Ext</th>
+            <th>Actions</th>
         </tr>
         <?php while ($row = $stmt->fetch()): ?>
         <tr>
@@ -30,6 +31,10 @@ $stmt = $pdo->query('SELECT * FROM Matchs');
             <td><?= htmlspecialchars($row['id_equipe_ext']) ?></td>
             <td><?= htmlspecialchars($row['score_dom']) ?></td>
             <td><?= htmlspecialchars($row['score_ext']) ?></td>
+            <td>
+                <a href="modifier_match.php?id=<?= $row['id_match'] ?>">Modifier</a> |
+                <a href="supprimer_match.php?id=<?= $row['id_match'] ?>" onclick="return confirm('Supprimer ce match ?');">Supprimer</a>
+            </td>
         </tr>
         <?php endwhile; ?>
     </table>

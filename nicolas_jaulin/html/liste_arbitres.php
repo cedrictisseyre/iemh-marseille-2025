@@ -17,6 +17,7 @@ $stmt = $pdo->query('SELECT * FROM Arbitres');
             <th>Nom</th>
             <th>Prénom</th>
             <th>Nationalité</th>
+            <th>Actions</th>
         </tr>
         <?php while ($row = $stmt->fetch()): ?>
         <tr>
@@ -24,6 +25,10 @@ $stmt = $pdo->query('SELECT * FROM Arbitres');
             <td><?= htmlspecialchars($row['nom']) ?></td>
             <td><?= htmlspecialchars($row['prenom']) ?></td>
             <td><?= htmlspecialchars($row['nationalite']) ?></td>
+            <td>
+                <a href="modifier_arbitre.php?id=<?= $row['id_arbitre'] ?>">Modifier</a> |
+                <a href="supprimer_arbitre.php?id=<?= $row['id_arbitre'] ?>" onclick="return confirm('Supprimer cet arbitre ?');">Supprimer</a>
+            </td>
         </tr>
         <?php endwhile; ?>
     </table>

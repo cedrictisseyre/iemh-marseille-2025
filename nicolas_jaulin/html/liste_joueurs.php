@@ -19,6 +19,7 @@ $stmt = $pdo->query('SELECT * FROM Joueurs');
             <th>Date de naissance</th>
             <th>Poste</th>
             <th>ID Équipe</th>
+            <th>Actions</th>
         </tr>
         <?php while ($row = $stmt->fetch()): ?>
         <tr>
@@ -28,6 +29,10 @@ $stmt = $pdo->query('SELECT * FROM Joueurs');
             <td><?= htmlspecialchars($row['date_naissance']) ?></td>
             <td><?= htmlspecialchars($row['poste']) ?></td>
             <td><?= htmlspecialchars($row['id_equipe']) ?></td>
+            <td>
+                <a href="modifier_joueur.php?id=<?= $row['id_joueur'] ?>">Modifier</a> |
+                <a href="supprimer_joueur.php?id=<?= $row['id_joueur'] ?>" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
+            </td>
         </tr>
         <?php endwhile; ?>
     </table>
