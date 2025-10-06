@@ -19,7 +19,7 @@ if ($id) {
         }
     }
 } else {
-    header('Location: liste_equipes.php');
+    header('Location: liste.php');
     exit;
 }
 ?>
@@ -38,6 +38,6 @@ if ($id) {
         <button type="submit">Modifier</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste_equipes.php">Retour à la liste</a>
+    <a href="liste.php">Retour à la liste</a>
 </body>
 </html>

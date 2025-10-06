@@ -29,6 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Ajouter</button>
     </form>
     <p><?= htmlspecialchars($message) ?></p>
-    <a href="liste_equipes.php">Retour à la liste</a>
+    <a href="liste.php">Retour à la liste</a>
 </body>
 </html>

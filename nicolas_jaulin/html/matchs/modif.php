@@ -23,7 +23,7 @@ if ($id) {
         }
     }
 } else {
-    header('Location: liste_matchs.php');
+    header('Location: liste.php');
     exit;
 }
 ?>

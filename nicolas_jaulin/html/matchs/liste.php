@@ -10,7 +10,7 @@ $stmt = $pdo->query('SELECT * FROM Matchs');
 </head>
 <body>
     <h1>Liste des matchs</h1>
-    <a href="ajout_match.php">Ajouter un match</a>
+    <a href="ajout.php">Ajouter un match</a>
     <table border="1">
         <tr>
             <th>ID</th>
@@ -32,8 +32,8 @@ $stmt = $pdo->query('SELECT * FROM Matchs');
             <td><?= htmlspecialchars($row['score_dom']) ?></td>
             <td><?= htmlspecialchars($row['score_ext']) ?></td>
             <td>
-                <a href="modifier_match.php?id=<?= $row['id_match'] ?>">Modifier</a> |
-                <a href="supprimer_match.php?id=<?= $row['id_match'] ?>" onclick="return confirm('Supprimer ce match ?');">Supprimer</a>
+                <a href="modif.php?id=<?= $row['id_match'] ?>">Modifier</a> |
+                <a href="suppr.php?id=<?= $row['id_match'] ?>" onclick="return confirm('Supprimer ce match ?');">Supprimer</a>
             </td>
         </tr>
         <?php endwhile; ?>
