@@ -11,7 +11,8 @@ require_once __DIR__ . '/includes/header.php';
 <section>
     <h2>Bienvenue sur le site de la Ligue 1</h2>
     <p>Explore les équipes, les joueurs et les résultats de la saison actuelle.</p>
-    <img src="<?= base_path() ?>images/ligue1_logo.png" alt="Logo Ligue 1" style="width:200px;">
+    <!-- Exemple de logo, à placer dans assets/images/ligue1_logo.png si nécessaire -->
+    <img src="<?= base_path() ?>assets/images/ligue1_logo.png" alt="Logo Ligue 1" style="width:200px;">
 </section>
 
 <?php

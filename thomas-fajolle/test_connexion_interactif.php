@@ -1,6 +1,12 @@
 <?php
+// Affiche toutes les erreurs pour debug
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Inclure les fichiers de configuration et connexion
 require_once __DIR__ . '/config.php';
-require_once base_path('connexion.php');
+require_once __DIR__ . '/connexion.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
