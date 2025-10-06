@@ -1,5 +1,6 @@
 <?php 
-include 'database_connexion.php'; // Connexion PDO
+include __DIR__ . '/config/database_connexion.php';
+
 
 // Définition de la page actuelle
 $page = $_GET['page'] ?? 'joueurs';
