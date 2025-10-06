@@ -12,13 +12,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       ficheDiv.innerHTML = `
-        <ul>
-          <li><b>Nom :</b> ${data.prenom} ${data.nom}</li>
-          <li><b>Nationalité :</b> ${data.nationalite || 'N/A'}</li>
-          <li><b>Nombre de titres :</b> ${data.nb_titres}</li>
-          <li><b>Nombre de participations :</b> ${data.nb_participations}</li>
-          <li><b>Écuries :</b> ${(data.ecuries && data.ecuries.length) ? data.ecuries.join(', ') : 'N/A'}</li>
-        </ul>
+        <div class="pantheon-card" style="max-width:340px;margin:2em auto;">
+          <div class="pantheon-photo">
+            ${data.photo ? `<img src="${data.photo}" alt="Photo de ${data.prenom} ${data.nom}">` : `<div class='no-photo'>?</div>`}
+          </div>
+          <div class="pantheon-info">
+            <h3>${data.prenom} <span class="pantheon-nom">${data.nom}</span></h3>
+            <div class="pantheon-titres"><span class="nb">${data.nb_titres}</span> titre${data.nb_titres>1?'s':''}</div>
+            <div class="pantheon-annees"><span class="label">Nationalité :</span> ${data.nationalite || 'N/A'}</div>
+            <div class="pantheon-participations"><span class="label">Participations :</span> ${data.nb_participations}</div>
+            <div class="pantheon-annees"><span class="label">Écuries :</span> ${(data.ecuries && data.ecuries.length) ? data.ecuries.join(', ') : 'N/A'}</div>
+          </div>
+        </div>
       `;
     });
 });
