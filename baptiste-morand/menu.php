@@ -1,10 +1,29 @@
 <!-- menu.php -->
-<nav style="background:#2c3e50;padding:10px;display:flex;gap:15px;align-items:center;">
-  <a href="index.php" style="color:#fff;text-decoration:none;">Accueil</a>
-  <a href="ajout_complet.php" style="color:#fff;text-decoration:none;">Ajout Complet</a>
-  <a href="joueurs/liste.php" style="color:#fff;text-decoration:none;">Liste Joueurs</a>
-  <a href="joueurs/stats.php" style="color:#fff;text-decoration:none;">Stats Joueurs</a>
-  <a href="matchs/liste.php" style="color:#fff;text-decoration:none;">Liste Matchs</a>
-  <a href="matchs/stats.php" style="color:#fff;text-decoration:none;">Stats Matchs</a>
-  <a href="saisons/liste.php" style="color:#fff;text-decoration:none;">Liste Saisons</a>
-</nav>
+<style>
+.menu-deroulant {
+  width:100%;
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+}
+.menu-deroulant select {
+  font-size:1.1em;
+  padding:8px 16px;
+  border-radius:5px;
+  border:1px solid #2c3e50;
+  background:#ecf0f1;
+  color:#2c3e50;
+}
+</style>
+<div class="menu-deroulant">
+  <select onchange="if(this.value) window.location.href=this.value;">
+    <option value="">-- Navigation --</option>
+    <option value="index.php">Accueil</option>
+    <option value="ajout_complet.php">Ajout Complet</option>
+    <option value="joueurs/liste.php">Liste Joueurs</option>
+    <option value="joueurs/stats.php">Stats Joueurs</option>
+    <option value="matchs/liste.php">Liste Matchs</option>
+    <option value="matchs/stats.php">Stats Matchs</option>
+    <option value="saisons/liste.php">Liste Saisons</option>
+  </select>
+</div>
