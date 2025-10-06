@@ -9,31 +9,19 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = '<p style="text-align:center;">Aucun champion trouvé.</p>';
         return;
       }
-      let tabs = '<div class="tabs">' + data.map((c, i) => `<div class="tab${i===0?' active':''}" data-tab="tab${i}">${c.prenom} ${c.nom}</div>`).join('') + '</div>';
-      let profiles = data.map((c, i) => `
-        <div class="profile${i===0?' active':''}" id="tab${i}">
-          <div class="info">
-            ${c.photo ? `<img src="${c.photo}" alt="Photo de ${c.prenom} ${c.nom}">` : ''}
-            <p><span class="label">Nom :</span> ${c.nom}</p>
-            <p><span class="label">Prénom :</span> ${c.prenom}</p>
-            <p><span class="label">Nombre de victoires :</span> ${c.nb_victoires}</p>
-            <p><span class="label">Nombre de participations :</span> ${c.nb_participations}</p>
-            <p><span class="label">Années de participations :</span> ${c.annees_participations.join(', ')}</p>
-            <p><span class="label">Années de victoires :</span> ${c.annees_victoires.join(', ')}</p>
+      let cards = '<div class="pantheon-grid">' + data.map((c) => `
+        <div class="pantheon-card">
+          <div class="pantheon-photo">
+            ${c.photo ? `<img src="${c.photo}" alt="Photo de ${c.prenom} ${c.nom}">` : `<div class='no-photo'>?</div>`}
+          </div>
+          <div class="pantheon-info">
+            <h3>${c.prenom} <span class="pantheon-nom">${c.nom}</span></h3>
+            <div class="pantheon-titres"><span class="nb">${c.nb_victoires}</span> titre${c.nb_victoires>1?'s':''}</div>
+            <div class="pantheon-annees"><span class="label">Années :</span> ${c.annees_victoires.join(', ')}</div>
+            <div class="pantheon-participations"><span class="label">Participations :</span> ${c.nb_participations} (${c.annees_participations.join(', ')})</div>
           </div>
         </div>
-      `).join('');
-      container.innerHTML = tabs + profiles;
-      // Tabs JS
-      const tabEls = container.querySelectorAll('.tab');
-      const profileEls = container.querySelectorAll('.profile');
-      tabEls.forEach((tab, i) => {
-        tab.addEventListener('click', () => {
-          tabEls.forEach(t => t.classList.remove('active'));
-          profileEls.forEach(p => p.classList.remove('active'));
-          tab.classList.add('active');
-          profileEls[i].classList.add('active');
-        });
-      });
+      `).join('') + '</div>';
+      container.innerHTML = cards;
     });
 });
