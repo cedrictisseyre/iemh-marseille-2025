@@ -8,7 +8,7 @@ require_once __DIR__ . '/../database/bdd_formule1.php';
 try {
     // $pdo est déjà défini dans bdd_formule1.php
     // Récupérer tous les pilotes champions du monde (vainqueurs du championnat)
-    $sql = "SELECT p.pilote_id, p.nom, p.prénom FROM pilotes p WHERE p.pilote_id IN (SELECT pilote_id FROM championnats) ORDER BY p.nom, p.prénom";
+    $sql = "SELECT p.pilote_id, p.nom, p.prenom FROM pilotes p WHERE p.pilote_id IN (SELECT pilote_id FROM championnats) ORDER BY p.nom, p.prenom";
     $stmt = $pdo->query($sql);
     $champions = [];
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -52,7 +52,7 @@ try {
 if (php_sapi_name() === 'cli') {
     echo "Champions trouvés : ".count($champions)."\n";
     foreach ($champions as $champion) {
-        echo ($champion['prénom'] ?? '').' '.$champion['nom']." (Victoires: ".$champion['nb_victoires'].")\n";
+        echo ($champion['prenom'] ?? '').' '.$champion['nom']." (Victoires: ".$champion['nb_victoires'].")\n";
     }
     exit;
 }
