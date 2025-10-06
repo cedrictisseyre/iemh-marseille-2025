@@ -1,14 +1,13 @@
-$php_debug = true;
-if ($php_debug) {
-     ini_set('display_errors', 1);
-     ini_set('display_startup_errors', 1);
-     error_reporting(E_ALL);
-}
-// Connexion à la base de données MySQL
+<?php
 $host = 'localhost';
-$db   = 'nicolas_jaulin';
+$db   = 'nicolas_jaulin'; // à confirmer dans la liste des bases
 $user = 'root';
-$pass = '';
+$pass = '<?php
+$host = 'localhost';
+$db   = 'nicolas_jaulin'; // à confirmer dans la liste des bases
+$user = 'root';
+$pass = ''; // à compléter si tu as défini un mot de passe
+$charset = 'INNnsk40374'; // à compléter si tu as défini un mot de passe
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -22,4 +21,3 @@ try {
 } catch (PDOException $e) {
      throw new PDOException($e->getMessage(), (int)$e->getCode());
 }
-?>
