@@ -288,7 +288,7 @@ document.getElementById('delete-equipes-multi').onclick = function() {
     <?php // fermeture du container principal ?>
     </div>
 <div id="notif" aria-live="polite" style="position:fixed;top:1em;left:50%;transform:translateX(-50%);z-index:1000;display:none;background:#0ea5e9;color:#fff;padding:0.7em 1.5em;border-radius:6px;font-size:1.1em;box-shadow:0 2px 8px #0002;"></div>
-// Notification globale pour actions CRUD supprimée de l'affichage
+
 <script>
 // Favoris (localStorage)
 function updateFavButtons() {

@@ -1,4 +1,4 @@
-$host = '195.15.235.20';
+<?php
 $host = '195.15.235.20';
 $user = 'root';
 $password = 'INNnsk40374';

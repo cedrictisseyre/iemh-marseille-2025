@@ -1,5 +1,7 @@
 <?php
 require_once 'connect.php';
+include 'header.php';
+
 
 //////////////////////////////////////
 // 1️⃣ SUPPRESSION D'UNE SEANCE
@@ -193,5 +195,6 @@ $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
         <?php endforeach; ?>
     </table>
+    include 'footer.php';
 </body>
 </html>
