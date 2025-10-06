@@ -12,7 +12,7 @@
 </header>
 <div class='container'>
   <div id="pantheon-pilotes"></div>
-  <a href='index.php'>Retour à l'accueil</a>
+  <a href='../site_f1.php'>Retour à l'accueil</a>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 <script src="../assets/pantheon_pilotes.js"></script>

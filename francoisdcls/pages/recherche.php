@@ -24,7 +24,7 @@ if ($q !== '') {
   <button type="submit">Rechercher</button>
 </form>
 <div id="resultats-recherche" style="margin-top:1em;"></div>
-<a href='liste_pilotes.php'>Voir tous les pilotes</a>
+<a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir tous les pilotes</a>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 <script src="../assets/recherche.js"></script>

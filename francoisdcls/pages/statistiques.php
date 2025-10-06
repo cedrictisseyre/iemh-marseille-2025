@@ -30,7 +30,7 @@ $top_ecuries = $pdo->query($sql2)->fetchAll(PDO::FETCH_ASSOC);
 <tr><td><?= htmlspecialchars($e['nom']) ?></td><td><?= $e['nb_particip'] ?></td></tr>
 <?php endforeach; ?>
 </table>
-<a href='liste_pilotes.php'>Voir les pilotes</a> | <a href='liste_ecuries.php'>Voir les écuries</a>
+<a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir les pilotes</a> | <a href='liste_ecuries.php'>Voir les écuries</a>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>

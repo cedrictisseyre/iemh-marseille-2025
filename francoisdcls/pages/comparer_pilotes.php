@@ -62,6 +62,8 @@ if ($id1 && $id2 && $id1 != $id2) {
 <?php endif; ?>
 <a href='index.php'>Retour à l'accueil</a>
 </div>
+</div>
+<a href="../site_f1.php">Retour à l'accueil</a>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
 </html>

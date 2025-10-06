@@ -55,6 +55,8 @@ $annees = $pdo->query("SELECT DISTINCT annee FROM championnats ORDER BY annee DE
 <?php endif; ?>
 <a href='index.php'>Retour à l'accueil</a>
 </div>
+</div>
+<a href="../site_f1.php">Retour à l'accueil</a>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
 </html>

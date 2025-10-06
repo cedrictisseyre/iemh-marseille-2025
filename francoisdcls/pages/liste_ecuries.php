@@ -21,7 +21,7 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 </tr>
 <?php endforeach; ?>
 </table>
-<a href='liste_pilotes.php'>Voir les pilotes</a>
+<a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir les pilotes</a>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
