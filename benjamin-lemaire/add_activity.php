@@ -1,0 +1,59 @@
+<?php
+require_once 'config.php';
+
+// Récupération des sports et utilisateurs pour les listes déroulantes
+$sports = $pdo->query("SELECT id_sport, nom_sport FROM sports ORDER BY nom_sport")->fetchAll(PDO::FETCH_ASSOC);
+$users = $pdo->query("SELECT id_utilisateur, nom FROM utilisateurs ORDER BY nom")->fetchAll(PDO::FETCH_ASSOC);
+
+// Traitement du formulaire
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $date = $_POST['date'] ?? '';
+    $temps = $_POST['temps'] ?? '';
+    $id_utilisateur = $_POST['id_utilisateur'] ?? '';
+    $id_sport = $_POST['id_sport'] ?? '';
+    if ($date && $temps && $id_utilisateur && $id_sport) {
+        $stmt = $pdo->prepare("INSERT INTO activites_sportives (date, temps, id_utilisateur, id_sport) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$date, $temps, $id_utilisateur, $id_sport]);
+        header('Location: index.php');
+        exit;
+    } else {
+        $error = 'Tous les champs sont obligatoires.';
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter une activité</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>Ajouter une activité sportive</h1>
+    <?php if (!empty($error)) : ?>
+        <div class="error"><?= htmlspecialchars($error) ?></div>
+    <?php endif; ?>
+    <form method="post">
+        <label>Date : <input type="date" name="date" required></label><br>
+        <label>Temps (min) : <input type="number" name="temps" min="1" required></label><br>
+        <label>Utilisateur :
+            <select name="id_utilisateur" required>
+                <option value="">-- Choisir --</option>
+                <?php foreach ($users as $u) : ?>
+                    <option value="<?= $u['id_utilisateur'] ?>"><?= htmlspecialchars($u['nom']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </label><br>
+        <label>Sport :
+            <select name="id_sport" required>
+                <option value="">-- Choisir --</option>
+                <?php foreach ($sports as $s) : ?>
+                    <option value="<?= $s['id_sport'] ?>"><?= htmlspecialchars($s['nom_sport']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </label><br>
+        <button type="submit">Ajouter</button>
+    </form>
+    <p><a href="index.php">Retour à l'accueil</a></p>
+</body>
+</html>
