@@ -54,10 +54,10 @@
     <span></span>
   </div>
   <div class="menu-links" id="menu-links">
-    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/index.php">Accueil</a>
-    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/ajout_complet.php">Ajout Complet</a>
-    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/joueurs/liste.php">Liste Joueurs</a>
-    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/matchs/liste.php">Liste Matchs</a>
-    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/saisons/liste.php">Liste Saisons</a>
+  <a href="index.php">Accueil</a>
+  <a href="ajout_complet.php">Ajout Complet</a>
+  <a href="joueurs/liste.php">Liste Joueurs</a>
+  <a href="matchs/liste.php">Liste Matchs</a>
+  <a href="saisons/liste.php">Liste Saisons</a>
   </div>
 </div>
