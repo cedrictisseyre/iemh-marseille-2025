@@ -45,6 +45,6 @@ if ($id > 0) {
     <?php else: ?>
         <p>Joueur non trouvé.</p>
     <?php endif; ?>
-    <a href="liste.php">Retour à la liste des joueurs</a>
+    
 </body>
 </html>

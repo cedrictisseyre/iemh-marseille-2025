@@ -44,6 +44,6 @@ if ($id > 0) {
     <?php else: ?>
         <p>Match non trouvé.</p>
     <?php endif; ?>
-    <a href="liste.php">Retour à la liste des matchs</a>
+    
 </body>
 </html>

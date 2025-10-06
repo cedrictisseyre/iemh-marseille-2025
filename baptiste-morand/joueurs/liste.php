@@ -23,6 +23,6 @@ $joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </li>
         <?php endforeach; ?>
     </ul>
-    <a href="../index.php">Retour à l'accueil</a>
+    
 </body>
 </html>

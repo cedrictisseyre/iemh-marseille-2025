@@ -1,3 +1,4 @@
+
 <?php include 'menu.php'; ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,14 +12,6 @@
         <img src="assets/logo-montfort.png" alt="Logo Montfort Basket Club" style="height:100px;">
     </div>
     <h1 style="text-align:center;">Statistiques de l'Equipe N3 du Montfort Basket Club</h1>
-    <nav>
-        <ul>
-            <li><a href="joueurs/liste.php">Liste des joueurs</a></li>
-            <li><a href="matchs/liste.php">Liste des matchs</a></li>
-            <li><a href="saisons/liste.php">Liste des saisons</a></li>
-            <li><a href="ajout_complet.php">Ajout complet (saison, match, joueurs, stats)</a></li>
-        </ul>
-    </nav>
     <section>
         <h2>Fonctionnalités</h2>
         <ul>
