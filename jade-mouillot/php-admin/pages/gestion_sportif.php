@@ -36,10 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['supprimer_sportif']))
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['changer_club'])) {
     $sportif_id = (int)$_POST['sportif_id'];
     $nouveau_club = (int)$_POST['nouveau_club'];
-    // Clôturer l’adhésion actuelle
-    $pdo->prepare("UPDATE club_membership SET end_date = CURDATE() WHERE sportif_id = ? AND end_date IS NULL")->execute([$sportif_id]);
-    // Ajouter la nouvelle adhésion
-    $pdo->prepare("INSERT INTO club_membership (sportif_id, club_id, start_date, end_date) VALUES (?, ?, CURDATE(), NULL)")->execute([$sportif_id, $nouveau_club]);
+    // Clôturer l’adhésion actuelle avec date+heure précise
+    $pdo->prepare("UPDATE club_membership SET end_date = NOW() WHERE sportif_id = ? AND end_date IS NULL")->execute([$sportif_id]);
+    // Ajouter la nouvelle adhésion avec date+heure précise
+    $pdo->prepare("INSERT INTO club_membership (sportif_id, club_id, start_date, end_date) VALUES (?, ?, NOW(), NULL)")->execute([$sportif_id, $nouveau_club]);
     echo "<p style='color:green'>Club changé avec succès !</p>";
 }
 
