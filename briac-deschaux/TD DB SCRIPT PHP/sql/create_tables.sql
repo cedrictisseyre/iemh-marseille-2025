@@ -1,94 +1,71 @@
 -- =============================================================
---  CREATE TABLES SCRIPT – NFL Stats Analyzer
---  Auteur : Briac Deschaux
---  Description : Structure complète de la base de données
+-- CREATE TABLES SCRIPT – NFL Stats Analyzer
+-- Auteur : Briac Deschaux
+-- Description : Structure complète de la base de données
 -- =============================================================
 
--- Supprimer les tables existantes pour éviter les doublons
 DROP TABLE IF EXISTS stats;
 DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS team;
 
--- =============================================================
---  Table : team
---  Description : Contient les équipes NFL avec nom et localisation
--- =============================================================
+-- Table team
 CREATE TABLE team (
     id_team INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
-    city VARCHAR(100) NOT NULL,
-    conference ENUM('AFC', 'NFC') NOT NULL,
+    nom_team VARCHAR(100) NOT NULL UNIQUE,
+    ville VARCHAR(100) NOT NULL,
+    conference ENUM('AFC','NFC') NOT NULL,
     division VARCHAR(50) NOT NULL,
     logo_url VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =============================================================
---  Table : player
---  Description : Liste des joueurs appartenant à une équipe
--- =============================================================
+-- Table player
 CREATE TABLE player (
     id_player INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    position ENUM('QB','RB','WR','TE','K','DEF','OL','DL','LB','CB','S') NOT NULL,
-    number INT NOT NULL CHECK (number BETWEEN 1 AND 99),
-    height_cm INT DEFAULT NULL,
-    weight_kg INT DEFAULT NULL,
-    birth_date DATE DEFAULT NULL,
-    id_team INT,
+    prenom VARCHAR(100) NOT NULL,
+    nom VARCHAR(100) NOT NULL,
+    poste VARCHAR(20) NOT NULL,
+    age INT DEFAULT NULL,
+    taille_cm INT DEFAULT NULL,
+    poids_kg INT DEFAULT NULL,
+    annee_debut INT DEFAULT NULL,
+    id_team INT DEFAULT NULL,
     FOREIGN KEY (id_team) REFERENCES team(id_team) ON DELETE SET NULL ON UPDATE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =============================================================
---  Table : stats
---  Description : Statistiques de match par joueur
--- =============================================================
+-- Table stats
 CREATE TABLE stats (
     id_stat INT AUTO_INCREMENT PRIMARY KEY,
     id_player INT NOT NULL,
-    game_date DATE NOT NULL,
-    opponent VARCHAR(100) NOT NULL,
-    passing_yards INT DEFAULT 0,
-    rushing_yards INT DEFAULT 0,
-    receiving_yards INT DEFAULT 0,
-    touchdowns INT DEFAULT 0,
+    saison INT NOT NULL,
+    yards_passe INT DEFAULT 0,
+    td_passe INT DEFAULT 0,
     interceptions INT DEFAULT 0,
-    fumbles INT DEFAULT 0,
-    tackles INT DEFAULT 0,
-    sacks INT DEFAULT 0,
+    yards_course INT DEFAULT 0,
+    td_course INT DEFAULT 0,
+    receptions INT DEFAULT 0,
+    yards_reception INT DEFAULT 0,
+    td_reception INT DEFAULT 0,
+    plaquages INT DEFAULT 0,
+    sacks DECIMAL(4,1) DEFAULT 0.0,
+    interceptions_def INT DEFAULT 0,
+    fg_reussis INT DEFAULT 0,
+    punts INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_player) REFERENCES player(id_player) ON DELETE CASCADE ON UPDATE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- =============================================================
---  Table d’exemple (optionnelle) : utilisateur admin
---  Permet de gérer l’authentification si besoin
--- =============================================================
-CREATE TABLE IF NOT EXISTS admin (
-    id_admin INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- =============================================================
---  Insertion de quelques données d’exemple
--- =============================================================
-
-INSERT INTO team (name, city, conference, division)
-VALUES
+-- Données d'exemple
+INSERT INTO team (nom_team, ville, conference, division) VALUES
 ('Kansas City Chiefs', 'Kansas City', 'AFC', 'West'),
 ('Dallas Cowboys', 'Dallas', 'NFC', 'East'),
 ('Buffalo Bills', 'Buffalo', 'AFC', 'East');
 
-INSERT INTO player (first_name, last_name, position, number, id_team)
-VALUES
-('Patrick', 'Mahomes', 'QB', 15, 1),
-('Travis', 'Kelce', 'TE', 87, 1),
-('Josh', 'Allen', 'QB', 17, 3);
+INSERT INTO player (prenom, nom, poste, age, id_team) VALUES
+('Patrick', 'Mahomes', 'QB', 28, 1),
+('Travis', 'Kelce', 'TE', 34, 1),
+('Josh', 'Allen', 'QB', 27, 3);
 
-INSERT INTO stats (id_player, game_date, opponent, passing_yards, touchdowns)
-VALUES
-(1, '2024-11-03', 'Buffalo Bills', 356, 3),
-(3, '2024-11-03', 'Kansas City Chiefs', 280, 2);
+INSERT INTO stats (id_player, saison, yards_passe, td_passe) VALUES
+(1, YEAR(CURDATE()), 356, 3),
+(3, YEAR(CURDATE()), 280, 2);

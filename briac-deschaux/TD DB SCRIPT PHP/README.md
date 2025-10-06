@@ -1,23 +1,18 @@
 # NFL Stats Analyzer
 
-Projet universitaire visant à créer une base de données MySQL connectée à une interface web en PHP pour gérer les profils joueurs NFL, leurs équipes et leurs statistiques.
+Projet universitaire : interface PHP + MySQL pour gérer les joueurs NFL, équipes et statistiques.
 
-## 🚀 Fonctionnalités
-- Ajout d'un joueur avec ses informations principales (nom, prénom, âge, taille, poids, équipe).
-- Ajout des statistiques d’un joueur pour la saison en cours.
-- Affichage et classement des joueurs par conférence selon leurs performances.
-- Interface sobre avec navigation par onglets.
+## Description
+Application simple permettant :
+- d'ajouter des joueurs (profil),
+- d'ajouter des statistiques par saison,
+- d'afficher la liste des joueurs,
+- de consulter un classement par conférence.
 
-## 🛠️ Technologies
-- PHP 8
-- MySQL / phpMyAdmin
-- HTML5 / CSS3
+Technologies : PHP 8, MySQL (PDO), HTML5/CSS3.
 
-## 📖 Utilisation
-- **Onglet Joueurs** : ajouter ou consulter les joueurs.
-- **Onglet Statistiques** : renseigner les performances d’un joueur pour la saison.
-- **Onglet Classement** : consulter la hiérarchie des joueurs par conférence.
-
-## 👤 Auteur
-- Briac Deschaux  
-- Ingénieur matériaux étudiant Mastère IHME – Projet PHP/MySQL
+## Installation locale
+1. Clonez le dépôt :
+   ```bash
+   git clone <url-du-depot>
+   cd "<nom-du-dossier>"
