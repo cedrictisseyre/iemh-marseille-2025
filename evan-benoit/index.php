@@ -6,26 +6,28 @@ require_once 'connect.php';
 include 'header.php';
 
 //////////////////////////////////////
-// 1️⃣ SUPPRESSION D'UNE SEANCE
+// 1️⃣ SUPPRESSION D'UNE SÉANCE
 //////////////////////////////////////
 if (isset($_GET['delete'])) {
     $id_delete = intval($_GET['delete']);
-    $sql_delete = "DELETE FROM seances WHERE id = :id";
-    $stmt = $conn->prepare($sql_delete);
-    $stmt->execute([':id' => $id_delete]);
-    echo "<p style='color: red; text-align: center;'>❌ Séance supprimée avec succès.</p>";
+    if ($id_delete > 0) {
+        $sql_delete = "DELETE FROM seances WHERE id = :id";
+        $stmt = $conn->prepare($sql_delete);
+        $stmt->execute([':id' => $id_delete]);
+        echo "<p style='color: red; text-align: center;'>❌ Séance supprimée avec succès.</p>";
+    }
 }
 
 //////////////////////////////////////
-// 2️⃣ AJOUT D'UNE SEANCE
+// 2️⃣ AJOUT D'UNE SÉANCE
 //////////////////////////////////////
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
-    $date_seance = $_POST['date_seance'];
-    $type_seance = $_POST['type_seance'];
-    $id_client = $_POST['id_client'];
-    $id_coach = $_POST['id_coach'];
+    $date_seance = trim($_POST['date_seance']);
+    $type_seance = trim($_POST['type_seance']);
+    $id_client = intval($_POST['id_client']);
+    $id_coach = intval($_POST['id_coach']);
 
-    if (!empty($date_seance) && !empty($type_seance) && !empty($id_client) && !empty($id_coach)) {
+    if (!empty($date_seance) && !empty($type_seance) && $id_client > 0 && $id_coach > 0) {
         $sql_insert = "INSERT INTO seances (date_seance, type_seance, id_client, id_coach)
                        VALUES (:date_seance, :type_seance, :id_client, :id_coach)";
         $stmt_insert = $conn->prepare($sql_insert);
@@ -37,21 +39,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
         ]);
         echo "<p style='color:green; text-align:center;'>✅ Séance ajoutée avec succès !</p>";
     } else {
-        echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis.</p>";
+        echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis correctement.</p>";
     }
 }
 
 //////////////////////////////////////
-// 3️⃣ MODIFICATION D'UNE SEANCE
+// 3️⃣ MODIFICATION D'UNE SÉANCE
 //////////////////////////////////////
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-    $id_update = $_POST['id'];
-    $date_seance = $_POST['date_seance'];
-    $type_seance = $_POST['type_seance'];
-    $id_client = $_POST['id_client'];
-    $id_coach = $_POST['id_coach'];
+    $id_update = intval($_POST['id']);
+    $date_seance = trim($_POST['date_seance']);
+    $type_seance = trim($_POST['type_seance']);
+    $id_client = intval($_POST['id_client']);
+    $id_coach = intval($_POST['id_coach']);
 
-    if (!empty($date_seance) && !empty($type_seance) && !empty($id_client) && !empty($id_coach)) {
+    if (!empty($date_seance) && !empty($type_seance) && $id_client > 0 && $id_coach > 0) {
         $sql_update = "UPDATE seances 
                        SET date_seance = :date_seance,
                            type_seance = :type_seance,
@@ -73,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 }
 
 //////////////////////////////////////
-// 4️⃣ RECUPERATION DES DONNEES
+// 4️⃣ RÉCUPÉRATION DES DONNÉES
 //////////////////////////////////////
 $clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
 $coachs = $conn->query("SELECT id, prenom, specialite FROM coachs ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
@@ -159,16 +161,16 @@ $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <td><?= $s['id'] ?></td>
             <td><?= $s['date_seance'] ?></td>
-            <td><?= $s['type_seance'] ?></td>
-            <td><?= $s['client'] ?></td>
-            <td><?= $s['coach'] ?></td>
-            <td><?= $s['specialite'] ?></td>
+            <td><?= htmlspecialchars($s['type_seance']) ?></td>
+            <td><?= htmlspecialchars($s['client']) ?></td>
+            <td><?= htmlspecialchars($s['coach']) ?></td>
+            <td><?= htmlspecialchars($s['specialite']) ?></td>
             <td>
                 <a class="delete-btn" href="?delete=<?= $s['id'] ?>" onclick="return confirm('Supprimer cette séance ?')">Supprimer</a>
                 <a href="?edit=<?= $s['id'] ?>">Modifier</a>
             </td>
         </tr>
-        <?php if (isset($_GET['edit']) && $_GET['edit'] == $s['id']): ?>
+        <?php if (isset($_GET['edit']) && intval($_GET['edit']) === $s['id']): ?>
         <tr>
             <td colspan="7">
                 <form method="POST" class="edit-form">
