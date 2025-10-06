@@ -5,7 +5,7 @@ include __DIR__ . '/includes/db_connexion.php';
 $page = $_GET['page'] ?? 'home';
 
 include __DIR__ . '/includes/header.php';
-include __DIR__ . '/includes/nav.php';
+include __DIR__ . '/nav.php';
 render_nav($page);
 echo '<div class="content">';
 
