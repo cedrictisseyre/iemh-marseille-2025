@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
+<?php
 require_once __DIR__ . '/config.php';       // 1️⃣ config global
 require_once base_path('connexion.php');    // 2️⃣ connexion PDO
 require_once base_path('includes/header.php'); // 3️⃣ header
