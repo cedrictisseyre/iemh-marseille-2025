@@ -1,6 +1,15 @@
 <?php
 // Section Karateka
 $db_ok = isset($pdo) && $pdo !== null;
+
+// Suppression d'un karateka
+if (isset($_GET['delete_karateka']) && $db_ok) {
+    $kid = intval($_GET['delete_karateka']);
+    $stmt = $pdo->prepare("DELETE FROM karateka WHERE id_karateka = ?");
+    $stmt->execute([$kid]);
+    echo '<p class="success">Karateka supprimé !</p>';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_karateka'])) {
     if ($db_ok) {
         $stmt = $pdo->prepare("INSERT INTO karateka (nom, prenom, date_naissance, sexe, grade, id_club) VALUES (?, ?, ?, ?, ?, ?)");
@@ -42,7 +51,8 @@ if (isset($_GET['karateka_id'])) {
     if ($stmt) {
         while ($k = $stmt->fetch()) {
             $label = formatName($k['prenom'], $k['nom']);
-            echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>" . esc($label) . "</strong></a> (" . esc($k['grade']) . ") - Club : " . esc($k['nom_club']) . "</li>";
+            echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>" . esc($label) . "</strong></a> (" . esc($k['grade']) . ") - Club : " . esc($k['nom_club']) . " ";
+            echo "<a href='gestion-karate.php?page=karateka&delete_karateka={$k['id_karateka']}' onclick=\"return confirm('Supprimer ce karateka ?');\" style='color:red;margin-left:10px;'>Supprimer</a></li>";
         }
     } else {
         echo "<li class='meta'>Aucun karateka listé (connexion DB manquante).</li>";

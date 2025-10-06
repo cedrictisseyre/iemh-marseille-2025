@@ -6,7 +6,6 @@ function render_nav($active) {
         'championnats' => 'Tournois',
         'karateka' => 'Karateka',
         'participation' => 'Participation',
-        'liste_participants' => 'Participants',
         'tableau_bord' => 'Tableau de bord',
         'evenements' => 'Événements'
     ];
