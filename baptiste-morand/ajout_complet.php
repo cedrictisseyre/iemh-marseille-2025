@@ -1,5 +1,4 @@
 <?php
-include 'menu.php';
 require_once 'connexion.php';
 $message = '';
 $saisons = $conn->query('SELECT id_saison, annee FROM saisons ORDER BY annee DESC')->fetchAll(PDO::FETCH_ASSOC);
