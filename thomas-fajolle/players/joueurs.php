@@ -1,17 +1,27 @@
-<?php 
-include 'includes/header.php'; 
-include 'connexion.php';
+<?php
+require_once base_path('includes/header.php');
+require_once base_path('connexion.php');
 
-$sql = "SELECT p.*, t.nom AS equipe FROM players p 
+// Récupération des joueurs avec leur équipe
+$sql = "SELECT p.*, t.nom AS equipe 
+        FROM players p 
         JOIN teams t ON p.team_id = t.id
         ORDER BY t.nom, p.nom";
+
 $stmt = $pdo->query($sql);
 $joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <h2>Joueurs</h2>
 <table>
-    <tr><th>Nom</th><th>Prénom</th><th>Poste</th><th>Numéro</th><th>Équipe</th><th>Nationalité</th></tr>
+    <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Poste</th>
+        <th>Numéro</th>
+        <th>Équipe</th>
+        <th>Nationalité</th>
+    </tr>
     <?php foreach ($joueurs as $j): ?>
         <tr>
             <td><?= htmlspecialchars($j['nom']) ?></td>
@@ -24,4 +34,5 @@ $joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endforeach; ?>
 </table>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+require_once base_path('includes/footer.php');

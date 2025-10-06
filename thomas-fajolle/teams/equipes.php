@@ -1,7 +1,8 @@
-<?php 
-include 'includes/header.php'; 
-include 'connexion.php';
+<?php
+require_once base_path('includes/header.php');
+require_once base_path('connexion.php');
 
+// Récupération des équipes
 $sql = "SELECT * FROM teams ORDER BY nom";
 $stmt = $pdo->query($sql);
 $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -9,7 +10,12 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <h2>Liste des équipes</h2>
 <table>
-    <tr><th>Nom</th><th>Ville</th><th>Stade</th><th>Entraîneur</th></tr>
+    <tr>
+        <th>Nom</th>
+        <th>Ville</th>
+        <th>Stade</th>
+        <th>Entraîneur</th>
+    </tr>
     <?php foreach ($equipes as $e): ?>
         <tr>
             <td><?= htmlspecialchars($e['nom']) ?></td>
@@ -20,4 +26,5 @@ $equipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endforeach; ?>
 </table>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+require_once base_path('includes/footer.php');

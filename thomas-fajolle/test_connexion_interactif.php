@@ -1,5 +1,5 @@
 <?php
-include 'connexion.php';
+require_once base_path('connexion.php');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,7 +42,7 @@ try {
     if (!empty($tables)) {
         echo "<h3>Tables présentes :</h3><ul>";
         foreach ($tables as $table) {
-            echo "<li><a href='?table=$table'>$table</a></li>";
+            echo "<li><a href='?table=" . urlencode($table) . "'>$table</a></li>";
         }
         echo "</ul>";
     } else {
@@ -51,10 +51,10 @@ try {
 
     // Afficher le contenu d'une table si sélectionnée
     if (isset($_GET['table'])) {
-        $selectedTable = $_GET['table'];
+        $selectedTable = preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['table']); // Sécurité simple
         echo "<h3>Contenu de la table <strong>$selectedTable</strong> :</h3>";
 
-        $stmt = $pdo->query("SELECT * FROM $selectedTable LIMIT 100");
+        $stmt = $pdo->query("SELECT * FROM `$selectedTable` LIMIT 100");
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (!empty($rows)) {
@@ -66,7 +66,7 @@ try {
             foreach ($rows as $row) {
                 echo "<tr>";
                 foreach ($row as $cell) {
-                    echo "<td>$cell</td>";
+                    echo "<td>" . htmlspecialchars($cell) . "</td>";
                 }
                 echo "</tr>";
             }
