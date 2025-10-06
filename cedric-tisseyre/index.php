@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenue sur la page de Cédric TISSEYRE</h1>
+        <h1>Bienvenue sur la page de Cédric TISSEYRE Enseignant IHME</h1>
         <p>Cette page est générée en PHP pour le projet IEMH Marseille 2025.</p>
         <div class="pub">
             <strong>Publicité :</strong> <br>
