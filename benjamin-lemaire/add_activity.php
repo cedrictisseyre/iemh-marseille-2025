@@ -13,17 +13,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_sport = $_POST['id_sport'] ?? '';
     if ($date && $temps && $id_utilisateur && $id_sport) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO activites_sportives (date, temps, id_utilisateur, id_sport) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$date, $temps, $id_utilisateur, $id_sport]);
+            // Récupérer le nom du sport à partir de l'id_sport
+            $sportName = $pdo->prepare("SELECT nom_sport FROM sports WHERE id_sport = ?");
+            $sportName->execute([$id_sport]);
+            $sport = $sportName->fetchColumn();
+            if (!$sport) {
+                throw new Exception('Sport inconnu');
+            }
+            $stmt = $pdo->prepare("INSERT INTO activites_sportives (date, temps, id_utilisateur, id_sport, sport) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$date, $temps, $id_utilisateur, $id_sport, $sport]);
             header('Location: index.php');
             exit;
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             $error = 'Erreur lors de l\'insertion : ' . $e->getMessage();
             $debug = [
                 'date' => $date,
                 'temps' => $temps,
                 'id_utilisateur' => $id_utilisateur,
-                'id_sport' => $id_sport
+                'id_sport' => $id_sport,
+                'sport' => $sport ?? null
             ];
         }
     } else {
