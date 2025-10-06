@@ -1,9 +1,9 @@
 <!-- menu.php -->
 <style>
 .menu-burger-container {
-  position: absolute;
-  top: 30px;
-  left: 30px;
+  margin-left: 20px;
+  margin-top: 10px;
+  position: relative;
   z-index: 100;
 }
 .menu-burger {
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   cursor: pointer;
 }
 .menu-burger span {
@@ -27,13 +27,14 @@
 .menu-links {
   display: none;
   position: absolute;
-  top: 50px;
+  top: 45px;
   left: 0;
   background: #fff;
   border: 1px solid #2c3e50;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(44,62,80,0.15);
   padding: 10px 20px;
+  min-width: 180px;
 }
 .menu-links a {
   display: block;
@@ -53,12 +54,10 @@
     <span></span>
   </div>
   <div class="menu-links" id="menu-links">
-    <a href="index.php">Accueil</a>
-    <a href="ajout_complet.php">Ajout Complet</a>
-    <a href="joueurs/liste.php">Liste Joueurs</a>
-    <a href="joueurs/stats.php">Stats Joueurs</a>
-    <a href="matchs/liste.php">Liste Matchs</a>
-    <a href="matchs/stats.php">Stats Matchs</a>
-    <a href="saisons/liste.php">Liste Saisons</a>
+    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/index.php">Accueil</a>
+    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/ajout_complet.php">Ajout Complet</a>
+    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/joueurs/liste.php">Liste Joueurs</a>
+    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/matchs/liste.php">Liste Matchs</a>
+    <a href="/workspaces/iemh-marseille-2025/baptiste-morand/saisons/liste.php">Liste Saisons</a>
   </div>
 </div>
