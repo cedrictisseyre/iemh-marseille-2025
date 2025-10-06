@@ -128,9 +128,10 @@ function nav($active) {
                     echo "<div class='card'>
                         <h3>{$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
 
-                    // Affichage uniquement des stats non nulles
+                    // Ignorer les colonnes techniques
+                    $exclude = ['id_stats','id_player','prenom','nom','poste','saison'];
                     foreach ($st as $key => $val) {
-                        if (!in_array($key, ['id_player','prenom','nom','poste','saison']) && $val !== null && $val != 0) {
+                        if (!in_array($key, $exclude) && $val !== null && $val != 0) {
                             $label = ucfirst(str_replace("_", " ", $key));
                             echo "<p>{$label}: {$val}</p>";
                         }
@@ -142,27 +143,50 @@ function nav($active) {
             </div>
 
         <?php elseif ($page === 'classement') : ?>
-            <!-- Classement par division -->
-            <h2>Classement par division</h2>
+            <!-- Classement par conférence -->
+            <h2>Classement par conférence (Total TD)</h2>
             <?php
-            $sql = "SELECT p.nom, p.prenom, p.poste, t.division,
-                           (COALESCE(s.td_passe,0) + COALESCE(s.td_course,0) + COALESCE(s.td_reception,0)) as total_td,
-                           (COALESCE(s.yards_passe,0) + COALESCE(s.yards_course,0) + COALESCE(s.yards_reception,0)) as total_yards
+            $sql_conf = "SELECT p.nom, p.prenom, p.poste, t.conference,
+                           (COALESCE(s.td_passe,0) + COALESCE(s.td_course,0) + COALESCE(s.td_reception,0)) as total_td
                     FROM player p 
                     JOIN team t ON p.id_team = t.id_team 
                     LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = ? 
-                    ORDER BY t.division, total_td DESC, total_yards DESC";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([date('Y')]);
+                    ORDER BY t.conference, total_td DESC";
+            $stmt_conf = $pdo->prepare($sql_conf);
+            $stmt_conf->execute([date('Y')]);
+
+            $conf = '';
+            while ($row = $stmt_conf->fetch()) {
+                if ($row['conference'] !== $conf) {
+                    if ($conf !== '') echo '</ol>';
+                    $conf = $row['conference'];
+                    echo "<h3>{$conf}</h3><ol>";
+                }
+                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_td']} TD</li>";
+            }
+            if ($conf !== '') echo '</ol>';
+            ?>
+
+            <!-- Classement par division -->
+            <h2>Classement par division (Plaquages)</h2>
+            <?php
+            $sql_div = "SELECT p.nom, p.prenom, p.poste, t.division,
+                           COALESCE(s.plaquages,0) as total_plaquages
+                    FROM player p 
+                    JOIN team t ON p.id_team = t.id_team 
+                    LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = ? 
+                    ORDER BY t.division, total_plaquages DESC";
+            $stmt_div = $pdo->prepare($sql_div);
+            $stmt_div->execute([date('Y')]);
 
             $div = '';
-            while ($row = $stmt->fetch()) {
+            while ($row = $stmt_div->fetch()) {
                 if ($row['division'] !== $div) {
                     if ($div !== '') echo '</ol>';
                     $div = $row['division'];
                     echo "<h3>{$div}</h3><ol>";
                 }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_td']} TD, {$row['total_yards']} yds</li>";
+                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
             }
             if ($div !== '') echo '</ol>';
             ?>
