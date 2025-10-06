@@ -1,6 +1,37 @@
 <?php
 require_once 'config.php';
 
+// Suppression d'un utilisateur et de ses données associées
+if (isset($_GET['delete'])) {
+    $id = (int)$_GET['delete'];
+    $pdo->beginTransaction();
+    try {
+        // Récupérer toutes les activités de l'utilisateur
+        $stmt = $pdo->prepare("SELECT id FROM activites_sportives WHERE id_utilisateur = ?");
+        $stmt->execute([$id]);
+        $activites = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        if ($activites) {
+            $in = str_repeat('?,', count($activites) - 1) . '?';
+            // Supprimer les performances liées aux activités
+            $pdo->prepare("DELETE FROM performances WHERE id_activite IN ($in)")->execute($activites);
+            // Supprimer les utilisations d'équipements liées aux activités
+            $pdo->prepare("DELETE FROM utilisation_equipements WHERE id_activite IN ($in)")->execute($activites);
+            // Supprimer les activités
+            $pdo->prepare("DELETE FROM activites_sportives WHERE id IN ($in)")->execute($activites);
+        }
+        // Supprimer les équipements de l'utilisateur
+        $pdo->prepare("DELETE FROM equipements WHERE id_utilisateur = ?")->execute([$id]);
+        // Supprimer l'utilisateur
+        $pdo->prepare("DELETE FROM utilisateurs WHERE id_utilisateur = ?")->execute([$id]);
+        $pdo->commit();
+        header('Location: users.php');
+        exit;
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        $error = "Erreur lors de la suppression : " . $e->getMessage();
+    }
+}
+
 // Récupération des utilisateurs
 $users = $pdo->query("SELECT * FROM utilisateurs ORDER BY nom")->fetchAll(PDO::FETCH_ASSOC);
 
@@ -51,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <th>Nom</th>
                     <th>Email</th>
                     <th>Date de création</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,11 +91,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <td><?= htmlspecialchars($u['nom']) ?></td>
                     <td><?= htmlspecialchars($u['email']) ?></td>
                     <td><?= htmlspecialchars($u['date_creation']) ?></td>
+                    <td>
+                        <a href="edit_user.php?id=<?= $u['id_utilisateur'] ?>">Modifier</a> |
+                        <a href="#" onclick="confirmDelete('<?= addslashes($u['nom']) ?>', <?= $u['id_utilisateur'] ?>)">Supprimer</a>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
         <p><a href="index.php">Retour à l'accueil</a></p>
+    </div>
+    <script>
+    function confirmDelete(nom, id) {
+        if (confirm('Supprimer définitivement l\'utilisateur ' + nom + ' et toutes ses données ?')) {
+            window.location = 'users.php?delete=' + id;
+        }
+    }
+    </script>
     </div>
 </body>
 </html>
