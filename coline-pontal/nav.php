@@ -5,7 +5,10 @@ function render_nav($active) {
         'clubs' => 'Clubs',
         'championnats' => 'Tournois',
         'karateka' => 'Karateka',
-        'participation' => 'Participation'
+        'participation' => 'Participation',
+        'liste_participants' => 'Participants',
+        'tableau_bord' => 'Tableau de bord',
+        'evenements' => 'Événements'
     ];
     echo '<nav class="tabs" aria-label="Navigation principale">';
     foreach ($tabs as $key => $label) {
@@ -13,8 +16,6 @@ function render_nav($active) {
         echo "<a href='?page=$key' class='$class'>$label</a> ";
     }
     echo '</nav>';
-
     // descriptions supprimées volontairement
 }
-
 ?>

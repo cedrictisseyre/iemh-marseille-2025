@@ -1,7 +1,4 @@
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-<?php
+$host = '195.15.235.20';
 $host = '195.15.235.20';
 $user = 'root';
 $password = 'INNnsk40374';
