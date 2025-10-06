@@ -98,37 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- ...existing code... -->
 </body>
 </html>
-                $poste = $joueur['poste'];
-            } else {
-                // Nouveau joueur
-                $nom = $_POST['joueur'][$i]['nom'] ?? '';
-                $prenom = $_POST['joueur'][$i]['prenom'] ?? '';
-                $poste = $_POST['joueur'][$i]['poste'] ?? '';
-                if ($nom && $prenom) {
-                    $stmt = $conn->prepare('INSERT INTO joueurs (nom, prenom, poste) VALUES (?, ?, ?)');
-                    $stmt->execute([$nom, $prenom, $poste]);
-                    $id_joueur = $conn->lastInsertId();
-                } else {
-                    continue;
-                }
-            }
-            // Ajout stats
-            $pts = $_POST['joueur'][$i]['pts'] ?? 0;
-            $reb_tot = $_POST['joueur'][$i]['reb_tot'] ?? 0;
-            $ast = $_POST['joueur'][$i]['ast'] ?? 0;
-            $stl = $_POST['joueur'][$i]['stl'] ?? 0;
-            $blk = $_POST['joueur'][$i]['blk'] ?? 0;
-            $turnovers = $_POST['joueur'][$i]['turnovers'] ?? 0;
-            $pf = $_POST['joueur'][$i]['pf'] ?? 0;
-            $stmt = $conn->prepare('INSERT INTO stats_match (id_match, id_joueur, pts, reb_tot, ast, stl, blk, turnovers, pf) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$id_match, $id_joueur, $pts, $reb_tot, $ast, $stl, $blk, $turnovers, $pf]);
-        }
-        $message = 'Ajout réussi !';
-    } catch (Exception $e) {
-        $message = 'Erreur : ' . $e->getMessage();
-    }
-}
-?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
