@@ -1,4 +1,5 @@
 <?php
+include '../menu.php';
 require_once '../connexion.php';
 // Récupère la liste des matchs
 $stmt = $conn->query('SELECT id_match, date_match, adversaire, lieu FROM matchs');

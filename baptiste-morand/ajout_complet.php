@@ -1,4 +1,5 @@
 <?php
+include 'menu.php';
 require_once 'connexion.php';
 
 // Traitement du formulaire

@@ -1,4 +1,5 @@
 <?php
+include '../menu.php';
 require_once '../connexion.php';
 // Récupère la liste des joueurs
 $stmt = $conn->query('SELECT id_joueur, nom, prenom, poste FROM joueurs');

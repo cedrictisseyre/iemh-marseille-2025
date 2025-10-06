@@ -1,4 +1,5 @@
 <?php
+include 'menu.php';
 // Connexion à la base de données MySQL
 
 $host = '195.15.235.20';

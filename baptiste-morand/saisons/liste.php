@@ -1,4 +1,5 @@
 <?php
+include '../menu.php';
 require_once '../connexion.php';
 // Récupère la liste des saisons
 $stmt = $conn->query('SELECT id_saison, annee, description FROM saisons');
