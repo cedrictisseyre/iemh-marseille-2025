@@ -3,13 +3,14 @@ require_once __DIR__ . '/connexion_database.php';
 
 // Ajout d'un coureur
 if (isset($_POST['add_runner'])) {
-    $stmt = $conn->prepare("INSERT INTO runners (name, country, birth, team, info) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO runners (name, country, birth, team, info, gender) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $_POST['name'],
         $_POST['country'],
         $_POST['birth'],
         $_POST['team'],
-        $_POST['info']
+        $_POST['info'],
+        $_POST['gender']
     ]);
 }
 // Ajout d'un résultat de manche
@@ -63,11 +64,7 @@ asort($general);
     <header>
         <img src="img/logo_gtws.jpg" alt="Logo GTWS" class="logo">
         <span style="font-size:2em;font-weight:bold;vertical-align:middle;">Golden World Trail Series</span>
-        <div class="header-images">
-            <img src="img/course1.jpg" alt="Course 1">
-            <img src="img/course2.jpg" alt="Course 2">
-            <img src="img/course3.jpg" alt="Course 3">
-        </div>
+        <!-- Images supprimées -->
     </header>
     <div style="width:100%;height:220px;background:url('img/course3.jpg') center/cover no-repeat;margin-bottom:20px;border-radius:10px;"></div>
     <div class="tabs">
@@ -76,7 +73,9 @@ asort($general);
         <div class="tab" id="tab-search" onclick="showTab('search')">Recherche coureur</div>
         <div class="tab" id="tab-add" onclick="showTab('add')">Ajouter un coureur</div>
     </div>
-    <div id="general" class="tab-content" style="background:url('img/course1.jpg') center/cover no-repeat;">
+    <div id="general" class="tab-content" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course1.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
+        <div style="position:relative;z-index:1;">
         <h2>Classement général</h2>
         <table border="1" cellpadding="5">
             <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
@@ -84,11 +83,25 @@ asort($general);
                 <tr><td><?= $place++ ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
             <?php } ?>
         </table>
+        </div>
     </div>
-    <div id="stages" class="tab-content" style="display:none;background:url('img/course1.jpg') center/cover no-repeat;">
+    <div id="stages" class="tab-content" style="display:none;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course1.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
+        <div style="position:relative;z-index:1;">
         <h2>Résultats par manche</h2>
         <form method="post">
-            <input name="stage" placeholder="Nom de la manche" required>
+            <select name="stage" required>
+                <option value="">Sélectionner la manche</option>
+                <option value="Manche 1">Manche 1</option>
+                <option value="Manche 2">Manche 2</option>
+                <option value="Manche 3">Manche 3</option>
+                <option value="Manche 4">Manche 4</option>
+                <option value="Manche 5">Manche 5</option>
+                <option value="Manche 6">Manche 6</option>
+                <option value="Manche 7">Manche 7</option>
+                <option value="Manche 8">Manche 8</option>
+                <option value="Manche 9">Manche 9</option>
+            </select>
             <select name="runner" required>
                 <option value="">Coureur</option>
                 <?php foreach ($runners as $r) { ?>
@@ -111,8 +124,11 @@ asort($general);
                 </tr>
             <?php } ?>
         </table>
+        </div>
     </div>
-    <div id="search" class="tab-content" style="display:none;background:url('img/course2.jpg') center/cover no-repeat;">
+    <div id="search" class="tab-content" style="display:none;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course2.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
+        <div style="position:relative;z-index:1;">
         <h2>Recherche d'un coureur</h2>
         <form method="post">
             <input name="search_name" placeholder="Nom du coureur" required>
@@ -130,14 +146,23 @@ asort($general);
         <?php } elseif (isset($_POST['search_runner'])) { ?>
             <p style="color:red">Coureur non trouvé.</p>
         <?php } ?>
+        </div>
     </div>
-    <div id="add" class="tab-content" style="display:none;background:url('img/course2.jpg') center/cover no-repeat;">
+    <div id="add" class="tab-content" style="display:none;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course2.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
+        <div style="position:relative;z-index:1;">
         <h2>Ajouter un coureur</h2>
         <form method="post">
             <input name="name" placeholder="Nom" required>
             <input name="country" placeholder="Pays" required>
             <input name="birth" type="date" placeholder="Date de naissance" required>
             <input name="team" placeholder="Équipe" required>
+            <select name="gender" required>
+                <option value="">Sexe</option>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Autre">Autre</option>
+            </select>
             <input name="info" placeholder="Infos complémentaires">
             <button type="submit" name="add_runner">Ajouter</button>
         </form>
@@ -147,6 +172,7 @@ asort($general);
             <li><?= htmlspecialchars($r['name']) ?> (<?= htmlspecialchars($r['country']) ?>)</li>
         <?php } ?>
         </ul>
+        </div>
     </div>
 </body>
 </html>
