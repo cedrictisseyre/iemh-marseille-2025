@@ -52,10 +52,10 @@ arsort($general_f);
 		<span style="font-size:2em;font-weight:bold;vertical-align:middle;">Golden World Trail Series</span>
 	</header>
 	<nav class="tabs">
-		<a class="tab active" href="general.php">Classement général</a>
-		<a class="tab" href="stages.php">Résultats par manche</a>
-		<a class="tab" href="search.php">Recherche coureur</a>
-		<a class="tab" href="add.php">Ajouter un coureur</a>
+		<a class="tab active" href="../general/">Classement général</a>
+		<a class="tab" href="../stages/">Résultats par manche</a>
+		<a class="tab" href="../search/">Recherche coureur</a>
+		<a class="tab" href="../add/">Ajouter un coureur</a>
 	</nav>
 	<div style="width:100%;height:220px;background:url('../img/course3.jpg') center/cover no-repeat;margin-bottom:20px;border-radius:10px;"></div>
 	<div class="tab-content">

@@ -38,8 +38,8 @@ $runners = $conn->query("SELECT * FROM runners")->fetchAll(PDO::FETCH_ASSOC);
 		<form method="post">
 			<input name="name" placeholder="Nom" required>
 			<input name="country" placeholder="Pays" required>
-			<input name="birth" type="date" placeholder="Date de naissance" required>
-			<input name="team" placeholder="Équipe" required>
+			<input name="birth" type="date" placeholder="Date de naissance">
+			<input name="team" placeholder="Équipe">
 			<select name="gender" required>
 				<option value="">Sexe</option>
 				<option value="Homme">Homme</option>

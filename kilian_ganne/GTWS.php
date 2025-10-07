@@ -158,10 +158,10 @@ arsort($general_f);
     </header>
     <div style="width:100%;height:220px;background:url('img/course3.jpg') center/cover no-repeat;margin-bottom:20px;border-radius:10px;"></div>
     <nav class="tabs">
-        <a class="tab" href="pages/general.php">Classement général</a>
-        <a class="tab" href="pages/stages.php">Résultats par manche</a>
-        <a class="tab" href="pages/search.php">Recherche coureur</a>
-        <a class="tab" href="pages/add.php">Ajouter un coureur</a>
+        <a class="tab" href="general/">Classement général</a>
+        <a class="tab" href="stages/">Résultats par manche</a>
+        <a class="tab" href="search/">Recherche coureur</a>
+        <a class="tab" href="add/">Ajouter un coureur</a>
     </nav>
     <!-- La logique d'affichage est maintenant dans les pages dédiées -->
     <div id="stages" class="tab-content" style="display:none;position:relative;overflow:hidden;">
