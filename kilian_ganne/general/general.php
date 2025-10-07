@@ -1,1 +1,1 @@
-<?php include __DIR__ . '/../../pages/general.php';
+<?php include __DIR__ . '/../../general/general.php';
