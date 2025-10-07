@@ -153,7 +153,7 @@ arsort($general_f);
 <body>
     <header>
         <img src="img/logo_gtws.jpg" alt="Logo GTWS" class="logo">
-        <span style="font-size:2em;font-weight:bold;vertical-align:middle;">Golden World Trail Series</span>
+    <span style="font-size:2em;font-weight:bold;vertical-align:middle;">Golden Trail World Series</span>
         <!-- Images supprimées -->
     </header>
     <div style="width:100%;height:220px;background:url('img/course3.jpg') center/cover no-repeat;margin-bottom:20px;border-radius:10px;"></div>
