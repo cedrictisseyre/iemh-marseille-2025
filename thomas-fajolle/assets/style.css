@@ -167,3 +167,15 @@
         height: 28px;
     }
 }
+.score-win {
+    color: #1eaa1e;
+    font-weight: bold;
+}
+.score-lose {
+    color: #e74c3c;
+    font-weight: bold;
+}
+.score-draw {
+    color: #888;
+    font-weight: bold;
+}

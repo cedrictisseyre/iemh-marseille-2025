@@ -18,22 +18,67 @@ $sql = "SELECT m.*,
         ORDER BY m.date_match DESC";
 $stmt = $pdo->query($sql);
 $matchs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fonction pour générer le nom du fichier logo d'équipe
+function logo_filename($nomEquipe) {
+    $nom = strtolower($nomEquipe);
+    $nom = iconv('UTF-8', 'ASCII//TRANSLIT', $nom); // retire les accents
+    $nom = preg_replace('/[^a-z0-9 ]/', '', $nom); // retire caractères spéciaux
+    $nom = str_replace(' ', '-', $nom);
+    return $nom . '.png';
+}
+
+// Fonction pour colorer le score
+function score_class($home, $away) {
+    if ($home > $away) return 'score-win';
+    if ($home < $away) return 'score-lose';
+    return 'score-draw';
+}
 ?>
 
 <h2>Résultats des matchs</h2>
-<table>
-    <tr><th>Date</th><th>Compétition</th><th>Domicile</th><th>Score</th><th>Extérieur</th></tr>
+<p class="nb-equipes">Nombre de matchs : <strong><?= count($matchs) ?></strong></p>
+<input type="text" id="searchMatch" placeholder="Rechercher par équipe, compétition..." class="search-input" onkeyup="filtrerMatchs()">
+<div class="table-responsive">
+<table class="equipes-table">
+    <thead>
+        <tr><th>Date</th><th>Compétition</th><th>Domicile</th><th>Score</th><th>Extérieur</th></tr>
+    </thead>
+    <tbody id="matchsBody">
     <?php foreach ($matchs as $m): ?>
+        <?php $logoHome = logo_filename($m['home_team']); ?>
+        <?php $logoAway = logo_filename($m['away_team']); ?>
         <tr>
             <td><?= htmlspecialchars($m['date_match']) ?></td>
             <td><?= htmlspecialchars($m['competition']) ?></td>
-            <td><?= htmlspecialchars($m['home_team']) ?></td>
-            <td><?= $m['home_score'] . ' - ' . $m['away_score'] ?></td>
-            <td><?= htmlspecialchars($m['away_team']) ?></td>
+            <td><img src="../teams/logos equipes/<?= $logoHome ?>" alt="Logo <?= htmlspecialchars($m['home_team']) ?>" class="logo-equipe"> <?= htmlspecialchars($m['home_team']) ?></td>
+            <td class="<?= score_class($m['home_score'], $m['away_score']) ?>">
+                <?= $m['home_score'] . ' - ' . $m['away_score'] ?>
+            </td>
+            <td><img src="../teams/logos equipes/<?= $logoAway ?>" alt="Logo <?= htmlspecialchars($m['away_team']) ?>" class="logo-equipe"> <?= htmlspecialchars($m['away_team']) ?></td>
         </tr>
     <?php endforeach; ?>
+    </tbody>
 </table>
-
+</div>
+<script>
+function filtrerMatchs() {
+    var input = document.getElementById('searchMatch');
+    var filter = input.value.toLowerCase();
+    var table = document.getElementById('matchsBody');
+    var trs = table.getElementsByTagName('tr');
+    for (var i = 0; i < trs.length; i++) {
+        var home = trs[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+        var away = trs[i].getElementsByTagName('td')[4].textContent.toLowerCase();
+        var comp = trs[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        if (home.indexOf(filter) > -1 || away.indexOf(filter) > -1 || comp.indexOf(filter) > -1) {
+            trs[i].style.display = '';
+        } else {
+            trs[i].style.display = 'none';
+        }
+    }
+}
+</script>
 <?php
 require_once __DIR__ . '/../includes/footer.php';
 ?>
