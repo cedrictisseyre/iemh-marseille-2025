@@ -15,10 +15,12 @@ if (isset($_POST['add_runner'])) {
 }
 // Ajout d'un résultat de manche
 if (isset($_POST['add_result'])) {
-    $stmt = $conn->prepare("INSERT INTO results (stage, runner, rank, time) VALUES (?, ?, ?, ?)");
+    $course_id = intval($_POST['course_id']);
+    $runner_id = intval($_POST['runner_id']);
+    $stmt = $conn->prepare("INSERT INTO results (course_id, runner_id, rank, time) VALUES (?, ?, ?, ?)");
     $stmt->execute([
-        $_POST['stage'],
-        $_POST['runner'],
+        $course_id,
+        $runner_id,
         $_POST['rank'],
         $_POST['time']
     ]);
@@ -31,14 +33,16 @@ if (isset($_POST['search_runner'])) {
     $stmt->execute([$search]);
     $searched_runner = $stmt->fetch(PDO::FETCH_ASSOC);
 }
+// Récupération des courses
+$courses = $conn->query("SELECT * FROM courses")->fetchAll(PDO::FETCH_ASSOC);
 // Récupération des coureurs
 $runners = $conn->query("SELECT * FROM runners")->fetchAll(PDO::FETCH_ASSOC);
-// Récupération des résultats
-$results = $conn->query("SELECT * FROM results")->fetchAll(PDO::FETCH_ASSOC);
+// Récupération des résultats avec jointures
+$results = $conn->query("SELECT results.*, courses.name AS course_name, runners.name AS runner_name FROM results JOIN courses ON results.course_id = courses.id JOIN runners ON results.runner_id = runners.id")->fetchAll(PDO::FETCH_ASSOC);
 // Calcul du classement général
 $general = [];
 foreach ($results as $res) {
-    $name = $res['runner'];
+    $name = $res['runner_name'];
     if (!isset($general[$name])) $general[$name] = 0;
     $general[$name] += (int)$res['rank'];
 }
@@ -90,22 +94,16 @@ asort($general);
         <div style="position:relative;z-index:1;">
         <h2>Résultats par manche</h2>
         <form method="post">
-            <select name="stage" required>
+            <select name="course_id" required>
                 <option value="">Sélectionner la course</option>
-                <option value="Kobe Trail">Kobe Trail</option>
-                <option value="Jin Shan Ling Great Wall Trail">Jin Shan Ling Great Wall Trail</option>
-                <option value="Il Golfo dell'Isola Trail">Il Golfo dell'Isola Trail</option>
-                <option value="Zegama-Aizkorri">Zegama-Aizkorri</option>
-                <option value="Broken Arrow Skyrace">Broken Arrow Skyrace</option>
-                <option value="Tepec Trail">Tepec Trail</option>
-                <option value="Salomon Pitz Alpine Glacier Trail">Salomon Pitz Alpine Glacier Trail</option>
-                <option value="Sierre-Zinal">Sierre-Zinal</option>
-                <option value="Ledro Sky Trentino Grand Finale">Ledro Sky Trentino Grand Finale</option>
+                <?php foreach ($courses as $c) { ?>
+                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                <?php } ?>
             </select>
-            <select name="runner" required>
+            <select name="runner_id" required>
                 <option value="">Coureur</option>
                 <?php foreach ($runners as $r) { ?>
-                    <option value="<?= htmlspecialchars($r['name']) ?>"><?= htmlspecialchars($r['name']) ?></option>
+                    <option value="<?= $r['id'] ?>"><?= htmlspecialchars($r['name']) ?></option>
                 <?php } ?>
             </select>
             <input name="rank" type="number" min="1" placeholder="Classement" required>
@@ -114,11 +112,11 @@ asort($general);
         </form>
         <h3>Résultats enregistrés :</h3>
         <table border="1" cellpadding="5">
-            <tr><th>Manche</th><th>Coureur</th><th>Classement</th><th>Temps</th></tr>
+            <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th></tr>
             <?php foreach ($results as $res) { ?>
                 <tr>
-                    <td><?= htmlspecialchars($res['stage']) ?></td>
-                    <td><?= htmlspecialchars($res['runner']) ?></td>
+                    <td><?= htmlspecialchars($res['course_name']) ?></td>
+                    <td><?= htmlspecialchars($res['runner_name']) ?></td>
                     <td><?= htmlspecialchars($res['rank']) ?></td>
                     <td><?= htmlspecialchars($res['time']) ?></td>
                 </tr>
