@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../:/workspace:cached
+    command: sleep infinity
+    networks:
+      - devnet
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root_password
+      - MYSQL_DATABASE=iemh_dev
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ../:/workspace:cached
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: iemh_dev
+      MYSQL_USER: dev_user
+      MYSQL_PASSWORD: dev_password
+    ports:
+      - "3306:3306"
+    networks:
+      - devnet
+    command: --default-authentication-plugin=mysql_native_password
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password
+      UPLOAD_LIMIT: 300M
+    ports:
+      - "8081:80"
+    networks:
+      - devnet
+    depends_on:
+      - mysql
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.apache
+    restart: unless-stopped
+    volumes:
+      - ../:/var/www/html:cached
+    ports:
+      - "8080:80"
+    networks:
+      - devnet
+    depends_on:
+      - mysql
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root_password
+
+networks:
+  devnet:
+    driver: bridge
+
+volumes:
+  mysql-data:
