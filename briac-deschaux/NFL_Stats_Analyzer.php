@@ -129,7 +129,7 @@ function nav($active) {
         <h2>Liste des joueurs</h2>
         <div class="grid">
             <?php
-            $search = $_GET['search'] ?? '';
+            $search = trim($_GET['search'] ?? '');
             $filtre_poste = $_GET['poste'] ?? '';
             $filtre_team = $_GET['team'] ?? '';
 
@@ -137,13 +137,11 @@ function nav($active) {
             $params = [];
 
             if (!empty($search)) {
-                $where .= " AND (
-                    CONCAT(p.prenom, ' ', p.nom) LIKE :search
-                    OR CONCAT(p.nom, ' ', p.prenom) LIKE :search
-                    OR p.prenom LIKE :search
-                    OR p.nom LIKE :search
-                )";
-                $params[':search'] = "%$search%";
+                $mots = explode(" ", $search);
+                foreach ($mots as $i => $mot) {
+                    $where .= " AND (p.nom LIKE :mot$i OR p.prenom LIKE :mot$i)";
+                    $params[":mot$i"] = "%$mot%";
+                }
             }
             if (!empty($filtre_poste)) {
                 $where .= " AND p.poste = :poste";
@@ -167,7 +165,7 @@ function nav($active) {
                 echo "<div class='card'>
                         <h3>{$pl['prenom']} {$pl['nom']}</h3>
                         <p><strong>Poste:</strong> {$pl['poste']}</p>
-                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:80px;height:80px;vertical-align:middle;'> {$pl['nom_team']}</p>
+                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:40px;height:40px;vertical-align:middle;'> {$pl['nom_team']}</p>
                         <p>Âge: {$pl['age']} ans</p>
                         <p>Taille: {$pl['taille_cm']} cm - Poids: {$pl['poids_kg']} kg</p>
                         <p>Expérience: {$experience} ans</p>
@@ -255,9 +253,11 @@ function nav($active) {
             $params = [':saison' => $saison];
 
             if (!empty($_GET['search'])) {
-                $where = " AND (CONCAT(p.prenom,' ',p.nom) LIKE :search OR CONCAT(p.nom,' ',p.prenom) LIKE :search OR p.prenom LIKE :search OR p.nom LIKE :search)";
-                $sql .= $where;
-                $params[':search'] = "%{$_GET['search']}%";
+                $mots = explode(" ", trim($_GET['search']));
+                foreach ($mots as $i => $mot) {
+                    $sql .= " AND (p.nom LIKE :mot$i OR p.prenom LIKE :mot$i)";
+                    $params[":mot$i"] = "%$mot%";
+                }
             }
             if (!empty($_GET['poste'])) {
                 $sql .= " AND p.poste = :poste";
@@ -274,7 +274,7 @@ function nav($active) {
 
             while ($st = $stmt->fetch()) {
                 echo "<div class='card'><h3>{$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
-                echo "<p><strong>Équipe:</strong> <img src='{$st['logo_url']}' alt='' style='width:80px;height:80px;vertical-align:middle;'> {$st['nom_team']}</p>";
+                echo "<p><strong>Équipe:</strong> <img src='{$st['logo_url']}' alt='' style='width:40px;height:40px;vertical-align:middle;'> {$st['nom_team']}</p>";
                 foreach ($st as $key => $val) {
                     if (in_array($key, ['id_stat','id_player','prenom','nom','poste','saison','nom_team','logo_url'])) continue;
                     if ($val !== null && $val != 0) {
@@ -287,126 +287,3 @@ function nav($active) {
             ?>
         </div>
 
-    <?php elseif ($page === 'classement') : 
-        $saison = date('Y');
-        $filtre_poste = $_GET['poste'] ?? '';
-        $filtre_team = $_GET['team'] ?? '';
-        ?>
-
-        <!-- Filtres -->
-        <div class="card">
-            <h2>Filtres Classement</h2>
-            <form method="get">
-                <input type="hidden" name="page" value="classement">
-
-                <label>Poste :</label>
-                <select name="poste">
-                    <option value="">Tous</option>
-                    <?php
-                    $positions = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
-                    foreach ($positions as $p) {
-                        $sel = ($filtre_poste === $p['code']) ? "selected" : "";
-                        echo "<option value='{$p['code']}' $sel>{$p['libelle']} ({$p['code']})</option>";
-                    }
-                    ?>
-                </select>
-
-                <label>Équipe :</label>
-                <select name="team">
-                    <option value="">Toutes</option>
-                    <?php
-                    $teams = $pdo->query("SELECT id_team, nom_team, conference FROM team ORDER BY conference, nom_team")->fetchAll();
-                    $confCourante = '';
-                    foreach ($teams as $t) {
-                        if ($t['conference'] !== $confCourante) {
-                            if ($confCourante !== '') echo "</optgroup>";
-                            $confCourante = $t['conference'];
-                            echo "<optgroup label='{$confCourante}'>";
-                        }
-                        $sel = ($filtre_team == $t['id_team']) ? "selected" : "";
-                        echo "<option value='{$t['id_team']}' $sel>{$t['nom_team']}</option>";
-                    }
-                    if ($confCourante !== '') echo "</optgroup>";
-                    ?>
-                </select>
-
-                <button type="submit">Filtrer</button>
-            </form>
-        </div>
-
-        <!-- Classement par conférence (TDs) -->
-        <h2>Classement par conférence (Total TDs)</h2>
-        <?php
-        $sql_conf = "
-            SELECT p.prenom, p.nom, p.poste, t.conference,
-                   COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
-            FROM player p
-            JOIN team t ON p.id_team = t.id_team
-            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
-            WHERE 1=1";
-
-        $params = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_conf .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_conf .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
-
-        $sql_conf .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.conference
-                       HAVING total_tds > 0
-                       ORDER BY t.conference, total_tds DESC";
-
-        $stmt_conf = $pdo->prepare($sql_conf);
-        $stmt_conf->execute($params);
-
-        $conf = '';
-        while ($row = $stmt_conf->fetch()) {
-            if ($row['conference'] !== $conf) {
-                if ($conf !== '') echo '</ol>';
-                $conf = $row['conference'];
-                echo "<h3>{$conf}</h3><ol>";
-            }
-            echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_tds']} TDs</li>";
-        }
-        if ($conf !== '') echo '</ol>';
-        ?>
-
-        <!-- Classement par division (Plaquages) -->
-        <h2>Classement par division (Plaquages)</h2>
-        <?php
-        $sql_div = "
-            SELECT p.prenom, p.nom, p.poste, t.division,
-                   COALESCE(SUM(s.tackles),0) AS total_plaquages
-            FROM player p
-            JOIN team t ON p.id_team = t.id_team
-            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
-            WHERE 1=1";
-
-        $params = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
-
-        $sql_div .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.division
-                      HAVING total_plaquages > 0
-                      ORDER BY t.division, total_plaquages DESC";
-
-        $stmt_div = $pdo->prepare($sql_div);
-        $stmt_div->execute($params);
-
-        $div = '';
-        while ($row = $stmt_div->fetch()) {
-            if ($row['division'] !== $div) {
-                if ($div !== '') echo '</ol>';
-                $div = $row['division'];
-                echo "<h3>{$div}</h3><ol>";
-            }
-            echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
-        }
-        if ($div !== '') echo '</ol>';
-        ?>
-
-    <?php endif; ?>
-    </main>
-</div>
-<footer>
-    <p>&copy; 2025 NFL Stats Analyzer - Projet académique</p>
-</footer>
-</body>
-</html>
