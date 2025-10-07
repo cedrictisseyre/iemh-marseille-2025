@@ -122,35 +122,75 @@ function nav($active) {
             </form>
         </div>
 
-        <!-- Liste des joueurs -->
-        <h2>Liste des joueurs</h2>
-        <div class="grid">
-            <?php
-            $sql = "SELECT p.*, t.nom_team, t.logo_url 
-                    FROM player p 
-                    JOIN team t ON p.id_team = t.id_team 
-                    WHERE 1=1";
-            $params = [];
+            <!-- Liste des joueurs -->
+            <h2>Liste des joueurs</h2>
 
-            if (!empty($_GET['search'])) {
-                $search = "%{$_GET['search']}%";
-                $sql .= " AND (p.nom LIKE :search OR p.prenom LIKE :search OR CONCAT(p.prenom,' ',p.nom) LIKE :search OR CONCAT(p.nom,' ',p.prenom) LIKE :search)";
-                $params[':search'] = $search;
-            }
-            if (!empty($_GET['poste'])) {
-                $sql .= " AND p.poste = :poste";
-                $params[':poste'] = $_GET['poste'];
-            }
-            if (!empty($_GET['team'])) {
-                $sql .= " AND p.id_team = :team";
-                $params[':team'] = $_GET['team'];
-            }
+            <!-- Formulaire de recherche -->
+            <form method="get" class="search-form">
+                <input type="hidden" name="page" value="joueurs">
+                <input type="text" name="search" placeholder="Rechercher un joueur (nom, prénom ou les deux)" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                <select name="poste">
+                    <option value="">Tous les postes</option>
+                    <?php
+                    $positions = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
+                    foreach ($positions as $p) {
+                        $sel = (($_GET['poste'] ?? '') === $p['code']) ? "selected" : "";
+                        echo "<option value='{$p['code']}' $sel>{$p['libelle']} ({$p['code']})</option>";
+                    }
+                    ?>
+                </select>
+                <select name="team">
+                    <option value="">Toutes les équipes</option>
+                    <?php
+                    $teams = $pdo->query("SELECT id_team, nom_team FROM team ORDER BY conference, division, nom_team")->fetchAll();
+                    foreach ($teams as $t) {
+                        $sel = (($_GET['team'] ?? '') == $t['id_team']) ? "selected" : "";
+                        echo "<option value='{$t['id_team']}' $sel>{$t['nom_team']}</option>";
+                    }
+                    ?>
+                </select>
+                <button type="submit">Rechercher</button>
+            </form>
 
-            $sql .= " ORDER BY p.nom";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute($params);
+            <div class="grid">
+                <?php
+                $search = $_GET['search'] ?? '';
+                $filtre_poste = $_GET['poste'] ?? '';
+                $filtre_team = $_GET['team'] ?? '';
 
-            while ($pl = $stmt->fetch()) {
+                $where = "1=1";
+                $params = [];
+
+                if (!empty($search)) {
+                    $where .= " AND (
+                        CONCAT(p.prenom, ' ', p.nom) LIKE :search
+                        OR CONCAT(p.nom, ' ', p.prenom) LIKE :search
+                        OR p.prenom LIKE :search
+                        OR p.nom LIKE :search
+                    )";
+                    $params[':search'] = "%$search%";
+                }
+
+                if (!empty($filtre_poste)) {
+                    $where .= " AND p.poste = :poste";
+                    $params[':poste'] = $filtre_poste;
+                }
+                if (!empty($filtre_team)) {
+                    $where .= " AND p.id_team = :team";
+                    $params[':team'] = $filtre_team;
+                }
+
+                $sql = "SELECT p.*, t.nom_team, t.logo_url 
+                        FROM player p 
+                        JOIN team t ON p.id_team = t.id_team 
+                        WHERE $where
+                        ORDER BY p.nom";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($params);
+
+                while ($pl = $stmt->fetch()) {
+
+
                 $experience = date('Y') - $pl['annee_debut'];
                 echo "<div class='card'>
                         <h3>{$pl['prenom']} {$pl['nom']}</h3>
@@ -249,8 +289,7 @@ function nav($active) {
             <h2>Filtres Classement</h2>
             <form method="get">
                 <input type="hidden" name="page" value="classement">
-                <label>Saison :</label>
-                <input type="number" name="saison" value="<?= $saison ?>">
+                
 
                 <label>Poste :</label>
                 <select name="poste">
