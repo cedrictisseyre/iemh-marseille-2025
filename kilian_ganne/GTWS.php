@@ -1,0 +1,151 @@
+<?php
+require_once __DIR__ . '/connexion_database.php';
+
+// Ajout d'un coureur
+if (isset($_POST['add_runner'])) {
+    $stmt = $conn->prepare("INSERT INTO runners (name, country, birth, team, info) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['name'],
+        $_POST['country'],
+        $_POST['birth'],
+        $_POST['team'],
+        $_POST['info']
+    ]);
+}
+// Ajout d'un résultat de manche
+if (isset($_POST['add_result'])) {
+    $stmt = $conn->prepare("INSERT INTO results (stage, runner, rank, time) VALUES (?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['stage'],
+        $_POST['runner'],
+        $_POST['rank'],
+        $_POST['time']
+    ]);
+}
+// Recherche d'un coureur
+$searched_runner = null;
+if (isset($_POST['search_runner'])) {
+    $search = trim($_POST['search_name']);
+    $stmt = $conn->prepare("SELECT * FROM runners WHERE name = ? LIMIT 1");
+    $stmt->execute([$search]);
+    $searched_runner = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+// Récupération des coureurs
+$runners = $conn->query("SELECT * FROM runners")->fetchAll(PDO::FETCH_ASSOC);
+// Récupération des résultats
+$results = $conn->query("SELECT * FROM results")->fetchAll(PDO::FETCH_ASSOC);
+// Calcul du classement général
+$general = [];
+foreach ($results as $res) {
+    $name = $res['runner'];
+    if (!isset($general[$name])) $general[$name] = 0;
+    $general[$name] += (int)$res['rank'];
+}
+asort($general);
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Golden World Trail Series - Résultats</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(e => e.style.display = 'none');
+            document.getElementById(tab).style.display = 'block';
+            document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+        window.onload = function() { showTab('general'); };
+    </script>
+</head>
+<body>
+    <header>
+        <img src="img/logo_gtws.png" alt="Logo GTWS" class="logo">
+        <span style="font-size:2em;font-weight:bold;vertical-align:middle;">Golden World Trail Series</span>
+        <div class="header-images">
+            <img src="img/course1.jpg" alt="Course 1">
+            <img src="img/course2.jpg" alt="Course 2">
+            <img src="img/course3.jpg" alt="Course 3">
+        </div>
+    </header>
+    <div class="tabs">
+        <div class="tab" id="tab-general" onclick="showTab('general')">Classement général</div>
+        <div class="tab" id="tab-stages" onclick="showTab('stages')">Résultats par manche</div>
+        <div class="tab" id="tab-search" onclick="showTab('search')">Recherche coureur</div>
+        <div class="tab" id="tab-add" onclick="showTab('add')">Ajouter un coureur</div>
+    </div>
+    <div id="general" class="tab-content">
+        <h2>Classement général</h2>
+        <table border="1" cellpadding="5">
+            <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
+            <?php $place = 1; foreach ($general as $name => $points) { ?>
+                <tr><td><?= $place++ ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
+            <?php } ?>
+        </table>
+    </div>
+    <div id="stages" class="tab-content" style="display:none">
+        <h2>Résultats par manche</h2>
+        <form method="post">
+            <input name="stage" placeholder="Nom de la manche" required>
+            <select name="runner" required>
+                <option value="">Coureur</option>
+                <?php foreach ($_SESSION['runners'] as $r) { ?>
+                    <option value="<?= htmlspecialchars($r['name']) ?>"><?= htmlspecialchars($r['name']) ?></option>
+                <?php } ?>
+            </select>
+            <input name="rank" type="number" min="1" placeholder="Classement" required>
+            <input name="time" placeholder="Temps (hh:mm:ss)" required>
+            <button type="submit" name="add_result">Ajouter résultat</button>
+        </form>
+        <h3>Résultats enregistrés :</h3>
+        <table border="1" cellpadding="5">
+            <tr><th>Manche</th><th>Coureur</th><th>Classement</th><th>Temps</th></tr>
+            <?php foreach ($_SESSION['results'] as $res) { ?>
+                <tr>
+                    <td><?= htmlspecialchars($res['stage']) ?></td>
+                    <td><?= htmlspecialchars($res['runner']) ?></td>
+                    <td><?= htmlspecialchars($res['rank']) ?></td>
+                    <td><?= htmlspecialchars($res['time']) ?></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+    <div id="search" class="tab-content" style="display:none">
+        <h2>Recherche d'un coureur</h2>
+        <form method="post">
+            <input name="search_name" placeholder="Nom du coureur" required>
+            <button type="submit" name="search_runner">Rechercher</button>
+        </form>
+        <?php if ($searched_runner) { ?>
+            <h3>Informations du coureur :</h3>
+            <ul>
+                <li>Nom : <?= htmlspecialchars($searched_runner['name']) ?></li>
+                <li>Pays : <?= htmlspecialchars($searched_runner['country']) ?></li>
+                <li>Date de naissance : <?= htmlspecialchars($searched_runner['birth']) ?></li>
+                <li>Équipe : <?= htmlspecialchars($searched_runner['team']) ?></li>
+                <li>Infos : <?= htmlspecialchars($searched_runner['info']) ?></li>
+            </ul>
+        <?php } elseif (isset($_POST['search_runner'])) { ?>
+            <p style="color:red">Coureur non trouvé.</p>
+        <?php } ?>
+    </div>
+    <div id="add" class="tab-content" style="display:none">
+        <h2>Ajouter un coureur</h2>
+        <form method="post">
+            <input name="name" placeholder="Nom" required>
+            <input name="country" placeholder="Pays" required>
+            <input name="birth" type="date" placeholder="Date de naissance" required>
+            <input name="team" placeholder="Équipe" required>
+            <input name="info" placeholder="Infos complémentaires">
+            <button type="submit" name="add_runner">Ajouter</button>
+        </form>
+        <h3>Coureurs déjà enregistrés :</h3>
+        <ul>
+        <?php foreach ($_SESSION['runners'] as $r) { ?>
+            <li><?= htmlspecialchars($r['name']) ?> (<?= htmlspecialchars($r['country']) ?>)</li>
+        <?php } ?>
+        </ul>
+    </div>
+</body>
+</html>
