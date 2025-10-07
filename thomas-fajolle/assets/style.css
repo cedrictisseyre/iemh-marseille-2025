@@ -1,3 +1,24 @@
+/* Footer stylisé et cohérent avec le header */
+.site-footer {
+    background: linear-gradient(90deg, #0a2540 60%, #1e90ff 100%);
+    color: #fff;
+    text-align: center;
+    padding: 25px 10px 15px 10px;
+    margin-top: 30px;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+    border-radius: 12px 12px 0 0;
+}
+.footer-content p {
+    margin: 6px 0;
+    font-size: 1rem;
+    color: #e0e0e0;
+}
+@media (max-width: 700px) {
+    .site-footer {
+        padding: 18px 5px 10px 5px;
+        font-size: 0.95rem;
+    }
+}
 /* Style pour le header professionnel et responsive */
 .site-header {
     background: linear-gradient(90deg, #0a2540 60%, #1e90ff 100%);
