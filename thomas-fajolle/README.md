@@ -15,24 +15,23 @@ Ce projet vise à offrir une plateforme claire et interactive pour tous les pass
 ### Arborescence du dossier github : ###
 
 /thomas-fajolle/
-│
-├── config.php
-├── connexion.php
-├──test_connexion_interactif.php
-├── index.php
-│
-├── assets/
-│   └── style.css
-│
-├── includes/
-│   ├── header.php
-│   └── footer.php
-│
-├── matches/
-│   └── matchs.php
-│
-├── standings/
-│   └── standings.php
-│
-├── teams/
-│   └── teams.php
+# config.php
+# connexion.php
+# test_connexion_interactif.php
+# index.php
+
+# assets/
+    ## style.css
+
+# includes/
+    ## header.php
+    ## footer.php
+
+# matches/
+    ## matchs.php
+
+# standings/
+    ## standings.php
+
+# teams/
+    teams.php
