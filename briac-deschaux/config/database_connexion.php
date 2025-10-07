@@ -3,13 +3,7 @@ declare(strict_types=1);
 
 /**
  * database_connexion.php
- *
- * Établit une connexion PDO sécurisée vers la base de données.
- * Mettre à jour les paramètres $host, $dbname, $username, $password
- * avant de déployer.
- *
- * @author Briac Deschaux
- * @version 1.1
+ * Connexion PDO sécurisée et logging des erreurs (ne pas afficher en prod).
  */
 
 $host = '195.15.235.20';
@@ -31,7 +25,13 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    // message protégé pour ne pas divulguer d'informations sensibles
+    // Log l'erreur (fichier) et renvoie un message générique
+    $log = __DIR__ . '/../logs/db_errors.log';
+    if (!is_dir(dirname($log))) {
+        @mkdir(dirname($log), 0750, true);
+    }
+    error_log(date('[Y-m-d H:i:s] ') . $e->getMessage() . PHP_EOL, 3, $log);
+
     http_response_code(500);
-    exit('Erreur de connexion à la base de données. Voir l\'administrateur.');
+    exit('Erreur de connexion à la base de données. Contacter l\'administrateur.');
 }

@@ -124,3 +124,7 @@ footer {
     font-size: 0.9em;
     color: #64748b;
 }
+:focus {
+    outline: 3px solid #ef4444;
+    outline-offset: 2px;
+}

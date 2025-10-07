@@ -1,24 +1,31 @@
-<?php 
-include __DIR__ . '/config/database_connexion.php';
+<?php
+declare(strict_types=1);
 
-// Définition de la page actuelle
+require_once __DIR__ . '/config/database_connexion.php';
+require_once __DIR__ . '/services/helpers.php';
+
+// page
 $page = $_GET['page'] ?? 'joueurs';
 
-// Fonction pour générer le menu de navigation
-function nav($active) {
+// Récupérer listes utilitaires
+// positions et teams pour formulaires
+$positions = $pdo->query('SELECT id, code, libelle FROM position ORDER BY libelle')->fetchAll();
+$teams = $pdo->query('SELECT id_team, nom_team FROM team ORDER BY nom_team')->fetchAll();
+
+function nav(string $active) {
     $tabs = [
         'joueurs'   => 'Joueurs',
         'stats'     => 'Statistiques',
         'classement'=> 'Classement'
     ];
-
     echo '<div class="menu">';
     foreach ($tabs as $key => $label) {
         $class = ($active === $key) ? 'active' : '';
-        echo "<a href='?page=$key' class='$class'>$label</a>";
+        echo "<a href='?page={$key}' class='{$class}'>" . e($label) . "</a>";
     }
     echo '</div>';
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -31,31 +38,72 @@ function nav($active) {
 <div class="container">
 
     <!-- HEADER -->
-    <div class="header">
+    <div class="header" role="banner">
         <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" alt="Logo NFL" class="header-logo">
-        <h1>NFL STATS ANALYZER</h1>
+        <h1 id="page-title">NFL STATS ANALYZER</h1>
     </div>
 
     <!-- NAV MENU -->
     <?php nav($page); ?>
 
-    <main>
-        <?php 
-        if ($page === 'joueurs') : 
-        ?>
-            <!-- Formulaire d'ajout joueur -->
-            <div class="card">
-                <h2>Ajouter un joueur</h2>
-                <form method="post" action="services/add_player.php">
+    <main role="main" aria-labelledby="page-title">
+        <?php if ($page === 'joueurs') : ?>
+
+            <div class="card" aria-labelledby="ajout-joueur">
+                <h2 id="ajout-joueur">Ajouter un joueur</h2>
+                <form method="post" action="services/add_player.php" novalidate>
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                     <input type="text" name="prenom" placeholder="Prénom" required>
                     <input type="text" name="nom" placeholder="Nom" required>
-                    <input type="text" name="poste" placeholder="Poste" required>
-                    <input type="number" name="age" placeholder="Âge" required>
-                    <input type="number" name="taille_cm" placeholder="Taille (cm)" required>
-                    <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
-                    <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
-                    <input type="number" name="id_team" placeholder="ID équipe" required>
+
+                    <!-- Sélecteur position (préférable au champ texte) -->
+                    <select name="position_id" >
+                        <option value="">Sélectionner un poste (optionnel)</option>
+                        <?php foreach ($positions as $pos): ?>
+                            <option value="<?= e((string)$pos['id']) ?>"><?= e($pos['libelle']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <!-- fallback texte (legacy) -->
+                    <input type="text" name="poste" placeholder="Poste (texte, si non listé)">
+
+                    <input type="number" name="age" placeholder="Âge" min="16" max="60">
+                    <input type="number" name="taille_cm" placeholder="Taille (cm)" min="140" max="230">
+                    <input type="number" name="poids_kg" placeholder="Poids (kg)" min="50" max="200">
+                    <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" min="1900" max="<?= date('Y') ?>">
+                    <!-- Sélecteur équipe -->
+                    <select name="id_team" required>
+                        <option value="">Sélectionner une équipe</option>
+                        <?php foreach ($teams as $t): ?>
+                            <option value="<?= e((string)$t['id_team']) ?>"><?= e($t['nom_team']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
                     <button type="submit">Ajouter le joueur</button>
+                </form>
+            </div>
+
+            <!-- Barre recherche / filtres -->
+            <div class="card">
+                <h2>Rechercher / Filtrer</h2>
+                <form method="get" action="">
+                    <input type="hidden" name="page" value="joueurs">
+                    <input type="search" name="q" placeholder="Rechercher nom ou prénom" value="<?= e($_GET['q'] ?? '') ?>">
+                    <select name="team_filter">
+                        <option value="">Toutes équipes</option>
+                        <?php foreach ($teams as $t): ?>
+                            <option value="<?= e((string)$t['id_team']) ?>" <?= (isset($_GET['team_filter']) && $_GET['team_filter'] == $t['id_team']) ? 'selected' : '' ?>><?= e($t['nom_team']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <select name="position_filter">
+                        <option value="">Tous postes</option>
+                        <?php foreach ($positions as $pos): ?>
+                            <option value="<?= e((string)$pos['id']) ?>" <?= (isset($_GET['position_filter']) && $_GET['position_filter'] == $pos['id']) ? 'selected' : '' ?>><?= e($pos['libelle']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button type="submit">Appliquer</button>
                 </form>
             </div>
 
@@ -63,34 +111,61 @@ function nav($active) {
             <h2>Liste des joueurs</h2>
             <div class="grid">
                 <?php
-                $stmt = $pdo->query("SELECT p.*, t.nom_team FROM player p JOIN team t ON p.id_team = t.id_team ORDER BY p.nom");
+                // Construction dynamique de la requête selon filtres
+                $params = [];
+                $where = [];
+                if (!empty($_GET['q'])) {
+                    $where[] = '(p.nom LIKE :q OR p.prenom LIKE :q)';
+                    $params[':q'] = '%' . $_GET['q'] . '%';
+                }
+                if (!empty($_GET['team_filter'])) {
+                    $where[] = 'p.id_team = :team';
+                    $params[':team'] = (int)$_GET['team_filter'];
+                }
+                if (!empty($_GET['position_filter'])) {
+                    $where[] = 'p.position_id = :pos';
+                    $params[':pos'] = (int)$_GET['position_filter'];
+                }
+
+                $sql = "SELECT p.*, t.nom_team, pos.libelle AS position_lib
+                        FROM player p
+                        LEFT JOIN team t ON p.id_team = t.id_team
+                        LEFT JOIN position pos ON p.position_id = pos.id";
+                if ($where) {
+                    $sql .= ' WHERE ' . implode(' AND ', $where);
+                }
+                $sql .= ' ORDER BY p.nom LIMIT 200'; // pagination simple / protection
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($params);
+
                 while ($pl = $stmt->fetch()) {
-                    $experience = date('Y') - $pl['annee_debut'];
+                    $experience = ($pl['annee_debut']) ? (date('Y') - (int)$pl['annee_debut']) : 'N/A';
+                    $position = $pl['position_lib'] ?: $pl['poste'] ?: '—';
                     echo "<div class='card'>
-                        <h3>{$pl['prenom']} {$pl['nom']}</h3>
-                        <p><strong>Poste:</strong> {$pl['poste']}</p>
-                        <p><strong>Équipe:</strong> {$pl['nom_team']}</p>
-                        <p>Âge: {$pl['age']} ans</p>
-                        <p>Taille: {$pl['taille_cm']} cm - Poids: {$pl['poids_kg']} kg</p>
-                        <p>Expérience: {$experience} ans</p>
+                        <h3>" . e($pl['prenom']) . " " . e($pl['nom']) . "</h3>
+                        <p><strong>Poste:</strong> " . e($position) . "</p>
+                        <p><strong>Équipe:</strong> " . e($pl['nom_team'] ?? '—') . "</p>
+                        <p>Âge: " . e((string)$pl['age']) . " ans</p>
+                        <p>Taille: " . e((string)$pl['taille_cm']) . " cm - Poids: " . e((string)$pl['poids_kg']) . " kg</p>
+                        <p>Expérience: " . e((string)$experience) . " ans</p>
                     </div>";
                 }
                 ?>
             </div>
 
         <?php elseif ($page === 'stats') : 
-            $saison = date('Y'); 
+            $saison = (int) ($_GET['saison'] ?? date('Y'));
         ?>
-            <!-- Formulaire stats -->
             <div class="card">
-                <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
+                <h2>Ajouter des statistiques (Saison <?= e((string)$saison) ?>)</h2>
                 <form method="post" action="services/add_stats.php">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                     <select name="id_player" required>
                         <option value="">Sélectionner un joueur</option>
                         <?php
                         $players = $pdo->query("SELECT id_player, prenom, nom FROM player ORDER BY nom")->fetchAll();
                         foreach ($players as $p) {
-                            echo "<option value='{$p['id_player']}'>{$p['prenom']} {$p['nom']}</option>";
+                            echo "<option value='" . e((string)$p['id_player']) . "'>" . e($p['prenom'] . ' ' . $p['nom']) . "</option>";
                         }
                         ?>
                     </select>
@@ -113,8 +188,7 @@ function nav($active) {
                 </form>
             </div>
 
-            <!-- Affichage stats -->
-            <h2>Statistiques <?= $saison ?></h2>
+            <h2>Statistiques <?= e((string)$saison) ?></h2>
             <div class="grid">
                 <?php
                 $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste 
@@ -124,29 +198,27 @@ function nav($active) {
                                        ORDER BY p.nom");
                 $stmt->execute([$saison]);
 
+                // On affiche propres labels et on escape les valeurs
+                $exclude = ['id_stat','id_player','prenom','nom','poste','saison'];
                 while ($st = $stmt->fetch()) {
                     echo "<div class='card'>
-                        <h3>{$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
+                        <h3>" . e($st['prenom']) . " " . e($st['nom']) . " (" . e($st['poste']) . ")</h3>";
 
-                    // Ignorer les colonnes techniques
-                    $exclude = ['id_stats','id_player','prenom','nom','poste','saison'];
                     foreach ($st as $key => $val) {
-                        if (!in_array($key, $exclude) && $val !== null && $val != 0) {
-                            $label = ucfirst(str_replace("_", " ", $key));
-                            echo "<p>{$label}: {$val}</p>";
-                        }
+                        if (in_array($key, $exclude, true)) continue;
+                        if ($val === null || $val === '' || $val == 0) continue;
+                        $label = ucfirst(str_replace('_', ' ', $key));
+                        echo "<p>" . e($label) . ": " . e((string)$val) . "</p>";
                     }
-
                     echo "</div>";
                 }
                 ?>
             </div>
 
         <?php elseif ($page === 'classement') : ?>
-            <!-- Classement par conférence -->
             <h2>Classement par conférence (Total TD)</h2>
             <?php
-            $sql_conf = "SELECT p.nom, p.prenom, p.poste, t.conference,
+            $sql_conf = "SELECT p.prenom, p.nom, p.poste, t.conference,
                            (COALESCE(s.td_passe,0) + COALESCE(s.td_course,0) + COALESCE(s.td_reception,0)) as total_td
                     FROM player p 
                     JOIN team t ON p.id_team = t.id_team 
@@ -160,14 +232,13 @@ function nav($active) {
                 if ($row['conference'] !== $conf) {
                     if ($conf !== '') echo '</ol>';
                     $conf = $row['conference'];
-                    echo "<h3>{$conf}</h3><ol>";
+                    echo "<h3>" . e($conf) . "</h3><ol>";
                 }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_td']} TD</li>";
+                echo "<li>" . e($row['prenom']) . " " . e($row['nom']) . " (" . e($row['poste']) . ") - " . e((string)$row['total_td']) . " TD</li>";
             }
             if ($conf !== '') echo '</ol>';
             ?>
 
-            <!-- Classement par division -->
             <h2>Classement par division (Plaquages)</h2>
             <?php
             $sql_div = "SELECT p.nom, p.prenom, p.poste, t.division,
@@ -184,9 +255,9 @@ function nav($active) {
                 if ($row['division'] !== $div) {
                     if ($div !== '') echo '</ol>';
                     $div = $row['division'];
-                    echo "<h3>{$div}</h3><ol>";
+                    echo "<h3>" . e($div) . "</h3><ol>";
                 }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
+                echo "<li>" . e($row['prenom']) . " " . e($row['nom']) . " (" . e($row['poste']) . ") - " . e((string)$row['total_plaquages']) . " plaquages</li>";
             }
             if ($div !== '') echo '</ol>';
             ?>
@@ -194,7 +265,7 @@ function nav($active) {
     </main>
 </div>
 
-<footer>
+<footer role="contentinfo">
     <p>&copy; 2025 NFL Stats Analyzer - Projet académique</p>
 </footer>
 </body>
