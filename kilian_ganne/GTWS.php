@@ -157,57 +157,13 @@ arsort($general_f);
         <!-- Images supprimées -->
     </header>
     <div style="width:100%;height:220px;background:url('img/course3.jpg') center/cover no-repeat;margin-bottom:20px;border-radius:10px;"></div>
-    <div class="tabs">
-        <div class="tab" id="tab-general" onclick="showTab('general')">Classement général</div>
-        <div class="tab" id="tab-stages" onclick="showTab('stages')">Résultats par manche</div>
-        <div class="tab" id="tab-search" onclick="showTab('search')">Recherche coureur</div>
-        <div class="tab" id="tab-add" onclick="showTab('add')">Ajouter un coureur</div>
-        <script>
-        // Persiste l’onglet lors des soumissions de formulaire
-        document.querySelectorAll('form').forEach(f => {
-            f.addEventListener('submit', function() {
-                var tab = document.querySelector('.tab.active');
-                if (tab) localStorage.setItem('activeTab', tab.id.replace('tab-', ''));
-            });
-        });
-        </script>
-    </div>
-    <div id="general" class="tab-content" style="position:relative;overflow:hidden;">
-        <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course1.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
-        <div style="position:relative;z-index:1;">
-        <h2>Classement général Hommes</h2>
-        <table border="1" cellpadding="5" id="table-general-hommes">
-            <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
-            <?php $place = 1; $total = count($general_m); $hidden = false; foreach ($general_m as $name => $points) { ?>
-                <tr class="<?= $place > 10 ? 'hidden-row-hommes' : '' ?>" style="<?= $place > 10 ? 'display:none' : '' ?>"><td><?= $place ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
-                <?php $place++; } ?>
-        </table>
-        <?php if ($total > 10) { ?>
-        <button onclick="toggleRows('hommes')" id="btn-hommes">Voir plus</button>
-        <?php } ?>
-        <h2>Classement général Femmes</h2>
-        <table border="1" cellpadding="5" id="table-general-femmes">
-            <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
-            <?php $place = 1; $total = count($general_f); foreach ($general_f as $name => $points) { ?>
-                <tr class="<?= $place > 10 ? 'hidden-row-femmes' : '' ?>" style="<?= $place > 10 ? 'display:none' : '' ?>"><td><?= $place ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
-                <?php $place++; } ?>
-        </table>
-        <?php if ($total > 10) { ?>
-        <button onclick="toggleRows('femmes')" id="btn-femmes">Voir plus</button>
-        <?php } ?>
-        <script>
-        function toggleRows(genre) {
-            var rows = document.querySelectorAll('.hidden-row-' + genre);
-            var btn = document.getElementById('btn-' + genre);
-            var isHidden = rows[0].style.display === 'none';
-            for (var i = 0; i < rows.length; i++) {
-                rows[i].style.display = isHidden ? '' : 'none';
-            }
-            btn.textContent = isHidden ? 'Voir moins' : 'Voir plus';
-        }
-        </script>
-        </div>
-    </div>
+    <nav class="tabs">
+        <a class="tab" href="pages/general.php">Classement général</a>
+        <a class="tab" href="pages/stages.php">Résultats par manche</a>
+        <a class="tab" href="pages/search.php">Recherche coureur</a>
+        <a class="tab" href="pages/add.php">Ajouter un coureur</a>
+    </nav>
+    <!-- La logique d'affichage est maintenant dans les pages dédiées -->
     <div id="stages" class="tab-content" style="display:none;position:relative;overflow:hidden;">
         <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course1.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
         <div style="position:relative;z-index:1;">
@@ -258,14 +214,14 @@ arsort($general_f);
             ?>
                 <tr class="<?= $count > 10 ? 'hidden-row-resultats-hommes' : '' ?>" style="<?= $count > 10 ? 'display:none' : '' ?>">
                     <td><?= htmlspecialchars($res['course_name']) ?></td>
-                    <td><?= htmlspecialchars($res['runner_name']) ?></td>
+                    <td><span class="coureur-nom"><?= htmlspecialchars($res['runner_name']) ?></span></td>
                     <td><?= htmlspecialchars($res['rank']) ?></td>
                     <td><?= htmlspecialchars($res['time']) ?></td>
                     <td>
-                        <button type="button" onclick="openEditModal(<?= $json ?>)">Modifier</button>
+                        <button type="button" class="icon-btn" title="Modifier" onclick="openEditModal(<?= $json ?>)"><img src="img/edit.svg" alt="Modifier" style="width:20px;height:20px;"></button>
                         <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce résultat ?');">
                             <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
-                            <button type="submit" name="delete_result">Supprimer</button>
+                            <button type="submit" class="icon-btn" title="Supprimer" name="delete_result"><img src="img/delete.svg" alt="Supprimer" style="width:20px;height:20px;"></button>
                         </form>
                     </td>
                 </tr>
@@ -292,14 +248,14 @@ arsort($general_f);
             ?>
                 <tr class="<?= $count > 10 ? 'hidden-row-resultats-femmes' : '' ?>" style="<?= $count > 10 ? 'display:none' : '' ?>">
                     <td><?= htmlspecialchars($res['course_name']) ?></td>
-                    <td><?= htmlspecialchars($res['runner_name']) ?></td>
+                    <td><span class="coureur-nom"><?= htmlspecialchars($res['runner_name']) ?></span></td>
                     <td><?= htmlspecialchars($res['rank']) ?></td>
                     <td><?= htmlspecialchars($res['time']) ?></td>
                     <td>
-                        <button type="button" onclick="openEditModal(<?= $json ?>)">Modifier</button>
+                        <button type="button" class="icon-btn" title="Modifier" onclick="openEditModal(<?= $json ?>)"><img src="img/edit.svg" alt="Modifier" style="width:20px;height:20px;"></button>
                         <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce résultat ?');">
                             <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
-                            <button type="submit" name="delete_result">Supprimer</button>
+                            <button type="submit" class="icon-btn" title="Supprimer" name="delete_result"><img src="img/delete.svg" alt="Supprimer" style="width:20px;height:20px;"></button>
                         </form>
                     </td>
                 </tr>
