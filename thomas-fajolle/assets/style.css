@@ -179,3 +179,9 @@
     color: #888;
     font-weight: bold;
 }
+.evo-up { color: #1eaa1e; font-weight: bold; }
+.evo-down { color: #e74c3c; font-weight: bold; }
+.evo-stable { color: #888; font-weight: bold; }
+.qualif-champions { background: #e6f7ff; }
+.qualif-europa { background: #fffbe6; }
+.relagation { background: #ffe6e6; }
