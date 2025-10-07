@@ -61,7 +61,7 @@ asort($general);
 </head>
 <body>
     <header>
-        <img src="img/logo_gtws.png" alt="Logo GTWS" class="logo">
+        <img src="img/logo_gtws.jpg" alt="Logo GTWS" class="logo">
         <span style="font-size:2em;font-weight:bold;vertical-align:middle;">Golden World Trail Series</span>
         <div class="header-images">
             <img src="img/course1.jpg" alt="Course 1">
@@ -69,13 +69,14 @@ asort($general);
             <img src="img/course3.jpg" alt="Course 3">
         </div>
     </header>
+    <div style="width:100%;height:220px;background:url('img/course3.jpg') center/cover no-repeat;margin-bottom:20px;border-radius:10px;"></div>
     <div class="tabs">
         <div class="tab" id="tab-general" onclick="showTab('general')">Classement général</div>
         <div class="tab" id="tab-stages" onclick="showTab('stages')">Résultats par manche</div>
         <div class="tab" id="tab-search" onclick="showTab('search')">Recherche coureur</div>
         <div class="tab" id="tab-add" onclick="showTab('add')">Ajouter un coureur</div>
     </div>
-    <div id="general" class="tab-content">
+    <div id="general" class="tab-content" style="background:url('img/course1.jpg') center/cover no-repeat;">
         <h2>Classement général</h2>
         <table border="1" cellpadding="5">
             <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
@@ -84,13 +85,13 @@ asort($general);
             <?php } ?>
         </table>
     </div>
-    <div id="stages" class="tab-content" style="display:none">
+    <div id="stages" class="tab-content" style="display:none;background:url('img/course1.jpg') center/cover no-repeat;">
         <h2>Résultats par manche</h2>
         <form method="post">
             <input name="stage" placeholder="Nom de la manche" required>
             <select name="runner" required>
                 <option value="">Coureur</option>
-                <?php foreach ($_SESSION['runners'] as $r) { ?>
+                <?php foreach ($runners as $r) { ?>
                     <option value="<?= htmlspecialchars($r['name']) ?>"><?= htmlspecialchars($r['name']) ?></option>
                 <?php } ?>
             </select>
@@ -101,7 +102,7 @@ asort($general);
         <h3>Résultats enregistrés :</h3>
         <table border="1" cellpadding="5">
             <tr><th>Manche</th><th>Coureur</th><th>Classement</th><th>Temps</th></tr>
-            <?php foreach ($_SESSION['results'] as $res) { ?>
+            <?php foreach ($results as $res) { ?>
                 <tr>
                     <td><?= htmlspecialchars($res['stage']) ?></td>
                     <td><?= htmlspecialchars($res['runner']) ?></td>
@@ -111,7 +112,7 @@ asort($general);
             <?php } ?>
         </table>
     </div>
-    <div id="search" class="tab-content" style="display:none">
+    <div id="search" class="tab-content" style="display:none;background:url('img/course2.jpg') center/cover no-repeat;">
         <h2>Recherche d'un coureur</h2>
         <form method="post">
             <input name="search_name" placeholder="Nom du coureur" required>
@@ -130,7 +131,7 @@ asort($general);
             <p style="color:red">Coureur non trouvé.</p>
         <?php } ?>
     </div>
-    <div id="add" class="tab-content" style="display:none">
+    <div id="add" class="tab-content" style="display:none;background:url('img/course2.jpg') center/cover no-repeat;">
         <h2>Ajouter un coureur</h2>
         <form method="post">
             <input name="name" placeholder="Nom" required>
@@ -142,7 +143,7 @@ asort($general);
         </form>
         <h3>Coureurs déjà enregistrés :</h3>
         <ul>
-        <?php foreach ($_SESSION['runners'] as $r) { ?>
+        <?php foreach ($runners as $r) { ?>
             <li><?= htmlspecialchars($r['name']) ?> (<?= htmlspecialchars($r['country']) ?>)</li>
         <?php } ?>
         </ul>
