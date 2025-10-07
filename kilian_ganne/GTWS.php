@@ -91,16 +91,16 @@ asort($general);
         <h2>Résultats par manche</h2>
         <form method="post">
             <select name="stage" required>
-                <option value="">Sélectionner la manche</option>
-                <option value="Manche 1">Manche 1</option>
-                <option value="Manche 2">Manche 2</option>
-                <option value="Manche 3">Manche 3</option>
-                <option value="Manche 4">Manche 4</option>
-                <option value="Manche 5">Manche 5</option>
-                <option value="Manche 6">Manche 6</option>
-                <option value="Manche 7">Manche 7</option>
-                <option value="Manche 8">Manche 8</option>
-                <option value="Manche 9">Manche 9</option>
+                <option value="">Sélectionner la course</option>
+                <option value="Kobe Trail">Kobe Trail</option>
+                <option value="Jin Shan Ling Great Wall Trail">Jin Shan Ling Great Wall Trail</option>
+                <option value="Il Golfo dell'Isola Trail">Il Golfo dell'Isola Trail</option>
+                <option value="Zegama-Aizkorri">Zegama-Aizkorri</option>
+                <option value="Broken Arrow Skyrace">Broken Arrow Skyrace</option>
+                <option value="Tepec Trail">Tepec Trail</option>
+                <option value="Salomon Pitz Alpine Glacier Trail">Salomon Pitz Alpine Glacier Trail</option>
+                <option value="Sierre-Zinal">Sierre-Zinal</option>
+                <option value="Ledro Sky Trentino Grand Finale">Ledro Sky Trentino Grand Finale</option>
             </select>
             <select name="runner" required>
                 <option value="">Coureur</option>
