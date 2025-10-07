@@ -97,7 +97,8 @@ asort($general);
             <select name="course_id" required>
                 <option value="">Sélectionner la course</option>
                 <?php foreach ($courses as $c) { ?>
-                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                    <option value="<?= $c['id'] ?>"
+                        <?= (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] == $c['id']) ? 'selected' : '' ?>><?= htmlspecialchars($c['name']) ?></option>
                 <?php } ?>
             </select>
             <select name="runner_id" required>
@@ -110,10 +111,21 @@ asort($general);
             <input name="time" placeholder="Temps (hh:mm:ss)" required>
             <button type="submit" name="add_result">Ajouter résultat</button>
         </form>
+        <form method="post" style="margin-top:20px;">
+            <label for="filter_course_id">Filtrer par course :</label>
+            <select name="filter_course_id" id="filter_course_id" onchange="this.form.submit()">
+                <option value="">Toutes les courses</option>
+                <?php foreach ($courses as $c) { ?>
+                    <option value="<?= $c['id'] ?>" <?= (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] == $c['id']) ? 'selected' : '' ?>><?= htmlspecialchars($c['name']) ?></option>
+                <?php } ?>
+            </select>
+        </form>
         <h3>Résultats enregistrés :</h3>
         <table border="1" cellpadding="5">
             <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th></tr>
-            <?php foreach ($results as $res) { ?>
+            <?php foreach ($results as $res) {
+                if (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] && $res['course_id'] != $_POST['filter_course_id']) continue;
+            ?>
                 <tr>
                     <td><?= htmlspecialchars($res['course_name']) ?></td>
                     <td><?= htmlspecialchars($res['runner_name']) ?></td>
@@ -128,10 +140,32 @@ asort($general);
         <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course2.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
         <div style="position:relative;z-index:1;">
         <h2>Recherche d'un coureur</h2>
-        <form method="post">
-            <input name="search_name" placeholder="Nom du coureur" required>
+        <form method="post" autocomplete="off">
+            <input name="search_name" id="search_name" placeholder="Nom du coureur" required oninput="showSuggestions()">
             <button type="submit" name="search_runner">Rechercher</button>
         </form>
+        <ul id="suggestions" style="list-style:none;padding-left:0;"></ul>
+        <script>
+        const runners = <?= json_encode($runners) ?>;
+        function showSuggestions() {
+            const input = document.getElementById('search_name').value.toLowerCase();
+            const list = document.getElementById('suggestions');
+            list.innerHTML = '';
+            if (input.length < 1) return;
+            runners.forEach(r => {
+                if (r.name.toLowerCase().includes(input)) {
+                    const li = document.createElement('li');
+                    li.textContent = r.name;
+                    li.style.cursor = 'pointer';
+                    li.onclick = function() {
+                        document.getElementById('search_name').value = r.name;
+                        list.innerHTML = '';
+                    };
+                    list.appendChild(li);
+                }
+            });
+        }
+        </script>
         <?php if ($searched_runner) { ?>
             <h3>Informations du coureur :</h3>
             <ul>
@@ -139,6 +173,7 @@ asort($general);
                 <li>Pays : <?= htmlspecialchars($searched_runner['country']) ?></li>
                 <li>Date de naissance : <?= htmlspecialchars($searched_runner['birth']) ?></li>
                 <li>Équipe : <?= htmlspecialchars($searched_runner['team']) ?></li>
+                <li>Sexe : <?= htmlspecialchars($searched_runner['gender']) ?></li>
                 <li>Infos : <?= htmlspecialchars($searched_runner['info']) ?></li>
             </ul>
         <?php } elseif (isset($_POST['search_runner'])) { ?>
