@@ -167,7 +167,7 @@ function nav($active) {
                 echo "<div class='card'>
                         <h3>{$pl['prenom']} {$pl['nom']}</h3>
                         <p><strong>Poste:</strong> {$pl['poste']}</p>
-                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:40px;height:840px;vertical-align:middle;'> {$pl['nom_team']}</p>
+                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:40px;height:40px;vertical-align:middle;'> {$pl['nom_team']}</p>
                         <p>Âge: {$pl['age']} ans</p>
                         <p>Taille: {$pl['taille_cm']} cm - Poids: {$pl['poids_kg']} kg</p>
                         <p>Expérience: {$experience} ans</p>
