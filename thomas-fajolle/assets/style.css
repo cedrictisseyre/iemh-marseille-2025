@@ -89,3 +89,81 @@
         padding: 10px 0;
     }
 }
+/* Tableau des équipes */
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.equipes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(10,37,64,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.equipes-table th, .equipes-table td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.equipes-table th {
+    background: #0a2540;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.equipes-table tr:nth-child(even) {
+    background: #f5f8fa;
+}
+
+.equipes-table tr:hover {
+    background: #e6f0ff;
+    transition: background 0.2s;
+}
+
+.logo-equipe {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #f5f8fa;
+    border: 1px solid #e0e0e0;
+}
+
+.nb-equipes {
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+    color: #0a2540;
+}
+
+.search-input {
+    width: 100%;
+    max-width: 350px;
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #1e90ff;
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.search-input:focus {
+    border-color: #0a2540;
+}
+
+@media (max-width: 700px) {
+    .equipes-table th, .equipes-table td {
+        padding: 8px 4px;
+        font-size: 0.95rem;
+    }
+    .logo-equipe {
+        width: 28px;
+        height: 28px;
+    }
+}
