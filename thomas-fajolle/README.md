@@ -34,4 +34,4 @@ Ce projet vise à offrir une plateforme claire et interactive pour tous les pass
     ## standings.php
 
 # teams/
-    ## teams.php
+    teams.php
