@@ -25,6 +25,57 @@ if (isset($_POST['add_result'])) {
         $_POST['time']
     ]);
 }
+// Suppression d'un résultat
+if (isset($_POST['delete_result'])) {
+    $stmt = $conn->prepare("DELETE FROM results WHERE id = ?");
+    $stmt->execute([intval($_POST['result_id'])]);
+}
+// Préparation modification d'un résultat
+$edit_result = null;
+if (isset($_POST['edit_result'])) {
+    $stmt = $conn->prepare("SELECT * FROM results WHERE id = ?");
+    $stmt->execute([intval($_POST['result_id'])]);
+    $edit_result = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+// Validation modification d'un résultat
+if (isset($_POST['update_result'])) {
+    $stmt = $conn->prepare("UPDATE results SET course_id = ?, runner_id = ?, rank = ?, time = ? WHERE id = ?");
+    $stmt->execute([
+        intval($_POST['course_id']),
+        intval($_POST['runner_id']),
+        $_POST['rank'],
+        $_POST['time'],
+        intval($_POST['result_id'])
+    ]);
+    $edit_result = null;
+}
+// Suppression d'un coureur
+if (isset($_POST['delete_runner'])) {
+    $stmt = $conn->prepare("DELETE FROM runners WHERE id = ?");
+    $stmt->execute([intval($_POST['runner_id'])]);
+    $searched_runner = null;
+}
+// Préparation modification d'un coureur
+$edit_runner = null;
+if (isset($_POST['edit_runner'])) {
+    $stmt = $conn->prepare("SELECT * FROM runners WHERE id = ?");
+    $stmt->execute([intval($_POST['runner_id'])]);
+    $edit_runner = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+// Validation modification d'un coureur
+if (isset($_POST['update_runner'])) {
+    $stmt = $conn->prepare("UPDATE runners SET name = ?, country = ?, birth = ?, team = ?, gender = ?, info = ? WHERE id = ?");
+    $stmt->execute([
+        $_POST['name'],
+        $_POST['country'],
+        $_POST['birth'],
+        $_POST['team'],
+        $_POST['gender'],
+        $_POST['info'],
+        intval($_POST['runner_id'])
+    ]);
+    $edit_runner = null;
+}
 // Recherche d'un coureur
 $searched_runner = null;
 if (isset($_POST['search_runner'])) {
@@ -39,14 +90,28 @@ $courses = $conn->query("SELECT * FROM courses")->fetchAll(PDO::FETCH_ASSOC);
 $runners = $conn->query("SELECT * FROM runners")->fetchAll(PDO::FETCH_ASSOC);
 // Récupération des résultats avec jointures
 $results = $conn->query("SELECT results.*, courses.name AS course_name, runners.name AS runner_name FROM results JOIN courses ON results.course_id = courses.id JOIN runners ON results.runner_id = runners.id")->fetchAll(PDO::FETCH_ASSOC);
-// Calcul du classement général
-$general = [];
+// Calcul du classement général séparé
+$general_m = [];
+$general_f = [];
 foreach ($results as $res) {
     $name = $res['runner_name'];
-    if (!isset($general[$name])) $general[$name] = 0;
-    $general[$name] += (int)$res['rank'];
+    $gender = '';
+    foreach ($runners as $r) {
+        if ($r['name'] === $name) {
+            $gender = $r['gender'];
+            break;
+        }
+    }
+    if ($gender === 'Homme') {
+        if (!isset($general_m[$name])) $general_m[$name] = 0;
+        $general_m[$name] += (int)$res['rank'];
+    } elseif ($gender === 'Femme') {
+        if (!isset($general_f[$name])) $general_f[$name] = 0;
+        $general_f[$name] += (int)$res['rank'];
+    }
 }
-asort($general);
+asort($general_m);
+asort($general_f);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -60,8 +125,12 @@ asort($general);
             document.getElementById(tab).style.display = 'block';
             document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
             document.getElementById('tab-' + tab).classList.add('active');
+            localStorage.setItem('activeTab', tab);
         }
-        window.onload = function() { showTab('general'); };
+        window.onload = function() {
+            var tab = localStorage.getItem('activeTab') || 'general';
+            showTab(tab);
+        };
     </script>
 </head>
 <body>
@@ -76,14 +145,30 @@ asort($general);
         <div class="tab" id="tab-stages" onclick="showTab('stages')">Résultats par manche</div>
         <div class="tab" id="tab-search" onclick="showTab('search')">Recherche coureur</div>
         <div class="tab" id="tab-add" onclick="showTab('add')">Ajouter un coureur</div>
+        <script>
+        // Persiste l’onglet lors des soumissions de formulaire
+        document.querySelectorAll('form').forEach(f => {
+            f.addEventListener('submit', function() {
+                var tab = document.querySelector('.tab.active');
+                if (tab) localStorage.setItem('activeTab', tab.id.replace('tab-', ''));
+            });
+        });
+        </script>
     </div>
     <div id="general" class="tab-content" style="position:relative;overflow:hidden;">
         <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course1.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
         <div style="position:relative;z-index:1;">
-        <h2>Classement général</h2>
+        <h2>Classement général Hommes</h2>
         <table border="1" cellpadding="5">
             <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
-            <?php $place = 1; foreach ($general as $name => $points) { ?>
+            <?php $place = 1; foreach ($general_m as $name => $points) { ?>
+                <tr><td><?= $place++ ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
+            <?php } ?>
+        </table>
+        <h2>Classement général Femmes</h2>
+        <table border="1" cellpadding="5">
+            <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
+            <?php $place = 1; foreach ($general_f as $name => $points) { ?>
                 <tr><td><?= $place++ ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
             <?php } ?>
         </table>
@@ -121,19 +206,93 @@ asort($general);
             </select>
         </form>
         <h3>Résultats enregistrés :</h3>
+        <h3>Résultats Hommes :</h3>
         <table border="1" cellpadding="5">
-            <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th></tr>
+            <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th><th>Actions</th></tr>
             <?php foreach ($results as $res) {
                 if (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] && $res['course_id'] != $_POST['filter_course_id']) continue;
+                $gender = '';
+                foreach ($runners as $r) {
+                    if ($r['name'] === $res['runner_name']) {
+                        $gender = $r['gender'];
+                        break;
+                    }
+                }
+                if ($gender !== 'Homme') continue;
             ?>
                 <tr>
                     <td><?= htmlspecialchars($res['course_name']) ?></td>
                     <td><?= htmlspecialchars($res['runner_name']) ?></td>
                     <td><?= htmlspecialchars($res['rank']) ?></td>
                     <td><?= htmlspecialchars($res['time']) ?></td>
+                    <td>
+                        <form method="post" style="display:inline">
+                            <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
+                            <button type="submit" name="edit_result">Modifier</button>
+                        </form>
+                        <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce résultat ?');">
+                            <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
+                            <button type="submit" name="delete_result">Supprimer</button>
+                        </form>
+                    </td>
                 </tr>
             <?php } ?>
         </table>
+        <h3>Résultats Femmes :</h3>
+        <table border="1" cellpadding="5">
+            <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th><th>Actions</th></tr>
+            <?php foreach ($results as $res) {
+                if (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] && $res['course_id'] != $_POST['filter_course_id']) continue;
+                $gender = '';
+                foreach ($runners as $r) {
+                    if ($r['name'] === $res['runner_name']) {
+                        $gender = $r['gender'];
+                        break;
+                    }
+                }
+                if ($gender !== 'Femme') continue;
+            ?>
+                <tr>
+                    <td><?= htmlspecialchars($res['course_name']) ?></td>
+                    <td><?= htmlspecialchars($res['runner_name']) ?></td>
+                    <td><?= htmlspecialchars($res['rank']) ?></td>
+                    <td><?= htmlspecialchars($res['time']) ?></td>
+                    <td>
+                        <form method="post" style="display:inline">
+                            <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
+                            <button type="submit" name="edit_result">Modifier</button>
+                        </form>
+                        <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce résultat ?');">
+                            <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
+                            <button type="submit" name="delete_result">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php } ?>
+        </table>
+        <?php if ($edit_result) { ?>
+        <h3>Modifier le résultat</h3>
+        <form method="post" style="background:#fff;padding:1em;border:1px solid #e67e22;border-radius:8px;max-width:400px;margin:20px auto;">
+            <input type="hidden" name="result_id" value="<?= $edit_result['id'] ?>">
+            <label>Course :</label>
+            <select name="course_id" required>
+                <?php foreach ($courses as $c) { ?>
+                    <option value="<?= $c['id'] ?>" <?= $edit_result['course_id'] == $c['id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['name']) ?></option>
+                <?php } ?>
+            </select><br>
+            <label>Coureur :</label>
+            <select name="runner_id" required>
+                <?php foreach ($runners as $r) { ?>
+                    <option value="<?= $r['id'] ?>" <?= $edit_result['runner_id'] == $r['id'] ? 'selected' : '' ?>><?= htmlspecialchars($r['name']) ?></option>
+                <?php } ?>
+            </select><br>
+            <label>Classement :</label>
+            <input name="rank" type="number" min="1" value="<?= $edit_result['rank'] ?>" required><br>
+            <label>Temps :</label>
+            <input name="time" value="<?= htmlspecialchars($edit_result['time']) ?>" required><br>
+            <button type="submit" name="update_result">Valider la modification</button>
+        </form>
+        <?php } ?>
         </div>
     </div>
     <div id="search" class="tab-content" style="display:none;position:relative;overflow:hidden;">
@@ -168,16 +327,49 @@ asort($general);
         </script>
         <?php if ($searched_runner) { ?>
             <h3>Informations du coureur :</h3>
-            <ul>
-                <li>Nom : <?= htmlspecialchars($searched_runner['name']) ?></li>
-                <li>Pays : <?= htmlspecialchars($searched_runner['country']) ?></li>
-                <li>Date de naissance : <?= htmlspecialchars($searched_runner['birth']) ?></li>
-                <li>Équipe : <?= htmlspecialchars($searched_runner['team']) ?></li>
-                <li>Sexe : <?= htmlspecialchars($searched_runner['gender']) ?></li>
-                <li>Infos : <?= htmlspecialchars($searched_runner['info']) ?></li>
-            </ul>
+            <div style="background:#fff;border:2px solid #e67e22;border-radius:10px;padding:1em;max-width:400px;margin:1em auto;box-shadow:0 2px 8px rgba(230,126,34,0.08);">
+                <ul style="list-style:none;padding-left:0;">
+                    <li><strong>Nom :</strong> <?= htmlspecialchars($searched_runner['name']) ?></li>
+                    <li><strong>Pays :</strong> <?= htmlspecialchars($searched_runner['country']) ?></li>
+                    <li><strong>Date de naissance :</strong> <?= htmlspecialchars($searched_runner['birth']) ?></li>
+                    <li><strong>Équipe :</strong> <?= htmlspecialchars($searched_runner['team']) ?></li>
+                    <li><strong>Sexe :</strong> <?= htmlspecialchars($searched_runner['gender']) ?></li>
+                    <li><strong>Infos :</strong> <?= htmlspecialchars($searched_runner['info']) ?></li>
+                </ul>
+                <form method="post" style="display:inline">
+                    <input type="hidden" name="runner_id" value="<?= $searched_runner['id'] ?>">
+                    <button type="submit" name="edit_runner">Modifier</button>
+                </form>
+                <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce coureur ?');">
+                    <input type="hidden" name="runner_id" value="<?= $searched_runner['id'] ?>">
+                    <button type="submit" name="delete_runner">Supprimer</button>
+                </form>
+            </div>
         <?php } elseif (isset($_POST['search_runner'])) { ?>
             <p style="color:red">Coureur non trouvé.</p>
+        <?php } ?>
+        <?php if ($edit_runner) { ?>
+            <h3>Modifier la fiche du coureur</h3>
+            <form method="post" style="background:#fff;padding:1em;border:1px solid #e67e22;border-radius:8px;max-width:400px;margin:20px auto;">
+                <input type="hidden" name="runner_id" value="<?= $edit_runner['id'] ?>">
+                <label>Nom :</label>
+                <input name="name" value="<?= htmlspecialchars($edit_runner['name']) ?>" required><br>
+                <label>Pays :</label>
+                <input name="country" value="<?= htmlspecialchars($edit_runner['country']) ?>" required><br>
+                <label>Date de naissance :</label>
+                <input name="birth" type="date" value="<?= htmlspecialchars($edit_runner['birth']) ?>" required><br>
+                <label>Équipe :</label>
+                <input name="team" value="<?= htmlspecialchars($edit_runner['team']) ?>" required><br>
+                <label>Sexe :</label>
+                <select name="gender" required>
+                    <option value="Homme" <?= $edit_runner['gender'] == 'Homme' ? 'selected' : '' ?>>Homme</option>
+                    <option value="Femme" <?= $edit_runner['gender'] == 'Femme' ? 'selected' : '' ?>>Femme</option>
+                    <option value="Autre" <?= $edit_runner['gender'] == 'Autre' ? 'selected' : '' ?>>Autre</option>
+                </select><br>
+                <label>Infos :</label>
+                <input name="info" value="<?= htmlspecialchars($edit_runner['info']) ?>"><br>
+                <button type="submit" name="update_runner">Valider la modification</button>
+            </form>
         <?php } ?>
         </div>
     </div>
