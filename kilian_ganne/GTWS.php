@@ -93,6 +93,19 @@ $runners = $conn->query("SELECT * FROM runners")->fetchAll(PDO::FETCH_ASSOC);
 // Récupération des résultats avec jointures
 $results = $conn->query("SELECT results.*, courses.name AS course_name, runners.name AS runner_name FROM results JOIN courses ON results.course_id = courses.id JOIN runners ON results.runner_id = runners.id")->fetchAll(PDO::FETCH_ASSOC);
 // Calcul du classement général séparé
+
+$points_table = [
+    1 => 200,
+    2 => 188,
+    3 => 176,
+    4 => 166,
+    5 => 156,
+    6 => 150,
+    7 => 144,
+    8 => 140,
+    9 => 136,
+    10 => 133
+];
 $general_m = [];
 $general_f = [];
 foreach ($results as $res) {
@@ -104,16 +117,18 @@ foreach ($results as $res) {
             break;
         }
     }
+    $rank = (int)$res['rank'];
+    $points = isset($points_table[$rank]) ? $points_table[$rank] : 0;
     if ($gender === 'Homme') {
         if (!isset($general_m[$name])) $general_m[$name] = 0;
-        $general_m[$name] += (int)$res['rank'];
+        $general_m[$name] += $points;
     } elseif ($gender === 'Femme') {
         if (!isset($general_f[$name])) $general_f[$name] = 0;
-        $general_f[$name] += (int)$res['rank'];
+        $general_f[$name] += $points;
     }
 }
-asort($general_m);
-asort($general_f);
+arsort($general_m);
+arsort($general_f);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -161,19 +176,36 @@ asort($general_f);
         <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:url('img/course1.jpg') center/cover no-repeat;opacity:0.25;z-index:0;"></div>
         <div style="position:relative;z-index:1;">
         <h2>Classement général Hommes</h2>
-        <table border="1" cellpadding="5">
+        <table border="1" cellpadding="5" id="table-general-hommes">
             <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
-            <?php $place = 1; foreach ($general_m as $name => $points) { ?>
-                <tr><td><?= $place++ ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
-            <?php } ?>
+            <?php $place = 1; $total = count($general_m); $hidden = false; foreach ($general_m as $name => $points) { ?>
+                <tr class="<?= $place > 10 ? 'hidden-row-hommes' : '' ?>" style="<?= $place > 10 ? 'display:none' : '' ?>"><td><?= $place ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
+                <?php $place++; } ?>
         </table>
+        <?php if ($total > 10) { ?>
+        <button onclick="toggleRows('hommes')" id="btn-hommes">Voir plus</button>
+        <?php } ?>
         <h2>Classement général Femmes</h2>
-        <table border="1" cellpadding="5">
+        <table border="1" cellpadding="5" id="table-general-femmes">
             <tr><th>Place</th><th>Nom</th><th>Total points</th></tr>
-            <?php $place = 1; foreach ($general_f as $name => $points) { ?>
-                <tr><td><?= $place++ ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
-            <?php } ?>
+            <?php $place = 1; $total = count($general_f); foreach ($general_f as $name => $points) { ?>
+                <tr class="<?= $place > 10 ? 'hidden-row-femmes' : '' ?>" style="<?= $place > 10 ? 'display:none' : '' ?>"><td><?= $place ?></td><td><?= htmlspecialchars($name) ?></td><td><?= $points ?></td></tr>
+                <?php $place++; } ?>
         </table>
+        <?php if ($total > 10) { ?>
+        <button onclick="toggleRows('femmes')" id="btn-femmes">Voir plus</button>
+        <?php } ?>
+        <script>
+        function toggleRows(genre) {
+            var rows = document.querySelectorAll('.hidden-row-' + genre);
+            var btn = document.getElementById('btn-' + genre);
+            var isHidden = rows[0].style.display === 'none';
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].style.display = isHidden ? '' : 'none';
+            }
+            btn.textContent = isHidden ? 'Voir moins' : 'Voir plus';
+        }
+        </script>
         </div>
     </div>
     <div id="stages" class="tab-content" style="display:none;position:relative;overflow:hidden;">
@@ -209,9 +241,9 @@ asort($general_f);
         </form>
         <h3>Résultats enregistrés :</h3>
         <h3>Résultats Hommes :</h3>
-        <table border="1" cellpadding="5">
+        <table border="1" cellpadding="5" id="table-resultats-hommes">
             <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th><th>Actions</th></tr>
-            <?php foreach ($results as $res) {
+            <?php $count = 0; foreach ($results as $res) {
                 if (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] && $res['course_id'] != $_POST['filter_course_id']) continue;
                 $gender = '';
                 foreach ($runners as $r) {
@@ -221,17 +253,16 @@ asort($general_f);
                     }
                 }
                 if ($gender !== 'Homme') continue;
+                $json = htmlspecialchars(json_encode($res), ENT_QUOTES, 'UTF-8');
+                $count++;
             ?>
-                <tr>
+                <tr class="<?= $count > 10 ? 'hidden-row-resultats-hommes' : '' ?>" style="<?= $count > 10 ? 'display:none' : '' ?>">
                     <td><?= htmlspecialchars($res['course_name']) ?></td>
                     <td><?= htmlspecialchars($res['runner_name']) ?></td>
                     <td><?= htmlspecialchars($res['rank']) ?></td>
                     <td><?= htmlspecialchars($res['time']) ?></td>
                     <td>
-                        <form method="post" style="display:inline">
-                            <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
-                            <button type="submit" name="edit_result">Modifier</button>
-                        </form>
+                        <button type="button" onclick="openEditModal(<?= $json ?>)">Modifier</button>
                         <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce résultat ?');">
                             <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
                             <button type="submit" name="delete_result">Supprimer</button>
@@ -240,10 +271,13 @@ asort($general_f);
                 </tr>
             <?php } ?>
         </table>
+        <?php if ($count > 10) { ?>
+        <button onclick="toggleRows('resultats-hommes')" id="btn-resultats-hommes">Voir plus</button>
+        <?php } ?>
         <h3>Résultats Femmes :</h3>
-        <table border="1" cellpadding="5">
+        <table border="1" cellpadding="5" id="table-resultats-femmes">
             <tr><th>Course</th><th>Coureur</th><th>Classement</th><th>Temps</th><th>Actions</th></tr>
-            <?php foreach ($results as $res) {
+            <?php $count = 0; foreach ($results as $res) {
                 if (isset($_POST['filter_course_id']) && $_POST['filter_course_id'] && $res['course_id'] != $_POST['filter_course_id']) continue;
                 $gender = '';
                 foreach ($runners as $r) {
@@ -253,17 +287,16 @@ asort($general_f);
                     }
                 }
                 if ($gender !== 'Femme') continue;
+                $json = htmlspecialchars(json_encode($res), ENT_QUOTES, 'UTF-8');
+                $count++;
             ?>
-                <tr>
+                <tr class="<?= $count > 10 ? 'hidden-row-resultats-femmes' : '' ?>" style="<?= $count > 10 ? 'display:none' : '' ?>">
                     <td><?= htmlspecialchars($res['course_name']) ?></td>
                     <td><?= htmlspecialchars($res['runner_name']) ?></td>
                     <td><?= htmlspecialchars($res['rank']) ?></td>
                     <td><?= htmlspecialchars($res['time']) ?></td>
                     <td>
-                        <form method="post" style="display:inline">
-                            <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
-                            <button type="submit" name="edit_result">Modifier</button>
-                        </form>
+                        <button type="button" onclick="openEditModal(<?= $json ?>)">Modifier</button>
                         <form method="post" style="display:inline" onsubmit="return confirm('Supprimer ce résultat ?');">
                             <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
                             <button type="submit" name="delete_result">Supprimer</button>
@@ -272,29 +305,52 @@ asort($general_f);
                 </tr>
             <?php } ?>
         </table>
-        <?php if ($edit_result) { ?>
-        <h3>Modifier le résultat</h3>
-        <form method="post" style="background:#fff;padding:1em;border:1px solid #e67e22;border-radius:8px;max-width:400px;margin:20px auto;">
-            <input type="hidden" name="result_id" value="<?= $edit_result['id'] ?>">
-            <label>Course :</label>
-            <select name="course_id" required>
-                <?php foreach ($courses as $c) { ?>
-                    <option value="<?= $c['id'] ?>" <?= $edit_result['course_id'] == $c['id'] ? 'selected' : '' ?>><?= htmlspecialchars($c['name']) ?></option>
-                <?php } ?>
-            </select><br>
-            <label>Coureur :</label>
-            <select name="runner_id" required>
-                <?php foreach ($runners as $r) { ?>
-                    <option value="<?= $r['id'] ?>" <?= $edit_result['runner_id'] == $r['id'] ? 'selected' : '' ?>><?= htmlspecialchars($r['name']) ?></option>
-                <?php } ?>
-            </select><br>
-            <label>Classement :</label>
-            <input name="rank" type="number" min="1" value="<?= $edit_result['rank'] ?>" required><br>
-            <label>Temps :</label>
-            <input name="time" value="<?= htmlspecialchars($edit_result['time']) ?>" required><br>
-            <button type="submit" name="update_result">Valider la modification</button>
-        </form>
+        <?php if ($count > 10) { ?>
+        <button onclick="toggleRows('resultats-femmes')" id="btn-resultats-femmes">Voir plus</button>
         <?php } ?>
+        <!-- Modale de modification -->
+        <div id="editModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+            <div style="background:#fff;padding:2em;border-radius:10px;max-width:400px;margin:auto;position:relative;">
+                <span style="position:absolute;top:10px;right:15px;cursor:pointer;font-size:1.5em;" onclick="closeEditModal()">&times;</span>
+                <h3>Modifier le résultat</h3>
+                <form method="post" id="editResultForm">
+                    <input type="hidden" name="result_id" id="edit_result_id">
+                    <label>Course :</label>
+                    <select name="course_id" id="edit_course_id" required>
+                        <?php foreach ($courses as $c) { ?>
+                            <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['name']) ?></option>
+                        <?php } ?>
+                    </select><br>
+                    <label>Coureur :</label>
+                    <select name="runner_id" id="edit_runner_id" required>
+                        <?php foreach ($runners as $r) { ?>
+                            <option value="<?= $r['id'] ?>"><?= htmlspecialchars($r['name']) ?></option>
+                        <?php } ?>
+                    </select><br>
+                    <label>Classement :</label>
+                    <input name="rank" type="number" min="1" id="edit_rank" required><br>
+                    <label>Temps :</label>
+                    <input name="time" id="edit_time" required><br>
+                    <button type="submit" name="update_result">Valider la modification</button>
+                </form>
+            </div>
+        </div>
+        <script>
+        function openEditModal(res) {
+            document.getElementById('editModal').style.display = 'flex';
+            document.getElementById('edit_result_id').value = res.id;
+            document.getElementById('edit_course_id').value = res.course_id;
+            document.getElementById('edit_runner_id').value = res.runner_id;
+            document.getElementById('edit_rank').value = res.rank;
+            document.getElementById('edit_time').value = res.time;
+        }
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        document.getElementById('editResultForm').onsubmit = function() {
+            closeEditModal();
+        };
+        </script>
         </div>
     </div>
     <div id="search" class="tab-content" style="display:none;position:relative;overflow:hidden;">
