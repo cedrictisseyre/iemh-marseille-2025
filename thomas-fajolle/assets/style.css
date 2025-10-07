@@ -1,3 +1,82 @@
+/* Accueil - Grille et sections */
+.accueil-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin: 30px 0;
+}
+.accueil-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(10,37,64,0.08);
+    padding: 20px 18px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.accueil-section h2 {
+    font-size: 1.3rem;
+    color: #0a2540;
+    margin-bottom: 12px;
+}
+.accueil-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+.accueil-table th, .accueil-table td {
+    padding: 8px 6px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+.accueil-table th {
+    background: #1e90ff;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+.accueil-table tr:nth-child(even) {
+    background: #f5f8fa;
+}
+.accueil-table tr:hover {
+    background: #e6f0ff;
+    transition: background 0.2s;
+}
+.top-joueurs {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px 0;
+}
+.top-joueurs li {
+    margin-bottom: 6px;
+    font-size: 1rem;
+    color: #0a2540;
+    background: #f5f8fa;
+    border-radius: 6px;
+    padding: 6px 10px;
+}
+.a-la-une {
+    background: linear-gradient(90deg, #1e90ff 60%, #0a2540 100%);
+    color: #fff;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    box-shadow: 0 1px 4px rgba(10,37,64,0.08);
+}
+.prochain-match {
+    background: #e6f7ff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1.05rem;
+    color: #0a2540;
+    box-shadow: 0 1px 4px rgba(10,37,64,0.08);
+}
+@media (max-width: 900px) {
+    .accueil-grid {
+        grid-template-columns: 1fr;
+    }
+}
 /* Footer stylisé et cohérent avec le header */
 .site-footer {
     background: linear-gradient(90deg, #0a2540 60%, #1e90ff 100%);
