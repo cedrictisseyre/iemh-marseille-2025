@@ -47,6 +47,8 @@ if (isset($_POST['update_result'])) {
         $_POST['time'],
         intval($_POST['result_id'])
     ]);
+    // On force le retour à l'affichage normal (pas de formulaire de modification)
+    unset($_POST['edit_result']);
     $edit_result = null;
 }
 // Suppression d'un coureur
