@@ -38,5 +38,7 @@ $stmt = $pdo->query('SELECT * FROM Arbitres');
         </tr>
         <?php endwhile; ?>
     </table>
+    </body>
+    <p><a href="../index.php">Retour au menu principal</a></p>
 </body>
 </html>
