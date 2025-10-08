@@ -102,15 +102,22 @@ try {
                 <td><?= htmlspecialchars($joueur['nom']) ?></td>
                 <td><?= htmlspecialchars($joueur['prenom']) ?></td>
                 <td><?= htmlspecialchars($joueur['poste']) ?></td>
-                <td>
-                  <?php if ($joueur['id_equipe']): ?>
-                    <a href="equipes/fiche_equipe.php?id=<?= urlencode($joueur['id_equipe']) ?>" title="Voir fiche équipe">
-                      <?= htmlspecialchars($joueur['id_equipe']) ?>
-                    </a>
-                  <?php else: ?>
-                    -
-                  <?php endif; ?>
-                </td>
+                                    <td>
+                                        <?php
+                                        if ($joueur['id_equipe']) {
+                                            $nom_equipe = '-';
+                                            foreach ($equipes as $equipe) {
+                                                if ($equipe['id_equipe'] == $joueur['id_equipe']) {
+                                                    $nom_equipe = $equipe['nom_equipe'];
+                                                    break;
+                                                }
+                                            }
+                                        ?>
+                                            <a href="equipes/fiche_equipe.php?id=<?= urlencode($joueur['id_equipe']) ?>" title="Voir fiche équipe">
+                                                <?= htmlspecialchars($nom_equipe) ?>
+                                            </a>
+                                        <?php } else { echo '-'; } ?>
+                                    </td>
                 <td>
                     <a href="joueurs/modifier_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-modifier">Modifier</a>
                     <a href="joueurs/supprimer_joueur.php?id=<?= urlencode($joueur['id_joueur']) ?>" class="btn-supprimer" onclick="return confirm('Supprimer ce joueur ?');">Supprimer</a>
@@ -263,7 +270,7 @@ document.getElementById('delete-equipes-multi').onclick = function() {
         <table>
             <tr>
                 <th>ID match</th>
-                <th>ID joueur</th>
+                                    <th>Nom du joueur</th>
                 <th>Essais</th>
                 <th>Transformations</th>
                 <th>Pénalités</th>
@@ -273,7 +280,18 @@ document.getElementById('delete-equipes-multi').onclick = function() {
             <?php foreach ($stats as $stat): ?>
             <tr>
                 <td><?= htmlspecialchars($stat['id_match']) ?></td>
-                <td><?= htmlspecialchars($stat['id_joueur']) ?></td>
+                                    <td>
+                                        <?php
+                                        $nom_joueur = '-';
+                                        foreach ($joueurs as $joueur) {
+                                            if ($joueur['id_joueur'] == $stat['id_joueur']) {
+                                                $nom_joueur = $joueur['nom'] . ' ' . $joueur['prenom'];
+                                                break;
+                                            }
+                                        }
+                                        echo htmlspecialchars($nom_joueur);
+                                        ?>
+                                    </td>
                 <td><?= htmlspecialchars($stat['essais']) ?></td>
                 <td><?= htmlspecialchars($stat['transformations']) ?></td>
                 <td><?= htmlspecialchars($stat['penalites']) ?></td>
