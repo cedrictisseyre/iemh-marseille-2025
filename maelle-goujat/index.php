@@ -289,10 +289,10 @@ document.getElementById('delete-equipes-multi').onclick = function() {
                                         if ($match['id_match'] == $stat['id_match']) {
                                             // Recherche des noms d'équipe
                                             foreach ($equipes as $equipe) {
-                                                if ($equipe['id_equipe'] == $match['id_equipe_dom']) {
+                                                if (isset($match['equipe_dom']) && $equipe['id_equipe'] == $match['equipe_dom']) {
                                                     $equipe_dom = $equipe['nom_equipe'];
                                                 }
-                                                if ($equipe['id_equipe'] == $match['id_equipe_ext']) {
+                                                if (isset($match['equipe_ext']) && $equipe['id_equipe'] == $match['equipe_ext']) {
                                                     $equipe_ext = $equipe['nom_equipe'];
                                                 }
                                             }
