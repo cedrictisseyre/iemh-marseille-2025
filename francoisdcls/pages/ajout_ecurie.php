@@ -1,3 +1,9 @@
+<?php
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
 <!DOCTYPE html>
 <html lang='fr'>
 <head>
@@ -9,6 +15,7 @@
 <header><h1>Ajouter une écurie</h1></header>
 <div class='container'>
   <form method='post' action='../services/ajout_ecurie.php'>
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
     <button type='submit'>Ajouter</button>
   </form>
