@@ -1,6 +1,6 @@
 <?php
 $host = '195.15.235.20';
-$db   = 'jade_mouillot';
+$db   = 'Gestionnaire_club';
 $user = 'root'; // À remplacer
 $pass = 'INNnsk40374'; // À remplacer
 $charset = 'utf8';
