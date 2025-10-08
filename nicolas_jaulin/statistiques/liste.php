@@ -1,3 +1,4 @@
+<?php require_once '../db_connect.php'; ?>
 <?php
 $sql = 'SELECT sj.id_stat, sj.id_match, sj.id_joueur, j.nom, j.prenom, sj.essais, sj.plaquages, sj.passes_decisives, sj.cartons_jaunes FROM Statistiques_Joueur sj JOIN Joueurs j ON sj.id_joueur = j.id_joueur';
 try {
