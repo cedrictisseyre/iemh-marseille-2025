@@ -18,7 +18,7 @@ try {
 </head>
 <body>
     <h1>Matchs & Arbitres</h1>
-    <a href="ajout_match_arbitre.php">Assigner un arbitre à un match</a>
+    <a href="ajout.php">Assigner un arbitre à un match</a>
     <table border="1">
         <tr>
             <th>ID Match</th>
@@ -36,7 +36,7 @@ try {
             <td><?= htmlspecialchars($row['nom_arbitre']) ?></td>
             <td><?= htmlspecialchars($row['prenom_arbitre']) ?></td>
             <td>
-                <a href="supprimer_match_arbitre.php?id_match=<?= $row['id_match'] ?>&id_arbitre=<?= $row['id_arbitre'] ?>" onclick="return confirm('Supprimer cette association ?');">Supprimer</a>
+                <a href="suppr.php?id_match=<?= $row['id_match'] ?>&id_arbitre=<?= $row['id_arbitre'] ?>" onclick="return confirm('Supprimer cette association ?');">Supprimer</a>
             </td>
         </tr>
         <?php endwhile; ?>

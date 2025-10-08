@@ -15,7 +15,7 @@ try {
 </head>
 <body>
     <h1>Statistiques des joueurs par match</h1>
-    <a href="ajout_stat_joueur.php">Ajouter une statistique</a>
+    <a href="ajout.php">Ajouter une statistique</a>
     <table border="1">
         <tr>
             <th>ID Stat</th>
@@ -41,7 +41,7 @@ try {
             <td><?= htmlspecialchars($row['passes_decisives']) ?></td>
             <td><?= htmlspecialchars($row['cartons_jaunes']) ?></td>
             <td>
-                <a href="supprimer_stat_joueur.php?id_stat=<?= $row['id_stat'] ?>" onclick="return confirm('Supprimer cette statistique ?');">Supprimer</a>
+                <a href="suppr.php?id_stat=<?= $row['id_stat'] ?>" onclick="return confirm('Supprimer cette statistique ?');">Supprimer</a>
             </td>
         </tr>
         <?php endwhile; ?>
