@@ -47,6 +47,7 @@ function nav($active) {
                 <input type="text" name="prenom" placeholder="Prénom" required>
                 <input type="text" name="nom" placeholder="Nom" required>
 
+                <!-- Select poste depuis table position -->
                 <select name="poste" required>
                     <option value="">Sélectionner un poste</option>
                     <?php
@@ -62,6 +63,7 @@ function nav($active) {
                 <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
                 <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
 
+                <!-- Select équipe par conférence -->
                 <select name="id_team" required>
                     <option value="">Sélectionner une équipe</option>
                     <?php
@@ -106,10 +108,10 @@ function nav($active) {
             }
 
             $stmt = $pdo->prepare("SELECT p.*, t.nom_team, t.logo_url 
-                                   FROM player p 
-                                   JOIN team t ON p.id_team = t.id_team 
-                                   $where
-                                   ORDER BY p.nom");
+                                 FROM player p 
+                                 JOIN team t ON p.id_team = t.id_team 
+                                 $where
+                                 ORDER BY p.nom");
             $stmt->execute($params);
             while ($pl = $stmt->fetch()) {
                 $experience = date('Y') - $pl['annee_debut'];
@@ -127,7 +129,7 @@ function nav($active) {
 
     <?php elseif ($page === 'stats') : 
         $saison = date('Y'); ?>
-        
+        <!-- Formulaire stats -->
         <div class="card">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
             <form method="post" action="services/add_stats.php">
@@ -140,7 +142,6 @@ function nav($active) {
                     }
                     ?>
                 </select>
-                <!-- champs stats -->
                 <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
                 <input type="number" name="passing_tds" placeholder="TD passés" min="0">
                 <input type="number" name="interceptions" placeholder="Interceptions" min="0">
@@ -156,7 +157,17 @@ function nav($active) {
             </form>
         </div>
 
-        <!-- Stats affichage -->
+        <!-- Recherche joueurs -->
+        <div class="card">
+            <h2>Recherche stats joueur</h2>
+            <form method="get">
+                <input type="hidden" name="page" value="stats">
+                <input type="text" name="recherche" placeholder="Nom ou prénom">
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+
+        <!-- Affichage stats -->
         <h2>Statistiques <?= $saison ?></h2>
         <div class="grid">
             <?php
@@ -164,30 +175,34 @@ function nav($active) {
             $params = [$saison];
             if (!empty($_GET['recherche'])) {
                 $search = "%" . $_GET['recherche'] . "%";
-                $where .= " AND (p.nom LIKE ? OR p.prenom LIKE ?)";
-                $params = array_merge($params, [$search,$search]);
+                $where .= " AND (p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?)";
+                $params = array_merge($params, [$search,$search,$search,$search]);
             }
 
-            $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste, t.logo_url, t.nom_team
+            $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste, t.nom_team, t.logo_url 
                                    FROM stats s 
-                                   JOIN player p ON s.id_player = p.id_player
+                                   JOIN player p ON s.id_player = p.id_player 
                                    JOIN team t ON p.id_team = t.id_team
                                    $where
                                    ORDER BY p.nom");
             $stmt->execute($params);
+
+            $has_stats = false;
             while ($st = $stmt->fetch()) {
+                $has_stats = true;
                 echo "<div class='card'>
-                        <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;'> 
+                        <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
                         {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
                 foreach ($st as $key => $val) {
-                    if (in_array($key, ['id_stat','id_player','prenom','nom','poste','saison','logo_url','nom_team'])) continue;
+                    if (in_array($key, ['id_stat','id_player','prenom','nom','poste','saison','nom_team','logo_url'])) continue;
                     if ($val !== null && $val != 0) {
-                        $label = ucfirst(str_replace('_', ' ', $key));
+                        $label = ucfirst(str_replace("_", " ", $key));
                         echo "<p><strong>{$label}:</strong> {$val}</p>";
                     }
                 }
                 echo "</div>";
             }
+            if (!$has_stats) echo "<p>Aucune statistique disponible pour cette saison.</p>";
             ?>
         </div>
 
@@ -195,53 +210,122 @@ function nav($active) {
         $saison = date('Y');
         $filtre_poste = $_GET['poste'] ?? '';
         $filtre_team = $_GET['team'] ?? '';
+        ?>
 
-        // ----- Classement par TD -----
+        <!-- Filtres -->
+        <div class="card">
+            <h2>Filtres Classement</h2>
+            <form method="get">
+                <input type="hidden" name="page" value="classement">
+
+                <label>Poste :</label>
+                <select name="poste">
+                    <option value="">Tous</option>
+                    <?php
+                    $positions = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
+                    foreach ($positions as $p) {
+                        $sel = ($filtre_poste === $p['code']) ? "selected" : "";
+                        echo "<option value='{$p['code']}' $sel>{$p['libelle']} ({$p['code']})</option>";
+                    }
+                    ?>
+                </select>
+
+                <label>Équipe :</label>
+                <select name="team">
+                    <option value="">Toutes</option>
+                    <?php
+                    $teams = $pdo->query("SELECT id_team, nom_team, conference FROM team ORDER BY conference, nom_team")->fetchAll();
+                    $current_conf = "";
+                    foreach ($teams as $t) {
+                        if ($t['conference'] !== $current_conf) {
+                            if ($current_conf !== "") echo "</optgroup>";
+                            $current_conf = $t['conference'];
+                            echo "<optgroup label='{$current_conf}'>";
+                        }
+                        $sel = ($filtre_team == $t['id_team']) ? "selected" : "";
+                        echo "<option value='{$t['id_team']}' $sel>{$t['nom_team']}</option>";
+                    }
+                    if ($current_conf !== "") echo "</optgroup>";
+                    ?>
+                </select>
+
+                <button type="submit">Filtrer</button>
+            </form>
+        </div>
+
+        <?php
+        // --- Classement TDs ---
         $sql_conf = "
             SELECT p.prenom, p.nom, p.poste, t.conference,
-                   COALESCE(SUM(s.passing_tds),0)+COALESCE(SUM(s.rushing_tds),0)+COALESCE(SUM(s.receiving_tds),0) AS total_tds
+                   COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
             FROM player p
-            JOIN team t ON p.id_team=t.id_team
-            LEFT JOIN stats s ON p.id_player=s.id_player AND s.saison=:saison
+            JOIN team t ON p.id_team = t.id_team
+            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
             WHERE 1=1";
 
-        $params = [':saison'=>$saison];
-        if ($filtre_poste) {$sql_conf.=" AND p.poste=:poste";$params[':poste']=$filtre_poste;}
-        if ($filtre_team) {$sql_conf.=" AND p.id_team=:team";$params[':team']=$filtre_team;}
-        $sql_conf.=" GROUP BY p.id_player, t.conference HAVING total_tds>0 ORDER BY t.conference, total_tds DESC";
-        $stmt_conf=$pdo->prepare($sql_conf);$stmt_conf->execute($params);
-        $res_conf=$stmt_conf->fetchAll();
+        $params = [':saison' => $saison];
+        if ($filtre_poste !== '') { $sql_conf .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
+        if ($filtre_team !== '') { $sql_conf .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
 
-        if (!empty($res_conf)) {
+        $sql_conf .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.conference
+                       HAVING total_tds > 0
+                       ORDER BY t.conference, total_tds DESC";
+
+        $stmt_conf = $pdo->prepare($sql_conf);
+        $stmt_conf->execute($params);
+        $conf_data = $stmt_conf->fetchAll();
+
+        if (count($conf_data) > 0) {
             echo "<h2>Classement par conférence (Total TDs)</h2>";
-            $conf='';foreach($res_conf as $row){
-                if($row['conference']!==$conf){if($conf!=='')echo'</ol>';$conf=$row['conference'];echo"<h3>{$conf}</h3><ol>";}
-                echo"<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_tds']} TDs</li>";
-            }if($conf!=='')echo'</ol>';
+            $conf = '';
+            foreach ($conf_data as $row) {
+                if ($row['conference'] !== $conf) {
+                    if ($conf !== '') echo '</ol>';
+                    $conf = $row['conference'];
+                    echo "<h3>{$conf}</h3><ol>";
+                }
+                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_tds']} TDs</li>";
+            }
+            echo '</ol>';
         }
 
-        // ----- Classement par Plaquages -----
+        // --- Classement Plaquages ---
         $sql_div = "
-            SELECT p.prenom, p.nom, p.poste, t.division, COALESCE(SUM(s.tackles),0) AS total_plaquages
+            SELECT p.prenom, p.nom, p.poste, t.division,
+                   COALESCE(SUM(s.tackles),0) AS total_plaquages
             FROM player p
-            JOIN team t ON p.id_team=t.id_team
-            LEFT JOIN stats s ON p.id_player=s.id_player AND s.saison=:saison
+            JOIN team t ON p.id_team = t.id_team
+            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
             WHERE 1=1";
-        $params=[":saison"=>$saison];
-        if($filtre_poste){$sql_div.=" AND p.poste=:poste";$params[':poste']=$filtre_poste;}
-        if($filtre_team){$sql_div.=" AND p.id_team=:team";$params[':team']=$filtre_team;}
-        $sql_div.=" GROUP BY p.id_player,t.division HAVING total_plaquages>0 ORDER BY t.division,total_plaquages DESC";
-        $stmt_div=$pdo->prepare($sql_div);$stmt_div->execute($params);
-        $res_div=$stmt_div->fetchAll();
 
-        if (!empty($res_div)) {
+        $params = [':saison' => $saison];
+        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
+        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
+
+        $sql_div .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.division
+                      HAVING total_plaquages > 0
+                      ORDER BY t.division, total_plaquages DESC";
+
+        $stmt_div = $pdo->prepare($sql_div);
+        $stmt_div->execute($params);
+        $div_data = $stmt_div->fetchAll();
+
+        if (count($div_data) > 0) {
             echo "<h2>Classement par division (Plaquages)</h2>";
-            $div='';foreach($res_div as $row){
-                if($row['division']!==$div){if($div!=='')echo'</ol>';$div=$row['division'];echo"<h3>{$div}</h3><ol>";}
-                echo"<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
-            }if($div!=='')echo'</ol>';
+            $div = '';
+            foreach ($div_data as $row) {
+                if ($row['division'] !== $div) {
+                    if ($div !== '') echo '</ol>';
+                    $div = $row['division'];
+                    echo "<h3>{$div}</h3><ol>";
+                }
+                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
+            }
+            echo '</ol>';
         }
-    endif; ?>
+        ?>
+
+    <?php endif; ?>
     </main>
 </div>
 <footer>
@@ -249,4 +333,5 @@ function nav($active) {
 </footer>
 </body>
 </html>
+
 
