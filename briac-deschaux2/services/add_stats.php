@@ -109,5 +109,5 @@ try {
     exit;
 }
 
-header('Location: ../NFL_Stats_Analyzer.php?page=stats&added=1');
+header('Location: ../NFL_stats_analyzer.php?page=stats&added=1');
 exit;

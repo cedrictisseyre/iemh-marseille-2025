@@ -72,5 +72,5 @@ try {
     exit;
 }
 
-header('Location: ../NFL_Stats_Analyzer.php?page=joueurs&added=1');
+header('Location: ../NFL_stats_analyzer.php?page=joueurs&added=1');
 exit;
