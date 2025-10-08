@@ -41,7 +41,10 @@ $rows2 = $pdo->query('SELECT id, libelle FROM ref_type_seance ORDER BY id')->fet
 foreach($rows2 as $r) $refs['types'][] = $r;
 echo json_encode(['ok'=>true,'data'=>$refs]);
 break;
+
 // --- USERS ---
+case 'list_users':
+$stmt = $pdo->query('SELECT id, nom, sexe, age, poids, taille, date_inscription FROM utilisateurs ORDER BY nom');
 echo json_encode(['ok'=>true,'data'=>$stmt->fetchAll(PDO::FETCH_ASSOC)]);
 break;
 
@@ -67,7 +70,6 @@ $stmt->execute([':id'=>(int)$d['id']]);
 echo json_encode(['ok'=>true]);
 break;
 
-
 // --- EXERCISES (library) ---
 case 'list_exercises':
 $stmt = $pdo->query('SELECT * FROM exercices ORDER BY nom_exercice');
@@ -89,7 +91,44 @@ $stmt = $pdo->prepare('UPDATE exercices SET nom_exercice=:nom, series=:series, r
 $stmt->execute([':nom'=>substr($d['nom'] ?? '',0,200),':series'=>(int)($d['series'] ?? 0),':reps'=>(int)($d['repetitions'] ?? 0),':charge'=>(float)($d['charge'] ?? 0),':id'=>(int)$d['id']]);
 echo json_encode(['ok'=>true]);
 break;
+
 // --- TRAININGS (sessions) ---
+case 'add_training':
+$d = json_body();
+$user = (int)($d['utilisateur_id'] ?? 0);
+$date = trim($d['date_seance'] ?? date('Y-m-d'));
+$type_id = (int)($d['type_id'] ?? 0);
+$type_label = substr($d['type_seance'] ?? '',0,100);
+$duree = (int)($d['duree'] ?? 0);
+$cal = (int)($d['calories_brulees'] ?? 0);
+if (!$user || !$date) throw new Exception('Utilisateur et date requis');
+
+
+$pdo->beginTransaction();
+$stmt = $pdo->prepare('INSERT INTO entrainements (utilisateur_id, date_seance, type_seance, duree, calories_brulees, type_id) VALUES (:user,:date,:type,:duree,:cal,:type_id)');
+$stmt->execute([':user'=>$user,':date'=>$date,':type'=>$type_label,':duree'=>$duree,':cal'=>$cal,':type_id'=>$type_id]);
+$eid = $pdo->lastInsertId();
+
+
+$exs = $d['exercises'] ?? [];
+$ins = $pdo->prepare('INSERT INTO exercices (entrainement_id, nom_exercice, series, repetitions, charge) VALUES (:eid,:nom,:series,:reps,:charge)');
+foreach($exs as $ex){
+$nom = substr(trim($ex['nom_exercice'] ?? ''),0,200);
+if (!$nom) continue;
+$ins->execute([':eid'=>$eid,':nom'=>$nom,':series'=>(int)($ex['series'] ?? 0),':reps'=>(int)($ex['repetitions'] ?? 0),':charge'=>(float)($ex['charge'] ?? 0)]);
+}
+$pdo->commit();
+echo json_encode(['ok'=>true,'id'=>$eid]);
+break;
+
+case 'list_trainings':
+$user = (int)($_GET['user'] ?? 0);
+if ($user){
+$stmt = $pdo->prepare('SELECT e.*, r.libelle as type_lib FROM entrainements e LEFT JOIN ref_type_seance r ON e.type_id=r.id WHERE utilisateur_id=:user ORDER BY date_seance DESC');
+$stmt->execute([':user'=>$user]);
+echo json_encode(['ok'=>true,'data'=>$stmt->fetchAll(PDO::FETCH_ASSOC)]);
+} else {
+$stmt = $pdo->query('SELECT e.*, u.nom FROM entrainements e LEFT JOIN utilisateurs u ON e.utilisateur_id=u.id ORDER BY date_seance DESC');
 echo json_encode(['ok'=>true,'data'=>$stmt->fetchAll(PDO::FETCH_ASSOC)]);
 }
 break;
@@ -106,7 +145,6 @@ $stmt2->execute([':id'=>$id]);
 $t['exercises'] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 echo json_encode(['ok'=>true,'data'=>$t]);
 break;
-
 
 case 'update_training':
 $d = json_body();
@@ -140,6 +178,7 @@ $pdo->exec("DELETE FROM exercices WHERE id IN ($in)");
 $pdo->commit();
 echo json_encode(['ok'=>true]);
 break;
+
 case 'delete_training':
 $d = json_body();
 $id = (int)($d['id'] ?? 0);
@@ -159,6 +198,7 @@ if (!$id) throw new Exception('id requis');
 $pdo->prepare('DELETE FROM exercices WHERE id=:id')->execute([':id'=>$id]);
 echo json_encode(['ok'=>true]);
 break;
+
 // --- CALCULS ---
 case 'add_calc':
 $d = json_body();
@@ -195,7 +235,6 @@ $ins->execute([':uid'=>$uid,':nap'=>$nap,':niv'=>$niv,':mb'=>$mb,':dej'=>$dej]);
 echo json_encode(['ok'=>true,'dej'=>$dej,'mb'=>$mb,'user_id'=>$uid]);
 break;
 
-
 case 'list_calcs':
 $user = (int)($_GET['user'] ?? 0);
 if (!$user) throw new Exception('user id required');
@@ -203,6 +242,7 @@ $stmt = $pdo->prepare('SELECT * FROM calculs WHERE utilisateur_id=:u ORDER BY da
 $stmt->execute([':u'=>$user]);
 echo json_encode(['ok'=>true,'data'=>$stmt->fetchAll(PDO::FETCH_ASSOC)]);
 break;
+
 // --- STATS ---
 case 'stats_dej':
 $user = (int)($_GET['user'] ?? 0);
@@ -220,7 +260,6 @@ $stmt = $pdo->prepare('SELECT YEARWEEK(date_seance,1) as yw, SUM(duree) as minut
 $stmt->execute([':u'=>$user]);
 echo json_encode(['ok'=>true,'data'=>$stmt->fetchAll(PDO::FETCH_ASSOC)]);
 break;
-
 
 // --- PROFILE ---
 case 'user_profile':
@@ -243,6 +282,7 @@ echo json_encode(['ok'=>false,'error'=>$e->getMessage()]);
 }
 exit;
 }
+
 // --- FRONTEND HTML ---
 header('Content-Type: text/html; charset=utf-8');
 ?><!doctype html>
@@ -276,6 +316,7 @@ header('Content-Type: text/html; charset=utf-8');
 </header>
 <main class="max-w-6xl mx-auto p-6">
 <div id="alerts"></div>
+
 <!-- DASHBOARD -->
 <section id="dashboard" class="tab-content">
 <h2 class="text-xl font-bold text-blue-700 mb-4">Tableau de bord</h2>
@@ -291,7 +332,6 @@ header('Content-Type: text/html; charset=utf-8');
 </div>
 </div>
 </section>
-
 
 <!-- CALCUL -->
 <section id="calcul" class="tab-content hidden">
@@ -319,6 +359,7 @@ header('Content-Type: text/html; charset=utf-8');
 </form>
 <div id="result_calc" class="mt-4 hidden bg-green-50 p-4 rounded"></div>
 </section>
+
 <!-- SESSIONS (trainings + exercises) -->
 <section id="sessions" class="tab-content hidden">
 <h2 class="text-xl font-bold text-red-700 mb-4">Séances & Exercices</h2>
@@ -347,6 +388,7 @@ header('Content-Type: text/html; charset=utf-8');
 <div id="list_sessions"></div>
 </div>
 </section>
+
 <!-- USERS -->
 <section id="users" class="tab-content hidden">
 <h2 class="text-xl font-bold text-gray-800 mb-4">Utilisateurs</h2>
@@ -371,6 +413,8 @@ header('Content-Type: text/html; charset=utf-8');
 </div>
 </div>
 </section>
+
+
 <!-- Session edit modal -->
 <div id="session_modal" class="modal-bg hidden fixed inset-0 bg-black bg-opacity-40 items-center justify-center p-4">
 <div class="modal-card bg-white rounded p-4 max-w-2xl w-full">
@@ -383,7 +427,6 @@ header('Content-Type: text/html; charset=utf-8');
 </main>
 <footer class="text-center py-6 text-gray-500 mt-12">© <?= date('Y') ?> DEJ Coaching</footer>
 
-
 <script>
 // Front-end logic
 let refs = {};
@@ -392,6 +435,8 @@ function showAlert(msg,type='green'){
 const el=document.getElementById('alerts'); el.innerHTML=`<div class="p-2 my-2 rounded ${type==='green'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}">${msg}</div>`;
 setTimeout(()=>el.innerHTML='',3500);
 }
+
+
 async function api(action, opts={}){
 const query = opts.query? ('&' + new URLSearchParams(opts.query)) : '';
 const url = '?action=' + action + query;
@@ -402,7 +447,6 @@ if (body && typeof body !== 'string') { body = JSON.stringify(body); headers['Co
 const res = await fetch(url, {method, headers, body});
 return res.json();
 }
-
 
 async function loadRefs(){
 const j = await api('get_refs');
@@ -417,6 +461,8 @@ napSel.innerHTML += `<option value="${v}">${lab} (NAP=${v})</option>`;
 const typeSel = document.getElementById('session_type_id'); typeSel.innerHTML='';
 refs.types.forEach(t=> typeSel.innerHTML += `<option value="${t.id}">${t.libelle}</option>`);
 }
+
+
 async function loadUsers(){
 const j = await api('list_users'); if(!j.ok) return;
 usersCache = j.data;
@@ -436,6 +482,7 @@ function attachUserHandlers(){
 document.querySelectorAll('.del-user').forEach(b=>b.onclick = async (e)=>{ const id=e.target.dataset.id; if(!confirm('Supprimer cet utilisateur ?')) return; const j=await api('delete_user',{method:'POST',body:{id}}); if(j.ok){ showAlert('Utilisateur supprimé'); loadUsers(); } else showAlert(j.error,'red'); });
 document.querySelectorAll('.user-link').forEach(a=>a.onclick = async (e)=>{ const id = e.target.dataset.id; showProfile(id); });
 }
+
 // Exercises container
 function addExerciseRow(container, data={}){
 const c = container;
@@ -450,7 +497,6 @@ row.querySelector('.remove_ex').onclick = ()=> row.remove();
 return row;
 }
 
-
 async function loadSessions(userId=null){
 const q = userId? ('?action=list_trainings&user='+userId) : '?action=list_trainings';
 const res = await fetch(q); const j = await res.json();
@@ -462,6 +508,8 @@ document.querySelectorAll('.view-session').forEach(b=>b.onclick = async (e)=>{ c
 document.querySelectorAll('.edit-session').forEach(b=>b.onclick = async (e)=>{ const id=e.target.dataset.id; const j=await api('get_training',{query:{id}}); if(j.ok) showSessionModal(j.data,true); else showAlert(j.error,'red'); });
 document.querySelectorAll('.del-session').forEach(b=>b.onclick = async (e)=>{ if(!confirm('Supprimer cette séance ?')) return; const id=e.target.dataset.id; const j=await api('delete_training',{method:'POST',body:{id}}); if(j.ok){ showAlert('Séance supprimée'); const uid = document.getElementById('session_user').value; loadSessions(uid); } else showAlert(j.error,'red'); });
 }
+
+
 function showSessionModal(data, editable=false){
 const container = document.getElementById('session_content');
 if (!editable){
@@ -515,6 +563,7 @@ if(j.ok){ showAlert('Séance modifiée'); const uid = data.utilisateur_id || doc
 });
 const modal = document.getElementById('session_modal'); modal.classList.remove('hidden'); modal.classList.add('flex','modal-open');
 }
+
 // Profile
 async function showProfile(userId){
 const j = await api('user_profile',{query:{user:userId}});
@@ -533,11 +582,12 @@ container.querySelectorAll('.del-from-profile').forEach(btn=>btn.addEventListene
 const viewAll = document.getElementById('profile_view_sessions'); if(viewAll) viewAll.addEventListener('click', ()=>{ document.querySelector('[data-tab="sessions"]').click(); document.getElementById('session_user').value = userId; loadSessions(userId); const m = document.getElementById('user_profile_modal'); m.classList.add('hidden'); m.classList.remove('flex','modal-open'); });
 }
 
-
 // Charts
 let chartDej=null, chartVolume=null;
 async function drawDejChart(userId){ const j=await api('stats_dej',{query:{user:userId}}); if(!j.ok) return; const labels=j.data.map(x=>x.date_calcul); const data=j.data.map(x=>parseFloat(x.dej)); const ctx = document.getElementById('chart_dej').getContext('2d'); if(chartDej) chartDej.destroy(); chartDej = new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'DEJ',data}]}}); }
 async function drawVolumeChart(userId){ const j=await api('stats_weekly_volume',{query:{user:userId}}); if(!j.ok) return; const labels=j.data.map(x=>x.yw); const data=j.data.map(x=>parseInt(x.minutes)); const ctx = document.getElementById('chart_volume').getContext('2d'); if(chartVolume) chartVolume.destroy(); chartVolume = new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'Minutes/semaine',data}]}}); }
+
+
 // Init
 async function init(){
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click', e=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('tab-active')); e.target.classList.add('tab-active'); document.querySelectorAll('.tab-content').forEach(s=>s.classList.add('hidden')); document.getElementById(e.target.dataset.tab).classList.remove('hidden'); }));
@@ -555,8 +605,6 @@ document.getElementById('dash_user').addEventListener('change', e=>{ drawDejChar
 document.getElementById('add_ex_row').addEventListener('click', ()=> addExerciseRow(document.getElementById('exercises_container')));
 // default one row
 addExerciseRow(document.getElementById('exercises_container'));
-
-
 // session form submit
 document.getElementById('form_session').addEventListener('submit', async (e)=>{
 e.preventDefault();
@@ -572,6 +620,7 @@ body.exercises = exercises; body.utilisateur_id = parseInt(body.utilisateur_id);
 const j = await api('add_training',{method:'POST',body});
 if(j.ok){ showAlert('Séance créée'); loadSessions(body.utilisateur_id); const calcUser = document.getElementById('calc_user_select').value; if(calcUser==body.utilisateur_id) showProfile(body.utilisateur_id); e.target.reset(); document.getElementById('exercises_container').innerHTML=''; addExerciseRow(document.getElementById('exercises_container')); } else showAlert(j.error,'red');
 });
+
 // calc form
 document.getElementById('form_calc').addEventListener('submit', async (e)=>{ e.preventDefault(); const fd=new FormData(e.target); const body=Object.fromEntries(fd.entries()); const selectedUser = document.getElementById('calc_user_select').value; if(selectedUser) body.user_id = parseInt(selectedUser); body.nap = parseFloat(body.nap); const j=await api('add_calc',{method:'POST',body}); if(j.ok){ showAlert('Calcul enregistré'); document.getElementById('result_calc').classList.remove('hidden'); document.getElementById('result_calc').innerText = `DEJ estimée: ${Math.round(j.dej)} kcal`; loadUsers(); } else showAlert(j.error,'red'); });
 
@@ -580,3 +629,5 @@ document.getElementById('form_calc').addEventListener('submit', async (e)=>{ e.p
 document.getElementById('calc_user_select').addEventListener('change', async (e)=>{
 const uid = e.target.value; if(!uid){ document.getElementById('calc_nom').value=''; document.getElementById('calc_sexe').value='homme'; document.getElementById('calc_age').value=''; document.getElementById('calc_taille').value=''; document.getElementById('calc_poids').value=''; return; }
 const user = use
+})}
+
