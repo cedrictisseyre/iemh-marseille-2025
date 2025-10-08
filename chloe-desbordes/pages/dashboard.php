@@ -38,73 +38,93 @@ function nav($active) {
     <div class="content">
     <?php
     if ($page === 'coureurs') {
-        $stmt = $pdo->query('SELECT * FROM coureurs');
-        echo '<h2>Liste des coureurs</h2>';
-        $rows = $stmt->fetchAll();
-        if (count($rows) > 0) {
-            echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Nationalité</th><th>Date de naissance</th><th>Club</th></tr></thead><tbody>';
-            foreach ($rows as $row) {
-                echo "<tr><td>{$row['id_coureur']}</td><td>{$row['nom']}</td><td>{$row['prenom']}</td><td>{$row['nationalite']}</td><td>{$row['date_naissance']}</td><td>{$row['club']}</td></tr>";
+        try {
+            $stmt = $pdo->query('SELECT * FROM coureurs');
+            echo '<h2>Liste des coureurs</h2>';
+            $rows = $stmt->fetchAll();
+            if (count($rows) > 0) {
+                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Nationalité</th><th>Date de naissance</th><th>Club</th></tr></thead><tbody>';
+                foreach ($rows as $row) {
+                    echo "<tr><td>{$row['id_coureur']}</td><td>{$row['nom']}</td><td>{$row['prenom']}</td><td>{$row['nationalite']}</td><td>{$row['date_naissance']}</td><td>{$row['club']}</td></tr>";
+                }
+                echo '</tbody></table>';
+            } else {
+                echo '<p>Aucun coureur trouvé dans la base.</p>';
             }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>Aucun coureur trouvé dans la base.</p>';
+        } catch (PDOException $e) {
+            echo '<div style="color:red">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     }
     elseif ($page === 'courses') {
-        $stmt = $pdo->query('SELECT * FROM courses');
-        echo '<h2>Liste des courses</h2>';
-        $rows = $stmt->fetchAll();
-        if (count($rows) > 0) {
-            echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Date</th><th>Lieu</th></tr></thead><tbody>';
-            foreach ($rows as $row) {
-                echo "<tr><td>{$row['id_course']}</td><td>{$row['nom']}</td><td>{$row['date']}</td><td>{$row['lieu']}</td></tr>";
+        try {
+            $stmt = $pdo->query('SELECT * FROM courses');
+            echo '<h2>Liste des courses</h2>';
+            $rows = $stmt->fetchAll();
+            if (count($rows) > 0) {
+                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Date</th><th>Lieu</th></tr></thead><tbody>';
+                foreach ($rows as $row) {
+                    echo "<tr><td>{$row['id_course']}</td><td>{$row['nom']}</td><td>{$row['date']}</td><td>{$row['lieu']}</td></tr>";
+                }
+                echo '</tbody></table>';
+            } else {
+                echo '<p>Aucune course trouvée dans la base.</p>';
             }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>Aucune course trouvée dans la base.</p>';
+        } catch (PDOException $e) {
+            echo '<div style="color:red">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     }
     elseif ($page === 'participations') {
-        $stmt = $pdo->query('SELECT * FROM participations');
-        echo '<h2>Liste des participations</h2>';
-        $rows = $stmt->fetchAll();
-        if (count($rows) > 0) {
-            echo '<table><thead><tr><th>ID</th><th>ID Coureur</th><th>ID Course</th><th>Temps</th></tr></thead><tbody>';
-            foreach ($rows as $row) {
-                echo "<tr><td>{$row['id_participation']}</td><td>{$row['id_coureur']}</td><td>{$row['id_course']}</td><td>{$row['temps']}</td></tr>";
+        try {
+            $stmt = $pdo->query('SELECT * FROM participations');
+            echo '<h2>Liste des participations</h2>';
+            $rows = $stmt->fetchAll();
+            if (count($rows) > 0) {
+                echo '<table><thead><tr><th>ID</th><th>ID Coureur</th><th>ID Course</th><th>Temps</th></tr></thead><tbody>';
+                foreach ($rows as $row) {
+                    echo "<tr><td>{$row['id_participation']}</td><td>{$row['id_coureur']}</td><td>{$row['id_course']}</td><td>{$row['temps']}</td></tr>";
+                }
+                echo '</tbody></table>';
+            } else {
+                echo '<p>Aucune participation trouvée dans la base.</p>';
             }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>Aucune participation trouvée dans la base.</p>';
+        } catch (PDOException $e) {
+            echo '<div style="color:red">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     }
     elseif ($page === 'points') {
-        $stmt = $pdo->query('SELECT * FROM points');
-        echo '<h2>Liste des points ITRA</h2>';
-        $rows = $stmt->fetchAll();
-        if (count($rows) > 0) {
-            echo '<table><thead><tr><th>ID</th><th>ID Coureur</th><th>Points</th></tr></thead><tbody>';
-            foreach ($rows as $row) {
-                echo "<tr><td>{$row['id_point']}</td><td>{$row['id_coureur']}</td><td>{$row['points']}</td></tr>";
+        try {
+            $stmt = $pdo->query('SELECT * FROM points');
+            echo '<h2>Liste des points ITRA</h2>';
+            $rows = $stmt->fetchAll();
+            if (count($rows) > 0) {
+                echo '<table><thead><tr><th>ID</th><th>ID Coureur</th><th>Points</th></tr></thead><tbody>';
+                foreach ($rows as $row) {
+                    echo "<tr><td>{$row['id_point']}</td><td>{$row['id_coureur']}</td><td>{$row['points']}</td></tr>";
+                }
+                echo '</tbody></table>';
+            } else {
+                echo '<p>Aucun point ITRA trouvé dans la base.</p>';
             }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>Aucun point ITRA trouvé dans la base.</p>';
+        } catch (PDOException $e) {
+            echo '<div style="color:red">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     }
     elseif ($page === 'nationalites') {
-        $stmt = $pdo->query('SELECT DISTINCT nationalite FROM coureurs');
-        echo '<h2>Liste des nationalités</h2>';
-        $rows = $stmt->fetchAll();
-        if (count($rows) > 0) {
-            echo '<table><thead><tr><th>Nationalité</th></tr></thead><tbody>';
-            foreach ($rows as $row) {
-                echo "<tr><td>{$row['nationalite']}</td></tr>";
+        try {
+            $stmt = $pdo->query('SELECT DISTINCT nationalite FROM coureurs');
+            echo '<h2>Liste des nationalités</h2>';
+            $rows = $stmt->fetchAll();
+            if (count($rows) > 0) {
+                echo '<table><thead><tr><th>Nationalité</th></tr></thead><tbody>';
+                foreach ($rows as $row) {
+                    echo "<tr><td>{$row['nationalite']}</td></tr>";
+                }
+                echo '</tbody></table>';
+            } else {
+                echo '<p>Aucune nationalité trouvée dans la base.</p>';
             }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>Aucune nationalité trouvée dans la base.</p>';
+        } catch (PDOException $e) {
+            echo '<div style="color:red">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     }
     ?>
