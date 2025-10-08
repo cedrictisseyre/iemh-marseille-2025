@@ -15,6 +15,9 @@ if (empty($_SESSION['csrf_token'])) {
 <body>
 <header><h1>Ajouter un pilote</h1></header>
 <div class='container'>
+  <?php include __DIR__ . '/../includes/flash.php'; $f = get_flash(); if ($f): ?>
+    <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
+  <?php endif; ?>
   <form method='post' action='../services/ajout_pilote.php'>
     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
     <label>Prénom:<br><input type='text' name='prenom' required></label><br>

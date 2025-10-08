@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../database/bdd_formule1.php';
 session_start();
+require_once __DIR__ . '/../includes/flash.php';
 // Validation simple
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -27,6 +28,7 @@ $stmt->execute([$prenom, $nom, $nationalite, $photo]);
 $newId = $pdo->lastInsertId();
 // Optionnel: régénérer le token
 unset($_SESSION['csrf_token']);
+set_flash('success', 'Pilote ajouté avec succès.');
 // Redirect to fiche
 header('Location: ../pages/fiche_pilote.php?id=' . $newId);
 exit;

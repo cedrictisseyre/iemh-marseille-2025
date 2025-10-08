@@ -23,6 +23,9 @@ $ecuries = $pdo->prepare($sql4); $ecuries->execute([$id]); $ecuries = $ecuries->
 <body>
 <header><h1><?= htmlspecialchars($pilote['prenom'].' '.$pilote['nom']) ?></h1></header>
 <div class='container'>
+  <?php include __DIR__ . '/../includes/flash.php'; $f = get_flash(); if ($f): ?>
+    <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
+  <?php endif; ?>
   <div id="fiche-pilote-dyn" data-id="<?= $id ?>"></div>
   <a href='liste_pilotes.php'>&larr; Retour à la liste</a>
 </div>

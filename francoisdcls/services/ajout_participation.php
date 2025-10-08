@@ -1,0 +1,27 @@
+<?php
+require_once __DIR__ . '/../database/bdd_formule1.php';
+session_start();
+require_once __DIR__ . '/../includes/flash.php';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit; }
+// CSRF
+if (empty($_POST['csrf_token']) || empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+    set_flash('error', 'Jeton CSRF invalide.');
+    header('Location: ../pages/ajout_participation.php');
+    exit;
+}
+$pilote_id = isset($_POST['pilote_id']) ? intval($_POST['pilote_id']) : 0;
+$ecurie_id = isset($_POST['ecurie_id']) ? intval($_POST['ecurie_id']) : 0;
+$annee = isset($_POST['annee']) ? intval($_POST['annee']) : 0;
+if (!$pilote_id || !$ecurie_id || !$annee) {
+    set_flash('error', 'Tous les champs sont requis.');
+    header('Location: ../pages/ajout_participation.php');
+    exit;
+}
+// Insert participation
+$sql = "INSERT INTO participations (annee, pilote_id, ecurie_id) VALUES (?, ?, ?)";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$annee, $pilote_id, $ecurie_id]);
+unset($_SESSION['csrf_token']);
+set_flash('success', 'Participation ajoutée.');
+header('Location: ../pages/palmares_annee.php?annee=' . urlencode($annee));
+exit;
