@@ -20,6 +20,8 @@
     <li><a href='pages/comparer_pilotes.php'>Comparer deux pilotes</a></li>
     <li><a href='pages/palmares_annee.php'>Palmarès par année</a></li>
     <li><a href='pages/pantheon_pilotes.php'>Champions du monde</a></li>
+  <li><a href='pages/ajout_pilote.php'>Ajouter un pilote</a></li>
+  <li><a href='pages/ajout_ecurie.php'>Ajouter une écurie</a></li>
   </ul>
   <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
   <div id="stats-globales" style="margin-top:2em;"></div>
