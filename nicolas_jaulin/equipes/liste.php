@@ -1,3 +1,4 @@
+<?php
 require_once '../db_connect.php';
 $stmt = $pdo->query('SELECT * FROM Equipes');
 ?>
