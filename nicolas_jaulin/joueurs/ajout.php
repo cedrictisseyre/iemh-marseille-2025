@@ -9,9 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $poste = $_POST['poste'] ?? '';
     $id_equipe = $_POST['id_equipe'] !== '' ? $_POST['id_equipe'] : null;
     if ($nom) {
-        $stmt = $pdo->prepare('INSERT INTO Joueurs (nom, prenom, date_naissance, poste, id_equipe) VALUES (?, ?, ?, ?, ?)');
-        $stmt->execute([$nom, $prenom, $date_naissance, $poste, $id_equipe]);
-        $message = 'Joueur ajouté !';
+        try {
+            $stmt = $pdo->prepare('INSERT INTO Joueurs (nom, prenom, date_naissance, poste, id_equipe) VALUES (?, ?, ?, ?, ?)');
+            $stmt->execute([$nom, $prenom, $date_naissance, $poste, $id_equipe]);
+            $message = 'Joueur ajouté !';
+        } catch (PDOException $e) {
+            $message = 'Erreur SQL : ' . $e->getMessage();
+        }
     } else {
         $message = 'Le nom est obligatoire.';
     }

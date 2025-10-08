@@ -14,9 +14,13 @@ if ($id) {
         $poste = $_POST['poste'] ?? '';
         $id_equipe = $_POST['id_equipe'] !== '' ? $_POST['id_equipe'] : null;
         if ($nom) {
-            $stmt = $pdo->prepare('UPDATE Joueurs SET nom = ?, prenom = ?, date_naissance = ?, poste = ?, id_equipe = ? WHERE id_joueur = ?');
-            $stmt->execute([$nom, $prenom, $date_naissance, $poste, $id_equipe, $id]);
-            $message = 'Joueur modifié !';
+            try {
+                $stmt = $pdo->prepare('UPDATE Joueurs SET nom = ?, prenom = ?, date_naissance = ?, poste = ?, id_equipe = ? WHERE id_joueur = ?');
+                $stmt->execute([$nom, $prenom, $date_naissance, $poste, $id_equipe, $id]);
+                $message = 'Joueur modifié !';
+            } catch (PDOException $e) {
+                $message = 'Erreur SQL : ' . $e->getMessage();
+            }
         } else {
             $message = 'Le nom est obligatoire.';
         }
