@@ -84,9 +84,9 @@ function tabNav($active) {
             $rows = $stmt->fetchAll();
             echo '<h2>Liste des courses</h2>';
             if (count($rows) > 0) {
-                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Date</th><th>Lieu</th></tr></thead><tbody>';
+                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Distance (km)</th><th>Dénivelé (m)</th><th>Date</th></tr></thead><tbody>';
                 foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_course']}</td><td>{$row['nom']}</td><td>{$row['date']}</td><td>{$row['lieu']}</td></tr>";
+                    echo "<tr><td>{$row['id_course']}</td><td>{$row['nom_course']}</td><td>{$row['distance_km']}</td><td>{$row['denivele_m']}</td><td>{$row['date_course']}</td></tr>";
                 }
                 echo '</tbody></table>';
             } else {
