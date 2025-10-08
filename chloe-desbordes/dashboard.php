@@ -3,6 +3,10 @@
 
 <?php
 require_once __DIR__ . '/connexion.php';
+if (!isset($pdo) || !$pdo) {
+    echo '<div style="color:red;font-weight:bold">Erreur : la connexion à la base de données a échoué. Vérifiez les identifiants et l’accessibilité du serveur.</div>';
+    exit;
+}
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -53,7 +57,7 @@ function tabNav($active) {
     try {
         if ($tab === 'coureurs') {
             echo '<a href="pages/liste_coureurs.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM coureurs';
+            $sql = 'SELECT * FROM coureurs_UTMB';
             if ($search) $sql .= ' WHERE nom LIKE :search OR prenom LIKE :search OR nationalite LIKE :search OR club LIKE :search';
             $stmt = $pdo->prepare($sql);
             $params = $search ? [':search' => "%$search%"] : [];
