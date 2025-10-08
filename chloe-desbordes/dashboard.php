@@ -153,6 +153,7 @@ function tabNav($active) {
     </style>
 </head>
 <body>
+    <h1 style="text-align:center;color:#1565c0;font-size:3em;margin-top:32px;letter-spacing:3px;font-family:'Montserrat',Arial,sans-serif;">UTMB - Ultra-Trail du Mont-Blanc</h1>
     <div class="mountain-header">
         <svg class="mountain-svg" viewBox="0 0 1100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 160L1100 160V80L900 120L800 60L700 130L600 90L500 150L400 100L300 140L200 80L100 120L0 160Z" fill="#388e3c"/>
