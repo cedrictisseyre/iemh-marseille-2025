@@ -285,7 +285,8 @@ exit;
 
 // --- FRONTEND HTML ---
 header('Content-Type: text/html; charset=utf-8');
-?><!doctype html>
+?>
+<!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
