@@ -32,19 +32,133 @@ function tabNav($active) {
 <head>
     <meta charset="UTF-8">
     <title>Dashboard UTMB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body{font-family:Arial;max-width:1000px;margin:20px auto;padding:10px}
-        .tabs { display: flex; justify-content: center; margin-top: 30px; }
-        .tabs a { background: #2980b9; color: #fff; padding: 12px 30px; margin: 0 5px; font-size: 1.1em; border-radius: 6px 6px 0 0; text-decoration: none; transition: background 0.2s; }
-        .tabs a.active { background: #34495e; }
-        .content { background: #fff; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(44,62,80,0.08); margin: 0 auto; max-width: 900px; padding: 30px; }
-        input[type=text]{padding:6px;width:300px;margin-bottom:1em;}
-        table{width:100%;border-collapse:collapse;margin-top:1em}
-        th,td{border:1px solid #ddd;padding:6px;text-align:left}
-        th{background:#f1f5f9}
+        body {
+            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(to top, #e0f7fa 0%, #fff 100%);
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        .mountain-header {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(to top, #b3e5fc 0%, #fff 100%);
+            position: relative;
+            margin-bottom: -40px;
+        }
+        .mountain-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 160px;
+        }
+        h1 {
+            text-align: center;
+            color: #34495e;
+            font-size: 2.5em;
+            margin-top: 0;
+            letter-spacing: 2px;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .tabs a {
+            background: #388e3c;
+            color: #fff;
+            padding: 14px 36px;
+            margin: 0 7px;
+            font-size: 1.15em;
+            border-radius: 12px 12px 0 0;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            font-weight: bold;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .tabs a.active {
+            background: #1565c0;
+            box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+        }
+        .content {
+            background: #fff;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            margin: 0 auto;
+            max-width: 1000px;
+            padding: 40px 32px 32px 32px;
+        }
+        input[type=text]{
+            padding:8px;
+            width:320px;
+            margin-bottom:1em;
+            border-radius:6px;
+            border:1px solid #b3e5fc;
+            font-size:1em;
+        }
+        button[type=submit]{
+            background:#388e3c;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            padding:8px 18px;
+            font-size:1em;
+            cursor:pointer;
+            font-weight:bold;
+            box-shadow:0 2px 8px rgba(44,62,80,0.08);
+            transition:background 0.2s;
+        }
+        button[type=submit]:hover{
+            background:#1565c0;
+        }
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:1em;
+            background:#f9fbe7;
+            border-radius:8px;
+            overflow:hidden;
+            box-shadow:0 2px 8px rgba(44,62,80,0.08);
+        }
+        th,td{
+            border:1px solid #c8e6c9;
+            padding:10px;
+            text-align:left;
+        }
+        th{
+            background:#b3e5fc;
+            color:#1565c0;
+            font-size:1.05em;
+        }
+        tr:nth-child(even){background:#e0f2f1;}
+        a[target="_blank"]{
+            background:#1565c0;
+            color:#fff;
+            padding:6px 16px;
+            border-radius:6px;
+            text-decoration:none;
+            font-size:0.95em;
+            float:right;
+            margin-bottom:10px;
+            margin-left:10px;
+            box-shadow:0 2px 8px rgba(44,62,80,0.08);
+        }
+        a[target="_blank"]:hover{
+            background:#388e3c;
+        }
     </style>
 </head>
 <body>
+    <div class="mountain-header">
+        <svg class="mountain-svg" viewBox="0 0 1100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 160L1100 160V80L900 120L800 60L700 130L600 90L500 150L400 100L300 140L200 80L100 120L0 160Z" fill="#388e3c"/>
+            <path d="M0 160L1100 160V120L900 140L800 100L700 150L600 130L500 160L400 120L300 150L200 120L100 140L0 160Z" fill="#b3e5fc"/>
+        </svg>
+    </div>
     <h1>Tableau de bord UTMB</h1>
     <?php tabNav($tab); ?>
     <div class="content">
