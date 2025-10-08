@@ -95,7 +95,7 @@ function tabNav($active) {
         }
         elseif ($tab === 'participations') {
             echo '<a href="pages/liste_participations.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM participations';
+            $sql = 'SELECT * FROM participation';
             if ($search) $sql .= ' WHERE id_coureur LIKE :search OR id_course LIKE :search OR temps LIKE :search';
             $stmt = $pdo->prepare($sql);
             $params = $search ? [':search' => "%$search%"] : [];
@@ -114,7 +114,7 @@ function tabNav($active) {
         }
         elseif ($tab === 'points') {
             echo '<a href="pages/liste_points.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM points';
+            $sql = 'SELECT * FROM points_ITRA';
             if ($search) $sql .= ' WHERE id_coureur LIKE :search OR points LIKE :search';
             $stmt = $pdo->prepare($sql);
             $params = $search ? [':search' => "%$search%"] : [];
