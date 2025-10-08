@@ -1,6 +1,25 @@
 <?php
 // Section Karateka
 $db_ok = isset($pdo) && $pdo !== null;
+
+
+// Modification d’un karateka
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_karateka']) && $db_ok) {
+    $stmt = $pdo->prepare("UPDATE karateka SET nom = ?, prenom = ?, date_naissance = ?, sexe = ?, grade = ?, id_club = ? WHERE id_karateka = ?");
+    $stmt->execute([
+        $_POST['nom'], $_POST['prenom'], $_POST['date_naissance'], $_POST['sexe'], $_POST['grade'], $_POST['id_club'], $_POST['id_karateka']
+    ]);
+    echo '<p class="success">Karateka modifié !</p>';
+}
+
+// Suppression d'un karateka
+if (isset($_GET['delete_karateka']) && $db_ok) {
+    $kid = intval($_GET['delete_karateka']);
+    $stmt = $pdo->prepare("DELETE FROM karateka WHERE id_karateka = ?");
+    $stmt->execute([$kid]);
+    echo '<p class="success">Karateka supprimé !</p>';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_karateka'])) {
     if ($db_ok) {
         $stmt = $pdo->prepare("INSERT INTO karateka (nom, prenom, date_naissance, sexe, grade, id_club) VALUES (?, ?, ?, ?, ?, ?)");
@@ -42,12 +61,51 @@ if (isset($_GET['karateka_id'])) {
     if ($stmt) {
         while ($k = $stmt->fetch()) {
             $label = formatName($k['prenom'], $k['nom']);
-            echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>" . esc($label) . "</strong></a> (" . esc($k['grade']) . ") - Club : " . esc($k['nom_club']) . "</li>";
+            echo "<li><a href='gestion-karate.php?page=karateka&karateka_id={$k['id_karateka']}'><strong>" . esc($label) . "</strong></a> (" . esc($k['grade']) . ") - Club : " . esc($k['nom_club']) . " ";
+            echo "<a href='gestion-karate.php?page=karateka&edit_karateka_id={$k['id_karateka']}' style='color:blue;margin-left:10px;'>Modifier</a>";
+            echo "<a href='gestion-karate.php?page=karateka&delete_karateka={$k['id_karateka']}' onclick=\"return confirm('Supprimer ce karateka ?');\" style='color:red;margin-left:10px;'>Supprimer</a></li>";
         }
     } else {
         echo "<li class='meta'>Aucun karateka listé (connexion DB manquante).</li>";
     }
     echo '</ul>';
+    // Formulaire de modification si demandé
+    if (isset($_GET['edit_karateka_id']) && $db_ok) {
+        $kid = intval($_GET['edit_karateka_id']);
+        $stmt = $pdo->prepare("SELECT * FROM karateka WHERE id_karateka = ?");
+        $stmt->execute([$kid]);
+        $k = $stmt->fetch();
+        if ($k) {
+            $clubs = $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll();
+            ?>
+            <h3>Modifier le karateka</h3>
+            <form method="post" aria-label="Modifier le karateka">
+                <input type="hidden" name="edit_karateka" value="1">
+                <input type="hidden" name="id_karateka" value="<?= $k['id_karateka'] ?>">
+                <label for="nom_karateka">Nom :</label>
+                <input type="text" id="nom_karateka" name="nom" value="<?= htmlspecialchars($k['nom']) ?>" required>
+                <label for="prenom_karateka">Prénom :</label>
+                <input type="text" id="prenom_karateka" name="prenom" value="<?= htmlspecialchars($k['prenom']) ?>" required>
+                <label for="date_naissance">Date de naissance :</label>
+                <input type="date" id="date_naissance" name="date_naissance" value="<?= htmlspecialchars($k['date_naissance']) ?>" required>
+                <label for="sexe">Sexe :</label>
+                <select id="sexe" name="sexe" required>
+                    <option value="M" <?= $k['sexe'] == 'M' ? 'selected' : '' ?>>Masculin</option>
+                    <option value="F" <?= $k['sexe'] == 'F' ? 'selected' : '' ?>>Féminin</option>
+                </select>
+                <label for="grade">Grade :</label>
+                <input type="text" id="grade" name="grade" value="<?= htmlspecialchars($k['grade']) ?>" required>
+                <label for="id_club">Club :</label>
+                <select id="id_club" name="id_club" required>
+                    <?php foreach ($clubs as $club): ?>
+                        <option value="<?= $club['id_club'] ?>" <?= $k['id_club'] == $club['id_club'] ? 'selected' : '' ?>><?= esc($club['nom_club']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button type="submit">Enregistrer</button>
+            </form>
+            <?php
+        }
+    }
     $clubs = $db_ok ? $pdo->query("SELECT id_club, nom_club FROM club")->fetchAll() : [];
     ?>
     <h3 class="add-title">Ajouter un karateka</h3>

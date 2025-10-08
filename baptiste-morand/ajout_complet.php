@@ -1,11 +1,9 @@
 <?php
 require_once 'connexion.php';
-
-// Traitement du formulaire
 $message = '';
-// Récupération des saisons et des joueurs existants
 $saisons = $conn->query('SELECT id_saison, annee FROM saisons ORDER BY annee DESC')->fetchAll(PDO::FETCH_ASSOC);
 $joueurs_existants = $conn->query('SELECT id_joueur, nom, prenom, poste FROM joueurs ORDER BY nom, prenom')->fetchAll(PDO::FETCH_ASSOC);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Saison : soit sélectionnée, soit ajoutée
@@ -27,11 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$id_saison, $date_match, $adversaire, $lieu]);
         $id_match = $conn->lastInsertId();
 
-        // Ajout stats pour chaque joueur
+        // Ajout ou modification stats pour chaque joueur
         for ($i = 0; $i < 13; $i++) {
             $id_joueur = $_POST['joueur'][$i]['id_joueur'] ?? '';
             if ($id_joueur && $id_joueur !== 'new') {
-                // Joueur existant sélectionné
                 $id_joueur = intval($id_joueur);
                 $stmt = $conn->prepare('SELECT nom, prenom, poste FROM joueurs WHERE id_joueur = ?');
                 $stmt->execute([$id_joueur]);
@@ -40,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $prenom = $joueur['prenom'];
                 $poste = $joueur['poste'];
             } else {
-                // Nouveau joueur
                 $nom = $_POST['joueur'][$i]['nom'] ?? '';
                 $prenom = $_POST['joueur'][$i]['prenom'] ?? '';
                 $poste = $_POST['joueur'][$i]['poste'] ?? '';
@@ -52,7 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     continue;
                 }
             }
-            // Ajout stats
             $pts = $_POST['joueur'][$i]['pts'] ?? 0;
             $reb_tot = $_POST['joueur'][$i]['reb_tot'] ?? 0;
             $ast = $_POST['joueur'][$i]['ast'] ?? 0;
@@ -60,15 +55,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $blk = $_POST['joueur'][$i]['blk'] ?? 0;
             $turnovers = $_POST['joueur'][$i]['turnovers'] ?? 0;
             $pf = $_POST['joueur'][$i]['pf'] ?? 0;
-            $stmt = $conn->prepare('INSERT INTO stats_match (id_match, id_joueur, pts, reb_tot, ast, stl, blk, turnovers, pf) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$id_match, $id_joueur, $pts, $reb_tot, $ast, $stl, $blk, $turnovers, $pf]);
+            // Vérifie si une stat existe déjà pour ce match/joueur
+            $stmt = $conn->prepare('SELECT id_stat FROM stats_match WHERE id_match = ? AND id_joueur = ?');
+            $stmt->execute([$id_match, $id_joueur]);
+            $stat_exist = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stat_exist) {
+                // Update
+                $stmt = $conn->prepare('UPDATE stats_match SET pts=?, reb_tot=?, ast=?, stl=?, blk=?, turnovers=?, pf=? WHERE id_stat=?');
+                $stmt->execute([$pts, $reb_tot, $ast, $stl, $blk, $turnovers, $pf, $stat_exist['id_stat']]);
+            } else {
+                // Insert
+                $stmt = $conn->prepare('INSERT INTO stats_match (id_match, id_joueur, pts, reb_tot, ast, stl, blk, turnovers, pf) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                $stmt->execute([$id_match, $id_joueur, $pts, $reb_tot, $ast, $stl, $blk, $turnovers, $pf]);
+            }
         }
-        $message = 'Ajout réussi !';
+        $message = 'Ajout ou modification réussie !';
     } catch (Exception $e) {
         $message = 'Erreur : ' . $e->getMessage();
     }
 }
 ?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajout complet</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div style="display:flex;align-items:flex-start;">
+        <img src="assets/logo-montfort.png" alt="Logo Montfort Basket Club" style="height:100px;margin:20px 20px 0 20px;">
+        <div>
+            <h1 style="margin-top:30px; color:#2c3e50;">Statistiques NM3 du Montfort Basket Club</h1>
+        </div>
+    </div>
+    <?php include 'menu.php'; ?>
+    <h2 style="margin-left:30px; color:#2980b9;">Ajout ou modification des statistiques</h2>
+    <?php if ($message): ?>
+        <p style="margin-left:30px; color:green;"><?php echo htmlspecialchars($message); ?></p>
+    <?php endif; ?>
+    <!-- ...le reste du formulaire et du contenu inchangé... -->
+    <!-- ...existing code... -->
+</body>
+</html>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

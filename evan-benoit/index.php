@@ -1,91 +1,119 @@
 <?php
-require_once 'connect.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+try {
+    require_once __DIR__ . '/connexion.php';
+} catch (Exception $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+include __DIR__ . '/header.html';
 
 //////////////////////////////////////
-// 1️⃣ SUPPRESSION D'UNE SEANCE
+// SUPPRESSION
 //////////////////////////////////////
 if (isset($_GET['delete'])) {
     $id_delete = intval($_GET['delete']);
-    $sql_delete = "DELETE FROM seances WHERE id = :id";
-    $stmt = $conn->prepare($sql_delete);
-    $stmt->execute([':id' => $id_delete]);
-    echo "<p style='color: red; text-align: center;'>❌ Séance supprimée avec succès.</p>";
+    if ($id_delete > 0) {
+        $sql_delete = "DELETE FROM seances WHERE id = :id";
+        $stmt = $conn->prepare($sql_delete);
+        if ($stmt->execute([':id' => $id_delete])) {
+            echo "<p style='color: red; text-align: center;'>❌ Séance supprimée avec succès.</p>";
+        } else {
+            echo "<p style='color: red; text-align: center;'>⚠️ Erreur lors de la suppression.</p>";
+        }
+    }
 }
 
 //////////////////////////////////////
-// 2️⃣ AJOUT D'UNE SEANCE
+// AJOUT
 //////////////////////////////////////
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
-    $date_seance = $_POST['date_seance'];
-    $type_seance = $_POST['type_seance'];
-    $id_client = $_POST['id_client'];
-    $id_coach = $_POST['id_coach'];
+    $date_seance = trim($_POST['date_seance']);
+    $type_seance = trim($_POST['type_seance']);
+    $id_client = intval($_POST['id_client']);
+    $id_coach = intval($_POST['id_coach']);
 
-    if (!empty($date_seance) && !empty($type_seance) && !empty($id_client) && !empty($id_coach)) {
+    if (!empty($date_seance) && !empty($type_seance) && $id_client > 0 && $id_coach > 0) {
         $sql_insert = "INSERT INTO seances (date_seance, type_seance, id_client, id_coach)
                        VALUES (:date_seance, :type_seance, :id_client, :id_coach)";
         $stmt_insert = $conn->prepare($sql_insert);
-        $stmt_insert->execute([
+        if ($stmt_insert->execute([
             ':date_seance' => $date_seance,
             ':type_seance' => $type_seance,
             ':id_client' => $id_client,
             ':id_coach' => $id_coach
-        ]);
-        echo "<p style='color:green; text-align:center;'>✅ Séance ajoutée avec succès !</p>";
+        ])) {
+            echo "<p style='color:green; text-align:center;'>✅ Séance ajoutée avec succès !</p>";
+        } else {
+            echo "<p style='color:red; text-align:center;'>⚠️ Erreur lors de l'ajout.</p>";
+        }
     } else {
         echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis.</p>";
     }
 }
 
 //////////////////////////////////////
-// 3️⃣ MODIFICATION D'UNE SEANCE
+// MODIFICATION
 //////////////////////////////////////
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-    $id_update = $_POST['id'];
-    $date_seance = $_POST['date_seance'];
-    $type_seance = $_POST['type_seance'];
-    $id_client = $_POST['id_client'];
-    $id_coach = $_POST['id_coach'];
+    $id_update = intval($_POST['id']);
+    $date_seance = trim($_POST['date_seance']);
+    $type_seance = trim($_POST['type_seance']);
+    $id_client = intval($_POST['id_client']);
+    $id_coach = intval($_POST['id_coach']);
 
-    $sql_update = "UPDATE seances 
-                   SET date_seance = :date_seance,
-                       type_seance = :type_seance,
-                       id_client = :id_client,
-                       id_coach = :id_coach
-                   WHERE id = :id";
-    $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->execute([
-        ':date_seance' => $date_seance,
-        ':type_seance' => $type_seance,
-        ':id_client' => $id_client,
-        ':id_coach' => $id_coach,
-        ':id' => $id_update
-    ]);
-    echo "<p style='color:orange; text-align:center;'>✏️ Séance modifiée avec succès.</p>";
+    if ($id_update > 0 && !empty($date_seance) && !empty($type_seance) && $id_client > 0 && $id_coach > 0) {
+        $sql_update = "UPDATE seances 
+                       SET date_seance = :date_seance,
+                           type_seance = :type_seance,
+                           id_client = :id_client,
+                           id_coach = :id_coach
+                       WHERE id = :id";
+        $stmt_update = $conn->prepare($sql_update);
+        if ($stmt_update->execute([
+            ':date_seance' => $date_seance,
+            ':type_seance' => $type_seance,
+            ':id_client' => $id_client,
+            ':id_coach' => $id_coach,
+            ':id' => $id_update
+        ])) {
+            echo "<p style='color:orange; text-align:center;'>✏️ Séance modifiée avec succès.</p>";
+        } else {
+            echo "<p style='color:red; text-align:center;'>⚠️ Erreur lors de la modification.</p>";
+        }
+    } else {
+        echo "<p style='color:red; text-align:center;'>⚠️ Tous les champs doivent être remplis pour la modification.</p>";
+    }
 }
 
 //////////////////////////////////////
-// 4️⃣ RECUPERATION DES DONNEES
+// RÉCUPÉRATION DES DONNÉES
 //////////////////////////////////////
-$clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
-$coachs = $conn->query("SELECT id, prenom, specialite FROM coachs ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
+    $coachs = $conn->query("SELECT id, prenom, specialite FROM coachs ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
 
-$sql = "
-    SELECT 
-        s.id,
-        s.date_seance,
-        s.type_seance,
-        CONCAT(c.prenom, ' ', c.nom) AS client,
-        co.prenom AS coach,
-        co.specialite,
-        s.id_client,
-        s.id_coach
-    FROM seances s
-    JOIN clients c ON s.id_client = c.id
-    JOIN coachs co ON s.id_coach = co.id
-    ORDER BY s.date_seance;
-";
-$seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    $sql = "
+        SELECT 
+            s.id,
+            s.date_seance,
+            s.type_seance,
+            CONCAT(c.prenom, ' ', c.nom) AS client,
+            co.prenom AS coach,
+            co.specialite,
+            s.id_client,
+            s.id_coach
+        FROM seances s
+        JOIN clients c ON s.id_client = c.id
+        JOIN coachs co ON s.id_coach = co.id
+        ORDER BY s.date_seance;
+    ";
+    $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    die("Erreur récupération données : " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -151,10 +179,10 @@ $seances = $conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <td><?= $s['id'] ?></td>
             <td><?= $s['date_seance'] ?></td>
-            <td><?= $s['type_seance'] ?></td>
-            <td><?= $s['client'] ?></td>
-            <td><?= $s['coach'] ?></td>
-            <td><?= $s['specialite'] ?></td>
+            <td><?= htmlspecialchars($s['type_seance']) ?></td>
+            <td><?= htmlspecialchars($s['client']) ?></td>
+            <td><?= htmlspecialchars($s['coach']) ?></td>
+            <td><?= htmlspecialchars($s['specialite']) ?></td>
             <td>
                 <a class="delete-btn" href="?delete=<?= $s['id'] ?>" onclick="return confirm('Supprimer cette séance ?')">Supprimer</a>
                 <a href="?edit=<?= $s['id'] ?>">Modifier</a>

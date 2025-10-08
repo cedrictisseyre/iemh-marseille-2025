@@ -1,0 +1,38 @@
+<?php
+require_once '../db_connect.php';
+$stmt = $pdo->query('SELECT * FROM Equipes');
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des équipes</title>
+</head>
+<body>
+    <h1>Liste des équipes</h1>
+    <a href="ajout.php">Ajouter une équipe</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Ville</th>
+            <th>Année de création</th>
+            <th>Actions</th>
+        </tr>
+        <?php while ($row = $stmt->fetch()): ?>
+        <tr>
+            <td><?= htmlspecialchars($row['id_equipe']) ?></td>
+            <td><?= htmlspecialchars($row['nom_equipe']) ?></td>
+            <td><?= htmlspecialchars($row['ville']) ?></td>
+            <td><?= htmlspecialchars($row['annee_creation']) ?></td>
+            <td>
+                <a href="modif.php?id=<?= $row['id_equipe'] ?>">Modifier</a> |
+                <a href="suppr.php?id=<?= $row['id_equipe'] ?>" onclick="return confirm('Supprimer cette équipe ?');">Supprimer</a>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+    </table>
+    </body>
+    <p><a href="../index.php">Retour au menu principal</a></p>
+</body>
+</html>

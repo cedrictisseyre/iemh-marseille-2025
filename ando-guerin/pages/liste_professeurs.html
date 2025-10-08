@@ -22,11 +22,47 @@
   </div>
 </nav>
 <div class="container mt-4">
-    <h2>Liste des professeurs</h2>
-    <ul id="profs-list" class="list-group"></ul>
-    <a href="../index.php" class="btn btn-secondary mt-3">Retour accueil</a>
+  <h2>Liste des professeurs</h2>
+  <form id="form-prof" class="mb-4">
+    <div class="row g-2">
+      <div class="col-md-3"><input type="text" class="form-control" name="prenom" placeholder="Prénom" required></div>
+      <div class="col-md-3"><input type="text" class="form-control" name="nom" placeholder="Nom" required></div>
+      <div class="col-md-3"><input type="text" class="form-control" name="matiere" placeholder="Matière" required></div>
+      <div class="col-md-3"><button type="submit" class="btn btn-success w-100">Ajouter professeur</button></div>
+    </div>
+    <div id="prof-message" class="mt-2"></div>
+  </form>
+  <ul id="profs-list" class="list-group"></ul>
+  <a href="../index.php" class="btn btn-secondary mt-3">Retour accueil</a>
 </div>
 <script>
+document.getElementById('form-prof').onsubmit = function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  fetch('../services/ajouter_professeur.php', {
+    method: 'POST',
+    body: data
+  })
+  .then(r => r.text())
+  .then(msg => {
+    document.getElementById('prof-message').textContent = msg;
+    form.reset();
+    // Rafraîchir la liste
+    fetch('../services/lire_professeurs.php')
+      .then(r => r.json())
+      .then(data => {
+        const ul = document.getElementById('profs-list');
+        ul.innerHTML = '';
+        data.forEach(p => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          li.textContent = p.prenom + ' ' + p.nom;
+          ul.appendChild(li);
+        });
+      });
+  });
+};
 fetch('../services/lire_professeurs.php')
   .then(r => r.json())
   .then(data => {

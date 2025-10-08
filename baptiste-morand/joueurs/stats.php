@@ -21,10 +21,17 @@ if ($id > 0) {
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
+    <div style="display:flex;align-items:flex-start;">
+        <img src="../assets/logo-montfort.png" alt="Logo Montfort Basket Club" style="height:100px;margin:20px 20px 0 20px;">
+        <div>
+            <h1 style="margin-top:30px; color:#2c3e50;">Statistiques NM3 du Montfort Basket Club</h1>
+        </div>
+    </div>
+    <?php include '../menu.php'; ?>
+    <h2 style="margin-left:30px; color:#2980b9;">Statistiques du joueur</h2>
     <?php if ($joueur): ?>
-        <h1>Statistiques de <?php echo htmlspecialchars($joueur['prenom'] . ' ' . $joueur['nom']); ?></h1>
-        <p>Poste : <?php echo htmlspecialchars($joueur['poste']); ?></p>
-        <table border="1">
+        <p style="margin-left:30px;">Poste : <?php echo htmlspecialchars($joueur['poste']); ?></p>
+        <table border="1" style="margin-left:30px;">
             <tr>
                 <th>Match</th><th>Points</th><th>Rebonds</th><th>Passes</th><th>Interceptions</th><th>Contres</th><th>Turnovers</th><th>Fautes</th>
             </tr>
@@ -42,8 +49,7 @@ if ($id > 0) {
             <?php endforeach; ?>
         </table>
     <?php else: ?>
-        <p>Joueur non trouvé.</p>
+        <p style="margin-left:30px;">Joueur non trouvé.</p>
     <?php endif; ?>
-    <a href="liste.php">Retour à la liste des joueurs</a>
 </body>
 </html>

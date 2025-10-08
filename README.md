@@ -9,12 +9,26 @@ Ce dépôt regroupe les travaux réalisés par les étudiants de la formation IH
 - Un README pour chaque dossier étudiant (optionnel)
 
 ## Instructions pour lancer le projet
+
+### 🌐 Environnement de production
 Le projet est déployé automatiquement sur l’environnement Jelastic d’Infomaniak pour visualisation
 
 Pour visualiser les résultats et accéder aux fonctionnalités, rendez-vous directement sur :
 https://env-iemh.jcloud-ver-jpe.ik-server.com/
 
 Aucune installation ou lancement manuel n’est nécessaire.
+
+### 💻 Environnement de développement local (Dev Container)
+Pour tester et développer localement avec PHP, MySQL et phpMyAdmin :
+
+1. Installez [Docker Desktop](https://www.docker.com/products/docker-desktop/) et [VS Code](https://code.visualstudio.com/)
+2. Installez l'extension [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+3. Ouvrez le projet dans VS Code
+4. Appuyez sur **F1** → **Dev Containers: Reopen in Container**
+5. Accédez à phpMyAdmin : http://localhost:8081 (user: `root` / pass: `root_password`)
+
+📘 **Guide complet** : [DEVCONTAINER_GUIDE.md](DEVCONTAINER_GUIDE.md)
+
 
 ## Modalités d’évaluation
 - Les dossiers étudiants sont évalués sur :
