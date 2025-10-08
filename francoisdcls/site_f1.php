@@ -11,6 +11,9 @@
   <h1 style="display:inline-block;vertical-align:middle;">Base de données Formule 1</h1>
 </header>
 <div class='container'>
+  <?php include __DIR__ . '/includes/flash.php'; $f = get_flash(); if ($f): ?>
+    <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
+  <?php endif; ?>
   <h2>Navigation</h2>
   <ul>
     <li><a href='pages/liste_pilotes.php'>Liste des pilotes</a></li>
@@ -20,6 +23,7 @@
     <li><a href='pages/comparer_pilotes.php'>Comparer deux pilotes</a></li>
     <li><a href='pages/palmares_annee.php'>Palmarès par année</a></li>
     <li><a href='pages/pantheon_pilotes.php'>Champions du monde</a></li>
+  <li><a href='pages/ajout_participation.php'>Ajouter une participation</a></li>
   <li><a href='pages/ajout_pilote.php'>Ajouter un pilote</a></li>
   <li><a href='pages/ajout_ecurie.php'>Ajouter une écurie</a></li>
   </ul>
