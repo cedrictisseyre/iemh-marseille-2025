@@ -1,6 +1,6 @@
 
 <?php
-require_once __DIR__ . '/connexion.php';
+require_once __DIR__ . '/pages/db_connect.php';
 $nb_coureurs = $pdo->query('SELECT COUNT(*) FROM coureurs')->fetchColumn();
 $nb_courses = $pdo->query('SELECT COUNT(*) FROM courses')->fetchColumn();
 $nb_resultats = $pdo->query('SELECT COUNT(*) FROM resultats')->fetchColumn();
