@@ -40,13 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = trim($_POST['prenom'] ?? '');
     $nom = trim($_POST['nom'] ?? '');
     $email = $_POST['email'] ?? '';
-    $mot_de_passe = $_POST['mot_de_passe'] ?? '';
     $nom_complet = ($prenom && $nom) ? (ucfirst($prenom) . ' ' . ucfirst(strtolower($nom))) : '';
-    if ($nom_complet && $email && $mot_de_passe) {
+    if ($nom_complet && $email) {
         try {
-            $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO utilisateurs (nom, email, mot_de_passe, date_creation) VALUES (?, ?, ?, CURDATE())");
-            $stmt->execute([$nom_complet, $email, $hash]);
+            $stmt = $pdo->prepare("INSERT INTO utilisateurs (nom, email, date_creation) VALUES (?, ?, CURDATE())");
+            $stmt->execute([$nom_complet, $email]);
             header('Location: users.php');
             exit;
         } catch (PDOException $e) {
@@ -75,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label>Prénom : <input type="text" name="prenom" required></label><br>
             <label>Nom : <input type="text" name="nom" required></label><br>
             <label>Email : <input type="email" name="email" required></label><br>
-            <label>Mot de passe : <input type="password" name="mot_de_passe" required></label><br>
             <button type="submit">Ajouter</button>
         </form>
         <h2>Liste des utilisateurs</h2>
