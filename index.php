@@ -66,7 +66,8 @@
 			$dossiers = [];
 			$fichiers = [];
 			foreach ($contenu as $item) {
-				if ($item === '.' || $item === '..') continue;
+				// Ignore les éléments cachés (., .. et tout dossier/fichier commençant par un point)
+				if ($item[0] === '.') continue;
 				$fullpath = $chemin . '/' . $item;
 				if (is_dir($fullpath)) {
 					$dossiers[] = $item;
@@ -93,7 +94,8 @@
 		}
 		$maxProgress = 14; // plafond dynamique, par exemple 14/20 si 2 TD restants
 		foreach (scandir('.') as $item) {
-			if ($item === '.' || $item === '..' || $item === '.git' || !is_dir($item)) continue;
+			// Ignore tous les dossiers cachés (commençant par un point) et les non-dossiers
+			if ($item[0] === '.' || !is_dir($item)) continue;
 			   $globalScore = getGlobalScore($item); // sur 100
 			   $color = $globalScore < 50 ? '#e74c3c' : ($globalScore < 80 ? '#f39c12' : '#27ae60');
 			   $progressBar = "<div class='progress-bar' style='width:120px;height:16px;background:#eee;border-radius:8px;display:inline-block;margin-left:12px;vertical-align:middle;'><div class='progress' style='height:100%;width:" . ($globalScore) . "%;;background:$color;border-radius:8px;transition:width 0.5s;'></div></div> <span style='font-size:0.95em;color:$color;'>$globalScore/100</span>";
