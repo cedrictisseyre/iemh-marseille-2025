@@ -1,7 +1,14 @@
 <?php
-require_once 'db_connect.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+require_once '../db_connect.php';
 $sql = 'SELECT ma.id_match, ma.id_arbitre, m.date_match, a.nom AS nom_arbitre, a.prenom AS prenom_arbitre FROM Matchs_Arbitres ma JOIN Matchs m ON ma.id_match = m.id_match JOIN Arbitres a ON ma.id_arbitre = a.id_arbitre';
-$stmt = $pdo->query($sql);
+try {
+    $stmt = $pdo->query($sql);
+} catch (PDOException $e) {
+    die("Erreur SQL : " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
