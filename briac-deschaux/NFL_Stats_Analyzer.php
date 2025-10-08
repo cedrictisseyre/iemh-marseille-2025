@@ -46,8 +46,6 @@ function nav($active) {
             <form method="post" action="services/add_player.php">
                 <input type="text" name="prenom" placeholder="Prénom" required>
                 <input type="text" name="nom" placeholder="Nom" required>
-
-                <!-- Select poste depuis table position -->
                 <select name="poste" required>
                     <option value="">Sélectionner un poste</option>
                     <?php
@@ -57,13 +55,10 @@ function nav($active) {
                     }
                     ?>
                 </select>
-
                 <input type="number" name="age" placeholder="Âge" required>
                 <input type="number" name="taille_cm" placeholder="Taille (cm)" required>
                 <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
                 <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
-
-                <!-- Select équipe par conférence -->
                 <select name="id_team" required>
                     <option value="">Sélectionner une équipe</option>
                     <?php
@@ -80,7 +75,6 @@ function nav($active) {
                     if ($current_conf !== "") echo "</optgroup>";
                     ?>
                 </select>
-
                 <button type="submit">Ajouter le joueur</button>
             </form>
         </div>
@@ -106,12 +100,11 @@ function nav($active) {
                 $where = "WHERE p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?";
                 $params = [$search, $search, $search, $search];
             }
-
             $stmt = $pdo->prepare("SELECT p.*, t.nom_team, t.logo_url 
-                                 FROM player p 
-                                 JOIN team t ON p.id_team = t.id_team 
-                                 $where
-                                 ORDER BY p.nom");
+                                   FROM player p 
+                                   JOIN team t ON p.id_team = t.id_team 
+                                   $where
+                                   ORDER BY p.nom");
             $stmt->execute($params);
             while ($pl = $stmt->fetch()) {
                 $experience = date('Y') - $pl['annee_debut'];
@@ -153,6 +146,15 @@ function nav($active) {
                 <input type="number" name="tackles" placeholder="Plaquages" min="0">
                 <input type="number" step="0.1" name="sacks" placeholder="Sacks" min="0">
                 <input type="number" name="interceptions_def" placeholder="Interceptions déf" min="0">
+                <!-- Stats Kickers / Punters -->
+                <input type="number" name="field_goals_made" placeholder="Field Goals marqués" min="0">
+                <input type="number" name="field_goals_attempted" placeholder="Field Goals tentés" min="0">
+                <input type="number" name="extra_points_made" placeholder="Extra Points marqués" min="0">
+                <input type="number" name="extra_points_attempted" placeholder="Extra Points tentés" min="0">
+                <input type="number" name="punts" placeholder="Punts" min="0">
+                <input type="number" name="punt_yards" placeholder="Yards punts" min="0">
+                <input type="number" name="longest_punt" placeholder="Plus long punt" min="0">
+                <input type="number" name="inside_20" placeholder="Punts inside 20" min="0">
                 <button type="submit">Ajouter les stats</button>
             </form>
         </div>
@@ -193,6 +195,8 @@ function nav($active) {
                 echo "<div class='card'>
                         <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
                         {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
+
+                // Afficher toutes les stats, y compris kickers/punters
                 foreach ($st as $key => $val) {
                     if (in_array($key, ['id_stat','id_player','prenom','nom','poste','saison','nom_team','logo_url'])) continue;
                     if ($val !== null && $val != 0) {
