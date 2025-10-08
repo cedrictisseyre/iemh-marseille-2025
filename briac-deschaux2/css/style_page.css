@@ -1,18 +1,19 @@
 /* ---- BASE ---- */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
+    background: #0d0d0d; /* fond noir/gris foncé */
     margin: 0;
     padding: 0;
-    color: #1e293b;
+    color: #e0e0e0; /* texte gris clair */
 }
 
+/* ---- CONTAINER ---- */
 .container {
     max-width: 1100px;
     margin: 2em auto;
-    background: #ffffff;
+    background: #1a1a1a; /* gris foncé */
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     padding: 1.5em;
 }
 
@@ -20,48 +21,56 @@ body {
 .header {
     text-align: center;
     margin-bottom: 1em;
+    background: url("assets/img/nfl-banner.png") no-repeat center center;
+    background-size: cover;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-shadow: 0 0 12px rgba(0,0,0,0.9);
+    border-radius: 12px;
 }
 
 .header-logo {
-    width: 200px;
-    height: auto;
-    display: inline-block;
+    display: none; /* on masque ton ancien logo si tu gardes la bannière */
 }
 
 h1 {
     text-align: center;
-    color: #0a2463;
+    color: #ffffff;
     margin-bottom: 0.5em;
-    font-size: 1.9em;
+    font-size: 2.2em;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
 }
 
 /* ---- NAV MENU ---- */
 .menu {
     display: flex;
     justify-content: center;
-    margin-bottom: 1.5em;
+    margin: 1.5em 0;
     gap: 0.6em;
 }
 
 .menu a {
     text-decoration: none;
-    padding: 0.6em 1em;
+    padding: 0.6em 1.2em;
     border-radius: 10px;
     font-weight: 600;
-    color: #0a2463;
-    background: #e2e8f0;
-    transition: all 0.15s ease;
+    color: #ffffff;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    transition: all 0.2s ease;
 }
 
 .menu a:hover {
-    background: #0a2463;
+    background: #0066ff; /* bleu NFL+ */
     color: #fff;
 }
 
 .menu a.active {
-    background: #ef4444;
+    background: #e60023; /* rouge Falcons */
     color: #fff;
 }
 
@@ -74,11 +83,11 @@ h1 {
 }
 
 .card {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+    background: #121212;
+    border: 1px solid #333;
     border-radius: 10px;
     padding: 1em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
 
 /* ---- FORM ---- */
@@ -96,17 +105,19 @@ button {
     font-size: 0.95em;
     padding: 0.5em 0.8em;
     border-radius: 8px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: #e0e0e0;
     outline: none;
 }
 
 input:focus,
 select:focus {
-    border-color: #0a2463;
+    border-color: #0066ff;
 }
 
 button {
-    background: #0a2463;
+    background: #0066ff;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -114,7 +125,7 @@ button {
 }
 
 button:hover {
-    background: #ef4444;
+    background: #e60023;
 }
 
 /* ---- FOOTER ---- */
@@ -122,9 +133,11 @@ footer {
     margin-top: 1.2em;
     text-align: center;
     font-size: 0.9em;
-    color: #64748b;
+    color: #999;
 }
+
+/* ---- ACCESSIBILITÉ ---- */
 :focus {
-    outline: 3px solid #ef4444;
+    outline: 3px solid #e60023;
     outline-offset: 2px;
 }
