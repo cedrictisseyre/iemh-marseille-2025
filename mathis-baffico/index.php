@@ -629,5 +629,27 @@ document.getElementById('form_calc').addEventListener('submit', async (e)=>{ e.p
 // calc user select change -> populate fields and nap
 document.getElementById('calc_user_select').addEventListener('change', async (e)=>{
 const uid = e.target.value; if(!uid){ document.getElementById('calc_nom').value=''; document.getElementById('calc_sexe').value='homme'; document.getElementById('calc_age').value=''; document.getElementById('calc_taille').value=''; document.getElementById('calc_poids').value=''; return; }
-const user = use
+const user = usersCache.find(u=>u.id==uid);
+if(user){ document.getElementById('calc_nom').value = user.nom; document.getElementById('calc_sexe').value = user.sexe.toLowerCase(); document.getElementById('calc_age').value = user.age; document.getElementById('calc_taille').value = user.taille; document.getElementById('calc_poids').value = user.poids; }
+// set nap from last calc if available
+const pr = await api('user_profile',{query:{user:uid}});
+if(pr.ok && pr.data.last_dej && pr.data.last_dej.nap){ const napVal = pr.data.last_dej.nap; const select = document.getElementById('select_nap'); if(Array.from(select.options).some(o=>o.value==napVal)) select.value = napVal; }
+});
+document.getElementById('clear_profile_calc').addEventListener('click', ()=>{ document.getElementById('calc_user_select').value=''; document.getElementById('calc_nom').value=''; document.getElementById('calc_sexe').value='homme'; document.getElementById('calc_age').value=''; document.getElementById('calc_taille').value=''; document.getElementById('calc_poids').value=''; });
+
+
+// user form
+document.getElementById('form_user').addEventListener('submit', async (e)=>{ e.preventDefault(); const fd=new FormData(e.target); const body=Object.fromEntries(fd.entries()); const j=await api('add_user',{method:'POST',body}); if(j.ok){ showAlert('Utilisateur ajouté'); loadUsers(); e.target.reset(); } else showAlert(j.error,'red'); });
+
+
+// close modals
+document.getElementById('user_profile_modal').querySelector('#close_profile').addEventListener('click', ()=>{ const m=document.getElementById('user_profile_modal'); m.classList.add('hidden'); m.classList.remove('flex','modal-open'); });
+document.getElementById('session_modal').querySelector('#close_session').addEventListener('click', ()=>{ const m=document.getElementById('session_modal'); m.classList.add('hidden'); m.classList.remove('flex','modal-open'); });
+}
+
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
 
