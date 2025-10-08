@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-require_once 'db_connect.php';
+require_once '../db_connect.php';
 $sql = 'SELECT sj.id_stat, sj.id_match, sj.id_joueur, j.nom, j.prenom, sj.essais, sj.plaquages, sj.passes_decisives, sj.cartons_jaunes FROM Statistiques_Joueur sj JOIN Joueurs j ON sj.id_joueur = j.id_joueur';
 try {
     $stmt = $pdo->query($sql);
