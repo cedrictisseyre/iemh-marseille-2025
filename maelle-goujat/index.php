@@ -269,7 +269,9 @@ document.getElementById('delete-equipes-multi').onclick = function() {
         <?php if (count($stats) > 0): ?>
         <table>
             <tr>
-                <th>ID match</th>
+                                    <th>ID match</th>
+                                    <th>Équipe domicile</th>
+                                    <th>Équipe extérieure</th>
                                     <th>Nom du joueur</th>
                 <th>Essais</th>
                 <th>Transformations</th>
@@ -279,7 +281,27 @@ document.getElementById('delete-equipes-multi').onclick = function() {
             </tr>
             <?php foreach ($stats as $stat): ?>
             <tr>
-                <td><?= htmlspecialchars($stat['id_match']) ?></td>
+                                    <td><?= htmlspecialchars($stat['id_match']) ?></td>
+                                    <?php
+                                    // Recherche du match correspondant
+                                    $equipe_dom = $equipe_ext = '-';
+                                    foreach ($matchs as $match) {
+                                        if ($match['id_match'] == $stat['id_match']) {
+                                            // Recherche des noms d'équipe
+                                            foreach ($equipes as $equipe) {
+                                                if ($equipe['id_equipe'] == $match['id_equipe_dom']) {
+                                                    $equipe_dom = $equipe['nom_equipe'];
+                                                }
+                                                if ($equipe['id_equipe'] == $match['id_equipe_ext']) {
+                                                    $equipe_ext = $equipe['nom_equipe'];
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    }
+                                    ?>
+                                    <td><?= htmlspecialchars($equipe_dom) ?></td>
+                                    <td><?= htmlspecialchars($equipe_ext) ?></td>
                                     <td>
                                         <?php
                                         $nom_joueur = '-';
