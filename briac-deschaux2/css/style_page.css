@@ -1,7 +1,7 @@
 /* ---- BASE ---- */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: #0d0d0d; /* fond noir/gris foncé */
+    background: #0d0d0d; /* fond noir */
     margin: 0;
     padding: 0;
     color: #e0e0e0; /* texte gris clair */
@@ -11,9 +11,9 @@ body {
 .container {
     max-width: 1100px;
     margin: 2em auto;
-    background: #1a1a1a; /* gris foncé */
+    background: #1a1a1a; /* gris très foncé */
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     padding: 1.5em;
 }
 
@@ -21,7 +21,8 @@ body {
 .header {
     text-align: center;
     margin-bottom: 1em;
-    background: url("assets/img/https://www.communicatorawards.com/wp-content/uploads/sites/9/2025/01/Winner-Spotlight_-NFL-La-Visual.png") no-repeat center center;
+    background: url("https://www.communicatorawards.com/wp-content/uploads/sites/9/2025/01/Winner-Spotlight_-NFL-La-Visual.png") 
+                no-repeat center center;
     background-size: cover;
     height: 300px;
     display: flex;
@@ -33,7 +34,7 @@ body {
 }
 
 .header-logo {
-    display: none; /* on masque ton ancien logo si tu gardes la bannière */
+    display: none; /* ancien logo masqué, remplacé par la bannière */
 }
 
 h1 {
@@ -65,12 +66,12 @@ h1 {
 }
 
 .menu a:hover {
-    background: #0066ff; /* bleu NFL+ */
+    background: #0066ff; /* bleu NFL */
     color: #fff;
 }
 
 .menu a.active {
-    background: #e60023; /* rouge Falcons */
+    background: #0066ff;
     color: #fff;
 }
 
@@ -84,10 +85,10 @@ h1 {
 
 .card {
     background: #121212;
-    border: 1px solid #333;
+    border: 1px solid #2a2a2a;
     border-radius: 10px;
     padding: 1em;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.6);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
 /* ---- FORM ---- */
@@ -109,6 +110,7 @@ button {
     background: #1a1a1a;
     color: #e0e0e0;
     outline: none;
+    transition: border 0.2s, background 0.2s;
 }
 
 input:focus,
@@ -125,7 +127,7 @@ button {
 }
 
 button:hover {
-    background: #e60023;
+    background: #0044aa; /* bleu plus foncé au hover */
 }
 
 /* ---- FOOTER ---- */
@@ -138,6 +140,6 @@ footer {
 
 /* ---- ACCESSIBILITÉ ---- */
 :focus {
-    outline: 3px solid #e60023;
+    outline: 3px solid #0066ff;
     outline-offset: 2px;
 }
