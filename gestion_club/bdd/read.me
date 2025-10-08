@@ -1,35 +1,46 @@
 Équipe BDD – gestion_club/bdd
 
 Objectif
-- Concevoir le modèle de données robuste, performant et versionné (migrations), avec jeux de données d’exemple (seeds).
+- Concevoir un schéma MySQL robuste pour un club omnisport multi-disciplines, avec migrations/seed et bonnes perfs.
 
-Périmètre
-- Modélisation (ERD), normalisation, contraintes, clés étrangères.
-- Migrations versionnées, seeds, indexation et optimisation.
-- Stratégies de sauvegarde/restauration et politique de données (retention, RGPD).
+Tables (proposition initiale)
+- utilisateurs (id, email, password_hash, role [admin|coach|adherent], created_at, updated_at)
+- adherents (id, user_id? nullable si compte séparé, nom, prenom, date_naissance, adresse, email, telephone, statut [actif|suspendu|en_attente], certificat_url, created_at, updated_at)
+- coachs (id, user_id? , nom, prenom, email, telephone, specialite, created_at, updated_at)
+- disciplines (id, nom, description)
+- adherents_disciplines (adherent_id, discipline_id) [N:N]
+- coachs_disciplines (coach_id, discipline_id) [N:N]
+- activites (id, discipline_id, titre, description, lieu, capacite_max, created_at, updated_at)
+- creneaux (id, activite_id, debut_at, fin_at)
+- inscriptions_activites (id, creneau_id, adherent_id, status [inscrit|desinscrit|present|absent], created_at)
+- cotisations (id, discipline_id, formule [annuelle|trimestrielle|mensuelle], tarif_centimes, actif)
+- paiements (id, adherent_id, cotisation_id, montant_centimes, statut [paye|en_attente|retard], date_paiement, reçu_url)
+- competitions (id, discipline_id, titre, description, date_debut, date_fin, lieu)
+- inscriptions_competitions (id, competition_id, adherent_id, created_at)
+- resultats (id, competition_id, adherent_id, rang, performance, notes)
+- photos_evenements (id, competition_id, url, uploaded_at) [optionnel]
 
-Livrables attendus
-- Diagramme ER (MER/ERD) et documentation des tables/colonnes.
-- Scripts SQL de migrations et seeds (déterministes et rejouables).
-- Changelog de schéma (révisions datées) + conventions de nommage.
+Contraintes & index
+- FK cohérentes; index sur clés étrangères et colonnes de filtrage (discipline_id, dates, statut).
+- Unicités: (email) sur utilisateurs/adhérents/coachs selon modèle retenu; éviter doublons.
+- Soft delete si besoin via deleted_at; sinon hard delete + audit léger optionnel.
 
-Contrats inter-équipes
-- Publier un changelog clair avant les changements majeurs.
-- Assurer la compatibilité ascendante quand possible; sinon période de transition.
-- Exposer vues/materialized views si besoin pour faciliter le reporting.
+Migrations & seeds
+- Migrations déterministes et ordonnées (ex: 0001_init.sql, 0002_disciplines.sql...).
+- Seeds minimales: disciplines (natation, tennis, course…), 3-5 adhérents/coach de démo.
 
-Qualité
-- Clés/contraintes vérifiées en CI (lint SQL si possible).
-- Indices justifiés (explains), pas d’index redondants.
+Qualité & RGPD
+- Données personnelles: minimiser, documenter finalités; purge possible.
+- Exports CSV/XLSX: vues dédiées si utile; contrôler accès.
 
-Backlog de démarrage (S1)
-- ERD v0 (membres, équipes, activités, matchs, paiements).
-- 3–5 migrations initiales (tables coeur) + seeds de base.
-- Convention de nommage (snake_case, suffixes _id, _at).
+Livrables
+- ERD (diagramme) + docs tables/colonnes.
+- migrations/ + seeds/ + changelog.sql.
 
-Structure suggérée
-- migrations/, seeds/, docs/, changelog.sql.
+Backlog S1
+- ERD v0 finalisé avec l’équipe API/DAL.
+- Migrations 0001..0005 (utilisateurs, adherents, coachs, disciplines, activites+creneaux).
+- Seeds de base (disciplines, utilisateurs tests) et index critiques.
 
 Conventions
-- Timestamps: created_at, updated_at (UTC), soft_delete: deleted_at (nullable).
-- Noms de tables au pluriel (ex: membres, equipes, matchs).
+- snake_case, tables au pluriel, timestamps: created_at, updated_at, (deleted_at nullable).

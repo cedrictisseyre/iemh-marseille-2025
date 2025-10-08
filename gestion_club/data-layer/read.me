@@ -1,34 +1,37 @@
 Équipe Lien avec BDD (Data Layer/DAL) – gestion_club/data-layer
 
 Objectif
-- Fournir une couche d’accès aux données propre et testée (ORM/DAO/Repositories), exposant des services métiers à l’API.
+- Offrir une couche d’accès et de logique métier stable entre l’API et MySQL (via ORM/DAO/Repositories).
 
-Périmètre
-- Mapping entités <-> tables, requêtes optimisées, transactions.
-- Repositories/Services métiers, validations côté serveur, gestion d’erreurs.
-- Cache local/simple si nécessaire (ex: listes stables), pagination au niveau requêtes.
+Périmètre par module
+- Adhérents: AdherentEntity, AdherentsRepository, AdherentsService (CRUD, export, upload certificat → stockage via service de fichiers).
+- Coachs: CoachEntity, CoachsRepository, CoachsService (affectations disciplines, historique de séances).
+- Disciplines: DisciplinesRepository (listes, affectations N:N).
+- Activités/Créneaux: ActivitesRepository, CreneauxRepository, InscriptionsActivitesRepository; Services pour inscription, désinscription, présence; gestion capacité max et conflits horaires.
+- Cotisations/Paiements: CotisationsRepository, PaiementsRepository; Services pour calcul statut, génération de reçus (URL), rappels email (intégration service mail optionnel).
+- Compétitions/Résultats: CompetitionsRepository, InscriptionsCompetitionsRepository, ResultatsRepository; Services pour classement/statistiques.
 
-Livrables attendus
-- Entités, Repositories, Services, DTOs, exceptions.
-- Tests d’intégration contre une base locale (avec seeds BDD).
-- Documentation des interfaces PHP exposées à l’API.
+Contrats (vers API)
+- Interfaces Services exposées: méthodes typées (DTO en entrée/sortie), pas d’objets ORM bruts.
+- Erreurs métier dédiées: NotFoundError, ValidationError, ConflictError, AuthorizationError.
 
-Interfaces
-- Vers BDD: respecte les migrations publiées.
-- Vers API: contrats d’interfaces stables (services). Ne pas exposer d’objets de persistance bruts.
+Tech
+- ORM possible ou DAO pur (à décider via ADR). Requêtes paginées au plus près de la BDD.
+- Transactions pour opérations multi-tables (ex: inscription + maj capacité).
+- Mappers DTO <-> Entités centralisés.
 
-Qualité
-- Aucune fuite SQL brute dans les contrôleurs API.
-- Gestion des erreurs normalisée (domain vs infrastructure).
+Tests & Qualité
+- Tests d’intégration contre une base locale seeded; couvrir cas nominal + erreurs (capacité atteinte, doublon, etc.).
+- Zéro SQL dans les contrôleurs API; tout passe par Services.
 
-Backlog de démarrage (S1)
-- Choix pattern (ORM léger ou DAO pur) + squelette Repository.
-- Implémenter MembersRepository + MembersService (liste, détail) avec tests.
-- Gabarit d’erreurs (ex: NotFound, ValidationError, Conflict).
+Backlog S1
+- Choisir pattern (ADR) + squelettes de Repositories/Services.
+- Implémenter AdherentsRepository + AdherentsService (liste paginée, détail, create) + tests.
+- Implémenter CreneauxRepository + opérations d’inscription/désinscription + règles capacité.
 
 Structure suggérée
 - src/Entities/, src/Repositories/, src/Services/, src/DTOs/, src/Exceptions/, tests/.
 
 Conventions
-- Méthodes repositories: findById, findAll(pagination), create, update, delete.
-- Transactions pour opérations multi-tables; pas de logique métier dans les repositories.
+- Repos: findById, findAll({ page, limit, filters }), create, update, delete.
+- Services: atomiques, orchestrent transactions; ne renvoient que des DTOs.

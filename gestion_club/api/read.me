@@ -1,39 +1,71 @@
 Équipe API (REST) – gestion_club/api
 
-Objectif
-- Fournir une API fiable et documentée pour toutes les fonctionnalités du club (membres, activités, équipes, matchs, paiements, etc.).
+Contexte du projet
+- Application de gestion d’un club omnisport (multi-disciplines) : adhérents, coachs, activités/entraînements, cotisations/paiements, compétitions/événements, statistiques.
 
-Périmètre
-- Endpoints CRUD, authentification/autorisation (rôles: admin, coach, joueur, staff), pagination/tri/filtre, validation des entrées.
-- Gestion des erreurs (codes HTTP, messages normalisés), rate limiting basique, CORS.
+Objectif
+- Exposer une API cohérente, sécurisée et documentée couvrant tous les modules fonctionnels.
+
+Périmètre (modules et endpoints principaux)
+- Authentification & rôles
+	- POST /api/auth/register, POST /api/auth/login, POST /api/auth/logout
+	- GET /api/users/me, PATCH /api/users/me
+	- (Optionnel) POST /api/auth/forgot-password, POST /api/auth/reset-password, 2FA
+	- Rôles: admin (tout), coach (ses séances/groupes), adhérent (profil/inscriptions)
+- Adhérents
+	- GET/POST/PATCH/DELETE /api/adherents
+	- Export: GET /api/adherents/export?format=csv|xlsx
+	- Upload certificat médical: POST /api/adherents/{id}/certificat
+- Coachs
+	- GET/POST/PATCH/DELETE /api/coachs
+	- Affectation disciplines: POST /api/coachs/{id}/disciplines
+- Activités / Entraînements
+	- GET/POST/PATCH/DELETE /api/activites
+	- Créneaux/inscriptions: POST /api/activites/{id}/inscriptions, DELETE /api/activites/{id}/inscriptions/{adherent_id}
+	- Feuille de présence: POST /api/activites/{id}/presence
+- Cotisations & Paiements
+	- GET/POST /api/cotisations (tarifs), GET/POST /api/paiements
+	- Rappels par email (option PHPMailer): POST /api/paiements/{id}/rappel
+- Compétitions / Événements
+	- GET/POST/PATCH/DELETE /api/competitions
+	- Inscriptions: POST /api/competitions/{id}/inscriptions
+	- Résultats: GET/POST /api/competitions/{id}/resultats
+- Tableau de bord & Statistiques
+	- GET /api/stats/adherents-par-sport
+	- GET /api/stats/taux-presence
+	- GET /api/stats/inscriptions-temps
+	- GET /api/stats/revenus-par-mois
+- Intégrations (optionnel)
+	- Synchronisation Google Calendar: POST /api/activites/{id}/sync-calendar
+	- Upload photos d’événements: POST /api/competitions/{id}/photos
+
+Sécurité & non-fonctionnels
+- Auth: JWT ou sessions (selon stack choisie), CORS, rate-limiting, validation des payloads.
+- Erreurs: format normalisé { error: { code, message, details } } et codes HTTP corrects.
+- Pagination/filtrage/tri systématiques sur les listes.
 
 Livrables attendus
-- Spécification OpenAPI (openapi.yaml) versionnée.
-- Contrôleurs/Routes, Middlewares (auth, validation), Serializers/DTOs.
-- Tests d’API (unitaires + intégration) et collection pour tests manuels (ex: Postman).
-- Guide d’utilisation (exemples de requêtes, codes d’erreurs).
+- Spécification OpenAPI (openapi.yaml) versionnée (source de vérité).
+- Contrôleurs/Routes, Middlewares (auth, validation), DTOs/Serializers.
+- Tests (unitaires + intégration) + collection Postman.
+- Guide d’utilisation (exemples de requêtes, codes d’erreurs, auth flow).
 
 Contrats et interfaces
-- Contrat API = openapi.yaml (source de vérité).
-- Consomme la couche “lien avec BDD” via des services PHP (interfaces stables).
-- Versionnage semver de l’API; dépréciations annoncées et testées.
-
-Qualité & sécurité
-- Validation systématique des payloads (schémas).
-- Logs structurés des requêtes; pas de secrets en logs.
-- Tests contractuels envers le fichier OpenAPI.
+- L’API dépend de la couche Data Layer (DAL) via services PHP aux interfaces stables.
+- Versionnage semver de l’API; dépréciations annoncées; tests contractuels.
 
 Backlog de démarrage (S1)
-- v0 openapi.yaml (ressources: auth, membres, activités).
-- 2 endpoints mockés (GET /health, GET /membres) + tests.
-- Middleware d’auth (JWT ou session) en mode minimal.
+- Créer openapi.yaml v0 (auth, adherents, activites, paiements minimal).
+- Exposer GET /health, POST /auth/login (mock), GET /adherents (liste paginée) + tests.
+- Mettre en place middleware d’auth + validation schéma.
+- Esquisser endpoints d’export CSV et upload certificat (spéc seulement si impl tardive).
 
 Structure suggérée
 - routes/, controllers/, middlewares/, dto/, serializers/, tests/.
 
 Conventions
-- Nommage snake_case en JSON, ISO 8601 pour dates, UTC.
+- JSON snake_case, dates ISO 8601 (UTC).
 - Réponses paginées: { data, meta: { total, page, limit } }.
 
-Done Definition (DoD)
-- Endpoint décrit dans OpenAPI, testé, validé contre schéma, erreur correctement gérée.
+Definition of Done (DoD)
+- Endpoint spécifié dans OpenAPI, testé (unit/intégration), validé par schéma, erreurs gérées, docs mises à jour.

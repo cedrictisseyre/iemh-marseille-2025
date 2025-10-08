@@ -1,32 +1,33 @@
 Équipe Front – gestion_club/front
 
 Objectif
-- Créer une interface utilisateur accessible, réactive et cohérente (design system), connectée à l’API.
+- Proposer une UI claire et responsive pour un club omnisport, reliée à l’API.
 
-Périmètre
-- Pages (auth, tableau de bord, listes, formulaires), composants réutilisables.
-- Gestion d’état, navigation, validation de formulaires, i18n (optionnel).
-- Accessibilité (a11y), responsive, performance de rendu.
+Pages et fonctionnalités clés
+- Authentification: Login/Logout, (option) Register pour admins, mot de passe oublié.
+- Tableau de bord (cartes): Adhérents, Activités, Paiements, Compétitions, Statistiques clés.
+- Adhérents: liste filtrable, fiche détail, création/édition/suppression, export CSV/XLSX, upload certificat.
+- Coachs: liste + fiche, spécialité, horaires, affectations disciplines.
+- Activités & entraînements: calendrier hebdo, création créneaux, inscription/désinscription, feuille de présence.
+- Paiements: suivi statut, reçus, rappels email.
+- Compétitions: calendrier, inscriptions, résultats, upload photos (option).
+- Profil utilisateur: photo, infos, planning personnel, statut cotisation.
 
-Livrables attendus
-- Maquettes/Design tokens (couleurs, typos, espacements).
-- Composants UI + pages clés, clients API générés depuis OpenAPI si possible.
-- Tests UI (unitaires + e2e léger) et guide d’utilisation.
-
-Interfaces
-- Consommation de l’API via un client (généré ou écrit) typé selon openapi.yaml.
-- Gestion centralisée des erreurs et des toasts/notifications.
+UX/Tech
+- Framework au choix (HTML/CSS/JS + Bootstrap, ou React si équipe OK).
+- Accessibilité (a11y), mobile-first, i18n optionnelle.
+- Client API typé depuis `openapi.yaml` si possible (génération conseillée).
 
 Qualité
-- Lint/format, conventions CSS (BEM) ou utilitaires, dark mode optionnel.
+- Lint/format, tests unitaires des composants, e2e léger (flow critique: login → liste adhérents → détail).
 
-Backlog de démarrage (S1)
-- Maquette + design tokens v0.
-- Page Login + page Liste (ex: Membres) consommant GET /membres.
-- Composants: Button, Input, Table, Toast.
+Backlog S1
+- Maquettes + design tokens v0.
+- Pages: Login, Dashboard (cartes), Liste Adhérents (GET /adherents), Détail Adhérent.
+- Composants de base: Button, Input, Table, Toast, Modal, Avatar/Upload.
 
 Structure suggérée
 - public/, src/components/, src/pages/, src/services/api/, src/styles/, tests/.
 
 Conventions
-- IHM en FR, dates/monnaies localisées, feedback utilisateur clair.
+- FR par défaut; formats dates/monnaies localisés; feedback clair des opérations.
