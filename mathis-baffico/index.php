@@ -629,5 +629,4 @@ document.getElementById('form_calc').addEventListener('submit', async (e)=>{ e.p
 document.getElementById('calc_user_select').addEventListener('change', async (e)=>{
 const uid = e.target.value; if(!uid){ document.getElementById('calc_nom').value=''; document.getElementById('calc_sexe').value='homme'; document.getElementById('calc_age').value=''; document.getElementById('calc_taille').value=''; document.getElementById('calc_poids').value=''; return; }
 const user = use
-})}
 
