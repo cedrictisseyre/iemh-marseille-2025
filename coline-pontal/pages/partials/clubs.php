@@ -1,3 +1,4 @@
+
 <?php
 // Section Clubs
 $db_ok = isset($pdo) && $pdo !== null;
@@ -9,6 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_club']) && $db_o
         $_POST['nom'], $_POST['ville'], $_POST['pays'], $_POST['date_creation'], $_POST['id_club']
     ]);
     echo '<p class="success">Club modifié !</p>';
+}
+// Suppression d'un club
+if (isset($_GET['delete_club']) && $db_ok) {
+    $cid = intval($_GET['delete_club']);
+    $stmt = $pdo->prepare("DELETE FROM club WHERE id_club = ?");
+    $stmt->execute([$cid]);
+    echo '<p class="success">Club supprimé !</p>';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_club'])) {
@@ -28,7 +36,8 @@ echo '<h2 class="title-with-icons"><svg class="small-icon" viewBox="0 0 24 24" x
 if ($stmt) {
     while ($club = $stmt->fetch()) {
         echo "<li><a href='gestion-karate.php?page=clubs&club_id={$club['id_club']}'><strong>" . htmlspecialchars($club['nom_club']) . "</strong></a> (" . htmlspecialchars($club['ville']) . ", " . htmlspecialchars($club['pays']) . ") ";
-        echo "<a href='gestion-karate.php?page=clubs&edit_club_id={$club['id_club']}' style='color:blue;margin-left:10px;'>Modifier</a></li>";
+        echo "<a href='gestion-karate.php?page=clubs&edit_club_id={$club['id_club']}' style='color:blue;margin-left:10px;'>Modifier</a>";
+    echo "<a href='gestion-karate.php?page=clubs&delete_club={$club['id_club']}' onclick=\"return confirm('Supprimer ce club ?');\" style='color:red;margin-left:10px;'>Supprimer</a></li>";
     }
 } else {
     echo "<li class='meta'>Aucun club listé (connexion DB manquante).</li>";

@@ -1,11 +1,47 @@
 <?php
-// Galerie photos/vidéos (simulée)
+// Galerie photos/vidéos (simulée + upload utilisateur)
 $galerie = [
     ['type' => 'photo', 'src' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhShBFNQ-U-iCtIO6yMvUht1WcKCDlPIP9Eg&s', 'alt' => 'Entraînement karate'],
     ['type' => 'photo', 'src' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPPovZhrM2FePFCb9DO30JFRibLUK8X6WUSw&s', 'alt' => 'Compétition'],
     ['type' => 'video', 'src' => 'https://www.youtube.com/watch?v=LPt8W7icWhs', 'alt' => 'Démonstration kata']
 ];
+
+// Ajout des photos uploadées par les utilisateurs
+$upload_dir = __DIR__ . '/../../assets/galerie_uploads/';
+if (!is_dir($upload_dir)) {
+    mkdir($upload_dir, 0777, true);
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['photo_user']) && $_FILES['photo_user']['error'] === UPLOAD_ERR_OK) {
+    $tmp = $_FILES['photo_user']['tmp_name'];
+    $name = basename($_FILES['photo_user']['name']);
+    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+    if (in_array($ext, $allowed)) {
+        $dest = $upload_dir . uniqid('photo_', true) . '.' . $ext;
+        if (move_uploaded_file($tmp, $dest)) {
+            echo '<p class="success">Photo ajoutée !</p>';
+        } else {
+            echo '<p class="error">Erreur lors de l\'upload.</p>';
+        }
+    } else {
+        echo '<p class="error">Format non autorisé.</p>';
+    }
+}
+// Charger les photos uploadées
+$uploaded_photos = array_filter(glob($upload_dir . '*.{jpg,jpeg,png,gif}', GLOB_BRACE));
+foreach ($uploaded_photos as $up) {
+    $galerie[] = [
+        'type' => 'photo',
+        'src' => 'assets/galerie_uploads/' . basename($up),
+        'alt' => 'Photo utilisateur'
+    ];
+}
 ?>
+<h3>Ajouter votre photo à la galerie</h3>
+<form method="post" enctype="multipart/form-data" style="margin-bottom:20px;">
+    <input type="file" name="photo_user" accept="image/*" required>
+    <button type="submit">Ajouter la photo</button>
+</form>
 <h2>Galerie photos & vidéos</h2>
 <div style="display:flex;flex-wrap:wrap;gap:20px;">
     <?php foreach ($galerie as $i => $item): ?>

@@ -45,6 +45,7 @@ $evenements = [
 </ul>
 
 <h2>Événements à venir</h2>
+<p>Pour plus d'informations sur les événements officiels, consultez le site de la <a href="https://www.ffkarate.fr/" target="_blank" rel="noopener">Fédération Française de Karaté</a>.</p>
 <table border="1" cellpadding="5">
     <tr>
         <th>Nom</th>
