@@ -4,6 +4,10 @@ $host = 'localhost';
 $db   = 'nicolas_jaulin';
 $user = 'root';
 $pass = '';
+$host = '195.15.235.20';
+$db   = 'nicolas_jaulin';
+$user = 'root';
+$pass = 'INNnsk40374';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
