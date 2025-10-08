@@ -2,7 +2,7 @@
 
 
 <?php
-require_once __DIR__ . '/pages/db_connect.php';
+require_once __DIR__ . '/connexion.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -52,6 +52,7 @@ function tabNav($active) {
     <?php
     try {
         if ($tab === 'coureurs') {
+            echo '<a href="pages/liste_coureurs.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
             $sql = 'SELECT * FROM coureurs';
             if ($search) $sql .= ' WHERE nom LIKE :search OR prenom LIKE :search OR nationalite LIKE :search OR club LIKE :search';
             $stmt = $pdo->prepare($sql);
@@ -70,6 +71,7 @@ function tabNav($active) {
             }
         }
         elseif ($tab === 'courses') {
+            echo '<a href="pages/liste_courses.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
             $sql = 'SELECT * FROM courses';
             if ($search) $sql .= ' WHERE nom LIKE :search OR lieu LIKE :search';
             $stmt = $pdo->prepare($sql);
@@ -88,6 +90,7 @@ function tabNav($active) {
             }
         }
         elseif ($tab === 'participations') {
+            echo '<a href="pages/liste_participations.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
             $sql = 'SELECT * FROM participations';
             if ($search) $sql .= ' WHERE id_coureur LIKE :search OR id_course LIKE :search OR temps LIKE :search';
             $stmt = $pdo->prepare($sql);
@@ -106,6 +109,7 @@ function tabNav($active) {
             }
         }
         elseif ($tab === 'points') {
+            echo '<a href="pages/liste_points.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
             $sql = 'SELECT * FROM points';
             if ($search) $sql .= ' WHERE id_coureur LIKE :search OR points LIKE :search';
             $stmt = $pdo->prepare($sql);
