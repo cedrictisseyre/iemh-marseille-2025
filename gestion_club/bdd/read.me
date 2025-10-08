@@ -1,0 +1,35 @@
+Équipe BDD – gestion_club/bdd
+
+Objectif
+- Concevoir le modèle de données robuste, performant et versionné (migrations), avec jeux de données d’exemple (seeds).
+
+Périmètre
+- Modélisation (ERD), normalisation, contraintes, clés étrangères.
+- Migrations versionnées, seeds, indexation et optimisation.
+- Stratégies de sauvegarde/restauration et politique de données (retention, RGPD).
+
+Livrables attendus
+- Diagramme ER (MER/ERD) et documentation des tables/colonnes.
+- Scripts SQL de migrations et seeds (déterministes et rejouables).
+- Changelog de schéma (révisions datées) + conventions de nommage.
+
+Contrats inter-équipes
+- Publier un changelog clair avant les changements majeurs.
+- Assurer la compatibilité ascendante quand possible; sinon période de transition.
+- Exposer vues/materialized views si besoin pour faciliter le reporting.
+
+Qualité
+- Clés/contraintes vérifiées en CI (lint SQL si possible).
+- Indices justifiés (explains), pas d’index redondants.
+
+Backlog de démarrage (S1)
+- ERD v0 (membres, équipes, activités, matchs, paiements).
+- 3–5 migrations initiales (tables coeur) + seeds de base.
+- Convention de nommage (snake_case, suffixes _id, _at).
+
+Structure suggérée
+- migrations/, seeds/, docs/, changelog.sql.
+
+Conventions
+- Timestamps: created_at, updated_at (UTC), soft_delete: deleted_at (nullable).
+- Noms de tables au pluriel (ex: membres, equipes, matchs).

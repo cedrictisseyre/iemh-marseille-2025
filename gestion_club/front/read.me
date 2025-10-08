@@ -1,0 +1,32 @@
+Équipe Front – gestion_club/front
+
+Objectif
+- Créer une interface utilisateur accessible, réactive et cohérente (design system), connectée à l’API.
+
+Périmètre
+- Pages (auth, tableau de bord, listes, formulaires), composants réutilisables.
+- Gestion d’état, navigation, validation de formulaires, i18n (optionnel).
+- Accessibilité (a11y), responsive, performance de rendu.
+
+Livrables attendus
+- Maquettes/Design tokens (couleurs, typos, espacements).
+- Composants UI + pages clés, clients API générés depuis OpenAPI si possible.
+- Tests UI (unitaires + e2e léger) et guide d’utilisation.
+
+Interfaces
+- Consommation de l’API via un client (généré ou écrit) typé selon openapi.yaml.
+- Gestion centralisée des erreurs et des toasts/notifications.
+
+Qualité
+- Lint/format, conventions CSS (BEM) ou utilitaires, dark mode optionnel.
+
+Backlog de démarrage (S1)
+- Maquette + design tokens v0.
+- Page Login + page Liste (ex: Membres) consommant GET /membres.
+- Composants: Button, Input, Table, Toast.
+
+Structure suggérée
+- public/, src/components/, src/pages/, src/services/api/, src/styles/, tests/.
+
+Conventions
+- IHM en FR, dates/monnaies localisées, feedback utilisateur clair.

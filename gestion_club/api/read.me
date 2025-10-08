@@ -1,0 +1,39 @@
+Équipe API (REST) – gestion_club/api
+
+Objectif
+- Fournir une API fiable et documentée pour toutes les fonctionnalités du club (membres, activités, équipes, matchs, paiements, etc.).
+
+Périmètre
+- Endpoints CRUD, authentification/autorisation (rôles: admin, coach, joueur, staff), pagination/tri/filtre, validation des entrées.
+- Gestion des erreurs (codes HTTP, messages normalisés), rate limiting basique, CORS.
+
+Livrables attendus
+- Spécification OpenAPI (openapi.yaml) versionnée.
+- Contrôleurs/Routes, Middlewares (auth, validation), Serializers/DTOs.
+- Tests d’API (unitaires + intégration) et collection pour tests manuels (ex: Postman).
+- Guide d’utilisation (exemples de requêtes, codes d’erreurs).
+
+Contrats et interfaces
+- Contrat API = openapi.yaml (source de vérité).
+- Consomme la couche “lien avec BDD” via des services PHP (interfaces stables).
+- Versionnage semver de l’API; dépréciations annoncées et testées.
+
+Qualité & sécurité
+- Validation systématique des payloads (schémas).
+- Logs structurés des requêtes; pas de secrets en logs.
+- Tests contractuels envers le fichier OpenAPI.
+
+Backlog de démarrage (S1)
+- v0 openapi.yaml (ressources: auth, membres, activités).
+- 2 endpoints mockés (GET /health, GET /membres) + tests.
+- Middleware d’auth (JWT ou session) en mode minimal.
+
+Structure suggérée
+- routes/, controllers/, middlewares/, dto/, serializers/, tests/.
+
+Conventions
+- Nommage snake_case en JSON, ISO 8601 pour dates, UTC.
+- Réponses paginées: { data, meta: { total, page, limit } }.
+
+Done Definition (DoD)
+- Endpoint décrit dans OpenAPI, testé, validé contre schéma, erreur correctement gérée.
