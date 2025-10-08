@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-include '../connexion.php';
+include 'db_connect.php';
 $page = $_GET['page'] ?? 'coureurs';
 function nav($active) {
     $tabs = [
