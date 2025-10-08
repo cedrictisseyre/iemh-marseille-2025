@@ -25,35 +25,19 @@ $id_player = (int) ($_POST['id_player'] ?? 0);
 $saison = (int) date('Y');
 
 // conversions simples (autorise null si champs vides)
-function nullableInt(string $key): ?int {
-    return (isset($_POST[$key]) && $_POST[$key] !== '') ? (int) $_POST[$key] : null;
-}
-function nullableFloat(string $key): ?float {
-    return (isset($_POST[$key]) && $_POST[$key] !== '') ? (float) $_POST[$key] : null;
-}
-
-$yards_passe         = nullableInt('yards_passe');
-$td_passe            = nullableInt('td_passe');
-$interceptions       = nullableInt('interceptions');
-$yards_course        = nullableInt('yards_course');
-$td_course           = nullableInt('td_course');
-$receptions          = nullableInt('receptions');
-$yards_reception     = nullableInt('yards_reception');
-$td_reception        = nullableInt('td_reception');
-$plaquages           = nullableInt('plaquages');
-$sacks               = nullableFloat('sacks');
-$interceptions_def   = nullableInt('interceptions_def');
-$fg_reussis          = nullableInt('fg_reussis');
-$punts               = nullableInt('punts');
-
-// nouvelles stats special teams
-$field_goals_made        = nullableInt('field_goals_made');
-$field_goals_attempted   = nullableInt('field_goals_attempted');
-$extra_points_made       = nullableInt('extra_points_made');
-$extra_points_attempted  = nullableInt('extra_points_attempted');
-$punt_yards              = nullableInt('punt_yards');
-$longest_punt            = nullableInt('longest_punt');
-$inside_20               = nullableInt('inside_20');
+$yards_passe = isset($_POST['yards_passe']) && $_POST['yards_passe'] !== '' ? (int) $_POST['yards_passe'] : null;
+$td_passe = isset($_POST['td_passe']) && $_POST['td_passe'] !== '' ? (int) $_POST['td_passe'] : null;
+$interceptions = isset($_POST['interceptions']) && $_POST['interceptions'] !== '' ? (int) $_POST['interceptions'] : null;
+$yards_course = isset($_POST['yards_course']) && $_POST['yards_course'] !== '' ? (int) $_POST['yards_course'] : null;
+$td_course = isset($_POST['td_course']) && $_POST['td_course'] !== '' ? (int) $_POST['td_course'] : null;
+$receptions = isset($_POST['receptions']) && $_POST['receptions'] !== '' ? (int) $_POST['receptions'] : null;
+$yards_reception = isset($_POST['yards_reception']) && $_POST['yards_reception'] !== '' ? (int) $_POST['yards_reception'] : null;
+$td_reception = isset($_POST['td_reception']) && $_POST['td_reception'] !== '' ? (int) $_POST['td_reception'] : null;
+$plaquages = isset($_POST['plaquages']) && $_POST['plaquages'] !== '' ? (int) $_POST['plaquages'] : null;
+$sacks = isset($_POST['sacks']) && $_POST['sacks'] !== '' ? (float) $_POST['sacks'] : null;
+$interceptions_def = isset($_POST['interceptions_def']) && $_POST['interceptions_def'] !== '' ? (int) $_POST['interceptions_def'] : null;
+$fg_reussis = isset($_POST['fg_reussis']) && $_POST['fg_reussis'] !== '' ? (int) $_POST['fg_reussis'] : null;
+$punts = isset($_POST['punts']) && $_POST['punts'] !== '' ? (int) $_POST['punts'] : null;
 
 if ($id_player <= 0) {
     header('Location: ../NFL_Stats_Analyzer.php?page=stats&error=1');
@@ -70,16 +54,9 @@ try {
     }
 
     $sql = 'INSERT INTO stats
-        (id_player, saison, yards_passe, td_passe, interceptions, yards_course, td_course,
-         receptions, yards_reception, td_reception, plaquages, sacks, interceptions_def,
-         fg_reussis, punts, field_goals_made, field_goals_attempted, extra_points_made,
-         extra_points_attempted, punt_yards, longest_punt, inside_20)
+        (id_player, saison, yards_passe, td_passe, interceptions, yards_course, td_course, receptions, yards_reception, td_reception, plaquages, sacks, interceptions_def, fg_reussis, punts)
         VALUES
-        (:id_player, :saison, :yards_passe, :td_passe, :interceptions, :yards_course, :td_course,
-         :receptions, :yards_reception, :td_reception, :plaquages, :sacks, :interceptions_def,
-         :fg_reussis, :punts, :field_goals_made, :field_goals_attempted, :extra_points_made,
-         :extra_points_attempted, :punt_yards, :longest_punt, :inside_20)';
-
+        (:id_player, :saison, :yards_passe, :td_passe, :interceptions, :yards_course, :td_course, :receptions, :yards_reception, :td_reception, :plaquages, :sacks, :interceptions_def, :fg_reussis, :punts)';
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
         ':id_player' => $id_player,
@@ -97,13 +74,6 @@ try {
         ':interceptions_def' => $interceptions_def,
         ':fg_reussis' => $fg_reussis,
         ':punts' => $punts,
-        ':field_goals_made' => $field_goals_made,
-        ':field_goals_attempted' => $field_goals_attempted,
-        ':extra_points_made' => $extra_points_made,
-        ':extra_points_attempted' => $extra_points_attempted,
-        ':punt_yards' => $punt_yards,
-        ':longest_punt' => $longest_punt,
-        ':inside_20' => $inside_20,
     ]);
 } catch (PDOException $e) {
     app_log('add_stats error: ' . $e->getMessage());
