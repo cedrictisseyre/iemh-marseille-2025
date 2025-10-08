@@ -1,9 +1,10 @@
 <?php
 require_once __DIR__ . '/connexion.php';
 // Statistiques globales
-$nb_coureurs = $conn->query('SELECT COUNT(*) FROM coureurs')->fetchColumn();
-$nb_courses = $conn->query('SELECT COUNT(*) FROM courses')->fetchColumn();
-$nb_resultats = $conn->query('SELECT COUNT(*) FROM resultats')->fetchColumn();
+
+$nb_coureurs = $pdo->query('SELECT COUNT(*) FROM coureurs')->fetchColumn();
+$nb_courses = $pdo->query('SELECT COUNT(*) FROM courses')->fetchColumn();
+$nb_resultats = $pdo->query('SELECT COUNT(*) FROM resultats')->fetchColumn();
 ?><!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -32,7 +33,7 @@ $nb_resultats = $conn->query('SELECT COUNT(*) FROM resultats')->fetchColumn();
         <h2>Top 5 coureurs (meilleurs temps)</h2>
         <canvas id="chart-temps" width="400" height="200" style="background:#fff;border-radius:8px;"></canvas>
         <?php
-        $top = $conn->query('SELECT c.nom, c.prenom, MIN(r.temps) as meilleur_temps FROM resultats r JOIN coureurs c ON r.id_coureur = c.id_coureur GROUP BY r.id_coureur ORDER BY meilleur_temps ASC LIMIT 5')->fetchAll(PDO::FETCH_ASSOC);
+    $top = $pdo->query('SELECT c.nom, c.prenom, MIN(r.temps) as meilleur_temps FROM resultats r JOIN coureurs c ON r.id_coureur = c.id_coureur GROUP BY r.id_coureur ORDER BY meilleur_temps ASC LIMIT 5')->fetchAll(PDO::FETCH_ASSOC);
         $labels = [];
         $data = [];
         foreach ($top as $row) {
@@ -50,9 +51,9 @@ $nb_resultats = $conn->query('SELECT COUNT(*) FROM resultats')->fetchColumn();
         <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['export_all'])) {
             $data = [
-                'coureurs' => $conn->query('SELECT * FROM coureurs')->fetchAll(PDO::FETCH_ASSOC),
-                'courses' => $conn->query('SELECT * FROM courses')->fetchAll(PDO::FETCH_ASSOC),
-                'resultats' => $conn->query('SELECT * FROM resultats')->fetchAll(PDO::FETCH_ASSOC),
+                'coureurs' => $pdo->query('SELECT * FROM coureurs')->fetchAll(PDO::FETCH_ASSOC),
+                'courses' => $pdo->query('SELECT * FROM courses')->fetchAll(PDO::FETCH_ASSOC),
+                'resultats' => $pdo->query('SELECT * FROM resultats')->fetchAll(PDO::FETCH_ASSOC),
             ];
             header('Content-Type: application/json');
             header('Content-Disposition: attachment; filename="export_all.json"');
