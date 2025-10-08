@@ -1,9 +1,3 @@
-<?php
-session_start();
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-?>
 <!DOCTYPE html>
 <html lang='fr'>
 <head>
@@ -18,7 +12,6 @@ if (empty($_SESSION['csrf_token'])) {
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
   <?php endif; ?>
   <form method='post' action='../services/ajout_ecurie.php'>
-    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
     <button type='submit'>Ajouter</button>
   </form>

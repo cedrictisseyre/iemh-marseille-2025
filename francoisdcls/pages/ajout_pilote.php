@@ -1,8 +1,4 @@
 <?php
-session_start();
-if (empty($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
 // Formulaire d'ajout de pilote
 ?>
 <!DOCTYPE html>
@@ -11,7 +7,7 @@ if (empty($_SESSION['csrf_token'])) {
   <meta charset='UTF-8'>
   <title>Ajouter un pilote</title>
   <link rel='stylesheet' href='../assets/style.css'>
-</head>
+}</head>
 <body>
 <header><h1>Ajouter un pilote</h1></header>
 <div class='container'>
@@ -19,7 +15,6 @@ if (empty($_SESSION['csrf_token'])) {
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
   <?php endif; ?>
   <form method='post' action='../services/ajout_pilote.php'>
-    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
     <label>Prénom:<br><input type='text' name='prenom' required></label><br>
     <label>Nom:<br><input type='text' name='nom' required></label><br>
     <label>Nationalité:<br><input type='text' name='nationalite'></label><br>
