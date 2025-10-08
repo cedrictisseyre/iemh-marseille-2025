@@ -1,6 +1,6 @@
 <?php
 include 'db_connect.php';
-$stmt = $pdo->query('SELECT * FROM coureurs_UTMB');
+$stmt = $pdo->query('SELECT * FROM coureurs');
 ?>
 <!DOCTYPE html>
 <html lang="fr">

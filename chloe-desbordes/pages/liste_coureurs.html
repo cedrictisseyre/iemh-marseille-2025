@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des coureurs</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <h1>Liste des coureurs</h1>
+    <table id="coureurs-table" style="display:none">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Nationalité</th>
+                <th>Date de naissance</th>
+                <th>Club</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <p id="loading">Chargement des coureurs...</p>
+    <script>
+    fetch('../../services/lire_coureurs.php')
+      .then(response => response.json())
+      .then(data => {
+        const table = document.getElementById('coureurs-table');
+        const tbody = table.querySelector('tbody');
+        document.getElementById('loading').style.display = 'none';
+        table.style.display = '';
+        data.forEach(coureur => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${coureur.id_coureur}</td><td>${coureur.nom}</td><td>${coureur.prenom}</td><td>${coureur.nationalite}</td><td>${coureur.date_naissance}</td><td>${coureur.club}</td>`;
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(() => {
+        document.getElementById('loading').textContent = 'Erreur de chargement des données.';
+      });
+    </script>
+</body>
+</html>

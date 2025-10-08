@@ -1,0 +1,9 @@
+body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+h1 { color: #2c3e50; }
+nav ul { list-style: none; padding: 0; }
+nav ul li { display: inline-block; margin-right: 20px; }
+a { color: #2980b9; text-decoration: none; }
+a:hover { text-decoration: underline; }
+table { border-collapse: collapse; margin-top: 20px; background: #fff; }
+th, td { padding: 8px 12px; border: 1px solid #ccc; }
+th { background: #2980b9; color: #fff; }
