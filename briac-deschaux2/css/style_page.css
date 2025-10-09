@@ -1,10 +1,10 @@
 /* ---- BASE ---- */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: #ffffff; /* fond blanc */
+    background: #ffffff;
     margin: 0;
     padding: 0;
-    color: #1e1e1e; /* texte noir/gris foncé */
+    color: #1e1e1e;
 }
 
 /* ---- CONTAINER ---- */
@@ -17,30 +17,51 @@ body {
     padding: 1.5em;
 }
 
-/* ---- HEADER AVEC IMAGE ---- */
+/* ---- HEADER ---- */
 .header {
+    position: relative;
     text-align: center;
-    margin-bottom: 1.5em;
-    background: #fff url("https://www.communicatorawards.com/wp-content/uploads/sites/9/2025/01/Winner-Spotlight_-NFL-La-Visual.png") no-repeat center center;
-    background-size: contain;   /* toute l’image visible */
-    background-color: #fff;     /* fond blanc autour */
-    height: 350px;              /* ajuste si nécessaire */
-    border-radius: 12px;
+    margin-bottom: 2em;
+    background: #0a0a0a; /* prolongement sombre autour de l'image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 380px; /* tu peux ajuster selon rendu */
+    overflow: hidden;
 }
 
-/* Suppression de l'ancien logo NFL */
-.header-logo {
-    display: none;
+/* Image centrée dans la bannière */
+.header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: 100%;
+    background: url("https://www.communicatorawards.com/wp-content/uploads/sites/9/2025/01/Winner-Spotlight_-NFL-La-Visual.png")
+                no-repeat center center;
+    background-size: contain; /* image entière visible */
 }
 
-/* Titre */
-h1 {
-    text-align: center;
-    color: #1e1e1e;
-    margin: 1em 0 0.5em;
+/* Superposition d’un léger dégradé sombre pour harmoniser */
+.header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.8) 0%, rgba(10,10,10,0.6) 40%, rgba(10,10,10,0.9) 100%);
+}
+
+/* Titre ajouté sous "nfl +" */
+.header-title {
+    position: relative;
+    z-index: 2;
+    margin-top: 140px; /* ajuste pour placer sous "nfl +" dans l’image */
+    color: #ffffff;
     font-size: 2em;
-    font-weight: 600;
-    letter-spacing: 1.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
 }
 
 /* ---- NAV MENU ---- */
@@ -63,7 +84,7 @@ h1 {
 }
 
 .menu a:hover {
-    background: #0066cc; /* bleu NFL */
+    background: #0066cc;
     color: #fff;
 }
 
@@ -124,7 +145,7 @@ button {
 }
 
 button:hover {
-    background: #004c99; /* bleu plus sombre */
+    background: #004c99;
 }
 
 /* ---- FOOTER ---- */
@@ -140,5 +161,6 @@ footer {
     outline: 2px solid #0066cc;
     outline-offset: 2px;
 }
+
 
 
