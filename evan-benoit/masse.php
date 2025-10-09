@@ -2,7 +2,47 @@
 require_once 'connexion.php';
 include 'header.html';
 
-// Récupérer la liste de tous les clients
+// Gestion des actions avant affichage (pour éviter erreurs d’en-tête)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ajout d'une mesure
+    if (isset($_POST['ajouter'])) {
+        $id_client = $_POST['id_client'];
+        $date_mesure = $_POST['date_mesure'];
+        $masse = $_POST['masse'];
+
+        $stmt = $conn->prepare("INSERT INTO suivi_masse (id_client, date_mesure, masse) VALUES (:id_client, :date_mesure, :masse)");
+        $stmt->execute([
+            ':id_client' => $id_client,
+            ':date_mesure' => $date_mesure,
+            ':masse' => $masse
+        ]);
+
+        header("Location: masse.php");
+        exit;
+    }
+
+    // Modification d'une mesure
+    if (isset($_POST['modifier'])) {
+        $id_mesure = $_POST['id_mesure'];
+        $masse = $_POST['masse'];
+        $stmt = $conn->prepare("UPDATE suivi_masse SET masse = :masse WHERE id = :id");
+        $stmt->execute([':masse' => $masse, ':id' => $id_mesure]);
+
+        header("Location: masse.php");
+        exit;
+    }
+}
+
+// Suppression d'une mesure
+if (isset($_GET['supprimer'])) {
+    $id_mesure = intval($_GET['supprimer']);
+    $stmt = $conn->prepare("DELETE FROM suivi_masse WHERE id = :id");
+    $stmt->execute([':id' => $id_mesure]);
+    header("Location: masse.php");
+    exit;
+}
+
+// Récupérer la liste des clients
 $clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -12,11 +52,9 @@ $clients = $conn->query("SELECT id, prenom, nom FROM clients ORDER BY prenom")->
 </div>
 
 <?php
-// Couleurs variées pour les graphiques
 $colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6610f2', '#6f42c1', '#fd7e14'];
 $colorIndex = 0;
 
-// Boucle sur chaque client
 foreach ($clients as $client) {
     echo "<div class='card shadow-sm mb-5'>";
     echo "<div class='card-header bg-dark text-white'>
@@ -29,7 +67,7 @@ foreach ($clients as $client) {
     $stmt->execute([':id_client' => $client['id']]);
     $mesures = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Formulaire d'ajout
+    // Formulaire d’ajout
     echo "
     <form method='POST' class='row g-3 mb-4'>
         <input type='hidden' name='ajouter' value='1'>
@@ -58,15 +96,21 @@ foreach ($clients as $client) {
         foreach ($mesures as $m) {
             echo "<tr>
                     <td>{$m['date_mesure']}</td>
-                    <td>{$m['masse']}</td>
                     <td>
-                        <a href='?supprimer={$m['id']}&id_client={$client['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Supprimer cette mesure ?\")'>🗑</a>
+                        <form method='POST' class='d-inline-flex'>
+                            <input type='hidden' name='id_mesure' value='{$m['id']}'>
+                            <input type='number' step='0.1' name='masse' value='{$m['masse']}' class='form-control form-control-sm me-2' style='width:90px'>
+                            <button type='submit' name='modifier' class='btn btn-warning btn-sm'>✏️</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a href='?supprimer={$m['id']}' onclick='return confirm(\"Supprimer cette mesure ?\")' class='btn btn-danger btn-sm'>🗑</a>
                     </td>
                   </tr>";
         }
         echo "</tbody></table>";
 
-        // Données pour le graphique
+        // Graphique Chart.js
         $dates = json_encode(array_column($mesures, 'date_mesure'));
         $poids = json_encode(array_column($mesures, 'masse'));
         $color = $colors[$colorIndex % count($colors)];
@@ -90,12 +134,8 @@ foreach ($clients as $client) {
                 }]
             },
             options: {
-                scales: {
-                    y: { beginAtZero: false }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
+                scales: { y: { beginAtZero: false } },
+                plugins: { legend: { display: false } }
             }
         });
         </script>";
@@ -105,27 +145,6 @@ foreach ($clients as $client) {
 
     echo "</div></div>";
     $colorIndex++;
-}
-
-// Gestion ajout/suppression
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajouter'])) {
-    $id_client = $_POST['id_client'];
-    $date_mesure = $_POST['date_mesure'];
-    $masse = $_POST['masse'];
-
-    $stmt = $conn->prepare("INSERT INTO suivi_masse (id_client, date_mesure, masse) VALUES (:id_client, :date_mesure, :masse)");
-    $stmt->execute([':id_client' => $id_client, ':date_mesure' => $date_mesure, ':masse' => $masse]);
-
-    header("Location: masse.php");
-    exit;
-}
-
-if (isset($_GET['supprimer'])) {
-    $id_mesure = intval($_GET['supprimer']);
-    $stmt = $conn->prepare("DELETE FROM suivi_masse WHERE id = :id");
-    $stmt->execute([':id' => $id_mesure]);
-    header("Location: masse.php");
-    exit;
 }
 ?>
 
