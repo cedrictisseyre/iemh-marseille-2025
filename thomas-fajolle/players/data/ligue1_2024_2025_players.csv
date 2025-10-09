@@ -1,0 +1,301 @@
+player_last_name,player_first_name,position,shirt_number,team_name,nationality,loan
+# ================== PARIS SAINT-GERMAIN ==================
+Donnarumma,Gianluigi,GK,99,Paris Saint-Germain,Italie,0
+Navas,Keylor,GK,1,Paris Saint-Germain,Costa Rica,0
+Letellier,Alexandre,GK,90,Paris Saint-Germain,France,0
+Hakimi,Achraf,DEF,2,Paris Saint-Germain,Maroc,0
+Marquinhos, ,DEF,5,Paris Saint-Germain,Brésil,0
+Skriniar,Milan,DEF,37,Paris Saint-Germain,Slovaquie,0
+Hernandez,Lucas,DEF,21,Paris Saint-Germain,France,0
+Hernandez,Théo,DEF,19,Paris Saint-Germain,France,0
+Beraldo,Lucas,DEF,35,Paris Saint-Germain,Brésil,0
+Mukiele,Nordi,DEF,26,Paris Saint-Germain,France,0
+Kurzawa,Layvin,DEF,97,Paris Saint-Germain,France,0
+Vitinha, ,MIL,17,Paris Saint-Germain,Portugal,0
+Ruiz,Fabian,MIL,8,Paris Saint-Germain,Espagne,0
+Ugarte,Manuel,MIL,4,Paris Saint-Germain,Uruguay,0
+Zaïre-Emery,Warren,MIL,33,Paris Saint-Germain,France,0
+Asensio,Marco,MIL,11,Paris Saint-Germain,Espagne,0
+Kang-In,Lee,MIL,19,Paris Saint-Germain,Corée du Sud,0
+Mendes,Nuno,DEF,25,Paris Saint-Germain,Portugal,0
+Mbappé,Kylian,ATT,7,Paris Saint-Germain,France,0
+Dembele,Ousmane,ATT,10,Paris Saint-Germain,France,0
+Kolo Muani,Randal,ATT,23,Paris Saint-Germain,France,0
+Gonçalo,Ramos,ATT,9,Paris Saint-Germain,Portugal,0
+Barcola,Bradley,ATT,29,Paris Saint-Germain,France,0
+Ekitike,Hugo,ATT,44,Paris Saint-Germain,France,0
+
+# ================== OLYMPIQUE DE MARSEILLE ==================
+Lopez,Pau,GK,16,Olympique de Marseille,Espagne,0
+Ngapandouetnbu,Simon,GK,40,Olympique de Marseille,Cameroun,0
+Blanco,Ruben,GK,36,Olympique de Marseille,Espagne,0
+Clauss,Jonathan,DEF,7,Olympique de Marseille,France,0
+Mbemba,Chancel,DEF,99,Olympique de Marseille,RD Congo,0
+Gigot,Samuel,DEF,4,Olympique de Marseille,France,0
+Balerdi,Leonardo,DEF,5,Olympique de Marseille,Argentine,0
+Kolasinac,Sead,DEF,23,Olympique de Marseille,Bosnie,0
+Merlin,Quentin,DEF,3,Olympique de Marseille,France,0
+Gasset, ,MIL,6,Olympique de Marseille,France,0
+Veretout,Jordan,MIL,27,Olympique de Marseille,France,0
+Rongier,Valentin,MIL,21,Olympique de Marseille,France,0
+Ounahi,Azzedine,MIL,8,Olympique de Marseille,Maroc,0
+Harit,Amine,MIL,11,Olympique de Marseille,Maroc,0
+Luis Henrique, ,ATT,44,Olympique de Marseille,Brésil,0
+Aubameyang,Pierre-Emerick,ATT,10,Olympique de Marseille,Gabon,0
+Correa,Joachim,ATT,20,Olympique de Marseille,Argentine,1
+Sarr,Ismaila,ATT,23,Olympique de Marseille,Sénégal,0
+Giggs,Ilyes,ATT,12,Olympique de Marseille,France,0
+
+# ================== OLYMPIQUE LYONNAIS ==================
+Lopes,Anthony,GK,1,Olympique Lyonnais,Portugal,0
+Perri,Bento,GK,31,Olympique Lyonnais,Brésil,0
+Tagliafico,Nicolas,DEF,3,Olympique Lyonnais,Argentine,0
+O'Brien,Jake,DEF,12,Olympique Lyonnais,Irlande,0
+Caleta-Car,Duje,DEF,5,Olympique Lyonnais,Croatie,0
+Mata,Saidou,DEF,22,Olympique Lyonnais,Burkina Faso,0
+M'bala,Clinton,DEF,24,Olympique Lyonnais,France,0
+Tolisso,Corentin,MIL,8,Olympique Lyonnais,France,0
+Caqueret,Maxence,MIL,6,Olympique Lyonnais,France,0
+Alvero,Skelly,MIL,35,Olympique Lyonnais,France,0
+Lepenant,Johann,MIL,25,Olympique Lyonnais,France,0
+Cherki,Rayan,ATT,18,Olympique Lyonnais,France,0
+Lacazette,Alexandre,ATT,10,Olympique Lyonnais,France,0
+Orban,Gift,ATT,9,Olympique Lyonnais,Nigéria,0
+Nuamah,Ernest,ATT,37,Olympique Lyonnais,Ghana,1
+Benrahma,Said,ATT,17,Olympique Lyonnais,Algérie,0
+
+# ================== AS MONACO ==================
+Kohn,Philipp,GK,16,AS Monaco,Suisse,0
+Majecki,Radoslaw,GK,1,AS Monaco,Pologne,0
+Kehrer,Thilo,DEF,5,AS Monaco,Allemagne,0
+Salisu,Mohammed,DEF,22,AS Monaco,Ghana,0
+Singh,Balaïde,DEF,35,AS Monaco,France,0
+Maripan,Guillermo,DEF,3,AS Monaco,Chili,0
+Henrique,Caio,DEF,12,AS Monaco,Brésil,0
+Vanderson, ,DEF,2,AS Monaco,Brésil,0
+Zakaria,Denis,MIL,6,AS Monaco,Suisse,0
+Fofana,Youssouf,MIL,19,AS Monaco,France,0
+Camara,Mohamed,MIL,4,AS Monaco,Mali,0
+Ben Seghir,Elies,MIL,21,AS Monaco,France,0
+Golovin,Aleksandr,MIL,17,AS Monaco,Russie,0
+Minamino,Takumi,ATT,18,AS Monaco,Japon,0
+Ben Yedder,Wissam,ATT,10,AS Monaco,France,0
+Balogun,Folarin,ATT,29,AS Monaco,États-Unis,0
+
+# ================== LILLE OSC ==================
+Chevalier,Lucas,GK,30,Lille OSC,France,0
+Riollet,Vito,GK,40,Lille OSC,France,0
+Diakité,Bafodé,DEF,18,Lille OSC,France,0
+Yoro,Leny,DEF,15,Lille OSC,France,0
+Alexsandro, ,DEF,4,Lille OSC,Brésil,0
+Ismaily, ,DEF,31,Lille OSC,Brésil,0
+Gudmundsson,Gabriel,DEF,5,Lille OSC,Suède,0
+André,Benjamin,MIL,21,Lille OSC,France,0
+Bentaleb,Nabil,MIL,6,Lille OSC,Algérie,0
+Moura,Edon,MIL,8,Lille OSC,Albanie,0
+Zhegrova,Edon,ATT,23,Lille OSC,Kosovo,0
+Cabella,Remy,ATT,10,Lille OSC,France,0
+David,Jonathan,ATT,9,Lille OSC,Canada,0
+Yazici,Yusuf,ATT,11,Lille OSC,Turquie,0
+Ounas,Adam,ATT,7,Lille OSC,Algérie,0
+
+# ================== STADE RENNAIS ==================
+Mandanda,Steve,GK,30,Stade Rennais,France,0
+Salin,Romain,GK,1,Stade Rennais,France,0
+Belocian,Jeanuel,DEF,16,Stade Rennais,France,0
+Theate,Arthur,DEF,5,Stade Rennais,Belgique,0
+Omari,Warmed,DEF,23,Stade Rennais,France,0
+Assignon,Lorenz,DEF,22,Stade Rennais,France,0
+Truffert,Adrien,DEF,3,Stade Rennais,France,0
+Matic,Nemanja,MIL,8,Stade Rennais,Serbie,0
+Santamaria,Baptiste,MIL,8,Stade Rennais,France,0
+Bourigeaud,Benjamin,MIL,14,Stade Rennais,France,0
+Le Fée,Enzo,MIL,28,Stade Rennais,France,0
+Doué,Desire,MIL,33,Stade Rennais,France,0
+Blas,Ludovic,ATT,11,Stade Rennais,France,0
+Gouiri,Amine,ATT,19,Stade Rennais,France,0
+Kalimuendo,Arnaud,ATT,9,Stade Rennais,France,0
+
+# ================== STADE BRESTOIS 29 ==================
+Bizot,Marco,GK,40,Stade Brestois 29,Pays-Bas,0
+Coudert,Quentin,GK,30,Stade Brestois 29,France,0
+Chardonnet,Brendan,DEF,5,Stade Brestois 29,France,0
+Brassier,Lilian,DEF,3,Stade Brestois 29,France,0
+Lala,Faitout,DEF,27,Stade Brestois 29,France,0
+Locko,Bradley,DEF,2,Stade Brestois 29,France,0
+Lees-Melou,Pierre,MIL,20,Stade Brestois 29,France,0
+Magnetti,Hugo,MIL,8,Stade Brestois 29,France,0
+Camblan,Mathias,MIL,33,Stade Brestois 29,France,0
+Del Castillo,Romain,ATT,10,Stade Brestois 29,France,0
+Mounié,Steve,ATT,15,Stade Brestois 29,Bénin,0
+Le Douaron,Jérémy,ATT,22,Stade Brestois 29,France,0
+
+# ================== RC LENS ==================
+Samba,Brice,GK,30,RC Lens,France,0
+Leca,Jean-Louis,GK,16,RC Lens,France,0
+Gradit,Jonathan,DEF,24,RC Lens,France,0
+Danso,Kevin,DEF,4,RC Lens,Autriche,0
+Medina,Facundo,DEF,14,RC Lens,Argentine,0
+Macha,Przemyslaw,DEF,33,RC Lens,Pologne,0
+Aguilar,Ruben,DEF,2,RC Lens,France,0
+Haidara,Massadio,DEF,21,RC Lens,Mali,0
+Fulgini,Angelo,MIL,11,RC Lens,France,0
+Mendy,Nampalys,MIL,26,RC Lens,Sénégal,0
+Abdul Samed,Salis,MIL,6,RC Lens,Ghana,0
+Thomasson,Adrien,MIL,28,RC Lens,France,0
+Saïd,Wesley,ATT,22,RC Lens,France,0
+Wahi,Elye,ATT,9,RC Lens,France,0
+Sotoca,Florian,ATT,7,RC Lens,France,0
+Fofana,David,ATT,23,RC Lens,Côte d'Ivoire,1
+
+# ================== OGC NICE ==================
+Bulka,Marcin,GK,1,OGC Nice,Pologne,0
+Scherpen,Kjell,GK,31,OGC Nice,Pays-Bas,0
+Todibo,Jean-Clair,DEF,6,OGC Nice,France,0
+Dante, ,DEF,4,OGC Nice,Brésil,0
+Lotomba,Jordan,DEF,23,OGC Nice,Suisse,0
+Bard,Melvin,DEF,26,OGC Nice,France,0
+Boga,Jérémie,ATT,7,OGC Nice,Côte d'Ivoire,0
+Claude-Maurice,Alexis,MIL,10,OGC Nice,France,0
+Louchet,Valentin,MIL,25,OGC Nice,France,0
+Boudaoui,Hicham,MIL,28,OGC Nice,Algérie,0
+Thuram,Khéphren,MIL,19,OGC Nice,France,0
+Rosario,Pablo,MIL,8,OGC Nice,Pays-Bas,0
+Laborde,Gaëtan,ATT,24,OGC Nice,France,0
+Moffi,Terem,ATT,9,OGC Nice,Nigéria,0
+
+# ================== FC NANTES ==================
+Lafont,Alban,GK,1,FC Nantes,France,0
+Descamps,Remy,GK,16,FC Nantes,France,0
+Pallois,Nicolas,DEF,4,FC Nantes,France,0
+Castelletto,Jean-Charles,DEF,21,FC Nantes,Cameroun,0
+Cozza,Enzo,DEF,24,FC Nantes,France,0
+Amian,Kelvin,DEF,98,FC Nantes,France,0
+Gyökeres,Viktor,ATT,17,FC Nantes,Suède,0
+Mollet,Florent,MIL,25,FC Nantes,France,0
+Sissoko,Moussa,MIL,17,FC Nantes,France,0
+Chirivella,Pedro,MIL,5,FC Nantes,Espagne,0
+Simon,Moses,ATT,27,FC Nantes,Nigéria,0
+Ganago,Ignatius,ATT,14,FC Nantes,Cameroun,0
+Mostafa,Mohamed,ATT,31,FC Nantes,Égypte,0
+
+# ================== STADE DE REIMS ==================
+Diouf,Yehvann,GK,94,Reims,France,0
+Pentz,Patrick,GK,1,Reims,Autriche,0
+Okumu,Joseph,DEF,2,Reims,Kenya,0
+Abdelhamid,Yunis,DEF,5,Reims,Maroc,0
+Wilson,Josh,DEF,19,Reims,Angleterre,0
+Foket,Thomas,DEF,32,Reims,Belgique,0
+Matusiwa,Azor,MIL,21,Reims,Pays-Bas,0
+Richardson,Marshall,MIL,8,Reims,France,0
+Daramy,Mohamed,ATT,11,Reims,Danemark,0
+Ito,Junya,ATT,7,Reims,Japon,0
+Odobert,Wilson,ATT,29,Reims,France,0
+Munetsi,Marshall,MIL,15,Reims,Zimbabwe,0
+
+# ================== RC STRASBOURG ==================
+Sels,Matz,GK,1,RC Strasbourg,Belgique,0
+Bellaarouch,Alaa,GK,40,RC Strasbourg,Maroc,0
+Perrin,Lucas,DEF,5,RC Strasbourg,France,0
+Nyamsi,Gerzino,DEF,22,RC Strasbourg,France,0
+Djiku,Alexander,DEF,24,RC Strasbourg,Ghana,0
+Doukouré,Mouhamadou,MIL,27,RC Strasbourg,France,0
+Sissoko,Ibrahima,MIL,18,RC Strasbourg,France,0
+Bellegarde,Jean-Ricner,MIL,17,RC Strasbourg,France,0
+Diarra,Moïse,MIL,29,RC Strasbourg,France,0
+Aholou,Jean-Eudes,MIL,6,RC Strasbourg,Côte d'Ivoire,0
+Gameiro,Kevin,ATT,9,RC Strasbourg,France,0
+Diallo,Habit,ATT,20,RC Strasbourg,Sénégal,0
+Emegha,Emmanuel,ATT,25,RC Strasbourg,Pays-Bas,0
+
+# ================== TOULOUSE FC ==================
+Restes,Guillaume,GK,50,Toulouse FC,France,0
+Haug,Jakob,GK,30,Toulouse FC,Norvège,0
+Desler,Mikkel,DEF,3,Toulouse FC,Danemark,0
+Nicolaisen,Rasmus,DEF,2,Toulouse FC,Danemark,0
+Diakité,Anthony Rouault,DEF,4,Toulouse FC,France,0
+Kamanzi,Waren,DEF,12,Toulouse FC,France,0
+Suazo, Gabriel,DEF,17,Toulouse FC,Chili,0
+Sierro,Vincent,MIL,8,Toulouse FC,Suisse,0
+Spierings,Stijn,MIL,6,Toulouse FC,Pays-Bas,0
+Schmid,Thijs,MIL,17,Toulouse FC,Pays-Bas,0
+Aboukhlal,Zakaria,ATT,7,Toulouse FC,Maroc,0
+Dallinga,Thijs,ATT,9,Toulouse FC,Pays-Bas,0
+Magri,Frank,ATT,19,Toulouse FC,France,0
+
+# ================== MONTPELLIER HSC ==================
+Lecomte,Benjamin,GK,40,Montpellier HSC,France,0
+Bertaud,Dimitry,GK,16,Montpellier HSC,France,0
+Sacko,Falaye,DEF,77,Montpellier HSC,Mali,0
+Estève,Maxime,DEF,14,Montpellier HSC,France,0
+Kouyaté,Kiki,DEF,4,Montpellier HSC,Mali,0
+Maouassa,Faitout,DEF,27,Montpellier HSC,France,0
+Chotard,Joris,MIL,13,Montpellier HSC,France,0
+Ferri,Jordan,MIL,12,Montpellier HSC,France,0
+Savanier,Téji,MIL,11,Montpellier HSC,France,0
+Faitout,Issiaga,MIL,21,Montpellier HSC,Guinée,0
+Nordin,Arnaud,ATT,7,Montpellier HSC,France,0
+Adams,Akor,ATT,8,Montpellier HSC,Nigéria,0
+Wahi,Elye,ATT,9,Montpellier HSC,France,0
+
+# ================== LORIENT ==================
+Mannone,Vito,GK,1,Lorient,Italie,0
+Mvog,oYvon,GK,38,Lorient,Cameroun,0
+Laporte,Julien,DEF,15,Lorient,France,0
+Talbi,Montassar,DEF,3,Lorient,Tunisie,0
+Le Goff,Vincent,DEF,25,Lorient,France,0
+Formose,Mendy,DEF,29,Lorient,France,0
+Abergel,Laurent,MIL,6,Lorient,France,0
+Innocent,Bonke,MIL,13,Lorient,Nigéria,0
+Le Bris,Theophile,MIL,37,Lorient,France,0
+Kone,Adilson,MIL,18,Lorient,France,0
+Ponceau,Julien,MIL,21,Lorient,France,0
+Cathline,Yoann,ATT,22,Lorient,France,0
+Tosin,Aiyegun,ATT,9,Lorient,Nigéria,0
+Kroupi,Julien,ATT,11,Lorient,France,0
+
+# ================== LE HAVRE AC ==================
+Desmas,Arthur,GK,30,Le Havre AC,France,0
+Gorgelin,Yohann,GK,1,Le Havre AC,France,0
+Sangante,Arouna,DEF,93,Le Havre AC,France,0
+Lloris,Gautier,DEF,4,Le Havre AC,France,0
+Touré,Oussama,DEF,27,Le Havre AC,France,0
+Grandsir,Samuel,DEF,29,Le Havre AC,France,0
+Targhalline,Oussama,MIL,15,Le Havre AC,Maroc,0
+Kuzyaev,Daler,MIL,14,Le Havre AC,Russie,0
+Keita,Yassine,MIL,5,Le Havre AC,France,0
+Casimir,Josué,ATT,23,Le Havre AC,France,0
+Ayew,André,ATT,10,Le Havre AC,Ghana,0
+Kitalo,Loic,ATT,11,Le Havre AC,France,0
+
+# ================== FC METZ ==================
+Oukidja,Alexandre,GK,16,FC Metz,Algérie,0
+De Bringhi,Guillaume,GK,30,FC Metz,France,0
+Traoré,Fali,DEF,8,FC Metz,Mali,0
+N'Doram,Habib,MIL,6,FC Metz,Tchad,0
+Udol,Matthieu,DEF,3,FC Metz,France,0
+Candé,Fali,DEF,5,FC Metz,Guinée-Bissau,0
+Jean Jacques,Kévin,MIL,27,FC Metz,France,0
+Maiga,Boubacar,MIL,12,FC Metz,Mali,0
+Sabaly,Mamadou,ATT,11,FC Metz,France,0
+Mikautadze,Georges,ATT,10,FC Metz,Géorgie,0
+Lamkel,Zé,ATT,9,FC Metz,Cameroun,0
+Asoro,Joel,ATT,23,FC Metz,Suède,0
+
+# ================== CLERMONT FOOT ==================
+Diaw,Mory,GK,1,Clermont Foot,Sénégal,0
+Djoco,Mehdi,GK,40,Clermont Foot,France,0
+Seidu,Alidu,DEF,36,Clermont Foot,Ghana,0
+Caufriez,Maxime,DEF,5,Clermont Foot,Belgique,0
+Wieteska,Mateusz,DEF,4,Clermont Foot,Pologne,0
+Ogier,Florent,DEF,21,Clermont Foot,France,0
+Gastien,Johan,MIL,25,Clermont Foot,France,0
+Magnin,Maxime,MIL,7,Clermont Foot,France,0
+Allevinah,Jim,ATT,11,Clermont Foot,Gabon,0
+Kyei,Gredey,ATT,95,Clermont Foot,France,0
+Dallinga,Thomas,ATT,9,Clermont Foot,Pays-Bas,0
+Andric,Komnen,ATT,99,Clermont Foot,Serbie,0
+
+# ================== TOULOUSE DOUBLONS (nettoyage) ==================
+# (Supprimer les lignes invalides si besoin.)
+

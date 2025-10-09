@@ -7,11 +7,37 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../connexion.php';
 require_once __DIR__ . '/../includes/header.php';
 
-$sql = "SELECT p.*, t.nom AS equipe FROM players p 
-        JOIN teams t ON p.team_id = t.id
-        ORDER BY t.nom, p.nom";
-$stmt = $pdo->query($sql);
-$joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$seasonFilter = $_GET['season'] ?? '2024-2025';
+$useSeasonSchema = false; // deviendra true si les tables seasons / player_seasons existent
+
+// Détection des tables seasons & player_seasons
+try {
+    $pdo->query("SELECT 1 FROM player_seasons LIMIT 1");
+    $pdo->query("SELECT 1 FROM seasons LIMIT 1");
+    $useSeasonSchema = true;
+} catch (Throwable $e) {
+    $useSeasonSchema = false; // on reste sur l'ancien mode
+}
+if ($useSeasonSchema) {
+    $sql = "SELECT p.id, p.nom, p.prenom,
+                   COALESCE(ps.position, p.poste) AS poste,
+                   COALESCE(ps.shirt_number, p.numero) AS numero,
+                   t.nom AS equipe,
+                   p.nationalite
+            FROM player_seasons ps
+            JOIN players p ON ps.player_id = p.id
+            JOIN teams t ON ps.team_id = t.id
+            JOIN seasons s ON ps.season_id = s.id
+            WHERE s.name = :season
+            ORDER BY t.nom, p.nom";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':season' => $seasonFilter]);
+    $joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $sql = "SELECT p.*, t.nom AS equipe FROM players p JOIN teams t ON p.team_id = t.id ORDER BY t.nom, p.nom";
+    $stmt = $pdo->query($sql);
+    $joueurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // Fonction pour générer le nom du fichier logo d'équipe
 function logo_filename($nomEquipe) {
@@ -23,8 +49,17 @@ function logo_filename($nomEquipe) {
 }
 ?>
 
-<h2>Liste des joueurs</h2>
+<h2>Liste des joueurs <?= $useSeasonSchema ? ' - Saison ' . htmlspecialchars($seasonFilter) : '' ?></h2>
 <p class="nb-equipes">Nombre de joueurs : <strong><?= count($joueurs) ?></strong></p>
+<?php if ($useSeasonSchema): ?>
+<form method="get" style="margin-bottom:1rem;">
+    <label>Saison : <input type="text" name="season" value="<?= htmlspecialchars($seasonFilter) ?>" placeholder="2024-2025"></label>
+    <button type="submit">Filtrer</button>
+    <a href="import_2024_2025.php" style="margin-left:1rem;">Importer 2024-2025</a>
+</form>
+<?php else: ?>
+<p style="font-size:0.9rem;color:#666;">Astuce : crée la structure saisons via <code>players/import_2024_2025.php</code> pour activer le filtrage par saison.</p>
+<?php endif; ?>
 <input type="text" id="searchJoueur" placeholder="Rechercher un joueur..." class="search-input" onkeyup="filtrerJoueurs()">
 <div class="table-responsive">
 <table class="equipes-table">
