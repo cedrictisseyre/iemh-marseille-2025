@@ -1,22 +1,20 @@
-<?php
-include 'header.html';
-?>
+<?php include 'header.php'; ?>
 
-<div class="text-center mt-5">
-    <h1 class="display-4">Bienvenue sur Coaching Sportif 🏋️</h1>
-    <p class="lead">Gérez vos séances, vos clients et votre suivi de masse corporelle depuis une interface simple.</p>
-
-    <div class="d-flex justify-content-center gap-4 mt-4 flex-wrap">
-        <a href="seances.php" class="btn btn-primary btn-lg">📅 Séances</a>
-        <a href="clients.php" class="btn btn-success btn-lg">👥 Clients</a>
-        <a href="masse.php" class="btn btn-warning btn-lg">⚖️ Suivi Masse</a>
-    </div>
-
-    <div class="mt-5">
-        <p class="text-muted">Projet PHP/MySQL – Coaching Sportif</p>
+<div class="text-center my-5">
+    <h1 class="display-5 fw-bold">Bienvenue sur votre espace Coaching</h1>
+    <p class="lead text-secondary mb-4">Gérez vos clients, séances et leur progression facilement.</p>
+    
+    <div class="d-flex justify-content-center flex-wrap gap-3 mt-4">
+        <a href="clients.php" class="btn btn-primary btn-lg px-4 py-3 shadow-sm">
+            👥 Gérer les clients
+        </a>
+        <a href="seances.php" class="btn btn-success btn-lg px-4 py-3 shadow-sm">
+            📅 Gérer les séances
+        </a>
+        <a href="masse.php" class="btn btn-warning btn-lg px-4 py-3 shadow-sm">
+            ⚖️ Suivi de la masse
+        </a>
     </div>
 </div>
 
-<?php
-include 'footer.html';
-?>
+<?php include 'footer.php'; ?>

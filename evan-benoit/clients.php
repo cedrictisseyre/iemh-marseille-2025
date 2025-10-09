@@ -1,10 +1,8 @@
 <?php
-require_once 'connect.php';
+require_once 'connexion.php';
 include 'header.php';
 
-//////////////////////////////////////
-// 1️⃣ SUPPRESSION D'UN CLIENT
-//////////////////////////////////////
+// Suppression
 if (isset($_GET['delete'])) {
     $id_delete = intval($_GET['delete']);
     $stmt = $conn->prepare("DELETE FROM clients WHERE id = :id");
@@ -12,9 +10,7 @@ if (isset($_GET['delete'])) {
     echo "<div class='alert alert-danger text-center'>❌ Client supprimé avec succès.</div>";
 }
 
-//////////////////////////////////////
-// 2️⃣ AJOUT D'UN CLIENT
-//////////////////////////////////////
+// Ajout
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
     $prenom = trim($_POST['prenom']);
     $nom = trim($_POST['nom']);
@@ -29,9 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add'])) {
     }
 }
 
-//////////////////////////////////////
-// 3️⃣ RÉCUPÉRATION DES CLIENTS
-//////////////////////////////////////
 $clients = $conn->query("SELECT * FROM clients ORDER BY prenom")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -64,7 +57,7 @@ $clients = $conn->query("SELECT * FROM clients ORDER BY prenom")->fetchAll(PDO::
     </div>
 </div>
 
-<!-- Tableau des clients -->
+<!-- Tableau -->
 <div class="card shadow-sm">
     <div class="card-header bg-dark text-white">📋 Liste des clients</div>
     <div class="card-body">
