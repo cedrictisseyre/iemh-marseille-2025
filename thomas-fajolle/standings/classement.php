@@ -7,10 +7,22 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../connexion.php';
 require_once __DIR__ . '/../includes/header.php';
 
-$sql = "SELECT s.*, t.nom, t.id 
-        FROM standings s
-        JOIN teams t ON s.team_id = t.id
-        ORDER BY s.points DESC, s.goal_difference DESC";
+// On veut afficher toutes les équipes même si elles n'ont pas encore d'entrée dans 'standings'.
+// On part donc de la table teams puis LEFT JOIN vers standings et on remplit les valeurs nulles par 0.
+$sql = "SELECT 
+        t.id,
+        t.nom,
+        COALESCE(s.points, 0) AS points,
+        COALESCE(s.played, 0) AS played,
+        COALESCE(s.won, 0) AS won,
+        COALESCE(s.draw, 0) AS draw,
+        COALESCE(s.lost, 0) AS lost,
+        COALESCE(s.goals_for, 0) AS goals_for,
+        COALESCE(s.goals_against, 0) AS goals_against,
+        COALESCE(s.goal_difference, COALESCE(s.goals_for,0) - COALESCE(s.goals_against,0), 0) AS goal_difference
+    FROM teams t
+    LEFT JOIN standings s ON s.team_id = t.id
+    ORDER BY points DESC, goal_difference DESC, nom ASC";
 $stmt = $pdo->query($sql);
 $classement = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -40,6 +52,12 @@ function qualif_class($pos) {
 ?>
 
 <h2>Classement de la Ligue 1</h2>
+<?php if (!empty($_GET['m'])): ?>
+    <p class="flash-message"><?= htmlspecialchars($_GET['m']) ?></p>
+<?php endif; ?>
+<form method="post" action="recalculer.php" onsubmit="return confirm('Recalculer le classement à partir de tous les matchs ?');" style="margin-bottom:1rem;">
+    <button type="submit" class="btn-recalc">🔄 Recalculer le classement</button>
+</form>
 <p class="nb-equipes">Nombre d'équipes : <strong><?= count($classement) ?></strong></p>
 <input type="text" id="searchClassement" placeholder="Rechercher une équipe..." class="search-input" onkeyup="filtrerClassement()">
 <div class="table-responsive">
