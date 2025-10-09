@@ -2,8 +2,8 @@
 
 <div class="hero">
   <div class="hero-content">
-    <h1>Transforme ton entraînement</h1>
-    <p>Planifie, suis et optimise tes performances. Coaching Sportif t’accompagne dans ta progression.</p>
+    <h1>Bienvenue sur EB Coaching</h1>
+    <p>Un espace pensé pour les coachs. Suis la progression et planifie tes entraînements.</p>
     <a href="clients.php">Commencer maintenant</a>
   </div>
 </div>
@@ -15,19 +15,19 @@
       <div class="col-md-4 mb-4">
         <div class="card card-custom p-4">
           <h4>📋 Gestion des séances</h4>
-          <p>Crée et planifie des programmes sur mesure pour chaque athlète.</p>
+          <p>Crée et planifie des programmes d'entraînement sur mesure pour chaque athlète.</p>
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <div class="card card-custom p-4">
-          <h4>📈 Suivi des progrès</h4>
-          <p>Visualise la progression avec des graphiques interactifs et des statistiques précises.</p>
+          <h4>📈 Suivi des performances</h4>
+          <p>Analyse la progression de la masse corporelle, des charges et des performances au fil du temps.</p>
         </div>
       </div>
       <div class="col-md-4 mb-4">
         <div class="card card-custom p-4">
-          <h4>🏋️ Gestion des clients</h4>
-          <p>Organise tes athlètes, leur profil, leurs objectifs et leurs résultats en un seul endroit.</p>
+          <h4>👥 Gestion des clients</h4>
+          <p>Visualise et organise les profils, objectifs et suivis de tous tes athlètes en un seul endroit.</p>
         </div>
       </div>
     </div>
@@ -36,20 +36,20 @@
 
 <section class="section bg-light">
   <div class="container">
-    <h2>Actualités</h2>
+    <h2>Actualités EB Coaching</h2>
     <div class="row">
       <div class="col-md-6 mb-4">
         <div class="card card-custom p-4">
           <h5>🔥 Nouvelle interface</h5>
-          <p>Un design plus fluide et plus intuitif pour t’aider à mieux gérer tes séances et ton suivi de progression.</p>
-          <small class="text-muted">Mise à jour : Octobre 2025</small>
+          <p>Une expérience plus fluide et intuitive pour la gestion des séances et des suivis d'entraînement.</p>
+          <small class="text-muted">Dernière mise à jour : Octobre 2025</small>
         </div>
       </div>
       <div class="col-md-6 mb-4">
         <div class="card card-custom p-4">
-          <h5>⚖️ Suivi de masse amélioré</h5>
-          <p>Chaque client dispose maintenant d’un graphique personnalisé de son évolution corporelle.</p>
-          <small class="text-muted">Mise à jour : Octobre 2025</small>
+          <h5>⚖️ Suivi de masse optimisé</h5>
+          <p>Chaque client dispose désormais de son propre graphique interactif de progression corporelle.</p>
+          <small class="text-muted">Dernière mise à jour : Octobre 2025</small>
         </div>
       </div>
     </div>
