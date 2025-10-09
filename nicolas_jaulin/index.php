@@ -6,15 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Menu Rugby</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f7f7f7; }
-        .menu-container { max-width: 500px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 8px #ccc; padding: 30px; }
-        h1 { text-align: center; color: #2c3e50; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 18px 0; }
-        a { display: block; padding: 12px 0; background: #3498db; color: #fff; text-decoration: none; border-radius: 5px; text-align: center; font-size: 1.1em; transition: background 0.2s; }
-        a:hover { background: #217dbb; }
-    </style>
+    <link rel="stylesheet" href="style-top14.css">
 </head>
 <body>
     <div class="menu-container">

@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Ajouter un joueur</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Ajouter un joueur</h1>
     <form method="post">

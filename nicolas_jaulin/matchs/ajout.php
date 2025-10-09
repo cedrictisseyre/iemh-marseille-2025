@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Ajouter un match</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Ajouter un match</h1>
     <form method="post">

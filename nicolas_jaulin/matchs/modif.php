@@ -33,6 +33,7 @@ if ($id) {
     <meta charset="UTF-8">
     <title>Modifier un match</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Modifier un match</h1>
     <form method="post">

@@ -13,6 +13,7 @@ try {
     <meta charset="UTF-8">
     <title>Statistiques Joueurs</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Statistiques des joueurs par match</h1>
     <a href="ajout.php">Ajouter une statistique</a>

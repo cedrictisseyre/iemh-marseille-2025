@@ -36,6 +36,7 @@ if ($id) {
     <meta charset="UTF-8">
     <title>Modifier un joueur</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Modifier un joueur</h1>
     <form method="post">

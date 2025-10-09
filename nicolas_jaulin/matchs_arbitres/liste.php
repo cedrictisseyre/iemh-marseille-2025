@@ -16,6 +16,7 @@ try {
     <meta charset="UTF-8">
     <title>Matchs & Arbitres</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Matchs & Arbitres</h1>
     <a href="ajout.php">Assigner un arbitre à un match</a>

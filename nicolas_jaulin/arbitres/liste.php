@@ -14,6 +14,7 @@ $stmt = $pdo->query('SELECT * FROM Arbitres');
     <meta charset="UTF-8">
     <title>Liste des arbitres</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Liste des arbitres</h1>
     <a href="ajout.php">Ajouter un arbitre</a>

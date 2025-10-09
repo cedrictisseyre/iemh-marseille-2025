@@ -14,6 +14,7 @@ $stmt = $pdo->query('SELECT * FROM Joueurs');
     <meta charset="UTF-8">
     <title>Liste des joueurs</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Liste des joueurs</h1>
     <a href="ajout.php">Ajouter un joueur</a>

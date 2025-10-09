@@ -14,6 +14,7 @@ $stmt = $pdo->query('SELECT * FROM Matchs');
     <meta charset="UTF-8">
     <title>Liste des matchs</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Liste des matchs</h1>
     <a href="ajout.php">Ajouter un match</a>

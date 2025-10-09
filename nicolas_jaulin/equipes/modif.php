@@ -29,6 +29,7 @@ if ($id) {
     <meta charset="UTF-8">
     <title>Modifier une équipe</title>
 </head>
+    <link rel="stylesheet" href="../style-top14.css">
 <body>
     <h1>Modifier une équipe</h1>
     <form method="post">

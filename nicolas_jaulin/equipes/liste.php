@@ -7,6 +7,7 @@ $stmt = $pdo->query('SELECT * FROM Equipes');
 <head>
     <meta charset="UTF-8">
     <title>Liste des équipes</title>
+    <link rel="stylesheet" href="../style-top14.css">
 </head>
 <body>
     <h1>Liste des équipes</h1>
