@@ -1,7 +1,7 @@
 /* ---- BASE ---- */
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: #0d0d0d; /* fond noir */
+    background: #0d0d0d; /* noir */
     margin: 0;
     padding: 0;
     color: #e0e0e0; /* texte gris clair */
@@ -13,37 +13,29 @@ body {
     margin: 2em auto;
     background: #1a1a1a; /* gris très foncé */
     border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    border: 1px solid #2a2a2a;
     padding: 1.5em;
 }
 
-/* ---- HEADER ---- */
+/* ---- HEADER AVEC IMAGE ---- */
 .header {
     text-align: center;
-    margin-bottom: 1em;
-    background: url("https://www.communicatorawards.com/wp-content/uploads/sites/9/2025/01/Winner-Spotlight_-NFL-La-Visual.png") 
-                no-repeat center center;
-    background-size: cover;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    text-shadow: 0 0 12px rgba(0,0,0,0.9);
+    margin-bottom: 1.5em;
+    background: #000 url("https://www.communicatorawards.com/wp-content/uploads/sites/9/2025/01/Winner-Spotlight_-NFL-La-Visual.png") no-repeat center center;
+    background-size: contain;   /* toute l’image visible */
+    background-color: #000;     /* noir autour si image pas assez large */
+    height: 350px;              /* ajuste selon rendu */
     border-radius: 12px;
 }
 
-.header-logo {
-    display: none; /* ancien logo masqué, remplacé par la bannière */
-}
-
+/* Logo texte si besoin */
 h1 {
     text-align: center;
     color: #ffffff;
-    margin-bottom: 0.5em;
-    font-size: 2.2em;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    margin: 1em 0 0.5em;
+    font-size: 2em;
+    font-weight: 600;
+    letter-spacing: 1.5px;
 }
 
 /* ---- NAV MENU ---- */
@@ -57,21 +49,21 @@ h1 {
 .menu a {
     text-decoration: none;
     padding: 0.6em 1.2em;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 600;
-    color: #ffffff;
+    color: #e0e0e0;
     background: #1a1a1a;
     border: 1px solid #333;
-    transition: all 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .menu a:hover {
-    background: #0066ff; /* bleu NFL */
+    background: #0066cc; /* bleu sobre */
     color: #fff;
 }
 
 .menu a.active {
-    background: #0066ff;
+    background: #0066cc;
     color: #fff;
 }
 
@@ -84,11 +76,10 @@ h1 {
 }
 
 .card {
-    background: #121212;
+    background: #1a1a1a;
     border: 1px solid #2a2a2a;
     border-radius: 10px;
     padding: 1em;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
 /* ---- FORM ---- */
@@ -105,41 +96,43 @@ select,
 button {
     font-size: 0.95em;
     padding: 0.5em 0.8em;
-    border-radius: 8px;
+    border-radius: 6px;
     border: 1px solid #333;
-    background: #1a1a1a;
+    background: #121212;
     color: #e0e0e0;
     outline: none;
-    transition: border 0.2s, background 0.2s;
+    transition: border 0.2s;
 }
 
 input:focus,
 select:focus {
-    border-color: #0066ff;
+    border-color: #0066cc;
 }
 
 button {
-    background: #0066ff;
+    background: #0066cc;
     color: #fff;
     border: none;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 600;
+    border-radius: 6px;
 }
 
 button:hover {
-    background: #0044aa; /* bleu plus foncé au hover */
+    background: #004c99; /* bleu plus sombre */
 }
 
 /* ---- FOOTER ---- */
 footer {
-    margin-top: 1.2em;
+    margin-top: 1.5em;
     text-align: center;
     font-size: 0.9em;
-    color: #999;
+    color: #aaa;
 }
 
 /* ---- ACCESSIBILITÉ ---- */
 :focus {
-    outline: 3px solid #0066ff;
+    outline: 2px solid #0066cc;
     outline-offset: 2px;
 }
+
