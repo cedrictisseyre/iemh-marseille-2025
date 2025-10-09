@@ -104,7 +104,9 @@ try {
     $compte = 0; $ignores = 0; $erreurs = 0; $messages = [];
 
     while (($row = fgetcsv($handle, 0, ',')) !== false) {
+        // Ignore lignes vides ou commentaires (# en première colonne)
         if (count(array_filter($row)) === 0) continue; // ligne vide
+        if (isset($row[0]) && str_starts_with(trim($row[0]), '#')) continue; // commentaire
         $ln = trim($row[$map['player_last_name']] ?? '');
         $fn = trim($row[$map['player_first_name']] ?? '');
         $pos = trim($row[$map['position']] ?? '');
