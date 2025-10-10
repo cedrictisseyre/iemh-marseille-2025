@@ -60,10 +60,37 @@ foreach ($matchs as $m) {
 
 // Trier les journées (plus récentes d'abord, car liste DESC)
 krsort($byJournee);
+
+// Construire la numérotation "Journée X/34" pour la Ligue 1 uniquement
+$ligue1Counts = [];
+foreach ($byJournee as $weekStart => $items) {
+        $cnt = 0;
+        foreach ($items as $m) {
+                if (isset($m['competition']) && $m['competition'] === 'Ligue 1') {
+                        $cnt++;
+                }
+        }
+        if ($cnt > 0) {
+                $ligue1Counts[$weekStart] = $cnt;
+        }
+}
+$ligue1Weekends = array_keys(array_filter($ligue1Counts, function($c){ return $c >= 9; }));
+sort($ligue1Weekends); // ordre chronologique
+$roundNumberOfWeekend = [];
+$i = 1;
+foreach ($ligue1Weekends as $w) { $roundNumberOfWeekend[$w] = $i++; }
+$totalRounds = count($ligue1Weekends);
 ?>
 
 <?php foreach ($byJournee as $journee => $items): ?>
-<h3 style="margin-top:18px;">Journée du weekend du <?= htmlspecialchars((new DateTime($journee))->format('d/m/Y')) ?></h3>
+<?php $rn = $roundNumberOfWeekend[$journee] ?? null; ?>
+<h3 style="margin-top:18px;">
+    <?php if ($rn): ?>
+        Journée <?= (int)$rn ?><?= $totalRounds ? '/' . (int)$totalRounds : '' ?>
+    <?php else: ?>
+        Weekend du <?= htmlspecialchars((new DateTime($journee))->format('d/m/Y')) ?>
+    <?php endif; ?>
+</h3>
 <div class="table-responsive">
     <table class="equipes-table">
         <thead>
