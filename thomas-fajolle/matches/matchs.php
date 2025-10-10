@@ -37,6 +37,15 @@ function score_class($home, $away) {
 ?>
 
 <h2>Résultats des matchs</h2>
+<?php if (isset($_GET['simule']) && $_GET['simule'] == '1'): ?>
+    <div style="padding:10px;background:#e6ffed;border:1px solid #b7eb8f;color:#135200;margin-bottom:12px;">
+        La saison a été resimulée avec succès.
+    </div>
+<?php endif; ?>
+<form method="post" action="simuler_saison.php" style="margin:8px 0 16px;">
+    <button type="submit" style="padding:8px 12px;">Resimuler une saison de Ligue 1</button>
+    <span style="color:#666;margin-left:8px;">Remplace tous les matchs de « Ligue 1 » par une nouvelle simulation aléatoire.</span>
+  </form>
 <p class="nb-equipes">Nombre de matchs : <strong><?= count($matchs) ?></strong></p>
 <input type="text" id="searchMatch" placeholder="Rechercher par équipe, compétition..." class="search-input" onkeyup="filtrerMatchs()">
 <div class="table-responsive">
