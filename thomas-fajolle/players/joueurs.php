@@ -29,7 +29,17 @@ function logo_filename($nomEquipe) {
 <div class="table-responsive">
 <table class="equipes-table">
     <thead>
-        <tr><th>Logo équipe</th><th>Nom</th><th>Prénom</th><th>Poste</th><th>Numéro</th><th>Équipe</th><th>Nationalité</th></tr>
+        <tr>
+            <th>Logo équipe</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Poste</th>
+            <th>Numéro</th>
+            <th>Équipe</th>
+            <th>Nationalité</th>
+            <th>Buts</th>
+            <th>Passes décisives</th>
+        </tr>
     </thead>
     <tbody id="joueursBody">
     <?php foreach ($joueurs as $j): ?>
@@ -42,6 +52,8 @@ function logo_filename($nomEquipe) {
             <td><?= htmlspecialchars($j['numero']) ?></td>
             <td><?= htmlspecialchars($j['equipe']) ?></td>
             <td><?= htmlspecialchars($j['nationalite']) ?></td>
+            <td><?= isset($j['goals']) ? (int)$j['goals'] : 0 ?></td>
+            <td><?= isset($j['assists']) ? (int)$j['assists'] : 0 ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
