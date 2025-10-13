@@ -122,10 +122,22 @@ function renderTable(array $rows, array $columns, string $tab): void {
     foreach ($rows as $row) {
         echo '<tr>';
         foreach ($columns as $col) {
-            $value = $row[$col['key']] ?? '';
+            // Recherche de la valeur avec variantes de noms de colonnes
+            $value = '';
+            $keys = [$col['key']];
+            // Ajout de variantes pour les cas connus
+            if ($col['key'] === 'nom') $keys[] = 'nom_course';
+            if ($col['key'] === 'id_point') $keys[] = 'id';
+            if ($col['key'] === 'id_coureur') $keys[] = 'coureur_id';
+            if ($col['key'] === 'points') $keys[] = 'point';
+            foreach ($keys as $k) {
+                if (isset($row[$k])) {
+                    $value = $row[$k];
+                    break;
+                }
+            }
             $value = htmlspecialchars((string)$value);
             if ($col['link'] && $value !== '') {
-                // Lien vers la fiche détaillée (exemple générique)
                 echo '<td><a href="details.php?tab=' . $tab . '&id=' . urlencode($value) . '" target="_blank">' . $value . '</a></td>';
             } else {
                 echo '<td>' . $value . '</td>';
