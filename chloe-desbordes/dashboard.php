@@ -110,6 +110,14 @@ function buildWhereClause(array $fields, string $search): array {
 }
 
 function renderTable(array $rows, array $columns, string $tab): void {
+    echo '<div style="color: #1565c0; font-weight: bold;">';
+    echo 'Diagnostic : ';
+    echo 'Nombre de résultats = ' . count($rows) . '<br>';
+    if (!empty($rows)) {
+        echo 'Colonnes du premier résultat : ' . implode(', ', array_keys($rows[0])) . '<br>';
+        echo 'Contenu du premier résultat : <pre>' . print_r($rows[0], true) . '</pre>';
+    }
+    echo '</div>';
     if (empty($rows)) {
         echo '<p>Aucun résultat ne correspond à votre recherche.</p>';
         return;
