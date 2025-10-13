@@ -114,11 +114,19 @@ function renderTable(array $rows, array $columns, string $tab): void {
         echo '<p>Aucun résultat ne correspond à votre recherche.</p>';
         return;
     }
-    // Détection dynamique des colonnes pour tous les onglets
+    // Colonnes dynamiques + colonnes reliées
     $dynamicColumns = [];
     $firstRow = $rows[0];
     foreach (array_keys($firstRow) as $colName) {
         $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
+    }
+    // Ajout colonne liée pour courses : nombre de participations
+    if ($tab === 'courses') {
+        $dynamicColumns[] = ['label' => 'Nombre de participations', 'key' => '__participations', 'link' => false];
+    }
+    // Ajout colonne liée pour points ITRA : nom du coureur
+    if ($tab === 'points') {
+        $dynamicColumns[] = ['label' => 'Nom du coureur', 'key' => '__nom_coureur', 'link' => false];
     }
     echo '<table><thead><tr>';
     foreach ($dynamicColumns as $col) {
@@ -129,6 +137,21 @@ function renderTable(array $rows, array $columns, string $tab): void {
         echo '<tr>';
         foreach ($dynamicColumns as $col) {
             $value = $row[$col['key']] ?? '';
+            // Ajout des données reliées
+            if ($col['key'] === '__participations' && isset($row['id_course'])) {
+                // Compter les participations pour cette course
+                $pdo2 = $GLOBALS['pdo'];
+                $stmt2 = $pdo2->prepare('SELECT COUNT(*) FROM participation WHERE id_course = ?');
+                $stmt2->execute([$row['id_course']]);
+                $value = $stmt2->fetchColumn();
+            }
+            if ($col['key'] === '__nom_coureur' && isset($row['id_coureur'])) {
+                $pdo2 = $GLOBALS['pdo'];
+                $stmt2 = $pdo2->prepare('SELECT nom, prenom FROM coureurs_UTMB WHERE id_coureur = ?');
+                $stmt2->execute([$row['id_coureur']]);
+                $c = $stmt2->fetch();
+                $value = $c ? ($c['nom'] . ' ' . $c['prenom']) : '';
+            }
             $value = htmlspecialchars((string)$value);
             echo '<td>' . $value . '</td>';
         }
