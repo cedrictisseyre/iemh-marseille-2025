@@ -110,26 +110,15 @@ function buildWhereClause(array $fields, string $search): array {
 }
 
 function renderTable(array $rows, array $columns, string $tab): void {
-    echo '<div style="color: #1565c0; font-weight: bold;">';
-    echo 'Diagnostic : ';
-    echo 'Nombre de résultats = ' . count($rows) . '<br>';
-    if (!empty($rows)) {
-        echo 'Colonnes du premier résultat : ' . implode(', ', array_keys($rows[0])) . '<br>';
-        echo 'Contenu du premier résultat : <pre>' . print_r($rows[0], true) . '</pre>';
-    }
-    echo '</div>';
     if (empty($rows)) {
         echo '<p>Aucun résultat ne correspond à votre recherche.</p>';
         return;
     }
-    // Détection dynamique des colonnes si aucune trouvée ou si aucune valeur n'est présente
-    $dynamicColumns = $columns;
-    if (count($rows) > 0 && ($tab === 'courses' || $tab === 'points')) {
-        $firstRow = $rows[0];
-        $dynamicColumns = [];
-        foreach (array_keys($firstRow) as $colName) {
-            $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
-        }
+    // Détection dynamique des colonnes pour tous les onglets
+    $dynamicColumns = [];
+    $firstRow = $rows[0];
+    foreach (array_keys($firstRow) as $colName) {
+        $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
     }
     echo '<table><thead><tr>';
     foreach ($dynamicColumns as $col) {
