@@ -199,9 +199,9 @@ function tabNav($active) {
             $rows = $stmt->fetchAll();
             echo '<h2>Liste des courses</h2>';
             if (count($rows) > 0) {
-                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Distance (km)</th><th>Dénivelé (m)</th><th>Date</th></tr></thead><tbody>';
+                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Distance (km)</th><th>Dénivelé (m)</th><th>Date</th><th>Lieu</th></tr></thead><tbody>';
                 foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_course']}</td><td>{$row['nom_course']}</td><td>{$row['distance_km']}</td><td>{$row['denivele_m']}</td><td>{$row['date_course']}</td></tr>";
+                    echo "<tr><td>{$row['id_course']}</td><td>{$row['nom']}</td><td>{$row['distance_km']}</td><td>{$row['denivele_m']}</td><td>{$row['date_course']}</td><td>{$row['lieu']}</td></tr>";
                 }
                 echo '</tbody></table>';
             } else {
@@ -239,7 +239,10 @@ function tabNav($active) {
             if (count($rows) > 0) {
                 echo '<table><thead><tr><th>ID</th><th>ID Coureur</th><th>Points</th></tr></thead><tbody>';
                 foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_point']}</td><td>{$row['id_coureur']}</td><td>{$row['points']}</td></tr>";
+                    $id = isset($row['id_point']) ? $row['id_point'] : (isset($row['id']) ? $row['id'] : '');
+                    $id_coureur = isset($row['id_coureur']) ? $row['id_coureur'] : (isset($row['coureur_id']) ? $row['coureur_id'] : '');
+                    $points = isset($row['points']) ? $row['points'] : (isset($row['point']) ? $row['point'] : '');
+                    echo "<tr><td>{$id}</td><td>{$id_coureur}</td><td>{$points}</td></tr>";
                 }
                 echo '</tbody></table>';
             } else {
