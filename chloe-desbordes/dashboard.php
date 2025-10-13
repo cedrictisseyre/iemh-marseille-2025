@@ -114,34 +114,26 @@ function renderTable(array $rows, array $columns, string $tab): void {
         echo '<p>Aucun résultat ne correspond à votre recherche.</p>';
         return;
     }
+    // Détection dynamique des colonnes si aucune trouvée ou si aucune valeur n'est présente
+    $dynamicColumns = $columns;
+    if (count($rows) > 0 && ($tab === 'courses' || $tab === 'points')) {
+        $firstRow = $rows[0];
+        $dynamicColumns = [];
+        foreach (array_keys($firstRow) as $colName) {
+            $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
+        }
+    }
     echo '<table><thead><tr>';
-    foreach ($columns as $col) {
+    foreach ($dynamicColumns as $col) {
         echo '<th>' . htmlspecialchars($col['label']) . '</th>';
     }
     echo '</tr></thead><tbody>';
     foreach ($rows as $row) {
         echo '<tr>';
-        foreach ($columns as $col) {
-            // Recherche de la valeur avec variantes de noms de colonnes
-            $value = '';
-            $keys = [$col['key']];
-            // Ajout de variantes pour les cas connus
-            if ($col['key'] === 'nom') $keys[] = 'nom_course';
-            if ($col['key'] === 'id_point') $keys[] = 'id';
-            if ($col['key'] === 'id_coureur') $keys[] = 'coureur_id';
-            if ($col['key'] === 'points') $keys[] = 'point';
-            foreach ($keys as $k) {
-                if (isset($row[$k])) {
-                    $value = $row[$k];
-                    break;
-                }
-            }
+        foreach ($dynamicColumns as $col) {
+            $value = $row[$col['key']] ?? '';
             $value = htmlspecialchars((string)$value);
-            if ($col['link'] && $value !== '') {
-                echo '<td><a href="details.php?tab=' . $tab . '&id=' . urlencode($value) . '" target="_blank">' . $value . '</a></td>';
-            } else {
-                echo '<td>' . $value . '</td>';
-            }
+            echo '<td>' . $value . '</td>';
         }
         echo '</tr>';
     }
