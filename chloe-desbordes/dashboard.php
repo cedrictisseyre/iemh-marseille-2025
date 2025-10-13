@@ -1,33 +1,176 @@
-
-
-
 <?php
 require_once __DIR__ . '/connexion.php';
 if (!isset($pdo) || !$pdo) {
     echo '<div style="color:red;font-weight:bold">Erreur : la connexion à la base de données a échoué. Vérifiez les identifiants et l’accessibilité du serveur.</div>';
     exit;
 }
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-$tab = $_GET['tab'] ?? 'coureurs';
-$search = $_GET['search'] ?? '';
 
-function tabNav($active) {
-    $tabs = [
-        'coureurs' => 'Coureurs',
-        'courses' => 'Courses',
-        'participations' => 'Participations',
-        'points' => 'Points ITRA'
-    ];
+$search = trim($_GET['search'] ?? '');
+$page   = max(1, (int)($_GET['page'] ?? 1));
+$pageSize = 20;
+
+$tabsConfig = [
+    'coureurs' => [
+        'label'      => 'Coureurs',
+        'title'      => 'Liste des coureurs',
+        'link'       => 'pages/liste_coureurs.php',
+        'base_sql'   => 'SELECT id_coureur, nom, prenom, nationalite, date_naissance, club FROM coureurs_UTMB',
+        'count_sql'  => 'SELECT COUNT(*) FROM coureurs_UTMB',
+        'searchable' => ['nom', 'prenom', 'nationalite', 'club'],
+        'order'      => 'ORDER BY nom ASC, prenom ASC',
+        'columns'    => [
+            ['label' => 'ID',               'key' => 'id_coureur'],
+            ['label' => 'Nom',              'key' => 'nom'],
+            ['label' => 'Prénom',           'key' => 'prenom'],
+            ['label' => 'Nationalité',      'key' => 'nationalite'],
+            ['label' => 'Date de naissance','key' => 'date_naissance'],
+            ['label' => 'Club',             'key' => 'club'],
+        ],
+    ],
+    'courses' => [
+        'label'      => 'Courses',
+        'title'      => 'Liste des courses',
+        'link'       => 'pages/liste_courses.php',
+        'base_sql'   => 'SELECT id_course, nom_course, distance_km, denivele_m, date_course, lieu FROM courses',
+        'count_sql'  => 'SELECT COUNT(*) FROM courses',
+        'searchable' => ['nom_course', 'lieu'],
+        'order'      => 'ORDER BY date_course DESC',
+        'columns'    => [
+            ['label' => 'ID',             'key' => 'id_course'],
+            ['label' => 'Nom',            'key' => 'nom_course'],
+            ['label' => 'Distance (km)',  'key' => 'distance_km'],
+            ['label' => 'Dénivelé (m)',   'key' => 'denivele_m'],
+            ['label' => 'Date',           'key' => 'date_course'],
+            ['label' => 'Lieu',           'key' => 'lieu'],
+        ],
+    ],
+    'participations' => [
+        'label'      => 'Participations',
+        'title'      => 'Liste des participations',
+        'link'       => 'pages/liste_participations.php',
+        'base_sql'   => 'SELECT id_coureur, id_course, dossard, temps_final, statut FROM participation',
+        'count_sql'  => 'SELECT COUNT(*) FROM participation',
+        'searchable' => ['id_coureur', 'id_course', 'temps_final', 'statut'],
+        'order'      => 'ORDER BY id_course DESC',
+        'columns'    => [
+            ['label' => 'ID Coureur', 'key' => 'id_coureur'],
+            ['label' => 'ID Course',  'key' => 'id_course'],
+            ['label' => 'Dossard',    'key' => 'dossard'],
+            ['label' => 'Temps final','key' => 'temps_final'],
+            ['label' => 'Statut',     'key' => 'statut'],
+        ],
+    ],
+    'points' => [
+        'label'      => 'Points ITRA',
+        'title'      => 'Liste des points ITRA',
+        'link'       => 'pages/liste_points.php',
+        'base_sql'   => 'SELECT id_point, id_coureur, points FROM points_ITRA',
+        'count_sql'  => 'SELECT COUNT(*) FROM points_ITRA',
+        'searchable' => ['id_coureur', 'points'],
+        'order'      => 'ORDER BY points DESC',
+        'columns'    => [
+            ['label' => 'ID',         'key' => 'id_point'],
+            ['label' => 'ID Coureur', 'key' => 'id_coureur'],
+            ['label' => 'Points',     'key' => 'points'],
+        ],
+    ],
+];
+
+$currentTab = $_GET['tab'] ?? 'coureurs';
+if (!array_key_exists($currentTab, $tabsConfig)) {
+    $currentTab = 'coureurs';
+}
+$config = $tabsConfig[$currentTab];
+
+function tabNav(string $active, array $tabs): void {
     echo '<nav class="tabs">';
-    foreach ($tabs as $key => $label) {
-        $class = ($active === $key) ? 'active' : '';
-        echo "<a href='?tab=$key' class='$class'>$label</a> ";
+    foreach ($tabs as $key => $data) {
+        $class = $active === $key ? 'active' : '';
+        $label = htmlspecialchars($data['label']);
+        echo "<a href='?tab={$key}' class='{$class}'>{$label}</a> ";
     }
     echo '</nav>';
 }
-?><!DOCTYPE html>
+
+function buildWhereClause(array $fields, string $search): array {
+    if ($search === '' || empty($fields)) {
+        return ['', []];
+    }
+    $conditions = [];
+    $params     = [];
+    foreach ($fields as $idx => $field) {
+        $paramKey = ":search{$idx}";
+        $conditions[] = "{$field} LIKE {$paramKey}";
+        $params[$paramKey] = '%' . $search . '%';
+    }
+    return [' WHERE ' . implode(' OR ', $conditions), $params];
+}
+
+function renderTable(array $rows, array $columns): void {
+    if (empty($rows)) {
+        echo '<p>Aucun résultat ne correspond à votre recherche.</p>';
+        return;
+    }
+    echo '<table><thead><tr>';
+    foreach ($columns as $col) {
+        echo '<th>' . htmlspecialchars($col['label']) . '</th>';
+    }
+    echo '</tr></thead><tbody>';
+    foreach ($rows as $row) {
+        echo '<tr>';
+        foreach ($columns as $col) {
+            $value = $row[$col['key']] ?? '';
+            echo '<td>' . htmlspecialchars((string)$value) . '</td>';
+        }
+        echo '</tr>';
+    }
+    echo '</tbody></table>';
+}
+
+function renderPagination(int $total, int $page, int $pageSize, string $tab, string $search): void {
+    if ($total <= $pageSize) {
+        return;
+    }
+    $pages = (int)ceil($total / $pageSize);
+    echo '<div class="pagination">';
+    for ($p = 1; $p <= $pages; $p++) {
+        $params = ['tab' => $tab, 'page' => $p];
+        if ($search !== '') {
+            $params['search'] = $search;
+        }
+        $href = '?' . http_build_query($params);
+        $active = $p === $page ? " class='active-page'" : '';
+        echo "<a{$active} href='{$href}'>" . $p . '</a> ';
+    }
+    echo '</div>';
+}
+
+[$whereClause, $searchParams] = buildWhereClause($config['searchable'], $search);
+
+$dataSql  = $config['base_sql'] . $whereClause . ' ' . $config['order'] . ' LIMIT :limit OFFSET :offset';
+$countSql = $config['count_sql'] . $whereClause;
+
+$stmt = $pdo->prepare($dataSql);
+foreach ($searchParams as $param => $value) {
+    $stmt->bindValue($param, $value, PDO::PARAM_STR);
+}
+$stmt->bindValue(':limit', $pageSize, PDO::PARAM_INT);
+$stmt->bindValue(':offset', ($page - 1) * $pageSize, PDO::PARAM_INT);
+$stmt->execute();
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$countStmt = $pdo->prepare($countSql);
+foreach ($searchParams as $param => $value) {
+    $countStmt->bindValue($param, $value, PDO::PARAM_STR);
+}
+$countStmt->execute();
+$totalRows = (int)$countStmt->fetchColumn();
+?>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -150,6 +293,24 @@ function tabNav($active) {
         a[target="_blank"]:hover{
             background:#388e3c;
         }
+        .pagination {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .pagination a {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #1565c0;
+            text-decoration: none;
+            color: #1565c0;
+        }
+        .pagination a.active-page {
+            background: #1565c0;
+            color: #fff;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -161,95 +322,21 @@ function tabNav($active) {
         </svg>
     </div>
     <h1>Tableau de bord UTMB</h1>
-    <?php tabNav($tab); ?>
+    <?php tabNav($currentTab, $tabsConfig); ?>
     <div class="content">
-    <form method="get" style="margin-bottom:1em;">
-        <input type="hidden" name="tab" value="<?= htmlspecialchars($tab) ?>">
-        <input type="text" name="search" placeholder="Recherche..." value="<?= htmlspecialchars($search) ?>">
-        <button type="submit">Rechercher</button>
-    </form>
-    <?php
-    try {
-        if ($tab === 'coureurs') {
-            echo '<a href="pages/liste_coureurs.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM coureurs_UTMB';
-            if ($search) $sql .= ' WHERE nom LIKE :search OR prenom LIKE :search OR nationalite LIKE :search OR club LIKE :search';
-            $stmt = $pdo->prepare($sql);
-            $params = $search ? [':search' => "%$search%"] : [];
-            $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-            echo '<h2>Liste des coureurs</h2>';
-            if (count($rows) > 0) {
-                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Prénom</th><th>Nationalité</th><th>Date de naissance</th><th>Club</th></tr></thead><tbody>';
-                foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_coureur']}</td><td>{$row['nom']}</td><td>{$row['prenom']}</td><td>{$row['nationalite']}</td><td>{$row['date_naissance']}</td><td>{$row['club']}</td></tr>";
-                }
-                echo '</tbody></table>';
-            } else {
-                echo '<p>Aucun coureur trouvé.</p>';
-            }
-        }
-        elseif ($tab === 'courses') {
-            echo '<a href="pages/liste_courses.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM courses';
-            if ($search) $sql .= ' WHERE nom LIKE :search OR lieu LIKE :search';
-            $stmt = $pdo->prepare($sql);
-            $params = $search ? [':search' => "%$search%"] : [];
-            $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-            echo '<h2>Liste des courses</h2>';
-            if (count($rows) > 0) {
-                echo '<table><thead><tr><th>ID</th><th>Nom</th><th>Distance (km)</th><th>Dénivelé (m)</th><th>Date</th></tr></thead><tbody>';
-                foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_course']}</td><td>{$row['nom_course']}</td><td>{$row['distance_km']}</td><td>{$row['denivele_m']}</td><td>{$row['date_course']}</td></tr>";
-                }
-                echo '</tbody></table>';
-            } else {
-                echo '<p>Aucune course trouvée.</p>';
-            }
-        }
-        elseif ($tab === 'participations') {
-            echo '<a href="pages/liste_participations.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM participation';
-            if ($search) $sql .= ' WHERE id_coureur LIKE :search OR id_course LIKE :search OR temps LIKE :search';
-            $stmt = $pdo->prepare($sql);
-            $params = $search ? [':search' => "%$search%"] : [];
-            $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-            echo '<h2>Liste des participations</h2>';
-            if (count($rows) > 0) {
-                echo '<table><thead><tr><th>ID Coureur</th><th>ID Course</th><th>Dossard</th><th>Temps final</th><th>Statut</th></tr></thead><tbody>';
-                foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_coureur']}</td><td>{$row['id_course']}</td><td>{$row['dossard']}</td><td>{$row['temps_final']}</td><td>{$row['statut']}</td></tr>";
-                }
-                echo '</tbody></table>';
-            } else {
-                echo '<p>Aucune participation trouvée.</p>';
-            }
-        }
-        elseif ($tab === 'points') {
-            echo '<a href="pages/liste_points.php" style="float:right;margin-bottom:10px;" target="_blank">Voir la liste complète</a>';
-            $sql = 'SELECT * FROM points_ITRA';
-            if ($search) $sql .= ' WHERE id_coureur LIKE :search OR points LIKE :search';
-            $stmt = $pdo->prepare($sql);
-            $params = $search ? [':search' => "%$search%"] : [];
-            $stmt->execute($params);
-            $rows = $stmt->fetchAll();
-            echo '<h2>Liste des points ITRA</h2>';
-            if (count($rows) > 0) {
-                echo '<table><thead><tr><th>ID</th><th>ID Coureur</th><th>Points</th></tr></thead><tbody>';
-                foreach ($rows as $row) {
-                    echo "<tr><td>{$row['id_point']}</td><td>{$row['id_coureur']}</td><td>{$row['points']}</td></tr>";
-                }
-                echo '</tbody></table>';
-            } else {
-                echo '<p>Aucun point ITRA trouvé.</p>';
-            }
-        }
-    } catch (PDOException $e) {
-        echo '<div style="color:red">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
-    }
-    ?>
+        <form method="get" style="margin-bottom:1em;">
+            <input type="hidden" name="tab" value="<?= htmlspecialchars($currentTab) ?>">
+            <input type="text" name="search" placeholder="Recherche..." value="<?= htmlspecialchars($search) ?>">
+            <button type="submit">Rechercher</button>
+        </form>
+
+        <?php if (!empty($config['link'])): ?>
+            <a href="<?= htmlspecialchars($config['link']) ?>" target="_blank">Voir la liste complète</a>
+        <?php endif; ?>
+
+        <h2><?= htmlspecialchars($config['title']) ?></h2>
+        <?php renderTable($rows, $config['columns']); ?>
+        <?php renderPagination($totalRows, $page, $pageSize, $currentTab, $search); ?>
     </div>
 </body>
 </html>
