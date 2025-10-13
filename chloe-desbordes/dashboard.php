@@ -1,4 +1,3 @@
-
 <?php
 require_once __DIR__ . '/connexion.php';
 if (!isset($pdo) || !$pdo) {
@@ -18,14 +17,6 @@ $tabsConfig = [
         'count_sql'  => 'SELECT COUNT(*) FROM coureurs_UTMB',
         'searchable' => ['nom', 'prenom', 'nationalite', 'club'],
         'order'      => 'ORDER BY nom ASC, prenom ASC',
-        'columns'    => [
-            ['label' => 'ID',               'key' => 'id_coureur', 'link' => false],
-            ['label' => 'Nom',              'key' => 'nom',        'link' => true],
-            ['label' => 'Prénom',           'key' => 'prenom',     'link' => false],
-            ['label' => 'Nationalité',      'key' => 'nationalite','link' => false],
-            ['label' => 'Date de naissance','key' => 'date_naissance','link' => false],
-            ['label' => 'Club',             'key' => 'club',       'link' => false],
-        ],
     ],
     'courses' => [
         'label'      => 'Courses',
@@ -35,14 +26,6 @@ $tabsConfig = [
         'count_sql'  => 'SELECT COUNT(*) FROM courses',
         'searchable' => ['nom', 'lieu'],
         'order'      => 'ORDER BY date_course DESC',
-        'columns'    => [
-            ['label' => 'ID',             'key' => 'id_course', 'link' => false],
-            ['label' => 'Nom',            'key' => 'nom',       'link' => true],
-            ['label' => 'Distance (km)',  'key' => 'distance_km','link' => false],
-            ['label' => 'Dénivelé (m)',   'key' => 'denivele_m','link' => false],
-            ['label' => 'Date',           'key' => 'date_course','link' => false],
-            ['label' => 'Lieu',           'key' => 'lieu',      'link' => false],
-        ],
     ],
     'participations' => [
         'label'      => 'Participations',
@@ -52,13 +35,6 @@ $tabsConfig = [
         'count_sql'  => 'SELECT COUNT(*) FROM participation',
         'searchable' => ['id_coureur', 'id_course', 'temps_final', 'statut'],
         'order'      => 'ORDER BY id_course DESC',
-        'columns'    => [
-            ['label' => 'ID Coureur', 'key' => 'id_coureur', 'link' => true],
-            ['label' => 'ID Course',  'key' => 'id_course',  'link' => true],
-            ['label' => 'Dossard',    'key' => 'dossard',    'link' => false],
-            ['label' => 'Temps final','key' => 'temps_final','link' => false],
-            ['label' => 'Statut',     'key' => 'statut',     'link' => false],
-        ],
     ],
     'points' => [
         'label'      => 'Points ITRA',
@@ -68,227 +44,152 @@ $tabsConfig = [
         'count_sql'  => 'SELECT COUNT(*) FROM points_ITRA',
         'searchable' => ['id_coureur', 'points'],
         'order'      => 'ORDER BY points DESC',
-        'columns'    => [
-            ['label' => 'ID',         'key' => 'id_point',   'link' => false],
-            ['label' => 'ID Coureur', 'key' => 'id_coureur', 'link' => true],
-            ['label' => 'Points',     'key' => 'points',     'link' => false],
-        ],
     ],
 ];
 
-$currentTab = $_GET['tab'] ?? 'coureurs';
-if (!array_key_exists($currentTab, $tabsConfig)) {
-    $currentTab = 'coureurs';
-}
-$config = $tabsConfig[$currentTab];
-$search = trim($_GET['search'] ?? '');
-$page   = max(1, (int)($_GET['page'] ?? 1));
-$pageSize = 20;
+        $currentTab = $_GET['tab'] ?? 'coureurs';
+        if (!array_key_exists($currentTab, $tabsConfig)) {
+            $currentTab = 'coureurs';
+        }
+        $config = $tabsConfig[$currentTab];
+        $search = trim($_GET['search'] ?? '');
+        $page   = max(1, (int)($_GET['page'] ?? 1));
+        $pageSize = 20;
 
-function tabNav(string $active, array $tabs): void {
-    echo '<nav class="tabs">';
-    foreach ($tabs as $key => $data) {
-        $class = $active === $key ? 'active' : '';
-        $label = htmlspecialchars($data['label']);
-        echo "<a href='?tab={$key}' class='{$class}'>{$label}</a> ";
-    }
-    echo '</nav>';
-}
-
-function buildWhereClause(array $fields, string $search): array {
-    if ($search === '' || empty($fields)) {
-        return ['', []];
-    }
-    $conditions = [];
-    $params     = [];
-    foreach ($fields as $idx => $field) {
-        $paramKey = ":search{$idx}";
-        $conditions[] = "{$field} LIKE {$paramKey}";
-        $params[$paramKey] = '%' . $search . '%';
-    }
-    return [' WHERE ' . implode(' OR ', $conditions), $params];
-}
-
-function renderTable(array $rows, array $columns, string $tab): void {
-    if (empty($rows)) {
-        echo '<p>Aucun résultat ne correspond à votre recherche.</p>';
-        return;
-    }
-    // Colonnes dynamiques + colonnes reliées
-    $dynamicColumns = [];
-    $firstRow = $rows[0];
-    foreach (array_keys($firstRow) as $colName) {
-        $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
-    }
-    // Ajout colonne liée pour courses : nombre de participations
-    if ($tab === 'courses') {
-        $dynamicColumns[] = ['label' => 'Nombre de participations', 'key' => '__participations', 'link' => false];
-    }
-    // Ajout colonne liée pour points ITRA : nom du coureur
-    if ($tab === 'points') {
-        $dynamicColumns[] = ['label' => 'Nom du coureur', 'key' => '__nom_coureur', 'link' => false];
-    }
-    echo '<table><thead><tr>';
-    foreach ($dynamicColumns as $col) {
-        echo '<th>' . htmlspecialchars($col['label']) . '</th>';
-    }
-    echo '</tr></thead><tbody>';
-    foreach ($rows as $row) {
-        echo '<tr>';
-        foreach ($dynamicColumns as $col) {
-            $value = $row[$col['key']] ?? '';
-            // Ajout des données reliées
-            if ($col['key'] === '__participations' && isset($row['id_course'])) {
-                // Compter les participations pour cette course
-                $pdo2 = $GLOBALS['pdo'];
-                $stmt2 = $pdo2->prepare('SELECT COUNT(*) FROM participation WHERE id_course = ?');
-                $stmt2->execute([$row['id_course']]);
-                $value = $stmt2->fetchColumn();
+        function tabNav(string $active, array $tabs): void {
+            echo '<nav class="tabs">';
+            foreach ($tabs as $key => $data) {
+                $class = $active === $key ? 'active' : '';
+                $label = htmlspecialchars($data['label']);
+                echo "<a href='?tab={$key}' class='{$class}'>{$label}</a> ";
             }
-            if ($col['key'] === '__nom_coureur' && isset($row['id_coureur'])) {
-                $pdo2 = $GLOBALS['pdo'];
-                $stmt2 = $pdo2->prepare('SELECT nom, prenom FROM coureurs_UTMB WHERE id_coureur = ?');
-                $stmt2->execute([$row['id_coureur']]);
-                $c = $stmt2->fetch();
-                $value = $c ? ($c['nom'] . ' ' . $c['prenom']) : '';
+            echo '</nav>';
+        }
+
+        function buildWhereClause(array $fields, string $search): array {
+            if ($search === '' || empty($fields)) {
+                return ['', []];
             }
-            $value = htmlspecialchars((string)$value);
-            echo '<td>' . $value . '</td>';
+            $conditions = [];
+            $params     = [];
+            foreach ($fields as $idx => $field) {
+                $paramKey = ":search{$idx}";
+                $conditions[] = "{$field} LIKE {$paramKey}";
+                $params[$paramKey] = '%' . $search . '%';
+            }
+            return [' WHERE ' . implode(' OR ', $conditions), $params];
         }
-        echo '</tr>';
-    }
-    echo '</tbody></table>';
-}
 
-function renderPagination(int $total, int $page, int $pageSize, string $tab, string $search): void {
-    if ($total <= $pageSize) {
-        return;
-    }
-    $pages = (int)ceil($total / $pageSize);
-    echo '<div class="pagination">';
-    for ($p = 1; $p <= $pages; $p++) {
-        $params = ['tab' => $tab, 'page' => $p];
-        if ($search !== '') {
-            $params['search'] = $search;
+        function renderPagination(int $total, int $page, int $pageSize, string $tab, string $search): void {
+            if ($total <= $pageSize) {
+                return;
+            }
+            $pages = (int)ceil($total / $pageSize);
+            echo '<div class="pagination">';
+            for ($p = 1; $p <= $pages; $p++) {
+                $params = ['tab' => $tab, 'page' => $p];
+                if ($search !== '') {
+                    $params['search'] = $search;
+                }
+                $href = '?' . http_build_query($params);
+                $active = $p === $page ? " class='active-page'" : '';
+                echo "<a{$active} href='{$href}'>" . $p . '</a> ';
+            }
+            echo '</div>';
         }
-        $href = '?' . http_build_query($params);
-        $active = $p === $page ? " class='active-page'" : '';
-        echo "<a{$active} href='{$href}'>" . $p . '</a> ';
-    }
-    echo '</div>';
-}
 
-function exportCSV(array $rows, array $columns): void {
-    header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="export.csv"');
-    $output = fopen('php://output', 'w');
-    fputcsv($output, array_map(fn($c) => $c['label'], $columns));
-    foreach ($rows as $row) {
-        fputcsv($output, array_map(fn($c) => $row[$c['key']] ?? '', $columns));
-    }
-    fclose($output);
-    exit;
-}
+        function renderTable(array $rows, string $tab): void {
+            if (empty($rows)) {
+                echo '<p style="color:red;font-weight:bold">Aucune donnée trouvée pour cet onglet. Vérifiez la table et les colonnes.</p>';
+                return;
+            }
+            $dynamicColumns = array_keys($rows[0]);
+            // Ajout colonne liée pour courses : nombre de participations
+            if ($tab === 'courses' && isset($rows[0]['id_course'])) {
+                $dynamicColumns[] = '__participations';
+            }
+            // Ajout colonne liée pour points ITRA : nom du coureur
+            if ($tab === 'points' && isset($rows[0]['id_coureur'])) {
+                $dynamicColumns[] = '__nom_coureur';
+            }
+            echo '<table><thead><tr>';
+            foreach ($dynamicColumns as $col) {
+                if ($col === '__participations') {
+                    echo '<th>Nombre de participations</th>';
+                } elseif ($col === '__nom_coureur') {
+                    echo '<th>Nom du coureur</th>';
+                } else {
+                    echo '<th>' . htmlspecialchars($col) . '</th>';
+                }
+            }
+            echo '</tr></thead><tbody>';
+            foreach ($rows as $row) {
+                echo '<tr>';
+                foreach ($dynamicColumns as $col) {
+                    if ($col === '__participations' && isset($row['id_course'])) {
+                        $pdo2 = $GLOBALS['pdo'];
+                        $stmt2 = $pdo2->prepare('SELECT COUNT(*) FROM participation WHERE id_course = ?');
+                        $stmt2->execute([$row['id_course']]);
+                        $value = $stmt2->fetchColumn();
+                    } elseif ($col === '__nom_coureur' && isset($row['id_coureur'])) {
+                        $pdo2 = $GLOBALS['pdo'];
+                        $stmt2 = $pdo2->prepare('SELECT nom, prenom FROM coureurs_UTMB WHERE id_coureur = ?');
+                        $stmt2->execute([$row['id_coureur']]);
+                        $c = $stmt2->fetch();
+                        $value = $c ? ($c['nom'] . ' ' . $c['prenom']) : '';
+                    } else {
+                        $value = $row[$col] ?? '';
+                    }
+                    echo '<td>' . htmlspecialchars((string)$value) . '</td>';
+                }
+                echo '</tr>';
+            }
+            echo '</tbody></table>';
+        }
 
-if (isset($_GET['export']) && $_GET['export'] === 'csv') {
-    [$whereClause, $searchParams] = buildWhereClause($config['searchable'], $search);
-    $dataSql  = $config['base_sql'] . $whereClause . ' ' . $config['order'];
-    $stmt = $pdo->prepare($dataSql);
-    foreach ($searchParams as $param => $value) {
-        $stmt->bindValue($param, $value, PDO::PARAM_STR);
-    }
-    $stmt->execute();
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    exportCSV($rows, $config['columns']);
-}
+        if (isset($_GET['export']) && $_GET['export'] === 'csv') {
+            [$whereClause, $searchParams] = buildWhereClause($config['searchable'], $search);
+            $dataSql  = $config['base_sql'] . $whereClause . ' ' . $config['order'];
+            $stmt = $pdo->prepare($dataSql);
+            foreach ($searchParams as $param => $value) {
+                $stmt->bindValue($param, $value, PDO::PARAM_STR);
+            }
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            renderTable($rows, $currentTab);
+            exit;
+        }
 
-[$whereClause, $searchParams] = buildWhereClause($config['searchable'], $search);
+        [$whereClause, $searchParams] = buildWhereClause($config['searchable'], $search);
 
-$dataSql  = $config['base_sql'] . $whereClause . ' ' . $config['order'] . ' LIMIT :limit OFFSET :offset';
-$countSql = $config['count_sql'] . $whereClause;
+        $dataSql  = $config['base_sql'] . $whereClause . ' ' . $config['order'] . ' LIMIT :limit OFFSET :offset';
+        $countSql = $config['count_sql'] . $whereClause;
 
-$stmt = $pdo->prepare($dataSql);
-foreach ($searchParams as $param => $value) {
-    $stmt->bindValue($param, $value, PDO::PARAM_STR);
-}
-$stmt->bindValue(':limit', $pageSize, PDO::PARAM_INT);
-$stmt->bindValue(':offset', ($page - 1) * $pageSize, PDO::PARAM_INT);
-$stmt->execute();
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $pdo->prepare($dataSql);
+            foreach ($searchParams as $param => $value) {
+                $stmt->bindValue($param, $value, PDO::PARAM_STR);
+            }
+            $stmt->bindValue(':limit', $pageSize, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', ($page - 1) * $pageSize, PDO::PARAM_INT);
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo '<div style="color:red;font-weight:bold">Erreur SQL : ' . htmlspecialchars($e->getMessage()) . '</div>';
+            $rows = [];
+        }
 
-$countStmt = $pdo->prepare($countSql);
-foreach ($searchParams as $param => $value) {
-    $countStmt->bindValue($param, $value, PDO::PARAM_STR);
-}
-$countStmt->execute();
-$totalRows = (int)$countStmt->fetchColumn();
-?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard UTMB</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
-            background: linear-gradient(to top, #e0f7fa 0%, #fff 100%);
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0;
+        try {
+            $countStmt = $pdo->prepare($countSql);
+            foreach ($searchParams as $param => $value) {
+                $countStmt->bindValue($param, $value, PDO::PARAM_STR);
+            }
+            $countStmt->execute();
+            $totalRows = (int)$countStmt->fetchColumn();
+        } catch (PDOException $e) {
+            $totalRows = 0;
         }
-        .mountain-header {
-            width: 100%;
-            height: 160px;
-            background: linear-gradient(to top, #b3e5fc 0%, #fff 100%);
-            position: relative;
-            margin-bottom: -40px;
-        }
-        .mountain-svg {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 160px;
-        }
-        h1 {
-            text-align: center;
-            color: #34495e;
-            font-size: 2.5em;
-            margin-top: 0;
-            letter-spacing: 2px;
-            font-family: 'Montserrat', Arial, sans-serif;
-        }
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        .tabs a {
-            background: #388e3c;
-            color: #fff;
-            padding: 14px 36px;
-            margin: 0 7px;
-            font-size: 1.15em;
-            border-radius: 12px 12px 0 0;
-            text-decoration: none;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
-            font-weight: bold;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        .tabs a.active {
-            background: #1565c0;
-            box-shadow: 0 4px 16px rgba(44,62,80,0.12);
-        }
-        .content {
-            background: #fff;
-            border-radius: 0 0 16px 16px;
-            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
-            margin: 0 auto;
-            max-width: 1000px;
-            padding: 40px 32px 32px 32px;
-        }
-        input[type=text]{
+        ?>
             padding:8px;
             width:320px;
             margin-bottom:1em;
