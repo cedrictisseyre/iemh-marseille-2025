@@ -28,8 +28,42 @@
   <li><a href='pages/ajout_ecurie.php'>Ajouter une écurie</a></li>
   </ul>
   <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
+  <h3>Formulaires rapides</h3>
+  <div class="quick-forms" style="display:flex;gap:1rem;flex-wrap:wrap;">
+    <form id="quick-add-pilote" action="/francoisdcls/services/api_ajout_pilote.php" method="post" style="border:1px solid #ddd;padding:0.6em;border-radius:6px;width:280px;">
+      <h4>Ajouter pilote</h4>
+      <label>Prénom<br><input name="prenom" required></label><br>
+      <label>Nom<br><input name="nom" required></label><br>
+      <label>Nationalité<br><input name="nationalite"></label><br>
+      <button type="submit">Ajouter</button>
+    </form>
+
+    <form id="quick-add-ecurie" action="/francoisdcls/services/api_ajout_ecurie.php" method="post" style="border:1px solid #ddd;padding:0.6em;border-radius:6px;width:280px;">
+      <h4>Ajouter écurie</h4>
+      <label>Nom<br><input name="nom" required></label><br>
+      <label>Siège<br><input name="siege"></label><br>
+      <button type="submit">Ajouter</button>
+    </form>
+
+    <form id="quick-add-participation" action="/francoisdcls/services/api_ajout_participation.php" method="post" style="border:1px solid #ddd;padding:0.6em;border-radius:6px;width:360px;">
+      <h4>Ajouter participation</h4>
+      <label>Pilote<br>
+        <select name="pilote_id" required>
+          <option value="">Chargement...</option>
+        </select>
+      </label><br>
+      <label>Écurie<br>
+        <select name="ecurie_id" required>
+          <option value="">Chargement...</option>
+        </select>
+      </label><br>
+      <label>Année<br><input name="annee" type="number" min="1900" max="2100" required></label><br>
+      <button type="submit">Ajouter</button>
+    </form>
+  </div>
   <div id="stats-globales" style="margin-top:2em;"></div>
   <script src="assets/stats.js"></script>
+  <script src="assets/actions.js"></script>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
