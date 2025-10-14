@@ -1,3 +1,4 @@
+<?php include __DIR__ . '/includes/flash.php'; $f = get_flash(); ?>
 <!DOCTYPE html>
 <html lang='fr'>
 <head>
@@ -11,7 +12,7 @@
   <h1 style="display:inline-block;vertical-align:middle;">Base de données Formule 1</h1>
 </header>
 <div class='container'>
-  <?php include __DIR__ . '/includes/flash.php'; $f = get_flash(); if ($f): ?>
+  <?php if ($f): ?>
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
   <?php endif; ?>
   <h2>Navigation</h2>
