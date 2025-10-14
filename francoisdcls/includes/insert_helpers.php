@@ -20,12 +20,20 @@ function insert_pilote(PDO $pdo, array $data): array {
 }
 
 function insert_ecurie(PDO $pdo, array $data): array {
+    // la table ecuries utilise la colonne `nom_ecuries` pour le nom
     $nom = trim($data['nom'] ?? '');
     $siege = trim($data['siege'] ?? '');
     if ($nom === '') return ['success'=>false,'message'=>'Nom requis','id'=>null];
     try {
-        $stmt = $pdo->prepare('INSERT INTO ecuries (nom, siege) VALUES (?, ?)');
-        $stmt->execute([$nom, $siege === '' ? null : $siege]);
+        // Some DB instances may not have a `siege` column; try to insert with siege if present
+        try {
+            $stmt = $pdo->prepare('INSERT INTO ecuries (nom_ecuries, siege) VALUES (?, ?)');
+            $stmt->execute([$nom, $siege === '' ? null : $siege]);
+        } catch (PDOException $e2) {
+            // if siege column not present, fall back to inserting only nom_ecuries
+            $stmt = $pdo->prepare('INSERT INTO ecuries (nom_ecuries) VALUES (?)');
+            $stmt->execute([$nom]);
+        }
         $id = $pdo->lastInsertId();
         return ['success'=>true,'message'=>'Écurie ajoutée','id'=> (int)$id];
     } catch (PDOException $e) {

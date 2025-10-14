@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../database/bdd_formule1.php';
+require_once __DIR__ . '/../includes/flash.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $sql = "SELECT * FROM pilotes WHERE pilote_id = ?";
 $stmt = $pdo->prepare($sql);
@@ -23,7 +24,7 @@ $ecuries = $pdo->prepare($sql4); $ecuries->execute([$id]); $ecuries = $ecuries->
 <body>
 <header><h1><?= htmlspecialchars($pilote['prenom'].' '.$pilote['nom']) ?></h1></header>
 <div class='container'>
-  <?php include __DIR__ . '/../includes/flash.php'; $f = get_flash(); if ($f): ?>
+  <?php $f = get_flash(); if ($f): ?>
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
   <?php endif; ?>
   <div id="fiche-pilote-dyn" data-id="<?= $id ?>"></div>

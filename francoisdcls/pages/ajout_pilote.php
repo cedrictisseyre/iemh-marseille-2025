@@ -1,5 +1,6 @@
 <?php
 // Formulaire d'ajout de pilote
+include __DIR__ . '/../includes/flash.php';
 ?>
 <!DOCTYPE html>
 <html lang='fr'>
@@ -11,7 +12,7 @@
 <body>
 <header><h1>Ajouter un pilote</h1></header>
 <div class='container'>
-  <?php include __DIR__ . '/../includes/flash.php'; $f = get_flash(); if ($f): ?>
+  <?php $f = get_flash(); if ($f): ?>
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
   <?php endif; ?>
   <form method='post' action='../services/ajout_pilote.php'>

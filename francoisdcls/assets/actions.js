@@ -95,7 +95,7 @@ async function populateQuickSelects() {
   const pilotes = await fetchJSON('/francoisdcls/services/pilotes.php');
   const ecuries = await fetchJSON('/francoisdcls/services/ecuries.php');
     selPil.innerHTML = '<option value="">-- Choisir --</option>' + pilotes.map(p=>`<option value="${p.pilote_id}">${p.prenom} ${p.nom}</option>`).join('');
-    selEcu.innerHTML = '<option value="">-- Choisir --</option>' + ecuries.map(e=>`<option value="${e.ecurie_id}">${e.nom}</option>`).join('');
+  selEcu.innerHTML = '<option value="">-- Choisir --</option>' + ecuries.map(e=>`<option value="${e.ecurie_id}">${e.nom_ecuries}</option>`).join('');
   } catch (err) {
     console.warn('Impossible de charger pilotes/ecuries', err);
   }

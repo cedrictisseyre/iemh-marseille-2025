@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../database/bdd_formule1.php';
 // Récupérer listes pilotes/ecuries
 $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom, prenom")->fetchAll(PDO::FETCH_ASSOC);
-$ecuries = $pdo->query("SELECT ecurie_id, nom FROM ecuries ORDER BY nom")->fetchAll(PDO::FETCH_ASSOC);
+$ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_ecuries")->fetchAll(PDO::FETCH_ASSOC);
 if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ if (empty($_SESSION['csrf_token'])) $_SESSION['csrf_token'] = bin2hex(random_byt
       <select name='ecurie_id' required>
         <option value=''>-- Choisir --</option>
         <?php foreach($ecuries as $e): ?>
-          <option value='<?= $e['ecurie_id'] ?>'><?= htmlspecialchars($e['nom']) ?></option>
+          <option value='<?= $e['ecurie_id'] ?>'><?= htmlspecialchars($e['nom_ecuries']) ?></option>
         <?php endforeach; ?>
       </select>
     </label><br>

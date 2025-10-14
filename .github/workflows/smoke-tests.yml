@@ -1,0 +1,31 @@
+name: Smoke tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Ensure test script is executable
+        run: |
+          chmod +x francoisdcls/tests/api_smoke.sh
+
+      - name: Run smoke tests
+        run: |
+          cd francoisdcls
+          ./tests/api_smoke.sh
+        env:
+          # permit the action to fail loudly if needed
+          CI: true

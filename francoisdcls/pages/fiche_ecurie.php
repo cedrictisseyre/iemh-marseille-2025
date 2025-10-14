@@ -13,11 +13,11 @@ $pilotes = $pdo->prepare($sql2); $pilotes->execute([$id]); $pilotes = $pilotes->
 <html lang='fr'>
 <head>
   <meta charset='UTF-8'>
-  <title>Fiche écurie - <?= htmlspecialchars($ecurie['nom']) ?></title>
+  <title>Fiche écurie - <?= htmlspecialchars($ecurie['nom_ecuries']) ?></title>
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1><?= htmlspecialchars($ecurie['nom']) ?></h1></header>
+<header><h1><?= htmlspecialchars($ecurie['nom_ecuries']) ?></h1></header>
 <div class='container'>
 <ul>
   <li><b>Pays :</b> <?= htmlspecialchars($ecurie['pays'] ?? 'N/A') ?></li>
