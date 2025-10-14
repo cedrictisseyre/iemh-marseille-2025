@@ -6,6 +6,14 @@ async function postFormJSON(url, form) {
   return res.json();
 }
 
+// Toast helper
+function showToast(message, type=''){
+  let container = document.querySelector('.toast-container');
+  if (!container){ container = document.createElement('div'); container.className='toast-container'; document.body.appendChild(container); }
+  const t = document.createElement('div'); t.className = 'toast ' + (type||''); t.textContent = message; container.appendChild(t);
+  setTimeout(()=>{ t.style.opacity=0; setTimeout(()=>t.remove(),400); }, 4000);
+}
+
 // Ajout pilote rapide
 const formPilote = document.getElementById('quick-add-pilote');
 if (formPilote) {
@@ -15,8 +23,13 @@ if (formPilote) {
     btn.disabled = true;
     try {
       const json = await postFormJSON(formPilote.action, formPilote);
-      alert(json.message || (json.success ? 'Ok' : 'Erreur'));
-      if (json.success) formPilote.reset();
+      showToast(json.message || (json.success ? 'Ok' : 'Erreur'), json.success ? 'success' : 'error');
+      if (json.success) {
+        formPilote.reset();
+        // refresh selects if present
+        await populateQuickSelects();
+        if (window.refreshStats) try { window.refreshStats(); } catch(e){}
+      }
     } catch (err) {
       console.error('Erreur réseau', err);
       alert('Erreur réseau lors de l\'envoi, vérifiez le serveur');
@@ -33,8 +46,12 @@ if (formEcurie) {
     btn.disabled = true;
     try {
       const json = await postFormJSON(formEcurie.action, formEcurie);
-      alert(json.message || (json.success ? 'Ok' : 'Erreur'));
-      if (json.success) formEcurie.reset();
+      showToast(json.message || (json.success ? 'Ok' : 'Erreur'), json.success ? 'success' : 'error');
+      if (json.success) {
+        formEcurie.reset();
+        await populateQuickSelects();
+        if (window.refreshStats) try { window.refreshStats(); } catch(e){}
+      }
     } catch (err) {
       console.error('Erreur réseau', err);
       alert('Erreur réseau lors de l\'envoi, vérifiez le serveur');
@@ -51,8 +68,12 @@ if (formPart) {
     btn.disabled = true;
     try {
       const json = await postFormJSON(formPart.action, formPart);
-      alert(json.message || (json.success ? 'Ok' : 'Erreur'));
-      if (json.success) formPart.reset();
+      showToast(json.message || (json.success ? 'Ok' : 'Erreur'), json.success ? 'success' : 'error');
+      if (json.success) {
+        formPart.reset();
+        await populateQuickSelects();
+        if (window.refreshStats) try { window.refreshStats(); } catch(e){}
+      }
     } catch (err) {
       console.error('Erreur réseau', err);
       alert('Erreur réseau lors de l\'envoi, vérifiez le serveur');
