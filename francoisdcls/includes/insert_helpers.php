@@ -7,12 +7,11 @@
 function insert_pilote(PDO $pdo, array $data): array {
     $prenom = trim($data['prenom'] ?? '');
     $nom = trim($data['nom'] ?? '');
-    $nationalite = trim($data['nationalite'] ?? '');
-    $photo = trim($data['photo'] ?? '');
+    // la table pilotes ne possède que (pilote_id, prenom, nom) dans la base actuelle
     if ($prenom === '' || $nom === '') return ['success'=>false,'message'=>'Prénom et nom requis','id'=>null];
     try {
-        $stmt = $pdo->prepare('INSERT INTO pilotes (prenom, nom, nationalite, photo) VALUES (?, ?, ?, ?)');
-        $stmt->execute([$prenom, $nom, $nationalite === '' ? null : $nationalite, $photo === '' ? null : $photo]);
+        $stmt = $pdo->prepare('INSERT INTO pilotes (prenom, nom) VALUES (?, ?)');
+        $stmt->execute([$prenom, $nom]);
         $id = $pdo->lastInsertId();
         return ['success'=>true,'message'=>'Pilote ajouté','id'=> (int)$id];
     } catch (PDOException $e) {
