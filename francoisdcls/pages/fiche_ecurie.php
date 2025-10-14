@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../database/bdd_formule1.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $sql = "SELECT * FROM ecuries WHERE ecurie_id = ?";
