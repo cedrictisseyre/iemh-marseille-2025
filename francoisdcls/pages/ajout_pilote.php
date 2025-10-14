@@ -1,5 +1,6 @@
 <?php
 // Formulaire d'ajout de pilote
+require_once __DIR__ . '/../includes/flash.php';
 ?>
 <!DOCTYPE html>
 <html lang='fr'>

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../database/bdd_formule1.php';
 $annee = isset($_GET['annee']) ? intval($_GET['annee']) : '';
 $champion = null;
