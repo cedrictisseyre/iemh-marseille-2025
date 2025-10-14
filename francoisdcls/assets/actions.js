@@ -13,12 +13,14 @@ if (formPilote) {
     e.preventDefault();
     const btn = formPilote.querySelector('button[type=submit]');
     btn.disabled = true;
-    const json = await postFormJSON(formPilote.action, formPilote);
-    btn.disabled = false;
-    alert(json.message || (json.success ? 'Ok' : 'Erreur'));
-    if (json.success) {
-      formPilote.reset();
-    }
+    try {
+      const json = await postFormJSON(formPilote.action, formPilote);
+      alert(json.message || (json.success ? 'Ok' : 'Erreur'));
+      if (json.success) formPilote.reset();
+    } catch (err) {
+      console.error('Erreur réseau', err);
+      alert('Erreur réseau lors de l\'envoi, vérifiez le serveur');
+    } finally { btn.disabled = false; }
   });
 }
 
@@ -29,10 +31,14 @@ if (formEcurie) {
     e.preventDefault();
     const btn = formEcurie.querySelector('button[type=submit]');
     btn.disabled = true;
-    const json = await postFormJSON(formEcurie.action, formEcurie);
-    btn.disabled = false;
-    alert(json.message || (json.success ? 'Ok' : 'Erreur'));
-    if (json.success) formEcurie.reset();
+    try {
+      const json = await postFormJSON(formEcurie.action, formEcurie);
+      alert(json.message || (json.success ? 'Ok' : 'Erreur'));
+      if (json.success) formEcurie.reset();
+    } catch (err) {
+      console.error('Erreur réseau', err);
+      alert('Erreur réseau lors de l\'envoi, vérifiez le serveur');
+    } finally { btn.disabled = false; }
   });
 }
 
@@ -43,10 +49,14 @@ if (formPart) {
     e.preventDefault();
     const btn = formPart.querySelector('button[type=submit]');
     btn.disabled = true;
-    const json = await postFormJSON(formPart.action, formPart);
-    btn.disabled = false;
-    alert(json.message || (json.success ? 'Ok' : 'Erreur'));
-    if (json.success) formPart.reset();
+    try {
+      const json = await postFormJSON(formPart.action, formPart);
+      alert(json.message || (json.success ? 'Ok' : 'Erreur'));
+      if (json.success) formPart.reset();
+    } catch (err) {
+      console.error('Erreur réseau', err);
+      alert('Erreur réseau lors de l\'envoi, vérifiez le serveur');
+    } finally { btn.disabled = false; }
   });
 }
 
