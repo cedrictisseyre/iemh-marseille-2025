@@ -26,8 +26,8 @@ try {
         echo json_encode(['success' => false, 'message' => 'Participation déjà enregistrée']);
         exit;
     }
-    $ins = $pdo->prepare('INSERT INTO participations (pilote_id, ecurie_id, annee) VALUES (?, ?, ?)');
-    $ins->execute([$pilote_id, $ecurie_id, $annee]);
+    $ins = $pdo->prepare('INSERT INTO participations (annee, pilote_id, ecurie_id) VALUES (?, ?, ?)');
+    $ins->execute([$annee, $pilote_id, $ecurie_id]);
     echo json_encode(['success' => true, 'message' => 'Participation ajoutée']);
 } catch (PDOException $e) {
     http_response_code(500);

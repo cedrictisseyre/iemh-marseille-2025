@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $nom = trim($_POST['nom'] ?? '');
-$siège = trim($_POST['siege'] ?? '');
+$siege = trim($_POST['siege'] ?? '');
 
 if ($nom === '') {
     echo json_encode(['success' => false, 'message' => 'Nom requis']);
@@ -18,7 +18,7 @@ if ($nom === '') {
 
 try {
     $stmt = $pdo->prepare('INSERT INTO ecuries (nom, siege) VALUES (?, ?)');
-    $stmt->execute([$nom, $siège]);
+    $stmt->execute([$nom, $siege]);
     $id = $pdo->lastInsertId();
     echo json_encode(['success' => true, 'message' => 'Écurie ajoutée', 'id' => (int)$id]);
 } catch (PDOException $e) {
