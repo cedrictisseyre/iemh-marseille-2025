@@ -31,7 +31,18 @@ $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom,
   <form method='post' action='../services/ajout_ecurie.php'>
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
     <label>Pays/Siege:<br><input type='text' name='siege'></label><br>
-    <button type='submit'>Ajouter</button>
+      <hr>
+      <h3>Ajouter aussi une participation (optionnel)</h3>
+      <label>Pilote:<br>
+        <select name='pilote_id'>
+          <option value=''>-- Aucun --</option>
+          <?php foreach($pilotes as $p): ?>
+            <option value='<?= $p['pilote_id'] ?>'><?= htmlspecialchars($p['prenom'].' '.$p['nom']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label><br>
+      <label>Année:<br><input type='number' name='annee' min='1900' max='2100'></label><br>
+      <button type='submit'>Ajouter</button>
   </form>
   <a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir les pilotes</a>
 </section>
