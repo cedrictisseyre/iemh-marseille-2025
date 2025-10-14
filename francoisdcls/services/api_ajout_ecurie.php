@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../database/bdd_formule1.php';
+require_once __DIR__ . '/../includes/insert_helpers.php';
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -8,20 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$nom = trim($_POST['nom'] ?? '');
-$siege = trim($_POST['siege'] ?? '');
-
-if ($nom === '') {
-    echo json_encode(['success' => false, 'message' => 'Nom requis']);
-    exit;
-}
-
-try {
-    $stmt = $pdo->prepare('INSERT INTO ecuries (nom, siege) VALUES (?, ?)');
-    $stmt->execute([$nom, $siege]);
-    $id = $pdo->lastInsertId();
-    echo json_encode(['success' => true, 'message' => 'Écurie ajoutée', 'id' => (int)$id]);
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erreur serveur: ' . $e->getMessage()]);
+$result = insert_ecurie($pdo, $_POST);
+if ($result['success']) {
+    echo json_encode(['success'=>true,'message'=>$result['message'],'id'=>$result['id']]);
+} else {
+    http_response_code(400);
+    echo json_encode(['success'=>false,'message'=>$result['message']]);
 }

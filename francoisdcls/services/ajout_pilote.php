@@ -1,24 +1,16 @@
 <?php
 require_once __DIR__ . '/../database/bdd_formule1.php';
-// Validation simple
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo 'Méthode non autorisée';
+require_once __DIR__ . '/../includes/flash.php';
+require_once __DIR__ . '/../includes/insert_helpers.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo 'Méthode non autorisée'; exit; }
+
+$result = insert_pilote($pdo, $_POST);
+if (!$result['success']) {
+    set_flash('error', $result['message']);
+    header('Location: ../pages/ajout_pilote.php');
     exit;
 }
-$prenom = isset($_POST['prenom']) ? trim($_POST['prenom']) : '';
-$nom = isset($_POST['nom']) ? trim($_POST['nom']) : '';
-$nationalite = isset($_POST['nationalite']) ? trim($_POST['nationalite']) : null;
-$photo = isset($_POST['photo']) ? trim($_POST['photo']) : null;
-if ($prenom === '' || $nom === '') {
-    header('Location: ../pages/ajout_pilote.php?error=1');
-    exit;
-}
-// Insert
-$sql = "INSERT INTO pilotes (prenom, nom, nationalite, photo) VALUES (?, ?, ?, ?)";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$prenom, $nom, $nationalite, $photo]);
-$newId = $pdo->lastInsertId();
-// Redirect to fiche
-header('Location: ../pages/fiche_pilote.php?id=' . $newId);
+set_flash('success', $result['message']);
+header('Location: ../pages/fiche_pilote.php?id=' . $result['id']);
 exit;
