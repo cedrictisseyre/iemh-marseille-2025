@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../database/bdd_formule1.php';
 // Récupérer la liste des pilotes pour le formulaire
 $pilotes = $pdo->query("SELECT pilote_id, nom, prenom FROM pilotes ORDER BY nom, prenom")->fetchAll(PDO::FETCH_ASSOC);

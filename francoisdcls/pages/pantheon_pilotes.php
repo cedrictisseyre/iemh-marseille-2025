@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . '/../includes/flash.php';
+require_once __DIR__ . '/../database/bdd_formule1.php';
+?>
 <!DOCTYPE html>
 <html lang='fr'>
 <head>

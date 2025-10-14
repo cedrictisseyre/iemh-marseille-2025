@@ -13,9 +13,6 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 <body>
 <?php $page_title = 'Liste des écuries de F1'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
-  <?php $f = get_flash(); if ($f): ?>
-    <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
-  <?php endif; ?>
 <table>
 <tr><th>Nom</th><th>Fiche</th></tr>
 <?php foreach($rows as $row): ?>
