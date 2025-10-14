@@ -22,7 +22,17 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 </tr>
 <?php endforeach; ?>
 </table>
-<a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir les pilotes</a>
+</div>
+
+<section class="add-form" style="margin-top:2em;border-top:1px solid #ddd;padding-top:1em;">
+  <h2>Ajouter une écurie</h2>
+  <form method='post' action='../services/ajout_ecurie.php'>
+    <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
+    <label>Pays/Siege:<br><input type='text' name='siege'></label><br>
+    <button type='submit'>Ajouter</button>
+  </form>
+  <a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir les pilotes</a>
+</section>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>

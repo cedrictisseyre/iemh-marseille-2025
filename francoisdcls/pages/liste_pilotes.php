@@ -23,8 +23,19 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 </tr>
 <?php endforeach; ?>
 </table>
+</div>
 
+<section class="add-form" style="margin-top:2em;border-top:1px solid #ddd;padding-top:1em;">
+  <h2>Ajouter un pilote</h2>
+  <form method='post' action='../services/ajout_pilote.php'>
+    <label>Prénom:<br><input type='text' name='prenom' required></label><br>
+    <label>Nom:<br><input type='text' name='nom' required></label><br>
+    <label>Nationalité:<br><input type='text' name='nationalite'></label><br>
+    <label>Photo URL:<br><input type='url' name='photo'></label><br>
+    <button type='submit'>Ajouter</button>
+  </form>
   <a href="../site_f1.php">Retour à l'accueil</a>
+</section>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
