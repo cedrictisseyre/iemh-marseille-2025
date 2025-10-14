@@ -11,7 +11,7 @@ $links = [
   '/francoisdcls/pages/comparer_pilotes.php' => 'Comparer',
   '/francoisdcls/pages/palmares_annee.php' => 'Palmarès',
   '/francoisdcls/pages/pantheon_pilotes.php' => 'Panthéon',
-  '/francoisdcls/pages/ajout_participation.php' => 'Ajouter',
+  // participation added via add-pilote / add-ecurie forms; no standalone page
 ];
 
 // Fallback: if the current URL is the repo-root without prefix, try matching by filename
