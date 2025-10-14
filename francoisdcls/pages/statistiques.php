@@ -1,10 +1,11 @@
 <?php
 require_once __DIR__ . '/../database/bdd_formule1.php';
-// Top 5 pilotes avec le plus de titres
-$sql = "SELECT p.nom, p.prenom, COUNT(c.championnat_id) as nb_titres FROM pilotes p JOIN championnats c ON p.pilote_id = c.pilote_id GROUP BY p.pilote_id ORDER BY nb_titres DESC, p.nom LIMIT 5";
+require_once __DIR__ . '/../includes/flash.php';
+$sql = "// Top 5 pilotes avec le plus de titres\n";
+$sql = "SELECT p.nom, p.prenom, COUNT(*) as nb_titres FROM pilotes p JOIN championnats c ON p.pilote_id = c.pilote_id GROUP BY p.pilote_id ORDER BY nb_titres DESC, p.nom LIMIT 5";
 $top_pilotes = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 // Top 5 écuries avec le plus de participations
-$sql2 = "SELECT e.nom_ecuries as nom, COUNT(pa.participation_id) as nb_particip FROM ecuries e JOIN participations pa ON e.ecurie_id = pa.ecurie_id GROUP BY e.ecurie_id ORDER BY nb_particip DESC, nom LIMIT 5";
+$sql2 = "SELECT e.nom_ecuries as nom, COUNT(*) as nb_particip FROM ecuries e JOIN participations pa ON e.ecurie_id = pa.ecurie_id GROUP BY e.ecurie_id ORDER BY nb_particip DESC, nom LIMIT 5";
 $top_ecuries = $pdo->query($sql2)->fetchAll(PDO::FETCH_ASSOC);
 ?><!DOCTYPE html>
 <html lang='fr'>
@@ -14,7 +15,7 @@ $top_ecuries = $pdo->query($sql2)->fetchAll(PDO::FETCH_ASSOC);
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1>Statistiques Formule 1</h1></header>
+<?php $page_title = 'Statistiques Formule 1'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <h2>Top 5 pilotes les plus titrés</h2>
 <table>

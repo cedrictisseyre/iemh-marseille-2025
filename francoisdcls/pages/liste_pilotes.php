@@ -10,7 +10,7 @@ $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1>Liste des pilotes de F1</h1></header>
+<?php $page_title = 'Liste des pilotes de F1'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <table>
 <tr><th>Nom</th><th>Prénom</th><th>Fiche</th></tr>

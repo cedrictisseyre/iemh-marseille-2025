@@ -25,10 +25,7 @@ if ($id1 && $id2 && $id1 != $id2) {
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header>
-  <img src="../assets/logo-f1.svg" alt="Logo F1" style="height:48px;vertical-align:middle;margin-right:1em;">
-  <h1 style="display:inline-block;vertical-align:middle;">Comparer deux pilotes</h1>
-</header>
+<?php $page_title = 'Comparer deux pilotes'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <form method='get'>
   <label>Pilote 1 :

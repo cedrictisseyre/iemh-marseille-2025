@@ -23,10 +23,7 @@ $annees = $pdo->query("SELECT DISTINCT annee FROM championnats ORDER BY annee DE
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header>
-  <img src="../assets/logo-f1.svg" alt="Logo F1" style="height:48px;vertical-align:middle;margin-right:1em;">
-  <h1 style="display:inline-block;vertical-align:middle;">Palmarès par année</h1>
-</header>
+<?php $page_title = 'Palmarès par année'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <form method='get'>
   <label>Choisir une année :

@@ -17,7 +17,7 @@ $pilotes = $pdo->prepare($sql2); $pilotes->execute([$id]); $pilotes = $pilotes->
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1><?= htmlspecialchars($ecurie['nom_ecuries']) ?></h1></header>
+<?php $page_title = htmlspecialchars($ecurie['nom_ecuries']); include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <ul>
   <li><b>Pays :</b> <?= htmlspecialchars($ecurie['pays'] ?? 'N/A') ?></li>

@@ -11,6 +11,7 @@
   <img src="assets/logo-f1.svg" alt="Logo F1" style="height:48px;vertical-align:middle;margin-right:1em;">
   <h1 style="display:inline-block;vertical-align:middle;">Base de données Formule 1</h1>
 </header>
+<!-- Navigation removed from homepage; navigation is provided on all pages under /pages/ -->
 <div class='container'>
   <?php if ($f): ?>
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
@@ -24,6 +25,7 @@
     <li><a href='pages/comparer_pilotes.php'>Comparer deux pilotes</a></li>
     <li><a href='pages/palmares_annee.php'>Palmarès par année</a></li>
     <li><a href='pages/pantheon_pilotes.php'>Champions du monde</a></li>
+    <li><a href='pages/ajout_participation.php'>Ajouter une participation</a></li>
   </ul>
   <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
   <h3>Formulaires rapides</h3>

@@ -99,3 +99,29 @@ th { background: #eee; }
 }
 .toast.success { background: #2b8a3e; }
 .toast.error { background: #b02a2a; }
+
+/* Tabs navigation */
+.tabs {
+	margin: 1em 0 2em 0;
+}
+.tabs-list {
+	display: flex;
+	gap: 0.5rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.tabs-list a {
+	display: inline-block;
+	padding: 0.5rem 0.9rem;
+	border-radius: 6px;
+	background: #fff;
+	color: #b00;
+	border: 1px solid #e6e6e6;
+}
+.tabs-list a:hover { background: #f8f8f8; }
+.tabs-list a.active {
+	background: #b00;
+	color: #fff;
+	border-color: #900;
+}

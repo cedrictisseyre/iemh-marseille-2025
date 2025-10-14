@@ -16,7 +16,7 @@ if ($q !== '') {
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1>Recherche de pilotes</h1></header>
+<?php $page_title = 'Recherche de pilotes'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 
 <form id="form-recherche" autocomplete="off">

@@ -6,10 +6,7 @@
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header>
-  <img src="../assets/logo-f1.svg" alt="Logo F1" style="height:48px;vertical-align:middle;margin-right:1em;">
-  <h1 style="display:inline-block;vertical-align:middle;">Panthéon des Pilotes Champions</h1>
-</header>
+<?php $page_title = 'Panthéon des Pilotes Champions'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <div id="pantheon-pilotes"></div>
   <a href='../site_f1.php'>Retour à l'accueil</a>

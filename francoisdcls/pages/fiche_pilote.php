@@ -22,7 +22,7 @@ $ecuries = $pdo->prepare($sql4); $ecuries->execute([$id]); $ecuries = $ecuries->
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1><?= htmlspecialchars($pilote['prenom'].' '.$pilote['nom']) ?></h1></header>
+<?php $page_title = htmlspecialchars($pilote['prenom'].' '.$pilote['nom']); include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <?php $f = get_flash(); if ($f): ?>
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>

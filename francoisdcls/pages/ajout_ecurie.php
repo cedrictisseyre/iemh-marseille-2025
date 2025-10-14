@@ -1,4 +1,3 @@
-<?php include __DIR__ . '/../includes/flash.php'; ?>
 <!DOCTYPE html>
 <html lang='fr'>
 <head>
@@ -7,11 +6,8 @@
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<header><h1>Ajouter une écurie</h1></header>
+<?php $page_title = 'Ajouter une écurie'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
-  <?php $f = get_flash(); if ($f): ?>
-    <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
-  <?php endif; ?>
   <form method='post' action='../services/ajout_ecurie.php'>
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
     <button type='submit'>Ajouter</button>
