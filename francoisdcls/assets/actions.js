@@ -61,8 +61,8 @@ async function populateQuickSelects() {
   const selEcu = document.querySelector('#quick-add-participation select[name=ecurie_id]');
   if (!selPil || !selEcu) return;
   try {
-    const pilotes = await fetchJSON('/francoisdcls/services/recherche_pilotes.php');
-    const ecuries = await fetchJSON('/francoisdcls/services/lire_salles.php');
+  const pilotes = await fetchJSON('/francoisdcls/services/pilotes.php');
+  const ecuries = await fetchJSON('/francoisdcls/services/ecuries.php');
     selPil.innerHTML = '<option value="">-- Choisir --</option>' + pilotes.map(p=>`<option value="${p.pilote_id}">${p.prenom} ${p.nom}</option>`).join('');
     selEcu.innerHTML = '<option value="">-- Choisir --</option>' + ecuries.map(e=>`<option value="${e.ecurie_id}">${e.nom}</option>`).join('');
   } catch (err) {
