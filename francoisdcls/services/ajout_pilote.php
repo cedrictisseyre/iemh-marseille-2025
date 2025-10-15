@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/insert_helpers.php';
+require_once __DIR__ . '/../includes/photo_helper.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo 'Méthode non autorisée'; exit; }
 
@@ -13,6 +14,15 @@ if (!$result['success']) {
 }
 // If the form also provided participation data, try to add it
 $pilote_id = (int)$result['id'];
+// pré-télécharger l'image si fournie pour remplir le cache local
+if (!empty($_POST['photo'])) {
+    $photo_raw = trim((string)$_POST['photo']);
+    $resolved = resolve_photo_url($photo_raw);
+    if ($resolved) {
+        // tente le cache (silencieux)
+        @cached_image_url($resolved);
+    }
+}
 $participation_msg = '';
 if (!empty($_POST['ecurie_id']) && !empty($_POST['annee'])) {
     $ecurie_id = (int)$_POST['ecurie_id'];

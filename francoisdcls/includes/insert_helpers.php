@@ -7,11 +7,20 @@
 function insert_pilote(PDO $pdo, array $data): array {
     $prenom = trim($data['prenom'] ?? '');
     $nom = trim($data['nom'] ?? '');
-    // la table pilotes ne possède que (pilote_id, prenom, nom) dans la base actuelle
     if ($prenom === '' || $nom === '') return ['success'=>false,'message'=>'Prénom et nom requis','id'=>null];
+    $photo = trim($data['photo'] ?? '');
+    // si aucune photo fournie, utiliser une chaîne vide pour éviter d'omettre la colonne
+    $photoVal = $photo === '' ? '' : $photo;
     try {
-        $stmt = $pdo->prepare('INSERT INTO pilotes (prenom, nom) VALUES (?, ?)');
-        $stmt->execute([$prenom, $nom]);
+        // essayer d'insérer avec la colonne photo si elle existe dans la base
+        try {
+            $stmt = $pdo->prepare('INSERT INTO pilotes (prenom, nom, photo) VALUES (?, ?, ?)');
+            $stmt->execute([$prenom, $nom, $photoVal]);
+        } catch (PDOException $e2) {
+            // si la colonne photo n'existe pas ou requête invalide, retomber sur l'ancien schéma
+            $stmt = $pdo->prepare('INSERT INTO pilotes (prenom, nom) VALUES (?, ?)');
+            $stmt->execute([$prenom, $nom]);
+        }
         $id = $pdo->lastInsertId();
         return ['success'=>true,'message'=>'Pilote ajouté','id'=> (int)$id];
     } catch (PDOException $e) {
