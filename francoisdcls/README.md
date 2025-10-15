@@ -21,7 +21,16 @@ Ce projet propose un site web dynamique permettant de consulter des fiches d'inf
 ## Installation
 1. Cloner ce dépôt
 2. Configurer la connexion à la base dans `francoisdcls/database/bdd_formule1.php`
-3. Importer le schéma et les données MySQL si besoin
+3. Importer le schéma et les données MySQL si besoin (fichiers `schema.sql` et `seed.sql` fournis dans ce dossier)
+	- Exemple rapide (depuis la racine du projet) :
+
+```sql
+CREATE DATABASE f1_demo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE f1_demo;
+SOURCE francoisdcls/schema.sql;
+SOURCE francoisdcls/seed.sql;
+```
+
 4. Lancer le serveur web ou utiliser `php -S localhost:8000` dans le dossier du projet
 
 
@@ -42,3 +51,7 @@ francoisdcls/
 
 ## Auteur
 Projet IEMH Marseille 2025 - François Duclos
+
+## Notes additionnelles
+- `schema.sql` et `seed.sql` ont été ajoutés pour faciliter les tests locaux.
+- Voir `IMPROVEMENTS.md` pour la liste des améliorations proposées (CSRF, tests, CI, nettoyage du cache d'images).
