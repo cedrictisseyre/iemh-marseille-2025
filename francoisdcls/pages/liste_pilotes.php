@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../database/bdd_formule1.php';
+require_once __DIR__ . '/../includes/photo_helper.php';
 // récupérer photo et quelques statistiques pour chaque pilote
 $sql = "SELECT p.*, 
   (SELECT COUNT(*) FROM championnats c WHERE c.pilote_id = p.pilote_id) AS nb_titres,
@@ -20,22 +21,28 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
 <body>
 <?php $page_title = 'Liste des pilotes de F1'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
-<table>
-<tr><th>Photo</th><th>Nom</th><th>Prénom</th><th>Titres</th><th>Participations</th></tr>
-<?php foreach($rows as $row): ?>
-<tr>
-  <td style="width:80px;">
-    <?php if (!empty($row['photo'])): ?>
-      <img src="<?= htmlspecialchars($row['photo']) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>" style="width:64px;height:auto;border-radius:6px;">                                                                         <?php else: ?>
-      <div class="no-photo" style="width:64px;height:64px;border-radius:6px;background:#eee;display:flex;align-items:center;justify-content:center;color:#666;">?</div>                                                   <?php endif; ?>
-  </td>
-  <td><?= htmlspecialchars($row['nom']) ?></td>
-  <td><?= htmlspecialchars($row['prenom']) ?></td>
-  <td style="text-align:center"><?= (int)($row['nb_titres'] ?? 0) ?></td>
-  <td style="text-align:center"><?= (int)($row['nb_particip'] ?? 0) ?></td>
-</tr>
-<?php endforeach; ?>
-</table>
+  <div class="cards">
+  <?php foreach($rows as $row):
+    $img = resolve_photo_url($row['photo'] ?? null);
+    $local = null; if ($img) $local = cached_image_url($img);
+  ?>
+    <article class="card">
+      <a href="<?= '../pages/fiche_pilote.php?id=' . urlencode($row['pilote_id']) ?>" class="card-link">
+        <?php if ($local): ?>
+          <img src="<?= htmlspecialchars($local) ?>" alt="<?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>" width="72" height="72" loading="lazy">
+        <?php elseif (!empty($row['photo'])): ?>
+          <img src="<?= htmlspecialchars($row['photo']) ?>" alt="<?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>" width="72" height="72" loading="lazy">
+        <?php else: ?>
+          <div class="card photo-placeholder"><?= htmlspecialchars(substr(($row['prenom']??'')[0] . ($row['nom']??'')[0],0,2)) ?></div>
+        <?php endif; ?>
+        <div class="meta">
+          <div class="name"><?= htmlspecialchars($row['prenom'].' '. $row['nom']) ?></div>
+          <div class="sub">Titres: <?= (int)($row['nb_titres'] ?? 0) ?> • Part.: <?= (int)($row['nb_particip'] ?? 0) ?></div>
+        </div>
+      </a>
+    </article>
+  <?php endforeach; ?>
+  </div>
 </div>
 
 <section class="add-form" style="margin-top:2em;border-top:1px solid #ddd;padding-top:1em;">
