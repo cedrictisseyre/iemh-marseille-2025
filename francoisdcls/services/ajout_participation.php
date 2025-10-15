@@ -1,9 +1,13 @@
 <?php
+
 require_once __DIR__ . '/../database/bdd_formule1.php';
 session_start();
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/insert_helpers.php';
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit;
+}
 $csrf_present = !empty($_POST['csrf_token']) && !empty($_SESSION['csrf_token']);
 if ($csrf_present && !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
     set_flash('error', 'Jeton CSRF invalide.');

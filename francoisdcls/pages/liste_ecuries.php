@@ -3,11 +3,11 @@ require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/flash.php';
 // Try to include 'pays' column if present; fallback if schema older
 try {
-  $sql = "SELECT ecurie_id, nom_ecuries, pays FROM ecuries ORDER BY nom_ecuries";
-  $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    $sql = "SELECT ecurie_id, nom_ecuries, pays FROM ecuries ORDER BY nom_ecuries";
+    $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
   // older schema without pays column
-  $rows = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_ecuries")->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_ecuries")->fetchAll(PDO::FETCH_ASSOC);
 }
 // Charger la liste des pilotes pour le formulaire de participation
 $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom, prenom")->fetchAll(PDO::FETCH_ASSOC);
@@ -19,14 +19,15 @@ $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom,
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = 'Liste des écuries de F1'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Liste des écuries de F1';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <table>
 <tr><th>Nom</th><th>Pays</th><th>Fiche</th></tr>
-<?php foreach($rows as $row): ?>
+<?php foreach ($rows as $row) : ?>
 <tr>
   <td><?= htmlspecialchars($row['nom_ecuries']) ?></td>
-  <?php $country = trim((string)($row['pays'] ?? $row['siege'] ?? '')); ?>
+    <?php $country = trim((string)($row['pays'] ?? $row['siege'] ?? '')); ?>
   <td><?= htmlspecialchars($country !== '' && $country !== '0' ? $country : 'N/A') ?></td>
   <td><a href='fiche_ecurie.php?id=<?= $row['ecurie_id'] ?>'>Voir fiche</a></td>
 </tr>
@@ -44,8 +45,8 @@ $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom,
       <label>Pilote:<br>
         <select name='pilote_id'>
           <option value=''>-- Aucun --</option>
-          <?php foreach($pilotes as $p): ?>
-            <option value='<?= $p['pilote_id'] ?>'><?= htmlspecialchars($p['prenom'].' '.$p['nom']) ?></option>
+          <?php foreach ($pilotes as $p) : ?>
+            <option value='<?= $p['pilote_id'] ?>'><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></option>
           <?php endforeach; ?>
         </select>
       </label><br>

@@ -1,4 +1,5 @@
 <?php
+
 header('Content-Type: application/json');
 require_once __DIR__ . '/../database/bdd_formule1.php';
 // Nombre total de pilotes

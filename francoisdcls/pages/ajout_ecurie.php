@@ -11,7 +11,8 @@ $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom,
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = 'Ajouter une écurie'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Ajouter une écurie';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <form method='post' action='../services/ajout_ecurie.php'>
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
@@ -21,8 +22,8 @@ $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom,
     <label>Pilote:<br>
       <select name='pilote_id'>
         <option value=''>-- Aucun --</option>
-        <?php foreach($pilotes as $p): ?>
-          <option value='<?= $p['pilote_id'] ?>'><?= htmlspecialchars($p['prenom'].' '.$p['nom']) ?></option>
+        <?php foreach ($pilotes as $p) : ?>
+          <option value='<?= $p['pilote_id'] ?>'><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></option>
         <?php endforeach; ?>
       </select>
     </label><br>

@@ -21,31 +21,34 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
   <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
-<?php $page_title = 'Liste des pilotes de F1'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Liste des pilotes de F1';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 
 <div class="pantheon-grid">
-<?php foreach($rows as $row):
-  $img = resolve_photo_url($row['photo'] ?? null);
-  $local = null;
-  if ($img) $local = cached_image_url($img);
-  $annees = [];
-  // Attempt to collect years of participations for display (optional)
-  try {
-    $stmt = $pdo->prepare("SELECT annee FROM participations WHERE pilote_id = ? ORDER BY annee ASC");
-    $stmt->execute([$row['pilote_id']]);
-    $annees = $stmt->fetchAll(PDO::FETCH_COLUMN);
-  } catch (Exception $e) {
+<?php foreach ($rows as $row) :
+    $img = resolve_photo_url($row['photo'] ?? null);
+    $local = null;
+    if ($img) {
+        $local = cached_image_url($img);
+    }
     $annees = [];
-  }
-?>
+  // Attempt to collect years of participations for display (optional)
+    try {
+        $stmt = $pdo->prepare("SELECT annee FROM participations WHERE pilote_id = ? ORDER BY annee ASC");
+        $stmt->execute([$row['pilote_id']]);
+        $annees = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    } catch (Exception $e) {
+        $annees = [];
+    }
+    ?>
   <div class="pantheon-card">
     <div class="pantheon-photo">
-      <?php if ($local): ?>
-        <img src="<?= htmlspecialchars($local) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>">
-      <?php elseif ($img): ?>
-        <img src="<?= htmlspecialchars($img) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>">
-      <?php else: ?>
+      <?php if ($local) : ?>
+        <img src="<?= htmlspecialchars($local) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'] . ' ' . $row['nom']) ?>">
+      <?php elseif ($img) : ?>
+        <img src="<?= htmlspecialchars($img) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'] . ' ' . $row['nom']) ?>">
+      <?php else : ?>
         <div class='no-photo'>?</div>
       <?php endif; ?>
     </div>
@@ -58,7 +61,7 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
     </div>
     <div class="pantheon-actions" style="margin-top:0.6rem;display:flex;gap:0.4rem;justify-content:center">
       <a class="btn" href="<?= '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']) ?>" style="background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px">Éditer</a>
-      <form method="post" action="../services/supprimer_pilote.php" onsubmit="return confirm('Supprimer le pilote <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?> ?')" style="display:inline">
+      <form method="post" action="../services/supprimer_pilote.php" onsubmit="return confirm('Supprimer le pilote <?= htmlspecialchars($row['prenom'] . ' ' . $row['nom']) ?> ?')" style="display:inline">
         <input type="hidden" name="pilote_id" value="<?= (int)$row['pilote_id'] ?>">
         <button type="submit" style="background:#b00;color:#fff;padding:0.35rem 0.6rem;border:none;border-radius:6px">Supprimer</button>
       </form>
@@ -79,7 +82,7 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
     <label>Écurie:<br>
       <select name='ecurie_id'>
         <option value=''>-- Aucune --</option>
-        <?php foreach($ecuries as $e): ?>
+        <?php foreach ($ecuries as $e) : ?>
           <option value='<?= $e['ecurie_id'] ?>'><?= htmlspecialchars($e['nom_ecuries']) ?></option>
         <?php endforeach; ?>
       </select>

@@ -10,7 +10,8 @@ require_once __DIR__ . '/../database/bdd_formule1.php';
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = 'Panthéon des Pilotes Champions'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Panthéon des Pilotes Champions';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <div id="pantheon-pilotes"></div>
   <a href='../site_f1.php'>Retour à l'accueil</a>

@@ -22,17 +22,17 @@ if (($handle = fopen(__DIR__ . '/pilotes_2024.csv', 'r')) !== false) {
 </head>
 <body>
     <h1>Panthéon des Pilotes F1 – Saison 2024</h1>
-    <?php if (empty($pilotes)): ?>
+    <?php if (empty($pilotes)) : ?>
         <p style="text-align:center;">Aucun pilote trouvé.</p>
-    <?php else: ?>
+    <?php else : ?>
         <div class="tabs">
-            <?php foreach ($pilotes as $i => $pilote): ?>
+            <?php foreach ($pilotes as $i => $pilote) : ?>
                 <button class="tab<?= $i === 0 ? ' active' : '' ?>" data-tab="tab<?= $i ?>">
                     <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?>
                 </button>
             <?php endforeach; ?>
         </div>
-        <?php foreach ($pilotes as $i => $pilote): ?>
+        <?php foreach ($pilotes as $i => $pilote) : ?>
             <div class="profile<?= $i === 0 ? ' active' : '' ?>" id="tab<?= $i ?>">
                 <div class="info">
                     <img src="<?= htmlspecialchars($pilote['photo']) ?>" alt="Photo de <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?>">

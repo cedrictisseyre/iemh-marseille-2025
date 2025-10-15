@@ -6,23 +6,33 @@ $sql = "SELECT * FROM pilotes WHERE pilote_id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id]);
 $pilote = $stmt->fetch(PDO::FETCH_ASSOC);
-if (!$pilote) { echo "<p>Pilote introuvable.</p>"; exit; }
+if (!$pilote) {
+    echo "<p>Pilote introuvable.</p>";
+    exit;
+}
 // Statistiques
 $sql2 = "SELECT COUNT(*) FROM championnats WHERE pilote_id = ?";
-$nb_titres = $pdo->prepare($sql2); $nb_titres->execute([$id]); $nb_titres = $nb_titres->fetchColumn();
+$nb_titres = $pdo->prepare($sql2);
+$nb_titres->execute([$id]);
+$nb_titres = $nb_titres->fetchColumn();
 $sql3 = "SELECT COUNT(DISTINCT annee) FROM participations WHERE pilote_id = ?";
-$nb_particip = $pdo->prepare($sql3); $nb_particip->execute([$id]); $nb_particip = $nb_particip->fetchColumn();
+$nb_particip = $pdo->prepare($sql3);
+$nb_particip->execute([$id]);
+$nb_particip = $nb_particip->fetchColumn();
 $sql4 = "SELECT DISTINCT ecurie_id FROM participations WHERE pilote_id = ?";
-$ecuries = $pdo->prepare($sql4); $ecuries->execute([$id]); $ecuries = $ecuries->fetchAll(PDO::FETCH_COLUMN);
+$ecuries = $pdo->prepare($sql4);
+$ecuries->execute([$id]);
+$ecuries = $ecuries->fetchAll(PDO::FETCH_COLUMN);
 ?><!DOCTYPE html>
 <html lang='fr'>
 <head>
   <meta charset='UTF-8'>
-  <title>Fiche pilote - <?= htmlspecialchars($pilote['prenom'].' '.$pilote['nom']) ?></title>
+  <title>Fiche pilote - <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?></title>
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = htmlspecialchars($pilote['prenom'].' '.$pilote['nom']); include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']);
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <div id="fiche-pilote-dyn" data-id="<?= $id ?>"></div>
   <a href='liste_pilotes.php'>&larr; Retour à la liste</a>

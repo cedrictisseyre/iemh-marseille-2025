@@ -4,10 +4,10 @@ require_once __DIR__ . '/../database/bdd_formule1.php';
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $results = [];
 if ($q !== '') {
-  $sql = "SELECT pilote_id, nom, prenom FROM pilotes WHERE nom LIKE ? OR prenom LIKE ? ORDER BY nom, prenom";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(["%$q%", "%$q%"]);
-  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sql = "SELECT pilote_id, nom, prenom FROM pilotes WHERE nom LIKE ? OR prenom LIKE ? ORDER BY nom, prenom";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(["%$q%", "%$q%"]);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?><!DOCTYPE html>
 <html lang='fr'>
@@ -17,7 +17,8 @@ if ($q !== '') {
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = 'Recherche de pilotes'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Recherche de pilotes';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 
 <form id="form-recherche" autocomplete="off">

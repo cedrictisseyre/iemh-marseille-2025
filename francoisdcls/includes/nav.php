@@ -16,19 +16,22 @@ $links = [
 
 // Fallback: if the current URL is the repo-root without prefix, try matching by filename
 if (!function_exists('_is_active')) {
-  function _is_active($current, $path) {
-    if (strpos($current, $path) !== false) return true;
-    // Also match by basename
-    $bcur = basename(parse_url($current, PHP_URL_PATH) ?: '');
-    $bpath = basename($path);
-    return $bcur && $bpath && $bcur === $bpath;
-  }
+    function _is_active($current, $path)
+    {
+        if (strpos($current, $path) !== false) {
+            return true;
+        }
+      // Also match by basename
+        $bcur = basename(parse_url($current, PHP_URL_PATH) ?: '');
+        $bpath = basename($path);
+        return $bcur && $bpath && $bcur === $bpath;
+    }
 }
 ?>
 <nav class="tabs" aria-label="Navigation principale">
   <ul class="tabs-list">
-    <?php foreach ($links as $url => $label): ?>
-      <?php $active = _is_active($current, $url) ? 'active' : ''; ?>
+    <?php foreach ($links as $url => $label) : ?>
+        <?php $active = _is_active($current, $url) ? 'active' : ''; ?>
       <li><a href="<?= htmlspecialchars($url) ?>" class="<?= $active ?>"><?= htmlspecialchars($label) ?></a></li>
     <?php endforeach; ?>
   </ul>

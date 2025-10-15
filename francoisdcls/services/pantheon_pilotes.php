@@ -1,4 +1,5 @@
 <?php
+
 header('Content-Type: application/json');
 require_once __DIR__ . '/../database/bdd_formule1.php';
 $sql = "SELECT p.pilote_id, p.nom, p.prenom FROM pilotes p WHERE p.pilote_id IN (SELECT pilote_id FROM championnats) ORDER BY p.nom, p.prenom";

@@ -13,7 +13,8 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = 'Ajouter un pilote'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Ajouter un pilote';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <form method='post' action='../services/ajout_pilote.php'>
     <label>Prénom:<br><input type='text' name='prenom' required></label><br>
@@ -25,7 +26,7 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
     <label>Écurie:<br>
       <select name='ecurie_id'>
         <option value=''>-- Aucune --</option>
-        <?php foreach($ecuries as $e): ?>
+        <?php foreach ($ecuries as $e) : ?>
           <option value='<?= $e['ecurie_id'] ?>'><?= htmlspecialchars($e['nom_ecuries']) ?></option>
         <?php endforeach; ?>
       </select>

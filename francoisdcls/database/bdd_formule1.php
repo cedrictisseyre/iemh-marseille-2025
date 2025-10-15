@@ -1,11 +1,12 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // Informations de connexion
 $host = '195.15.235.20';      // ou l'adresse du serveur MySQL
-$dbname = 'francois_duclos'; 
-$username = 'root'; 
+$dbname = 'francois_duclos';
+$username = 'root';
 $password = 'INNnsk40374';
 
 try {
@@ -16,4 +17,3 @@ try {
 } catch (PDOException $e) {
     echo "Erreur de connexion : " . $e->getMessage();
 }
-?>

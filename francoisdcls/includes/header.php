@@ -9,11 +9,11 @@
   </h1>
 </header>
 <?php include __DIR__ . '/nav.php'; ?>
-<?php if (function_exists('get_flash')):
-  $f = get_flash();
-  if ($f): ?>
+<?php if (function_exists('get_flash')) :
+    $f = get_flash();
+    if ($f) : ?>
     <div class="flash flash-<?= htmlspecialchars($f['type']) ?>" style="padding:0.6em;border-radius:6px;margin:1em 0;background:#efe;color:#030;"><?= htmlspecialchars($f['message']) ?></div>
-<?php
-  endif;
+        <?php
+    endif;
 endif;
 ?>

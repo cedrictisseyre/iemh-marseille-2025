@@ -15,19 +15,20 @@ $top_ecuries = $pdo->query($sql2)->fetchAll(PDO::FETCH_ASSOC);
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
-<?php $page_title = 'Statistiques Formule 1'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Statistiques Formule 1';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <h2>Top 5 pilotes les plus titrés</h2>
 <table>
 <tr><th>Nom</th><th>Prénom</th><th>Nombre de titres</th></tr>
-<?php foreach($top_pilotes as $p): ?>
+<?php foreach ($top_pilotes as $p) : ?>
 <tr><td><?= htmlspecialchars($p['nom']) ?></td><td><?= htmlspecialchars($p['prenom']) ?></td><td><?= $p['nb_titres'] ?></td></tr>
 <?php endforeach; ?>
 </table>
 <h2>Top 5 écuries les plus présentes</h2>
 <table>
 <tr><th>Nom</th><th>Nombre de participations</th></tr>
-<?php foreach($top_ecuries as $e): ?>
+<?php foreach ($top_ecuries as $e) : ?>
 <tr><td><?= htmlspecialchars($e['nom']) ?></td><td><?= $e['nb_particip'] ?></td></tr>
 <?php endforeach; ?>
 </table>

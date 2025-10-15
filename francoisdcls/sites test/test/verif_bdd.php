@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../bdd_formule1.php';
 
 // Test de connexion explicite
@@ -14,7 +15,8 @@ try {
     exit(1);
 }
 
-function affiche($sql, $pdo) {
+function affiche($sql, $pdo)
+{
     echo "\n==== $sql ====";
     try {
         $res = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);

@@ -1,10 +1,15 @@
 <?php
+
 require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/insert_helpers.php';
 require_once __DIR__ . '/../includes/photo_helper.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo 'Méthode non autorisée'; exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo 'Méthode non autorisée';
+    exit;
+}
 
 $result = insert_pilote($pdo, $_POST);
 if (!$result['success']) {

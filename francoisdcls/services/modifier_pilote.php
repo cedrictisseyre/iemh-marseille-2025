@@ -1,9 +1,14 @@
 <?php
+
 require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/photo_helper.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo 'Méthode non autorisée'; exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo 'Méthode non autorisée';
+    exit;
+}
 
 $id = isset($_POST['pilote_id']) ? (int)$_POST['pilote_id'] : 0;
 $prenom = trim((string)($_POST['prenom'] ?? ''));
@@ -23,7 +28,9 @@ try {
     // attempt to cache remote photo if provided
     if ($photo) {
         $resolved = resolve_photo_url($photo);
-        if ($resolved) {@cached_image_url($resolved);}    
+        if ($resolved) {
+            @cached_image_url($resolved);
+        }
     }
     set_flash('success', 'Pilote mis à jour.');
     header('Location: ../pages/liste_pilotes.php');

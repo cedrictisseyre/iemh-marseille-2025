@@ -1,11 +1,20 @@
 <?php
+
 require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/flash.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo 'Méthode non autorisée'; exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo 'Méthode non autorisée';
+    exit;
+}
 
 $id = isset($_POST['pilote_id']) ? (int)$_POST['pilote_id'] : 0;
-if (!$id) { set_flash('error', 'ID pilote manquant'); header('Location: ../pages/liste_pilotes.php'); exit; }
+if (!$id) {
+    set_flash('error', 'ID pilote manquant');
+    header('Location: ../pages/liste_pilotes.php');
+    exit;
+}
 
 try {
     // Optionnel: supprimer participations liées

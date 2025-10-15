@@ -4,11 +4,19 @@ require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/photo_helper.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if (!$id) { set_flash('error', 'ID pilote manquant'); header('Location: liste_pilotes.php'); exit; }
+if (!$id) {
+    set_flash('error', 'ID pilote manquant');
+    header('Location: liste_pilotes.php');
+    exit;
+}
 $stmt = $pdo->prepare('SELECT * FROM pilotes WHERE pilote_id = ?');
 $stmt->execute([$id]);
 $pilote = $stmt->fetch(PDO::FETCH_ASSOC);
-if (!$pilote) { set_flash('error', 'Pilote introuvable'); header('Location: liste_pilotes.php'); exit; }
+if (!$pilote) {
+    set_flash('error', 'Pilote introuvable');
+    header('Location: liste_pilotes.php');
+    exit;
+}
 
 // Charger écuries pour optionnel
 $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_ecuries")->fetchAll(PDO::FETCH_ASSOC);
@@ -16,13 +24,14 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
 <html lang='fr'>
 <head>
   <meta charset='utf-8'>
-  <title>Modifier pilote - <?= htmlspecialchars((($pilote['prenom'] ?? '') . ' ' . ($pilote['nom'] ?? '')) ) ?></title>
+  <title>Modifier pilote - <?= htmlspecialchars((($pilote['prenom'] ?? '') . ' ' . ($pilote['nom'] ?? ''))) ?></title>
   <link rel='stylesheet' href='../assets/style.css'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
   <style>.form-row{margin-bottom:0.6rem}</style>
 </head>
 <body>
-<?php $page_title = 'Modifier pilote'; include __DIR__ . '/../includes/header.php'; ?>
+<?php $page_title = 'Modifier pilote';
+include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <h1>Modifier pilote</h1>
   <form method='post' action='../services/modifier_pilote.php'>
