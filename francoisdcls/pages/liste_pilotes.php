@@ -1,7 +1,12 @@
 <?php
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../database/bdd_formule1.php';
-$sql = "SELECT pilote_id, nom, prenom FROM pilotes ORDER BY nom, prenom";
+// récupérer photo et quelques statistiques pour chaque pilote
+$sql = "SELECT p.*, 
+  (SELECT COUNT(*) FROM championnats c WHERE c.pilote_id = p.pilote_id) AS nb_titres,
+  (SELECT COUNT(*) FROM participations pa WHERE pa.pilote_id = p.pilote_id) AS nb_particip
+  FROM pilotes p
+  ORDER BY p.nom, p.prenom";
 $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 // Charger la liste des écuries pour le formulaire de participation
 $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_ecuries")->fetchAll(PDO::FETCH_ASSOC);
@@ -16,12 +21,20 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
 <?php $page_title = 'Liste des pilotes de F1'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <table>
-<tr><th>Nom</th><th>Prénom</th><th>Fiche</th></tr>
+<tr><th>Photo</th><th>Nom</th><th>Prénom</th><th>Titres</th><th>Participations</th></tr>
 <?php foreach($rows as $row): ?>
 <tr>
+  <td style="width:80px;">
+    <?php if (!empty($row['photo'])): ?>
+      <img src="<?= htmlspecialchars($row['photo']) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>" style="width:64px;height:auto;border-radius:6px;">
+    <?php else: ?>
+      <div class="no-photo" style="width:64px;height:64px;border-radius:6px;background:#eee;display:flex;align-items:center;justify-content:center;color:#666;">?</div>
+    <?php endif; ?>
+  </td>
   <td><?= htmlspecialchars($row['nom']) ?></td>
   <td><?= htmlspecialchars($row['prenom']) ?></td>
-  <td><a href='fiche_pilote.php?id=<?= $row['pilote_id'] ?>'>Voir fiche</a></td>
+  <td style="text-align:center"><?= (int)($row['nb_titres'] ?? 0) ?></td>
+  <td style="text-align:center"><?= (int)($row['nb_particip'] ?? 0) ?></td>
 </tr>
 <?php endforeach; ?>
 </table>
