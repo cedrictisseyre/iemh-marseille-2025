@@ -45,27 +45,42 @@ include __DIR__ . '/../includes/header.php'; ?>
   <div class="pantheon-card">
     <div class="pantheon-photo">
       <?php if ($local) : ?>
-        <img src="<?= htmlspecialchars($local) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'] . ' ' . $row['nom']) ?>">
+            <?php $alt = 'Photo de ' . ($row['prenom'] . ' ' . $row['nom']); ?>
+        <img src="<?= htmlspecialchars($local) ?>" alt="<?= htmlspecialchars($alt) ?>">
       <?php elseif ($img) : ?>
-        <img src="<?= htmlspecialchars($img) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'] . ' ' . $row['nom']) ?>">
+          <?php $alt = 'Photo de ' . ($row['prenom'] . ' ' . $row['nom']); ?>
+        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($alt) ?>">
       <?php else : ?>
         <div class='no-photo'>?</div>
       <?php endif; ?>
     </div>
     <div class="pantheon-info">
       <h3><?= htmlspecialchars($row['prenom']) ?> <span class="pantheon-nom"><?= htmlspecialchars($row['nom']) ?></span></h3>
-      <div class="pantheon-titres"><span class="nb"><?= (int)($row['nb_titres'] ?? 0) ?></span> titre<?= ((int)($row['nb_titres'] ?? 0) > 1 ? 's' : '') ?></div>
-      <div class="pantheon-annees"><span class="label">Années :</span> <?= $annees ? htmlspecialchars(implode(', ', $annees)) : 'N/A' ?></div>
-  <div class="pantheon-annees"><span class="label">Nationalité :</span> <?= htmlspecialchars($row['nationalite'] ?? 'N/A') ?></div>
-  <div class="pantheon-participations"><span class="label">Participations :</span> <?= (int)($row['nb_particip'] ?? 0) ?><?= $annees ? ' (' . htmlspecialchars(implode(', ', $annees)) . ')' : '' ?></div>
+      <?php $nbTitres = (int)($row['nb_titres'] ?? 0); ?>
+      <div class="pantheon-titres">
+        <span class="nb"><?= $nbTitres ?></span>
+        titre<?= ($nbTitres > 1 ? 's' : '') ?>
+      </div>
+      <?php $anneesText = $annees ? htmlspecialchars(implode(', ', $annees)) : 'N/A'; ?>
+      <div class="pantheon-annees"><span class="label">Années :</span> <?= $anneesText ?></div>
+      <div class="pantheon-annees"><span class="label">Nationalité :</span> <?= htmlspecialchars($row['nationalite'] ?? 'N/A') ?></div>
+      <?php $nbPart = (int)($row['nb_particip'] ?? 0); ?>
+      <div class="pantheon-participations">
+        <span class="label">Participations :</span>
+        <?= $nbPart ?>
+        <?= $annees ? ' (' . htmlspecialchars(implode(', ', $annees)) . ')' : '' ?>
+      </div>
     </div>
-    <div class="pantheon-actions" style="margin-top:0.6rem;display:flex;gap:0.4rem;justify-content:center">
-      <a class="btn" href="<?= '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']) ?>" style="background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px">Éditer</a>
-      <form method="post" action="../services/supprimer_pilote.php" onsubmit="return confirm('Supprimer le pilote <?= htmlspecialchars($row['prenom'] . ' ' . $row['nom']) ?> ?')" style="display:inline">
-        <input type="hidden" name="pilote_id" value="<?= (int)$row['pilote_id'] ?>">
-        <button type="submit" style="background:#b00;color:#fff;padding:0.35rem 0.6rem;border:none;border-radius:6px">Supprimer</button>
-      </form>
-    </div>
+      <div class="pantheon-actions" style="margin-top:0.6rem;display:flex;gap:0.4rem;justify-content:center">
+        <?php $edit_url = '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']); ?>
+        <a class="btn" href="<?= $edit_url ?>" style="background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px">Éditer</a>
+    <?php $confirm_msg = htmlspecialchars($row['prenom'] . ' ' . $row['nom']); ?>
+    <?php $onsubmit = "return confirm('Supprimer le pilote {$confirm_msg} ?')"; ?>
+  <form method="post" action="../services/supprimer_pilote.php" onsubmit="<?= $onsubmit ?>" style="display:inline">
+          <input type="hidden" name="pilote_id" value="<?= (int)$row['pilote_id'] ?>">
+          <button type="submit" style="background:#b00;color:#fff;padding:0.35rem 0.6rem;border:none;border-radius:6px">Supprimer</button>
+        </form>
+      </div>
   </div>
 <?php endforeach; ?>
 </div>

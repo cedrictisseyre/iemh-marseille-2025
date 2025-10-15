@@ -26,23 +26,32 @@ if (($handle = fopen(__DIR__ . '/pilotes_2024.csv', 'r')) !== false) {
         <p style="text-align:center;">Aucun pilote trouvé.</p>
     <?php else : ?>
         <div class="tabs">
-            <?php foreach ($pilotes as $i => $pilote) : ?>
-                <button class="tab<?= $i === 0 ? ' active' : '' ?>" data-tab="tab<?= $i ?>">
-                    <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?>
-                </button>
-            <?php endforeach; ?>
+                <?php foreach ($pilotes as $i => $pilote) : ?>
+                    <?php $isActive = $i === 0 ? ' active' : ''; ?>
+                    <button class="tab<?= $isActive ?>" data-tab="tab<?= $i ?>">
+                        <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?>
+                    </button>
+                <?php endforeach; ?>
         </div>
         <?php foreach ($pilotes as $i => $pilote) : ?>
             <div class="profile<?= $i === 0 ? ' active' : '' ?>" id="tab<?= $i ?>">
                 <div class="info">
-                    <img src="<?= htmlspecialchars($pilote['photo']) ?>" alt="Photo de <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?>">
-                    <p><span class="label">Nom :</span> <?= htmlspecialchars($pilote['nom']) ?></p>
-                    <p><span class="label">Prénom :</span> <?= htmlspecialchars($pilote['prenom']) ?></p>
-                    <p><span class="label">Écurie actuelle :</span> <span class="ecurie"><?= htmlspecialchars($pilote['ecurie']) ?></span></p>
-                    <p><span class="label">Nombre de GP :</span> <?= htmlspecialchars($pilote['nb_gp']) ?></p>
-                    <p><span class="label">Victoires :</span> <?= htmlspecialchars($pilote['nb_victoires']) ?></p>
-                    <p><span class="label">Podiums :</span> <?= htmlspecialchars($pilote['nb_podiums']) ?></p>
-                    <p><span class="label">Champion du monde :</span> <?= $pilote['champion'] === 'oui' ? '🏆 Oui' : 'Non' ?></p>
+                        <img
+                            src="<?= htmlspecialchars($pilote['photo']) ?>"
+                            alt="Photo de <?= htmlspecialchars($pilote['prenom'] . ' ' . $pilote['nom']) ?>">
+                        <p><span class="label">Nom :</span> <?= htmlspecialchars($pilote['nom']) ?></p>
+                        <p><span class="label">Prénom :</span> <?= htmlspecialchars($pilote['prenom']) ?></p>
+                        <p>
+                            <span class="label">Écurie actuelle :</span>
+                            <span class="ecurie"><?= htmlspecialchars($pilote['ecurie']) ?></span>
+                        </p>
+                        <p><span class="label">Nombre de GP :</span> <?= htmlspecialchars($pilote['nb_gp']) ?></p>
+                        <p><span class="label">Victoires :</span> <?= htmlspecialchars($pilote['nb_victoires']) ?></p>
+                        <p><span class="label">Podiums :</span> <?= htmlspecialchars($pilote['nb_podiums']) ?></p>
+                        <p>
+                            <span class="label">Champion du monde :</span>
+                            <?= $pilote['champion'] === 'oui' ? '🏆 Oui' : 'Non' ?>
+                        </p>
                 </div>
             </div>
         <?php endforeach; ?>

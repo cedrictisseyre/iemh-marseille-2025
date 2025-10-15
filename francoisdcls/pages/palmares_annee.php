@@ -11,6 +11,11 @@ if ($annee) {
     $champion = $stmt->fetch(PDO::FETCH_ASSOC);
     $sql2 = "SELECT p.nom, p.prenom FROM participations pa JOIN pilotes p ON pa.pilote_id = p.pilote_id WHERE pa.annee = ? ORDER BY p.nom, p.prenom";
     $stmt2 = $pdo->prepare($sql2);
+    $sql = (
+      "SELECT p.nom, p.prenom, c.annee "
+      . "FROM championnats c JOIN pilotes p ON c.pilote_id = p.pilote_id "
+      . "WHERE c.annee = ? ORDER BY c.annee DESC"
+    );
     $stmt2->execute([$annee]);
     $participants = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 }

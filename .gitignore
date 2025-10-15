@@ -1,0 +1,11 @@
+# Ignore cached photos and temporary files
+francoisdcls/assets/photos_cache/
+
+# Composer vendor (keep if you want vendor in repo; usually excluded)
+vendor/
+
+# OS / editor files
+.DS_Store
+*.swp
+*.swo
+/.vscode/

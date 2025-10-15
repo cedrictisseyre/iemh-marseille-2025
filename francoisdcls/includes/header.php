@@ -3,9 +3,15 @@
 // Usage: set $page_title = 'Titre'; then include __DIR__ . '/header.php';
 ?>
 <header>
-  <img src="/francoisdcls/assets/logo-f1.svg" alt="Logo F1" style="height:48px;vertical-align:middle;margin-right:1em;">
+  <img
+    src="/francoisdcls/assets/logo-f1.svg"
+    alt="Logo F1"
+    style="height:48px;vertical-align:middle;margin-right:1em;">
   <h1 style="display:inline-block;vertical-align:middle;">
-    <?= isset($page_title) ? htmlspecialchars($page_title) : 'Base de données Formule 1' ?>
+    <?php
+      $title = isset($page_title) ? htmlspecialchars($page_title) : 'Base de donn&eacute;es Formule 1';
+    ?>
+    <?= $title ?>
   </h1>
 </header>
 <?php include __DIR__ . '/nav.php'; ?>

@@ -24,22 +24,30 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
 <html lang='fr'>
 <head>
   <meta charset='utf-8'>
-  <title>Modifier pilote - <?= htmlspecialchars((($pilote['prenom'] ?? '') . ' ' . ($pilote['nom'] ?? ''))) ?></title>
+  <?php $full_name = htmlspecialchars((($pilote['prenom'] ?? '') . ' ' . ($pilote['nom'] ?? ''))); ?>
+  <title>Modifier pilote - <?= $full_name ?></title>
   <link rel='stylesheet' href='../assets/style.css'>
   <meta name='viewport' content='width=device-width,initial-scale=1'>
-  <style>.form-row{margin-bottom:0.6rem}</style>
+  <style>
+    .form-row{margin-bottom:0.6rem}
+  </style>
 </head>
 <body>
 <?php $page_title = 'Modifier pilote';
 include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <h1>Modifier pilote</h1>
-  <form method='post' action='../services/modifier_pilote.php'>
+  <?php $action_url = '../services/modifier_pilote.php'; ?>
+  <form method='post' action='<?= $action_url ?>'>
     <input type='hidden' name='pilote_id' value='<?= (int)($pilote['pilote_id'] ?? 0) ?>'>
-    <div class='form-row'><label>Prénom:<br><input type='text' name='prenom' value='<?= htmlspecialchars((string)($pilote['prenom'] ?? '')) ?>' required></label></div>
-    <div class='form-row'><label>Nom:<br><input type='text' name='nom' value='<?= htmlspecialchars((string)($pilote['nom'] ?? '')) ?>' required></label></div>
-    <div class='form-row'><label>Nationalité:<br><input type='text' name='nationalite' value='<?= htmlspecialchars((string)($pilote['nationalite'] ?? '')) ?>'></label></div>
-    <div class='form-row'><label>Photo URL:<br><input type='url' name='photo' value='<?= htmlspecialchars((string)($pilote['photo'] ?? '')) ?>'></label></div>
+    <?php $prenom_val = htmlspecialchars((string)($pilote['prenom'] ?? '')); ?>
+    <?php $nom_val = htmlspecialchars((string)($pilote['nom'] ?? '')); ?>
+    <?php $nat_val = htmlspecialchars((string)($pilote['nationalite'] ?? '')); ?>
+    <?php $photo_val = htmlspecialchars((string)($pilote['photo'] ?? '')); ?>
+    <div class='form-row'><label>Prénom:<br><input type='text' name='prenom' value='<?= $prenom_val ?>' required></label></div>
+    <div class='form-row'><label>Nom:<br><input type='text' name='nom' value='<?= $nom_val ?>' required></label></div>
+    <div class='form-row'><label>Nationalité:<br><input type='text' name='nationalite' value='<?= $nat_val ?>'></label></div>
+    <div class='form-row'><label>Photo URL:<br><input type='url' name='photo' value='<?= $photo_val ?>'></label></div>
     <button type='submit'>Enregistrer</button>
     <a href='liste_pilotes.php' style='margin-left:1rem'>Annuler</a>
   </form>

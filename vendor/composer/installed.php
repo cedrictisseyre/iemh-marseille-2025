@@ -3,7 +3,7 @@
         'name' => 'cedrictisseyre/iemh-marseille-2025',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'dee2dea33afefd4625c235723483885c26ed2791',
+        'reference' => '1cda98b16656cd6ff8ee979052b39f2d92376c11',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'cedrictisseyre/iemh-marseille-2025' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'dee2dea33afefd4625c235723483885c26ed2791',
+            'reference' => '1cda98b16656cd6ff8ee979052b39f2d92376c11',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

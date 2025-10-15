@@ -28,7 +28,11 @@ function insert_pilote(PDO $pdo, array $data): array
         $id = $pdo->lastInsertId();
         return ['success' => true,'message' => 'Pilote ajouté','id' => (int)$id];
     } catch (PDOException $e) {
-        return ['success' => false,'message' => 'Erreur base de données: ' . $e->getMessage(),'id' => null];
+        return [
+            'success' => false,
+            'message' => 'Erreur base de données: ' . $e->getMessage(),
+            'id' => null,
+        ];
     }
 }
 
@@ -54,7 +58,11 @@ function insert_ecurie(PDO $pdo, array $data): array
         $id = $pdo->lastInsertId();
         return ['success' => true,'message' => 'Écurie ajoutée','id' => (int)$id];
     } catch (PDOException $e) {
-        return ['success' => false,'message' => 'Erreur base de données: ' . $e->getMessage(),'id' => null];
+        return [
+            'success' => false,
+            'message' => 'Erreur base de données: ' . $e->getMessage(),
+            'id' => null,
+        ];
     }
 }
 
@@ -75,6 +83,10 @@ function insert_participation(PDO $pdo, int $pilote_id, int $ecurie_id, int $ann
         $id = $pdo->lastInsertId();
         return ['success' => true,'message' => 'Participation ajoutée','id' => (int)$id];
     } catch (PDOException $e) {
-        return ['success' => false,'message' => 'Erreur base de données: ' . $e->getMessage(),'id' => null];
+        return [
+            'success' => false,
+            'message' => 'Erreur base de données: ' . $e->getMessage(),
+            'id' => null,
+        ];
     }
 }

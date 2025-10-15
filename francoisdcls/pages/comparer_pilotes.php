@@ -51,10 +51,28 @@ include __DIR__ . '/../includes/header.php'; ?>
 <?php if ($stats1 && $stats2) : ?>
   <h2>Comparaison</h2>
   <table>
-    <tr><th></th><th><?= htmlspecialchars($stats1['prenom'] . ' ' . $stats1['nom']) ?></th><th><?= htmlspecialchars($stats2['prenom'] . ' ' . $stats2['nom']) ?></th></tr>
-    <tr><td>Titres</td><td><?= $stats1['nb_titres'] ?></td><td><?= $stats2['nb_titres'] ?></td></tr>
-    <tr><td>Participations</td><td><?= $stats1['nb_particip'] ?></td><td><?= $stats2['nb_particip'] ?></td></tr>
-    <tr><td>Écuries</td><td><?= $stats1['nb_ecuries'] ?></td><td><?= $stats2['nb_ecuries'] ?></td></tr>
+    <tr>
+      <th></th>
+      <?php $name1 = htmlspecialchars($stats1['prenom'] . ' ' . $stats1['nom']); ?>
+      <?php $name2 = htmlspecialchars($stats2['prenom'] . ' ' . $stats2['nom']); ?>
+      <th><?= $name1 ?></th>
+      <th><?= $name2 ?></th>
+    </tr>
+    <tr>
+      <td>Titres</td>
+      <td><?= $stats1['nb_titres'] ?></td>
+      <td><?= $stats2['nb_titres'] ?></td>
+    </tr>
+    <tr>
+      <td>Participations</td>
+      <td><?= $stats1['nb_particip'] ?></td>
+      <td><?= $stats2['nb_particip'] ?></td>
+    </tr>
+    <tr>
+      <td>Écuries</td>
+      <td><?= $stats1['nb_ecuries'] ?></td>
+      <td><?= $stats2['nb_ecuries'] ?></td>
+    </tr>
   </table>
 <?php elseif ($id1 && $id2 && $id1 == $id2) : ?>
   <p style='color:#b00'>Veuillez choisir deux pilotes différents.</p>

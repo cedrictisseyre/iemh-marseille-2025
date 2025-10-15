@@ -19,7 +19,8 @@ $pilotes = $pilotes->fetchAll(PDO::FETCH_ASSOC);
 <html lang='fr'>
 <head>
   <meta charset='UTF-8'>
-  <title>Fiche écurie - <?= htmlspecialchars($ecurie['nom_ecuries']) ?></title>
+    <?php $ecurie_title = htmlspecialchars($ecurie['nom_ecuries']); ?>
+    <title>Fiche écurie - <?= $ecurie_title ?></title>
   <link rel='stylesheet' href='../assets/style.css'>
 </head>
 <body>
@@ -27,7 +28,10 @@ $pilotes = $pilotes->fetchAll(PDO::FETCH_ASSOC);
 include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <ul>
-  <li><b>Pays :</b> <?= htmlspecialchars($ecurie['pays'] ?? 'N/A') ?></li>
+  <li>
+    <b>Pays :</b>
+    <?= htmlspecialchars($ecurie['pays'] ?? 'N/A') ?>
+  </li>
 </ul>
 <h2>Pilotes ayant couru pour cette écurie</h2>
 <ul>
