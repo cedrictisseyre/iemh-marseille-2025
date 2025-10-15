@@ -1,0 +1,31 @@
+-- Schema minimal pour la base Formule 1 (tables essentielles)
+
+CREATE TABLE IF NOT EXISTS ecuries (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(200) NOT NULL,
+  pays VARCHAR(100) DEFAULT NULL,
+  annee_creation INT DEFAULT NULL,
+  siege_social VARCHAR(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS pilotes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  prenom VARCHAR(100) NOT NULL,
+  nom VARCHAR(100) NOT NULL,
+  annee_naissance INT DEFAULT NULL,
+  nationalite VARCHAR(100) DEFAULT NULL,
+  photo VARCHAR(255) DEFAULT NULL,
+  ecurie_id INT DEFAULT NULL,
+  FOREIGN KEY (ecurie_id) REFERENCES ecuries(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS participations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pilote_id INT NOT NULL,
+  annee INT NOT NULL,
+  points INT DEFAULT 0,
+  ecurie_id INT DEFAULT NULL,
+  position_finale INT DEFAULT NULL,
+  FOREIGN KEY (pilote_id) REFERENCES pilotes(id) ON DELETE CASCADE,
+  FOREIGN KEY (ecurie_id) REFERENCES ecuries(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
