@@ -55,3 +55,25 @@ Projet IEMH Marseille 2025 - François Duclos
 ## Notes additionnelles
 - `schema.sql` et `seed.sql` ont été ajoutés pour faciliter les tests locaux.
 - Voir `IMPROVEMENTS.md` pour la liste des améliorations proposées (CSRF, tests, CI, nettoyage du cache d'images).
+
+## Configs et commandes de développement
+
+Les fichiers de configuration canoniques pour les outils de développement se trouvent sous `francoisdcls/config/` :
+
+- `francoisdcls/config/phpunit.xml` - configuration PHPUnit (bootstrap relatif au répertoire racine du dépôt)
+- `francoisdcls/config/phpcs.xml` - configuration PHP_CodeSniffer (ruleset PSR12)
+
+Commandes utiles depuis la racine du dépôt :
+
+```bash
+# Lancer PHPUnit en utilisant la configuration canonique
+./vendor/bin/phpunit --configuration francoisdcls/config/phpunit.xml
+
+# Lancer PHPCS avec la ruleset du projet
+./vendor/bin/phpcs --standard=francoisdcls/config/phpcs.xml francoisdcls/
+
+# Vérifier la syntaxe PHP d'un fichier
+php -l francoisdcls/site_f1.php
+```
+
+Remarque : les configurations à la racine ont été consolidées dans `francoisdcls/config/`. Utilisez ces chemins pour exécuter les tests et le linter localement ou dans votre CI.
