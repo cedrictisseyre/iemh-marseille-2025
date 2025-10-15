@@ -15,6 +15,7 @@ $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom,
 <div class='container'>
   <form method='post' action='../services/ajout_ecurie.php'>
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
+    <label>Pays/Siege:<br><input type='text' name='pays'></label><br>
     <hr>
     <h3>Ajouter aussi une participation (optionnel)</h3>
     <label>Pilote:<br>

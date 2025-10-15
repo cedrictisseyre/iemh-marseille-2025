@@ -31,7 +31,8 @@ function insert_pilote(PDO $pdo, array $data): array {
 function insert_ecurie(PDO $pdo, array $data): array {
     // la table ecuries utilise la colonne `nom_ecuries` pour le nom
     $nom = trim($data['nom'] ?? '');
-    $siege = trim($data['siege'] ?? '');
+    // accept either 'pays' or legacy 'siege'
+    $siege = trim($data['siege'] ?? $data['pays'] ?? '');
     if ($nom === '') return ['success'=>false,'message'=>'Nom requis','id'=>null];
     try {
         // Some DB instances may not have a `siege` column; try to insert with siege if present

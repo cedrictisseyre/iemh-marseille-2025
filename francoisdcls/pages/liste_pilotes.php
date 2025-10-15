@@ -24,32 +24,46 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
 <?php $page_title = 'Liste des pilotes de F1'; include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 
-<div class="pilot-list">
+<div class="pantheon-grid">
 <?php foreach($rows as $row):
   $img = resolve_photo_url($row['photo'] ?? null);
   $local = null;
   if ($img) $local = cached_image_url($img);
-  $initials = trim(($row['prenom'] ?? '') . ' ' . ($row['nom'] ?? ''));
-  $initials = implode('', array_map(function($p){return strtoupper($p[0] ?? '');}, array_filter(explode(' ', $initials))));
+  $annees = [];
+  // Attempt to collect years of participations for display (optional)
+  try {
+    $stmt = $pdo->prepare("SELECT annee FROM participations WHERE pilote_id = ? ORDER BY annee ASC");
+    $stmt->execute([$row['pilote_id']]);
+    $annees = $stmt->fetchAll(PDO::FETCH_COLUMN);
+  } catch (Exception $e) {
+    $annees = [];
+  }
 ?>
-  <article class="pilot-fiche">
-    <div class="pilot-photo">
+  <div class="pantheon-card">
+    <div class="pantheon-photo">
       <?php if ($local): ?>
-        <img src="<?= htmlspecialchars($local) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>" width="120" height="120" loading="lazy">
+        <img src="<?= htmlspecialchars($local) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>">
       <?php elseif ($img): ?>
-        <img src="<?= htmlspecialchars($img) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>" width="120" height="120" loading="lazy">
+        <img src="<?= htmlspecialchars($img) ?>" alt="Photo de <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?>">
       <?php else: ?>
-        <div class="placeholder"><?= htmlspecialchars($initials ?: '?') ?></div>
+        <div class='no-photo'>?</div>
       <?php endif; ?>
     </div>
-    <div class="pilot-meta">
-      <div class="title"><?= htmlspecialchars($row['prenom'].' '. $row['nom']) ?></div>
-      <div class="muted">Titres: <strong><?= (int)($row['nb_titres'] ?? 0) ?></strong> &nbsp; • &nbsp; Participations: <strong><?= (int)($row['nb_particip'] ?? 0) ?></strong></div>
-      <?php if (!empty($row['nationalite']) || !empty($row['photo'])): ?>
-        <div class="muted" style="margin-top:0.35rem"><?= !empty($row['nationalite']) ? htmlspecialchars($row['nationalite']) : '' ?></div>
-      <?php endif; ?>
+    <div class="pantheon-info">
+      <h3><?= htmlspecialchars($row['prenom']) ?> <span class="pantheon-nom"><?= htmlspecialchars($row['nom']) ?></span></h3>
+      <div class="pantheon-titres"><span class="nb"><?= (int)($row['nb_titres'] ?? 0) ?></span> titre<?= ((int)($row['nb_titres'] ?? 0) > 1 ? 's' : '') ?></div>
+      <div class="pantheon-annees"><span class="label">Années :</span> <?= $annees ? htmlspecialchars(implode(', ', $annees)) : 'N/A' ?></div>
+  <div class="pantheon-annees"><span class="label">Nationalité :</span> <?= htmlspecialchars($row['nationalite'] ?? 'N/A') ?></div>
+  <div class="pantheon-participations"><span class="label">Participations :</span> <?= (int)($row['nb_particip'] ?? 0) ?><?= $annees ? ' (' . htmlspecialchars(implode(', ', $annees)) . ')' : '' ?></div>
     </div>
-  </article>
+    <div class="pantheon-actions" style="margin-top:0.6rem;display:flex;gap:0.4rem;justify-content:center">
+      <a class="btn" href="<?= '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']) ?>" style="background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px">Éditer</a>
+      <form method="post" action="../services/supprimer_pilote.php" onsubmit="return confirm('Supprimer le pilote <?= htmlspecialchars($row['prenom'].' '.$row['nom']) ?> ?')" style="display:inline">
+        <input type="hidden" name="pilote_id" value="<?= (int)$row['pilote_id'] ?>">
+        <button type="submit" style="background:#b00;color:#fff;padding:0.35rem 0.6rem;border:none;border-radius:6px">Supprimer</button>
+      </form>
+    </div>
+  </div>
 <?php endforeach; ?>
 </div>
 
