@@ -38,24 +38,52 @@ include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <h1>Modifier pilote</h1>
   <?php $action_url = '../services/modifier_pilote.php'; ?>
-  <form method='post' action='<?= $action_url ?>'>
+  <?php $form_action = $action_url; ?>
+  <form method='post' action='<?= $form_action ?>'>
     <input type='hidden' name='pilote_id' value='<?= (int)($pilote['pilote_id'] ?? 0) ?>'>
+    <?= csrf_field() ?>
     <?php $prenom_val = htmlspecialchars((string)($pilote['prenom'] ?? '')); ?>
     <?php $nom_val = htmlspecialchars((string)($pilote['nom'] ?? '')); ?>
     <?php $nat_val = htmlspecialchars((string)($pilote['nationalite'] ?? '')); ?>
     <?php $photo_val = htmlspecialchars((string)($pilote['photo'] ?? '')); ?>
-    <div class='form-row'><label>Prénom:<br><input type='text' name='prenom' value='<?= $prenom_val ?>' required></label></div>
-    <div class='form-row'><label>Nom:<br><input type='text' name='nom' value='<?= $nom_val ?>' required></label></div>
-    <div class='form-row'><label>Nationalité:<br><input type='text' name='nationalite' value='<?= $nat_val ?>'></label></div>
-    <div class='form-row'><label>Photo URL:<br><input type='url' name='photo' value='<?= $photo_val ?>'></label></div>
+  <div class='form-row'>
+    <label>Prénom:<br>
+      <input type='text' name='prenom' value='<?= $prenom_val ?>' required>
+    </label>
+  </div>
+  <div class='form-row'>
+    <label>Nom:<br>
+      <input type='text' name='nom' value='<?= $nom_val ?>' required>
+    </label>
+  </div>
+  <div class='form-row'>
+    <label>Nationalité:<br>
+      <input type='text' name='nationalite' value='<?= $nat_val ?>'>
+    </label>
+  </div>
+  <div class='form-row'>
+    <label>Photo URL:<br>
+      <input type='url' name='photo' value='<?= $photo_val ?>'>
+    </label>
+  </div>
     <button type='submit'>Enregistrer</button>
     <a href='liste_pilotes.php' style='margin-left:1rem'>Annuler</a>
   </form>
   <hr>
-  <form method='post' action='../services/supprimer_pilote.php' onsubmit="return confirm('Supprimer ce pilote ? Cette action est irréversible.')">
-    <input type='hidden' name='pilote_id' value='<?= (int)$pilote['pilote_id'] ?>'>
-    <button type='submit' style='background:#b00;color:#fff;padding:0.5rem 0.8rem;border:none;border-radius:6px'>Supprimer le pilote</button>
-  </form>
+    <?php
+    $confirm_delete = 'return confirm("Supprimer ce pilote ? Cette action est irr\u00e9versible.")';
+    $delete_action = '../services/supprimer_pilote.php';
+    ?>
+    <form method='post'
+      action='<?= htmlspecialchars($delete_action) ?>'
+      onsubmit="<?= $confirm_delete ?>">
+        <input type='hidden' name='pilote_id' value='<?= (int)$pilote['pilote_id'] ?>'>
+        <?= csrf_field() ?>
+        <button type='submit'
+                style='background:#b00;color:#fff;padding:0.5rem 0.8rem;border:none;border-radius:6px'>
+            Supprimer le pilote
+        </button>
+    </form>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>

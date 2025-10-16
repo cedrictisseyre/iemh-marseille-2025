@@ -45,40 +45,80 @@ include __DIR__ . '/../includes/header.php'; ?>
   <div class="pantheon-card">
     <div class="pantheon-photo">
       <?php if ($local) : ?>
-            <?php $alt = 'Photo de ' . ($row['prenom'] . ' ' . $row['nom']); ?>
-        <img src="<?= htmlspecialchars($local) ?>" alt="<?= htmlspecialchars($alt) ?>">
+                    <?php $alt = 'Photo de ' . ($row['prenom'] . ' ' . $row['nom']); ?>
+                <img src="<?= htmlspecialchars($local) ?>"
+                     alt="<?= htmlspecialchars($alt) ?>">
       <?php elseif ($img) : ?>
           <?php $alt = 'Photo de ' . ($row['prenom'] . ' ' . $row['nom']); ?>
-        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($alt) ?>">
+        <img src="<?= htmlspecialchars($img) ?>"
+             alt="<?= htmlspecialchars($alt) ?>">
       <?php else : ?>
         <div class='no-photo'>?</div>
       <?php endif; ?>
     </div>
     <div class="pantheon-info">
-      <h3><?= htmlspecialchars($row['prenom']) ?> <span class="pantheon-nom"><?= htmlspecialchars($row['nom']) ?></span></h3>
-      <?php $nbTitres = (int)($row['nb_titres'] ?? 0); ?>
+      <?php
+        $prenomEsc = htmlspecialchars($row['prenom'] ?? '');
+        $nomEsc = htmlspecialchars($row['nom'] ?? '');
+        ?>
+      <h3>
+        <?= $prenomEsc ?>
+        <span class="pantheon-nom"><?= $nomEsc ?></span>
+      </h3>
+    <?php $nbTitres = (int)($row['nb_titres'] ?? 0); ?>
       <div class="pantheon-titres">
         <span class="nb"><?= $nbTitres ?></span>
         titre<?= ($nbTitres > 1 ? 's' : '') ?>
       </div>
-      <?php $anneesText = $annees ? htmlspecialchars(implode(', ', $annees)) : 'N/A'; ?>
-      <div class="pantheon-annees"><span class="label">Années :</span> <?= $anneesText ?></div>
-      <div class="pantheon-annees"><span class="label">Nationalité :</span> <?= htmlspecialchars($row['nationalite'] ?? 'N/A') ?></div>
+      <?php
+        if ($annees) {
+            $annees_csv = implode(', ', $annees);
+            $anneesText = htmlspecialchars($annees_csv);
+        } else {
+            $anneesText = 'N/A';
+        }
+        ?>
+      <div class="pantheon-annees">
+        <span class="label">Années :</span>
+        <?php echo $anneesText; ?>
+      </div>
+      <div class="pantheon-annees">
+        <span class="label">Nationalité :</span>
+        <?= htmlspecialchars($row['nationalite'] ?? 'N/A') ?>
+      </div>
       <?php $nbPart = (int)($row['nb_particip'] ?? 0); ?>
+      <?php
+        $annees_suffix = '';
+        if ($annees) {
+            $annees_suffix = ' (' . htmlspecialchars(implode(', ', $annees)) . ')';
+        }
+        ?>
       <div class="pantheon-participations">
         <span class="label">Participations :</span>
         <?= $nbPart ?>
-        <?= $annees ? ' (' . htmlspecialchars(implode(', ', $annees)) . ')' : '' ?>
+        <?= $annees_suffix ?>
       </div>
     </div>
-      <div class="pantheon-actions" style="margin-top:0.6rem;display:flex;gap:0.4rem;justify-content:center">
-        <?php $edit_url = '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']); ?>
-        <a class="btn" href="<?= $edit_url ?>" style="background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px">Éditer</a>
-    <?php $confirm_msg = htmlspecialchars($row['prenom'] . ' ' . $row['nom']); ?>
-    <?php $onsubmit = "return confirm('Supprimer le pilote {$confirm_msg} ?')"; ?>
-  <form method="post" action="../services/supprimer_pilote.php" onsubmit="<?= $onsubmit ?>" style="display:inline">
-          <input type="hidden" name="pilote_id" value="<?= (int)$row['pilote_id'] ?>">
-          <button type="submit" style="background:#b00;color:#fff;padding:0.35rem 0.6rem;border:none;border-radius:6px">Supprimer</button>
+      <div class="pantheon-actions"
+           style="margin-top:0.6rem;display:flex;gap:0.4rem;justify-content:center">
+      <?php
+        $edit_url = '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']);
+        $btn_style = 'background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px';
+        $confirm_msg = htmlspecialchars($row['prenom'] . ' ' . $row['nom']);
+        $confirm_text = 'Supprimer le pilote ' . $confirm_msg . ' ?';
+        $onsubmit = 'return confirm("' . $confirm_text . '")';
+        ?>
+      <a class="btn" href="<?= $edit_url ?>" style="<?= $btn_style ?>">Éditer</a>
+    <form method="post"
+      action="../services/supprimer_pilote.php"
+      onsubmit="<?= $onsubmit ?>"
+      style="display:inline">
+      <input type="hidden" name="pilote_id" value="<?= (int)$row['pilote_id'] ?>">
+      <?= csrf_field() ?>
+            <button type="submit"
+                    style="background:#b00;color:#fff;padding:0.35rem 0.6rem;border:none;border-radius:6px">
+                Supprimer
+            </button>
         </form>
       </div>
   </div>
@@ -88,6 +128,7 @@ include __DIR__ . '/../includes/header.php'; ?>
 <section class="add-form" style="margin-top:2em;border-top:1px solid #ddd;padding-top:1em;">
   <h2>Ajouter un pilote</h2>
   <form method='post' action='../services/ajout_pilote.php'>
+    <?= csrf_field() ?>
     <label>Prénom:<br><input type='text' name='prenom' required></label><br>
     <label>Nom:<br><input type='text' name='nom' required></label><br>
     <label>Nationalité:<br><input type='text' name='nationalite'></label><br>

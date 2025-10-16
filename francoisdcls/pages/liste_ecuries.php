@@ -38,6 +38,7 @@ include __DIR__ . '/../includes/header.php'; ?>
 <section class="add-form" style="margin-top:2em;border-top:1px solid #ddd;padding-top:1em;">
   <h2>Ajouter une écurie</h2>
   <form method='post' action='../services/ajout_ecurie.php'>
+    <?= csrf_field() ?>
     <label>Nom de l'écurie:<br><input type='text' name='nom' required></label><br>
     <label>Pays/Siege:<br><input type='text' name='siege'></label><br>
       <hr>

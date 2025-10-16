@@ -1,11 +1,19 @@
 <?php
 
 require_once __DIR__ . '/../database/bdd_formule1.php';
+require_once __DIR__ . '/../includes/init.php';
+require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../includes/flash.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo 'Méthode non autorisée';
+    exit;
+}
+
+if (!validate_csrf()) {
+    set_flash('error', 'Jeton CSRF invalide.');
+    header('Location: ../pages/liste_pilotes.php');
     exit;
 }
 
