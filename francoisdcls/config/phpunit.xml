@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="../../vendor/autoload.php" colors="true">
+<!-- Unified phpunit config for francoisdcls
+     Merged from root and config copies. This config expects to be
+     executed from the francoisdcls directory (so bootstrap points to tests/bootstrap.php)
+-->
+<phpunit bootstrap="../tests/bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="francoisdcls Test Suite">
+            <!-- Run tests located in francoisdcls/tests -->
             <directory>../tests</directory>
         </testsuite>
     </testsuites>

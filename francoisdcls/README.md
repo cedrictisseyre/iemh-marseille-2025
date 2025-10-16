@@ -76,6 +76,23 @@ Commandes utiles depuis la racine du dépôt :
 php -l francoisdcls/site_f1.php
 ```
 
+## Tests & CI
+
+Le dépôt contient un workflow GitHub Actions qui exécute des vérifications (php -l, phpcs et phpunit) pour les changements affectant uniquement le dossier `francoisdcls/`. Cela évite d'exécuter la CI pour d'autres travaux présents dans le dépôt.
+
+Localement, pour lancer les vérifications :
+
+```bash
+# Vérifier la syntaxe PHP
+find francoisdcls -name "*.php" -print0 | xargs -0 -n1 php -l
+
+# Linter (PHPCS) — nécessite phpcs installé via composer
+./vendor/bin/phpcs --standard=francoisdcls/config/phpcs.xml francoisdcls/
+
+# Tests PHPUnit
+./vendor/bin/phpunit --configuration francoisdcls/config/phpunit.xml
+```
+
 Remarque : les configurations à la racine ont été consolidées dans `francoisdcls/config/`. Utilisez ces chemins pour exécuter les tests et le linter localement ou dans votre CI.
 
 ## Changelog

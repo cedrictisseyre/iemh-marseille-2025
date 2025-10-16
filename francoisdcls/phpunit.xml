@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="../vendor/autoload.php" colors="true">
-    <testsuites>
-        <testsuite name="francoisdcls Test Suite">
-            <directory>./tests</directory>
-        </testsuite>
-    </testsuites>
+<!-- Deprecated: canonical phpunit config is francoisdcls/config/phpunit.xml -->
+<phpunit>
+    <!-- Please use francoisdcls/config/phpunit.xml when running tests -->
 </phpunit>

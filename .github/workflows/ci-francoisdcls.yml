@@ -1,0 +1,42 @@
+name: CI — Francoisdcls
+
+on:
+  push:
+    paths:
+      - 'francoisdcls/**'
+  pull_request:
+    paths:
+      - 'francoisdcls/**'
+
+jobs:
+  php-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Get composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist
+
+      - name: PHP syntax check
+        run: find francoisdcls -name "*.php" -print0 | xargs -0 -n1 php -l
+
+      - name: Run PHPCS
+        run: ./vendor/bin/phpcs --standard=francoisdcls/config/phpcs.xml francoisdcls/
+
+      - name: Run PHPUnit
+        run: ./vendor/bin/phpunit --configuration francoisdcls/config/phpunit.xml

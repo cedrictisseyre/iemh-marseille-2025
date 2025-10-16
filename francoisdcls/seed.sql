@@ -1,13 +1,9 @@
--- Seed minimal pour tests locaux
+-- Minimal seed data for local testing
+INSERT INTO ecuries (nom_ecuries, siege) VALUES ('SmokeEcurie', 'France');
+INSERT INTO ecuries (nom_ecuries, siege) VALUES ('Test Team', 'UK');
 
-INSERT INTO ecuries (nom, pays, annee_creation) VALUES
-('Scuderia Example', 'Italie', 1929),
-('Team Demo', 'France', 2001);
+INSERT INTO pilotes (prenom, nom, nationalite, photo) VALUES ('Jean', 'Dupont', 'France', 'https://example.org/photo1.png');
+INSERT INTO pilotes (prenom, nom, nationalite, photo) VALUES ('Ana', 'Silva', 'Portugal', 'https://example.org/photo2.png');
 
-INSERT INTO pilotes (prenom, nom, annee_naissance, nationalite, photo, ecurie_id) VALUES
-('Jean', 'Dupont', 1987, 'France', NULL, 2),
-('Mario', 'Rossi', 1990, 'Italie', NULL, 1);
+INSERT INTO participations (annee, pilote_id, ecurie_id) VALUES (2020, 1, 1);
 
-INSERT INTO participations (pilote_id, annee, points, ecurie_id, position_finale) VALUES
-(1, 2022, 12, 2, 8),
-(2, 2022, 45, 1, 2);

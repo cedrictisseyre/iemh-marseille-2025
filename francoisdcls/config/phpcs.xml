@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
+<!-- Unified phpcs ruleset for francoisdcls
+     Merged from root and config copies. Use this file as canonical.
+     Scans the francoisdcls directory (one level up from config/).
+-->
 <ruleset name="francoisdcls ruleset">
     <description>PHP CodeSniffer ruleset (PSR12) for francoisdcls</description>
     <rule ref="PSR12"/>
+    <!-- Analyze the francoisdcls directory (parent of config/). -->
     <file>../</file>
+    <!-- Common exclusions can be added here if needed, e.g. vendor or var -->
+    <exclude-pattern>../vendor/*</exclude-pattern>
+    <exclude-pattern>../var/*</exclude-pattern>
 </ruleset>

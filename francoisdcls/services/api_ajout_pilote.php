@@ -6,6 +6,11 @@ require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../includes/insert_helpers.php';
 header('Content-Type: application/json; charset=utf-8');
 
+// Ensure session and security headers are initialised for API endpoints
+if (function_exists('init_app')) {
+    init_app();
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Méthode non autorisée']);
@@ -16,6 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $csrf_header = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
 if ($csrf_header) {
     if (!isset($_SESSION['_csrf_token']) || !hash_equals($_SESSION['_csrf_token'], $csrf_header)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Jeton CSRF invalide']);
+        exit;
+    }
+}
+
+// If no header provided, expect the normal POST hidden field and validate it.
+if (!$csrf_header) {
+    if (!function_exists('validate_csrf') || !validate_csrf()) {
         http_response_code(403);
         echo json_encode(['success' => false, 'message' => 'Jeton CSRF invalide']);
         exit;
