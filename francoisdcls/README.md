@@ -76,6 +76,25 @@ Commandes utiles depuis la racine du dépôt :
 php -l francoisdcls/site_f1.php
 ```
 
+### Notes sur les fichiers de configuration
+
+Les fichiers de configuration canoniques sont maintenant placés sous `francoisdcls/config/`.
+Les copies précédentes à la racine de `francoisdcls/` ont été sauvegardées sous
+`francoisdcls/config/backup/` et remplacées par de petits placeholders pour éviter
+la confusion. Si vous avez des outils qui pointent encore vers les fichiers racine,
+mettez-les à jour pour utiliser `francoisdcls/config/phpunit.xml` et
+`francoisdcls/config/phpcs.xml`.
+
+Backups conservés :
+
+```
+francoisdcls/config/backup/phpcs.xml
+francoisdcls/config/backup/phpunit.xml
+```
+
+Si vous préférez supprimer les placeholders racine définitivement, dites-le et je
+les retirerai.
+
 ## Tests & CI
 
 Le dépôt contient un workflow GitHub Actions qui exécute des vérifications (php -l, phpcs et phpunit) pour les changements affectant uniquement le dossier `francoisdcls/`. Cela évite d'exécuter la CI pour d'autres travaux présents dans le dépôt.
