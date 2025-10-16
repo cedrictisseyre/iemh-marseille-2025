@@ -1,11 +1,19 @@
 <?php
 
 require_once __DIR__ . '/../database/bdd_formule1.php';
+require_once __DIR__ . '/../includes/init.php';
+require_once __DIR__ . '/../includes/csrf.php';
 require_once __DIR__ . '/../includes/flash.php';
 require_once __DIR__ . '/../includes/insert_helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
+    exit;
+}
+
+if (!validate_csrf()) {
+    set_flash('error', 'Jeton CSRF invalide.');
+    header('Location: ../pages/ajout_ecurie.php');
     exit;
 }
 

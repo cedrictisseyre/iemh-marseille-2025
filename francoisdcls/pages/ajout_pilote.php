@@ -17,6 +17,7 @@ $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_
 include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <form method='post' action='../services/ajout_pilote.php'>
+    <?= csrf_field() ?>
     <label>Prénom:<br><input type='text' name='prenom' required></label><br>
     <label>Nom:<br><input type='text' name='nom' required></label><br>
     <label>Nationalité:<br><input type='text' name='nationalite'></label><br>

@@ -4,9 +4,6 @@ require_once __DIR__ . '/../database/bdd_formule1.php';
 // Récupérer listes pilotes/ecuries
 $pilotes = $pdo->query("SELECT pilote_id, prenom, nom FROM pilotes ORDER BY nom, prenom")->fetchAll(PDO::FETCH_ASSOC);
 $ecuries = $pdo->query("SELECT ecurie_id, nom_ecuries FROM ecuries ORDER BY nom_ecuries")->fetchAll(PDO::FETCH_ASSOC);
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
 ?>
 <!DOCTYPE html>
 <html lang='fr'>
@@ -20,7 +17,7 @@ if (empty($_SESSION['csrf_token'])) {
 include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
   <form method='post' action='../services/ajout_participation.php'>
-    <input type='hidden' name='csrf_token' value='<?= htmlspecialchars($_SESSION['csrf_token']) ?>'>
+    <?= csrf_field() ?>
     <label>Pilote:<br>
       <select name='pilote_id' required>
         <option value=''>-- Choisir --</option>
