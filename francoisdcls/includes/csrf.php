@@ -1,9 +1,6 @@
 <?php
-// CSRF helper - place tokens in session and validate incoming POST requests.
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// CSRF helper - place tokens in session and validate incoming POST requests.
 
 function csrf_token(): string
 {
@@ -29,5 +26,3 @@ function validate_csrf(): bool
     }
     return hash_equals($_SESSION['_csrf_token'], $_POST['_csrf']);
 }
-
-?>
