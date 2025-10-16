@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!-- Deprecated: please use francoisdcls/config/phpcs.xml as the canonical ruleset.
-     This file is kept for backward compatibility; update your tooling to point to
-     francoisdcls/config/phpcs.xml instead.
--->
-
-<ruleset name="Deprecated placeholder">
-    <description>Placeholder. See francoisdcls/config/phpcs.xml</description>
-</ruleset>
