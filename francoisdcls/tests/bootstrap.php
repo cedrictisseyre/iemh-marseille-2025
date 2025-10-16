@@ -22,3 +22,21 @@ if (file_exists($seed)) {
 
 // expose $pdo globally for tests and application includes that expect $pdo
 global $pdo;
+
+// Start PHP built-in server for integration tests if not already running
+$host = '127.0.0.1';
+$port = 8000;
+$pidFile = __DIR__ . '/../var/test_server.pid';
+if (!file_exists($pidFile)) {
+    $docroot = realpath(__DIR__ . '/..');
+    $cmd = sprintf("php -S %s:%d -t %s > /dev/null 2>&1 & echo $!", $host, $port, $docroot);
+    $output = [];
+    exec($cmd, $output);
+    if (count($output)) {
+        $pid = (int)$output[0];
+        file_put_contents($pidFile, $pid);
+        // give server a moment to start
+        usleep(200000);
+    }
+}
+
