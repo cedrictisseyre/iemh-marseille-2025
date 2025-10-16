@@ -21,23 +21,4 @@ function init_app(): void
 }
 
 // Helper simple pour les flash messages (utilisent $_SESSION)
-function set_flash(string $type, string $message): void
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    $_SESSION['_flash'] = ['type' => $type, 'message' => $message];
-}
-
-function get_flash(): ?array
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-    if (!isset($_SESSION['_flash'])) {
-        return null;
-    }
-    $f = $_SESSION['_flash'];
-    unset($_SESSION['_flash']);
-    return $f;
-}
+// Les helpers de flash existent dans includes/flash.php pour éviter les duplications

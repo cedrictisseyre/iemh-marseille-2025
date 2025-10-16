@@ -3,6 +3,12 @@
 // Usage: set $page_title = 'Titre'; then include __DIR__ . '/header.php';
 require_once __DIR__ . '/init.php';
 require_once __DIR__ . '/csrf.php';
+// Initialisation de l'application (session + headers)
+if (function_exists('init_app')) {
+    init_app();
+}
+// Charger le helper flash (définit set_flash/get_flash)
+require_once __DIR__ . '/flash.php';
 ?>
 <header>
   <img src="/francoisdcls/assets/logo-f1.svg"
