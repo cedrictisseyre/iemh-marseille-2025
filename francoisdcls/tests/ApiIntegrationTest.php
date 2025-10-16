@@ -1,4 +1,5 @@
 <?php
+
 namespace Francoisdcls\Tests;
 
 use PHPUnit\Framework\TestCase;
