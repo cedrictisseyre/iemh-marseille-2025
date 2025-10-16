@@ -54,6 +54,15 @@ $f = get_flash();
 
   <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
 
+  <section aria-labelledby="search-label" style="margin-top:1em;">
+    <h2 id="search-label">Recherche rapide de pilote</h2>
+    <form id="form-recherche-home" autocomplete="off" role="search">
+      <label for="input-recherche-home" class="visually-hidden">Rechercher un pilote par nom ou prénom</label>
+      <input type="search" id="input-recherche-home" placeholder="Rechercher un pilote..." aria-autocomplete="list" aria-controls="suggestions-list" />
+      <div id="suggestions-list" role="listbox" aria-live="polite"></div>
+    </form>
+  </section>
+
   <h3>Formulaires d'ajout</h3>
   <ul>
     <li><a href="pages/ajout_pilote.php">Ajouter un pilote</a></li>
