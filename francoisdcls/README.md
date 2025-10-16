@@ -77,3 +77,7 @@ php -l francoisdcls/site_f1.php
 ```
 
 Remarque : les configurations à la racine ont été consolidées dans `francoisdcls/config/`. Utilisez ces chemins pour exécuter les tests et le linter localement ou dans votre CI.
+
+## Changelog
+
+Un journal des modifications global du dépôt est maintenu dans le fichier `CHANGELOG.md` à la racine du projet. Ce fichier contient les notes de version, les réorganisations importantes et les décisions de configuration. Pour une vue rapide des changements affectant ce module, consultez également `francoisdcls/IMPROVEMENTS.md`.
