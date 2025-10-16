@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile PSR1.Files.SideEffects.FoundWithSymbols
 // Navigation tabs for the F1 site. Adds an 'active' class based on the current URL.
 $current = $_SERVER['REQUEST_URI'] ?? '';
 

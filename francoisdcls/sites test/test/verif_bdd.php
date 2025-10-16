@@ -1,6 +1,7 @@
 <?php
+// phpcs:ignoreFile PSR1.Files.SideEffects.FoundWithSymbols
 
-require_once __DIR__ . '/../bdd_formule1.php';
+require_once __DIR__ . '/../../database/bdd_formule1.php';
 
 // Test de connexion explicite
 try {

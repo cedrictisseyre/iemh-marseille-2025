@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile PSR1.Files.SideEffects.FoundWithSymbols
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

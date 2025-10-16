@@ -5,11 +5,19 @@ $annee = isset($_GET['annee']) ? intval($_GET['annee']) : '';
 $champion = null;
 $participants = [];
 if ($annee) {
-    $sql = "SELECT p.nom, p.prenom, c.annee FROM championnats c JOIN pilotes p ON c.pilote_id = p.pilote_id WHERE c.annee = ?";
+    $sql = (
+      "SELECT p.nom, p.prenom, c.annee "
+      . "FROM championnats c JOIN pilotes p ON c.pilote_id = p.pilote_id "
+      . "WHERE c.annee = ?"
+    );
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$annee]);
     $champion = $stmt->fetch(PDO::FETCH_ASSOC);
-    $sql2 = "SELECT p.nom, p.prenom FROM participations pa JOIN pilotes p ON pa.pilote_id = p.pilote_id WHERE pa.annee = ? ORDER BY p.nom, p.prenom";
+    $sql2 = (
+      "SELECT p.nom, p.prenom "
+      . "FROM participations pa JOIN pilotes p ON pa.pilote_id = p.pilote_id "
+      . "WHERE pa.annee = ? ORDER BY p.nom, p.prenom"
+    );
     $stmt2 = $pdo->prepare($sql2);
     $sql = (
       "SELECT p.nom, p.prenom, c.annee "

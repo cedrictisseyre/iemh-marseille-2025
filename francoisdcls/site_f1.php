@@ -8,7 +8,8 @@ $f = get_flash();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <?php
-    $meta_desc = 'Base de données Formule 1 — pilotes, écuries, participations et statistiques (projet IEMH Marseille 2025).';
+    $meta_desc = 'Base de données Formule 1 — pilotes, écuries, participations et statistiques ('
+      . 'projet IEMH Marseille 2025).';
     ?>
   <meta name="description" content="<?= htmlspecialchars($meta_desc) ?>">
   <title>Base de données Formule 1</title>

@@ -1,0 +1,1 @@
+-- schema.sql (moved under francoisdcls/docs)

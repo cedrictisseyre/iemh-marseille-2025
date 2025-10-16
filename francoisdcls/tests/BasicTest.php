@@ -1,7 +1,9 @@
 <?php
+
+// phpcs:ignoreFile PSR1.Classes.ClassDeclaration.MissingNamespace
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../evaluation_etudiant.php';
+require_once __DIR__ . '/../../evaluation_etudiant.php';
 
 class BasicTest extends TestCase
 {

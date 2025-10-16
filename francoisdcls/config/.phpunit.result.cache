@@ -1,0 +1,1 @@
+{"version":2,"defects":{"BasicTest::testGetGlobalScoreReturnsInt":7},"times":{"BasicTest::testGetGlobalScoreReturnsInt":0.073,"ApiSmokeTest::test_csrf_token_present":0.046,"CSRFTest::test_token_generation_and_validation":0.023}}

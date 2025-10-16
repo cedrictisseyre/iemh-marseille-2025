@@ -7,11 +7,14 @@ $id1 = isset($_GET['id1']) ? intval($_GET['id1']) : 0;
 $id2 = isset($_GET['id2']) ? intval($_GET['id2']) : 0;
 $stats1 = $stats2 = null;
 if ($id1 && $id2 && $id1 != $id2) {
-    $sql = "SELECT p.nom, p.prenom,
-    (SELECT COUNT(*) FROM championnats WHERE pilote_id = p.pilote_id) as nb_titres,
-    (SELECT COUNT(DISTINCT annee) FROM participations WHERE pilote_id = p.pilote_id) as nb_particip,
-    (SELECT COUNT(DISTINCT ecurie_id) FROM participations WHERE pilote_id = p.pilote_id) as nb_ecuries
-    FROM pilotes p WHERE p.pilote_id = ?";
+    $sqlParts = [
+        'SELECT p.nom, p.prenom, ',
+        '(SELECT COUNT(*) FROM championnats WHERE pilote_id = p.pilote_id) as nb_titres, ',
+        '(SELECT COUNT(DISTINCT annee) FROM participations WHERE pilote_id = p.pilote_id) as nb_particip, ',
+        '(SELECT COUNT(DISTINCT ecurie_id) FROM participations WHERE pilote_id = p.pilote_id) as nb_ecuries ',
+        'FROM pilotes p WHERE p.pilote_id = ?'
+    ];
+    $sql = implode('', $sqlParts);
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$id1]);
     $stats1 = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -33,16 +36,24 @@ include __DIR__ . '/../includes/header.php'; ?>
   <label>Pilote 1 :
     <select name='id1' required>
       <option value=''>-- Choisir --</option>
-      <?php foreach ($pilotes as $p) : ?>
-        <option value='<?= $p['pilote_id'] ?>' <?= $id1 == $p['pilote_id'] ? 'selected' : '' ?>><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></option>
+      <?php foreach ($pilotes as $p) :
+            $optVal = (int)$p['pilote_id'];
+            $optLabel = htmlspecialchars($p['prenom'] . ' ' . $p['nom']);
+            $optSel = $id1 == $p['pilote_id'] ? 'selected' : '';
+            ?>
+        <option value='<?= $optVal ?>' <?= $optSel ?>><?= $optLabel ?></option>
       <?php endforeach; ?>
     </select>
   </label>
   <label>Pilote 2 :
     <select name='id2' required>
       <option value=''>-- Choisir --</option>
-      <?php foreach ($pilotes as $p) : ?>
-        <option value='<?= $p['pilote_id'] ?>' <?= $id2 == $p['pilote_id'] ? 'selected' : '' ?>><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></option>
+      <?php foreach ($pilotes as $p) :
+            $optVal = (int)$p['pilote_id'];
+            $optLabel = htmlspecialchars($p['prenom'] . ' ' . $p['nom']);
+            $optSel = $id2 == $p['pilote_id'] ? 'selected' : '';
+            ?>
+        <option value='<?= $optVal ?>' <?= $optSel ?>><?= $optLabel ?></option>
       <?php endforeach; ?>
     </select>
   </label>

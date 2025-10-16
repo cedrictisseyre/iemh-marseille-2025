@@ -11,7 +11,7 @@
     "psr-4": { "": "" }
   },
   "scripts": {
-    "test": "phpunit --colors=always",
-    "cs": "phpcs -n --standard=PSR12 francoisdcls"
+    "test": "phpunit --configuration francoisdcls/config/phpunit.xml --colors=always",
+    "cs": "phpcs -n --standard=francoisdcls/config/phpcs.xml francoisdcls"
   }
 }

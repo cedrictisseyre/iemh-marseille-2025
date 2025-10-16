@@ -28,19 +28,37 @@ include __DIR__ . '/../includes/header.php'; ?>
 <div class='container'>
 <h2>Top 5 pilotes les plus titrés</h2>
 <table>
-<tr><th>Nom</th><th>Prénom</th><th>Nombre de titres</th></tr>
+<tr>
+  <th>Nom</th>
+  <th>Prénom</th>
+  <th>Nombre de titres</th>
+</tr>
 <?php foreach ($top_pilotes as $p) : ?>
-<tr><td><?= htmlspecialchars($p['nom']) ?></td><td><?= htmlspecialchars($p['prenom']) ?></td><td><?= $p['nb_titres'] ?></td></tr>
+  <tr>
+    <td><?= htmlspecialchars($p['nom']) ?></td>
+    <td><?= htmlspecialchars($p['prenom']) ?></td>
+    <td><?= $p['nb_titres'] ?></td>
+  </tr>
 <?php endforeach; ?>
 </table>
 <h2>Top 5 écuries les plus présentes</h2>
 <table>
 <tr><th>Nom</th><th>Nombre de participations</th></tr>
 <?php foreach ($top_ecuries as $e) : ?>
-<tr><td><?= htmlspecialchars($e['nom']) ?></td><td><?= $e['nb_particip'] ?></td></tr>
+  <tr>
+    <td><?= htmlspecialchars($e['nom']) ?></td>
+    <td><?= $e['nb_particip'] ?></td>
+  </tr>
 <?php endforeach; ?>
 </table>
-<a href="../site_f1.php">Retour à l'accueil</a> | <a href='liste_pilotes.php'>Voir les pilotes</a> | <a href='liste_ecuries.php'>Voir les écuries</a>
+<?php
+  $home_link = '../site_f1.php';
+  $pilotes_link = 'liste_pilotes.php';
+  $ecuries_link = 'liste_ecuries.php';
+?>
+  <a href="<?= $home_link ?>">Retour à l'accueil</a>
+  | <a href='<?= $pilotes_link ?>'>Voir les pilotes</a>
+  | <a href='<?= $ecuries_link ?>'>Voir les écuries</a>
 </div>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>

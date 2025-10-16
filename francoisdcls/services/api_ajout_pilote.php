@@ -1,6 +1,5 @@
 <?php
 
-
 require_once __DIR__ . '/../database/bdd_formule1.php';
 require_once __DIR__ . '/../includes/init.php';
 require_once __DIR__ . '/../includes/csrf.php';
