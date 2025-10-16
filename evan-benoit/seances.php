@@ -1,5 +1,5 @@
 <?php
-require_once 'connect.php';
+require_once 'connexion.php';
 include 'header.html';
 
 // 🔹 Ajout d'une séance
