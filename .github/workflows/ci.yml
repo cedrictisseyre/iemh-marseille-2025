@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Filter paths
         id: filter
         uses: dorny/paths-filter@v2
@@ -14,19 +15,32 @@ jobs:
           filters: |
             francoisdcls:
               - 'francoisdcls/**'
+
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1'
-          extensions: pdo_mysql
+          php-version: '8.2'
+          tools: composer
+
+      - name: Get composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
       - name: Validate PHP syntax
         run: |
           find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 -P4 php -l
+
       - name: Install composer deps
         run: composer install --no-progress --prefer-dist
+
       - name: Run phpcs (PSR12)
         if: steps.filter.outputs.francoisdcls == 'true'
-        run: vendor/bin/phpcs --standard=francoisdcls/config/phpcs.xml francoisdcls/
+        run: ./vendor/bin/phpcs --standard=francoisdcls/config/phpcs.xml francoisdcls/
+
       - name: Run tests
         if: steps.filter.outputs.francoisdcls == 'true'
-        run: vendor/bin/phpunit --configuration francoisdcls/config/phpunit.xml
+        run: ./vendor/bin/phpunit --configuration francoisdcls/config/phpunit.xml
