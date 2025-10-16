@@ -80,4 +80,4 @@ Remarque : les configurations à la racine ont été consolidées dans `francois
 
 ## Changelog
 
-Un journal des modifications global du dépôt est maintenu dans le fichier `CHANGELOG.md` à la racine du projet. Ce fichier contient les notes de version, les réorganisations importantes et les décisions de configuration. Pour une vue rapide des changements affectant ce module, consultez également `francoisdcls/IMPROVEMENTS.md`.
+Un journal des modifications pour ce module est disponible dans `francoisdcls/CHANGELOG.md`. Ce fichier contient les notes de version, les réorganisations importantes et les décisions de configuration relatives à ce module. Consultez également `francoisdcls/IMPROVEMENTS.md` pour la liste des améliorations et plan d'actions.
