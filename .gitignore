@@ -4,6 +4,9 @@ francoisdcls/assets/photos_cache/
 # Test server logs and runtime var files
 francoisdcls/var/
 
+# Local env files containing secrets
+francoisdcls/.env
+
 # Composer vendor (keep if you want vendor in repo; usually excluded)
 vendor/
 
