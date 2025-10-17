@@ -46,6 +46,22 @@ if (!isset($conn) || !($conn instanceof PDO)) {
     }
 }
 
+// récupérer le nom/prénom de l'élève connecté (si disponible)
+$current_eleve_name = null;
+if (isset($_SESSION['user']['id']) && !$db_error) {
+    try {
+        $stmt = $conn->prepare('SELECT prenom, nom FROM eleves WHERE user_id = :uid LIMIT 1');
+        $stmt->execute([':uid' => $_SESSION['user']['id']]);
+        $ce = $stmt->fetch();
+        if ($ce) {
+            $current_eleve_name = trim($ce['prenom'] . ' ' . $ce['nom']);
+        }
+    } catch (PDOException $e) {
+        // ne pas bloquer l'affichage si la requête échoue
+        error_log('Erreur récupération élève connecté: ' . $e->getMessage());
+    }
+}
+
 // --- Gestion simple de connexion/logout ---
 $login_error = '';
 // Gestion de l'inscription
@@ -203,6 +219,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <body>
     <div class="container mt-4">
         <h1 class="text-center mb-4">Mastère IHME</h1>
+        <?php if ($current_eleve_name): ?>
+            <p class="text-center text-muted">Connecté : <strong><?= htmlspecialchars($current_eleve_name) ?></strong></p>
+        <?php endif; ?>
         <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="accueil-tab" data-bs-toggle="tab" data-bs-target="#accueil" type="button" role="tab" aria-controls="accueil" aria-selected="true">Accueil</button>
@@ -213,9 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="profs-tab" data-bs-toggle="tab" data-bs-target="#profs" type="button" role="tab" aria-controls="profs" aria-selected="false">Professeurs</button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="eleves-tab" data-bs-toggle="tab" data-bs-target="#eleves" type="button" role="tab" aria-controls="eleves" aria-selected="false">Élèves</button>
-            </li>
+            <!-- onglet Élèves supprimé, son contenu affiché dans l'entête pour l'utilisateur connecté -->
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="accueil" role="tabpanel" aria-labelledby="accueil-tab">
@@ -364,13 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <?php endforeach; ?>
                 </ul>
             </div>
-            <div class="tab-pane fade" id="eleves" role="tabpanel" aria-labelledby="eleves-tab">
-                <ul>
-                    <?php foreach ($eleves as $eleve): ?>
-                        <li><?= htmlspecialchars($eleve['prenom'] . ' ' . $eleve['nom']) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
+            <!-- suppression de la pane Élèves -->
         </div>
     </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -380,8 +391,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             const tabMap = {
                 '#accueil': 'accueil-tab',
                 '#edt': 'edt-tab',
-                '#profs': 'profs-tab',
-                '#eleves': 'eleves-tab'
+                '#profs': 'profs-tab'
             };
 
             function activateFromHash() {
