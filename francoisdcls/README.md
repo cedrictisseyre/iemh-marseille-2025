@@ -114,6 +114,36 @@ find francoisdcls -name "*.php" -print0 | xargs -0 -n1 php -l
 
 Remarque : les configurations à la racine ont été consolidées dans `francoisdcls/config/`. Utilisez ces chemins pour exécuter les tests et le linter localement ou dans votre CI.
 
+## Forcer la base de données utilisée (MySQL vs SQLite)
+
+Le projet peut utiliser soit une base MySQL (par défaut en production) soit un fichier SQLite local pour les tests.
+
+- Pour forcer MySQL localement, créez un fichier `francoisdcls/.env` contenant :
+
+```
+FRANCOISDB_DRIVER=mysql
+FRANCOISDB_HOST=127.0.0.1
+FRANCOISDB_NAME=francois_duclos
+FRANCOISDB_USER=root
+FRANCOISDB_PASS=secret
+```
+
+- Pour forcer SQLite (utilisé par la suite de tests et le bootstrap PHPUnit), mettez :
+
+```
+FRANCOISDB_DRIVER=sqlite
+```
+
+- Vous pouvez aussi exporter la variable d'environnement pour la session en cours :
+
+```bash
+export FRANCOISDB_DRIVER=mysql
+# ou
+export FRANCOISDB_DRIVER=sqlite
+```
+
+Le bootstrap des tests (`francoisdcls/tests/bootstrap.php`) crée un fichier `francoisdcls/var/test_db.sqlite` propre pour les tests et le supprime/récrée à chaque exécution. Utilisez `francoisdcls/var/create_sqlite.php` pour (re)générer localement le fichier SQLite si besoin.
+
 ## Changelog
 
 Un journal des modifications pour ce module est disponible dans `francoisdcls/CHANGELOG.md`. Ce fichier contient les notes de version, les réorganisations importantes et les décisions de configuration relatives à ce module. Consultez également `francoisdcls/IMPROVEMENTS.md` pour la liste des améliorations et plan d'actions.

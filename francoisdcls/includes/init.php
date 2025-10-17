@@ -3,23 +3,35 @@
 // Initialisation centralisée : encapsule session et headers dans une fonction
 // pour éviter les effets de bord à l'inclusion (PHPCS warning).
 
-// Load .env file if present (simple parser, supports KEY=VALUE and quoted values)
-$envFile = __DIR__ . '/../.env';
-if (file_exists($envFile)) {
+/**
+ * Load simple .env file if present. This helper does not execute automatically on include
+ * to avoid side-effects during static analysis or accidental output.
+ * Supports lines like KEY=VALUE and quoted values.
+ *
+ * @param string|null $path Path to the .env file. If null, uses repository root francoisdcls/.env
+ */
+function load_dotenv(?string $path = null): void
+{
+    $envFile = $path ?? __DIR__ . '/../.env';
+    if (!file_exists($envFile)) {
+        return;
+    }
     $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         $line = trim($line);
         if ($line === '' || strpos($line, '#') === 0) {
             continue;
         }
-        if (!strpos($line, '=')) {
+        if (strpos($line, '=') === false) {
             continue;
         }
         list($key, $val) = explode('=', $line, 2);
         $key = trim($key);
         $val = trim($val);
         // remove surrounding quotes
-        if ((substr($val, 0, 1) === '"' && substr($val, -1) === '"') || (substr($val, 0, 1) === "'" && substr($val, -1) === "'")) {
+        $first = substr($val, 0, 1);
+        $last = substr($val, -1);
+        if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
             $val = substr($val, 1, -1);
         }
         putenv("$key=$val");
