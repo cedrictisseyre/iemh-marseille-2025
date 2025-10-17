@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../evaluation_etudiant.php';
 $score = getGlobalScore(__DIR__ . '/..');
 ?><!DOCTYPE html>

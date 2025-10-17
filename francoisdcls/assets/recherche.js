@@ -32,13 +32,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 // if selectors are provided, read their current values
                 if (opts.typeSelector) {
                     const s = document.getElementById(opts.typeSelector);
-                    if (s) params.set('type', s.value);
+                    if (s) {
+                        params.set('type', s.value);
+                    }
                 } else if (opts.type) {
                     params.set('type', opts.type);
                 }
                 if (opts.anneeSelector) {
                     const a = document.getElementById(opts.anneeSelector);
-                    if (a && a.value) params.set('annee', a.value);
+                    if (a && a.value) {
+                        params.set('annee', a.value);
+                    }
                 } else if (opts.annee) {
                     params.set('annee', opts.annee);
                 }
@@ -46,7 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const fetcher = (typeof secureFetch === 'function') ? secureFetch : (u => fetch(u));
                 fetcher('services/recherche_pilotes.php?' + params.toString())
                     .then(r => {
-                        if (!r.ok) throw new Error('Network response not ok');
+                        if (!r.ok) {
+                            throw new Error('Network response not ok');
+                        }
                         return r.json();
                     })
                     .then(data => {
@@ -67,8 +73,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             item.tabIndex = -1;
                             item.dataset.index = idx;
                             // store id depending on type
-                            if (p.type === 'ecurie') item.dataset.ecurieId = p.ecurie_id || '';
-                            else item.dataset.piloteId = p.pilote_id || '';
+                            if (p.type === 'ecurie') {
+                                item.dataset.ecurieId = p.ecurie_id || '';
+                            } else {
+                                item.dataset.piloteId = p.pilote_id || '';
+                            }
                             // build accessible label
                             let label = '';
                             if (p.type === 'ecurie') {

@@ -12,3 +12,8 @@ INSERT INTO participations (annee, pilote_id, ecurie_id) VALUES (2020, 1, 1);
 -- Participation for Vettel -> associate with ecurie 2 (Test Team)
 INSERT INTO participations (annee, pilote_id, ecurie_id) VALUES (2022, 3, 2);
 
+-- Quelques titres (championnats) pour les tests et affichages
+INSERT INTO championnats (pilote_id, annee) VALUES (3, 2013);
+INSERT INTO championnats (pilote_id, annee) VALUES (3, 2015);
+INSERT INTO championnats (pilote_id, annee) VALUES (1, 2020);
+
