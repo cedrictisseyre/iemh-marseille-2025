@@ -32,7 +32,7 @@ $tabsConfig = [
         'title'      => 'Liste des courses',
         'link'       => 'pages/liste_courses.php',
     // alignement exact avec pages/liste_courses.php (SELECT * FROM courses) — on liste explicitement les colonnes
-    'base_sql'   => 'SELECT id_course, nom_course AS nom, distance_km, denivele_m, date_course, lieu FROM courses',
+    'base_sql'   => 'SELECT id_course, nom_course AS nom, distance_km, denivele_m, date_course FROM courses',
         'count_sql'  => 'SELECT COUNT(*) FROM courses',
         'searchable' => ['nom_course', 'lieu'],
         'order'      => 'ORDER BY date_course DESC',
@@ -42,7 +42,6 @@ $tabsConfig = [
             ['label' => 'Distance (km)',  'key' => 'distance_km','link' => false],
             ['label' => 'Dénivelé (m)',   'key' => 'denivele_m','link' => false],
             ['label' => 'Date',           'key' => 'date_course','link' => false],
-            ['label' => 'Lieu',           'key' => 'lieu',      'link' => false],
         ],
     ],
     'participations' => [
