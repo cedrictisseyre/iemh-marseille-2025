@@ -1,6 +1,9 @@
 <?php
 // filepath: /workspace/ando-guerin/index.php
+$require_conn = false;
 require_once 'connexion.php';
+// session pour l'auth
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Préparer des variables par défaut
 $jours = $horaires = $emploi = $profs = $eleves = [];
@@ -42,6 +45,97 @@ if (!isset($conn) || !($conn instanceof PDO)) {
         $db_error = true;
     }
 }
+
+// --- Gestion simple de connexion/logout ---
+$login_error = '';
+// Gestion de l'inscription
+$register_error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'register') {
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    $prenom = isset($_POST['prenom']) ? trim($_POST['prenom']) : '';
+    $nom = isset($_POST['nom']) ? trim($_POST['nom']) : '';
+    if ($username === '' || $password === '' || $prenom === '' || $nom === '') {
+        $register_error = 'Tous les champs sont requis.';
+    } elseif ($db_error) {
+        $register_error = 'Impossible d\'accéder à la base de données.';
+    } else {
+        try {
+            // vérifier si username existe
+            $stmt = $conn->prepare('SELECT id FROM users WHERE username = :u LIMIT 1');
+            $stmt->execute([':u' => $username]);
+            if ($stmt->fetch()) {
+                $register_error = 'Nom d\'utilisateur déjà utilisé.';
+            } else {
+                // créer user
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $ins = $conn->prepare('INSERT INTO users (username, password) VALUES (:u, :p)');
+                $ins->execute([':u' => $username, ':p' => $hash]);
+                $userId = $conn->lastInsertId();
+                // créer eleve et lier au user
+                $ins2 = $conn->prepare('INSERT INTO eleves (prenom, nom, user_id) VALUES (:prenom, :nom, :uid)');
+                $ins2->execute([':prenom' => $prenom, ':nom' => $nom, ':uid' => $userId]);
+                // connexion automatique
+                $_SESSION['user'] = ['id' => $userId, 'username' => $username];
+                // rediriger vers la page profil
+                header('Location: profil.php');
+                exit;
+            }
+        } catch (PDOException $e) {
+            error_log('Erreur register: ' . $e->getMessage());
+            $register_error = 'Erreur lors de la création du compte.';
+        }
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'login') {
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+    if ($username === '' || $password === '') {
+        $login_error = 'Veuillez renseigner le nom d\'utilisateur et le mot de passe.';
+    } elseif ($db_error) {
+        $login_error = 'Impossible de vérifier les identifiants (problème de base de données).';
+    } else {
+        try {
+            // La table attendue : users(username, password)
+            $stmt = $conn->prepare('SELECT * FROM users WHERE username = :u LIMIT 1');
+            $stmt->execute([':u' => $username]);
+            $user = $stmt->fetch();
+            if ($user) {
+                $hash = isset($user['password']) ? $user['password'] : '';
+                $ok = false;
+                if ($hash !== '' && (strpos($hash, '$2y$') === 0 || strpos($hash, '$argon2') === 0)) {
+                    // hashé avec password_hash
+                    $ok = password_verify($password, $hash);
+                } else {
+                    // comparation en clair (legacy)
+                    $ok = ($password === $hash);
+                }
+                if ($ok) {
+                    // succès
+                    $_SESSION['user'] = [
+                        'id' => $user['id'] ?? null,
+                        'username' => $user['username']
+                    ];
+                    // rediriger vers le profil
+                    header('Location: profil.php');
+                    exit;
+                } else {
+                    $login_error = 'Identifiants invalides.';
+                }
+            } else {
+                $login_error = 'Utilisateur non trouvé.';
+            }
+        } catch (PDOException $e) {
+            error_log('Erreur login: ' . $e->getMessage());
+            $login_error = 'Erreur lors de la vérification des identifiants.';
+        }
+    }
+} elseif (isset($_GET['action']) && $_GET['action'] === 'logout') {
+    session_unset();
+    session_destroy();
+    header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -71,6 +165,70 @@ if (!isset($conn) || !($conn instanceof PDO)) {
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="accueil" role="tabpanel" aria-labelledby="accueil-tab">
                 <p>Bienvenue sur le site du Mastère IHME !</p>
+
+                <?php if ($db_error): ?>
+                    <div class="alert alert-danger">Impossible de se connecter à la base de données. Certaines fonctionnalités peuvent être indisponibles.</div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['user'])): ?>
+                    <div class="alert alert-success">Connecté en tant que <strong><?= htmlspecialchars($_SESSION['user']['username']) ?></strong>. <a href="?action=logout">Se déconnecter</a></div>
+                <?php else: ?>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Connexion</h5>
+                                        <?php if (!empty($login_error)): ?>
+                                            <div class="alert alert-danger"><?= htmlspecialchars($login_error) ?></div>
+                                        <?php endif; ?>
+                                        <form method="post" action="">
+                                            <input type="hidden" name="action" value="login">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nom d'utilisateur</label>
+                                                <input type="text" name="username" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Mot de passe</label>
+                                                <input type="password" name="password" class="form-control" required>
+                                            </div>
+                                            <button class="btn btn-primary" type="submit">Se connecter</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Créer un compte étudiant</h5>
+                                        <?php if (!empty($register_error)): ?>
+                                            <div class="alert alert-danger"><?= htmlspecialchars($register_error) ?></div>
+                                        <?php endif; ?>
+                                        <form method="post" action="">
+                                            <input type="hidden" name="action" value="register">
+                                            <div class="mb-3">
+                                                <label class="form-label">Prénom</label>
+                                                <input type="text" name="prenom" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Nom</label>
+                                                <input type="text" name="nom" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Nom d'utilisateur</label>
+                                                <input type="text" name="username" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Mot de passe</label>
+                                                <input type="password" name="password" class="form-control" required>
+                                            </div>
+                                            <button class="btn btn-success" type="submit">S'inscrire</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <?php endif; ?>
                 <div class="row mt-4">
                     <div class="col-md-4">
                         <h5>Jours</h5>
