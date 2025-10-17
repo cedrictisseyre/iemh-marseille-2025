@@ -234,6 +234,7 @@ $totalRows = (int)$countStmt->fetchColumn();
     <meta charset="UTF-8">
     <title>Dashboard UTMB</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/dashboard.css">
     <style>
         body {
             font-family: 'Montserrat', 'Roboto', Arial, sans-serif;
@@ -385,16 +386,26 @@ $totalRows = (int)$countStmt->fetchColumn();
     </style>
 </head>
 <body>
-    <h1 style="text-align:center;color:#1565c0;font-size:3em;margin-top:32px;letter-spacing:3px;font-family:'Montserrat',Arial,sans-serif;">UTMB - Ultra-Trail du Mont-Blanc</h1>
-    <div class="mountain-header">
-        <svg class="mountain-svg" viewBox="0 0 1100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 160L1100 160V80L900 120L800 60L700 130L600 90L500 150L400 100L300 140L200 80L100 120L0 160Z" fill="#388e3c"/>
-            <path d="M0 160L1100 160V120L900 140L800 100L700 150L600 130L500 160L400 120L300 150L200 120L100 140L0 160Z" fill="#b3e5fc"/>
-        </svg>
-    </div>
-    <h1>Tableau de bord UTMB</h1>
-    <?php tabNav($currentTab, $tabsConfig); ?>
-    <div class="content">
+    <header class="topbar">
+        <img class="logo" src="assets/logo-utmb.svg" alt="UTMB logo" onerror="this.style.display='none'">
+        <div class="header-title">
+            <h1>UTMB Dashboard</h1>
+            <p>Gestion coureurs, courses, participations et points ITRA</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="mountain-hero">
+            <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 90 L40 40 L80 70 L120 20 L160 60 L200 0 L200 100 L0 100 Z" fill="#0b5cff" opacity="0.08"/></svg>
+            <div class="hero-text">
+                <h2>Tableau de bord UTMB</h2>
+                <p class="small">Vue synthétique des données — triées, recherchables et exportables</p>
+            </div>
+            <div style="margin-left:auto" aria-hidden="true"></div>
+        </div>
+
+        <?php tabNav($currentTab, $tabsConfig); ?>
+        <div class="content container">
         <form method="get" style="margin-bottom:1em;">
             <input type="hidden" name="tab" value="<?= htmlspecialchars($currentTab) ?>">
             <input type="text" name="search" placeholder="Recherche..." value="<?= htmlspecialchars($search) ?>">
@@ -407,8 +418,11 @@ $totalRows = (int)$countStmt->fetchColumn();
         <?php endif; ?>
 
         <h2><?= htmlspecialchars($config['title']) ?></h2>
-        <?php renderTable($rows, $config['columns'], $currentTab); ?>
-        <?php renderPagination($totalRows, $page, $pageSize, $currentTab, $search); ?>
+            <div class="table-card">
+                <?php renderTable($rows, $config['columns'], $currentTab); ?>
+                <?php renderPagination($totalRows, $page, $pageSize, $currentTab, $search); ?>
+            </div>
+        </div>
     </div>
 </body>
 </html>
