@@ -1,0 +1,26 @@
+name: DB Sync and Artifact
+
+on:
+  push:
+    paths:
+      - 'francoisdcls/**'
+      - 'scripts/**'
+
+jobs:
+  sync-db:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.2'
+      - name: Install dependencies
+        run: composer install --no-progress --no-suggest || true
+      - name: Run DB sync script
+        run: php scripts/sync_db.php || true
+      - name: Upload sqlite artifact (if exists)
+        uses: actions/upload-artifact@v4
+        with:
+          name: francoisdcls-test-db
+          path: francoisdcls/var/test_db.sqlite
