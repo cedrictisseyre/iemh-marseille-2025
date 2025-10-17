@@ -23,6 +23,12 @@ include __DIR__ . '/../includes/header.php'; ?>
 
 <form id="form-recherche" autocomplete="off">
   <input type="text" id="input-recherche" placeholder="Nom ou prénom...">
+  <select id="select-recherche-type">
+    <option value="both">Pilote et écurie</option>
+    <option value="pilote">Pilote</option>
+    <option value="ecurie">Écurie</option>
+  </select>
+  <input type="number" id="input-recherche-annee" placeholder="Année (optionnel)" min="1900" max="2100">
   <button type="submit">Rechercher</button>
 </form>
 <div id="resultats-recherche" style="margin-top:1em;"></div>

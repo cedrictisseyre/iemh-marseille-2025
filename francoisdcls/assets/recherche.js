@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Attach to the dedicated search page
-    attachSearch('input-recherche', 'resultats-recherche');
-    // Attach to the homepage quick search
-    attachSearch('input-recherche-home', 'suggestions-list');
+    // Attach to the dedicated search page (reads type and year from selectors)
+    attachSearch('input-recherche', 'resultats-recherche', { typeSelector: 'select-recherche-type', anneeSelector: 'input-recherche-annee' });
+    // Attach to the homepage quick search (reads type and year from homepage selectors)
+    attachSearch('input-recherche-home', 'suggestions-list', { typeSelector: 'select-recherche-home-type', anneeSelector: 'input-recherche-home-annee' });
 });

@@ -59,6 +59,14 @@ $f = get_flash();
     <form id="form-recherche-home" autocomplete="off" role="search">
       <label for="input-recherche-home" class="visually-hidden">Rechercher un pilote par nom ou prénom</label>
       <input type="search" id="input-recherche-home" placeholder="Rechercher un pilote..." aria-autocomplete="list" aria-controls="suggestions-list" />
+      <label for="select-recherche-home-type" class="visually-hidden">Type</label>
+      <select id="select-recherche-home-type" aria-label="Type de recherche">
+        <option value="both">Pilote et écurie</option>
+        <option value="pilote">Pilote</option>
+        <option value="ecurie">Écurie</option>
+      </select>
+      <label for="input-recherche-home-annee" class="visually-hidden">Année</label>
+      <input type="number" id="input-recherche-home-annee" placeholder="Année (optionnel)" min="1900" max="2100" />
       <div id="suggestions-list" role="listbox" aria-live="polite"></div>
     </form>
   </section>

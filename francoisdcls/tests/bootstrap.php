@@ -40,3 +40,14 @@ if (!file_exists($pidFile)) {
     }
 }
 
+// Register shutdown to stop the server when PHP process ends
+register_shutdown_function(function () use ($pidFile) {
+    if (!file_exists($pidFile)) return;
+    $pid = (int)@file_get_contents($pidFile);
+    if ($pid > 0) {
+        // try to kill the process
+        @exec('kill ' . $pid . ' 2>/dev/null');
+        @unlink($pidFile);
+    }
+});
+
