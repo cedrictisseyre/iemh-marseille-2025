@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" viewBox="0 0 200 60" role="img" aria-label="UTMB logo">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#0b5cff"/>
+      <stop offset="1" stop-color="#0b8756"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="60" rx="8" fill="url(#g)" opacity="0.08"/>
+  <g transform="translate(12,14)">
+    <path d="M0 28 L10 10 L20 22 L30 4 L40 28 Z" fill="#0b5cff"/>
+    <text x="54" y="22" font-family="Montserrat, Arial" font-weight="700" font-size="16" fill="#0b5cff">UTMB</text>
+    <text x="54" y="38" font-family="Roboto, Arial" font-size="10" fill="#6b7785">Dashboard</text>
+  </g>
+</svg>
