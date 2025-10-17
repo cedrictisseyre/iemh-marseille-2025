@@ -1,5 +1,6 @@
 <?php
 include __DIR__ . '/includes/flash.php';
+include __DIR__ . '/includes/site_helpers.php';
 $f = get_flash();
 ?>
 <!DOCTYPE html>
@@ -25,27 +26,21 @@ $f = get_flash();
 <body>
 <a class="skip-link" href="#main-content">Aller au contenu</a>
 
-<header>
-  <img
-    src="assets/logo-f1.svg"
-    alt="Logo F1"
-    loading="lazy"
-    style="height:48px;vertical-align:middle;margin-right:1em;">
-  <h1 style="display:inline-block;vertical-align:middle;">Base de données Formule 1</h1>
-</header>
-
-<nav aria-label="Navigation principale">
-  <ul>
-    <li><a href="pages/liste_pilotes.php">Liste des pilotes</a></li>
-    <li><a href="pages/liste_ecuries.php">Liste des écuries</a></li>
-    <li><a href="pages/statistiques.php">Statistiques</a></li>
-    <li><a href="pages/recherche.php">Recherche de pilotes</a></li>
-    <li><a href="pages/comparer_pilotes.php">Comparer deux pilotes</a></li>
-    <li><a href="pages/palmares_annee.php">Palmarès par année</a></li>
-    <li><a href="pages/pantheon_pilotes.php">Champions du monde</a></li>
-    <li><a href="pages/ajout_participation.php">Ajouter une participation</a></li>
-  </ul>
-</nav>
+<?php
+// Render header and nav using helpers to increase modularity and testability
+render_header('Base de données Formule 1');
+$navLinks = [
+    'pages/liste_pilotes.php' => 'Liste des pilotes',
+    'pages/liste_ecuries.php' => 'Liste des écuries',
+    'pages/statistiques.php' => 'Statistiques',
+    'pages/recherche.php' => 'Recherche de pilotes',
+    'pages/comparer_pilotes.php' => 'Comparer deux pilotes',
+    'pages/palmares_annee.php' => 'Palmarès par année',
+    'pages/pantheon_pilotes.php' => 'Champions du monde',
+    'pages/ajout_participation.php' => 'Ajouter une participation',
+];
+render_nav($navLinks);
+?>
 
 <main id="main-content" role="main" class="container">
   <?php if ($f) : ?>
@@ -63,7 +58,7 @@ $f = get_flash();
   </div>
   <?php endif; ?>
 
-  <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
+  <p><?= htmlspecialchars(get_welcome_message()) ?></p>
 
   <div id="evaluation-badge" style="float:right;margin-top:-2.5em;">Score: <span id="eval-score">—</span></div>
 
@@ -115,12 +110,13 @@ $f = get_flash();
   </ul>
 
   <div id="stats-globales" style="margin-top:2em;"></div>
+  <p style="margin-top:1em;">Consultez <a href="database/example_pdo_usage.php">un exemple d'utilisation PDO</a> pour voir une connexion sûre à la base de données.</p>
 </main>
 
 <script src="assets/stats.js" defer></script>
 <script src="assets/actions.js" defer></script>
 <script src="assets/recherche.js" defer></script>
 <script src="assets/eval.js" defer></script>
-<footer>Projet IEMH Marseille 2025</footer>
+<?php render_footer(); ?>
 </body>
 </html>
