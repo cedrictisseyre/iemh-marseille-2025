@@ -50,6 +50,9 @@ if (!isset($conn) || !($conn instanceof PDO)) {
 $login_error = '';
 // Gestion de l'inscription
 $register_error = '';
+// Gestion ajout professeur
+$prof_add_error = '';
+$prof_add_success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'register') {
     $username = isset($_POST['username']) ? trim($_POST['username']) : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
@@ -135,6 +138,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     session_destroy();
     header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
     exit;
+}
+
+// Ajouter un professeur (formulaire dans onglet Professeurs)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_prof') {
+    $p_prenom = isset($_POST['prof_prenom']) ? trim($_POST['prof_prenom']) : '';
+    $p_nom = isset($_POST['prof_nom']) ? trim($_POST['prof_nom']) : '';
+    $p_matiere = isset($_POST['prof_matiere']) ? trim($_POST['prof_matiere']) : '';
+    if ($p_prenom === '' || $p_nom === '' || $p_matiere === '') {
+        $prof_add_error = 'Tous les champs sont requis.';
+    } elseif ($db_error) {
+        $prof_add_error = 'Impossible d\'accéder à la base de données.';
+    } else {
+        try {
+            // transactionnel : créer matière si besoin, professeur, puis lien
+            $conn->beginTransaction();
+            // trouver ou créer la matière
+            $stmt = $conn->prepare('SELECT id FROM matieres WHERE nom = :n LIMIT 1');
+            $stmt->execute([':n' => $p_matiere]);
+            $m = $stmt->fetch();
+            if ($m) {
+                $matiere_id = $m['id'];
+            } else {
+                $insm = $conn->prepare('INSERT INTO matieres (nom) VALUES (:n)');
+                $insm->execute([':n' => $p_matiere]);
+                $matiere_id = $conn->lastInsertId();
+            }
+
+            // insérer professeur
+            $insp = $conn->prepare('INSERT INTO professeurs (prenom, nom) VALUES (:prenom, :nom)');
+            $insp->execute([':prenom' => $p_prenom, ':nom' => $p_nom]);
+            $prof_id = $conn->lastInsertId();
+
+            // lier professeur <-> matiere
+            $link = $conn->prepare('INSERT INTO professeurs_matieres (professeur_id, matiere_id) VALUES (:pid, :mid)');
+            $link->execute([':pid' => $prof_id, ':mid' => $matiere_id]);
+
+            $conn->commit();
+            $prof_add_success = 'Professeur ajouté avec succès.';
+
+            // rafraîchir la liste des profs
+            $profs = $conn->query("SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR ', ') AS matieres
+                FROM professeurs p
+                LEFT JOIN professeurs_matieres pm ON p.id = pm.professeur_id
+                LEFT JOIN matieres m ON pm.matiere_id = m.id
+                GROUP BY p.id, p.prenom, p.nom
+                ORDER BY p.nom")->fetchAll();
+        } catch (PDOException $e) {
+            if ($conn->inTransaction()) $conn->rollBack();
+            error_log('Erreur add_prof: ' . $e->getMessage());
+            $prof_add_error = 'Erreur lors de l\'ajout du professeur.';
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -284,6 +339,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 </table>
             </div>
             <div class="tab-pane fade" id="profs" role="tabpanel" aria-labelledby="profs-tab">
+                <?php if (!empty($prof_add_error)): ?><div class="alert alert-danger"><?= htmlspecialchars($prof_add_error) ?></div><?php endif; ?>
+                <?php if (!empty($prof_add_success)): ?><div class="alert alert-success"><?= htmlspecialchars($prof_add_success) ?></div><?php endif; ?>
+
+                <form method="post" class="row g-2 mb-3">
+                    <input type="hidden" name="action" value="add_prof">
+                    <div class="col-md-3">
+                        <input type="text" name="prof_prenom" class="form-control" placeholder="Prénom" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="prof_nom" class="form-control" placeholder="Nom" required>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="prof_matiere" class="form-control" placeholder="Matière (ex: Math)" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Ajouter</button>
+                    </div>
+                </form>
+
                 <ul>
                 <?php foreach ($profs as $prof): ?>
                     <li><?= htmlspecialchars($prof['prenom'] . ' ' . $prof['nom']) ?> (<?= htmlspecialchars($prof['matieres']) ?>)</li>
