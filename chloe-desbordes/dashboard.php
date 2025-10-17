@@ -221,19 +221,6 @@ $stmt->bindValue(':offset', ($page - 1) * $pageSize, PDO::PARAM_INT);
 $stmt->execute();
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Debug temporaire : afficher la requête et un aperçu des résultats si demandé
-if (isset($_GET['debug']) && $_GET['debug'] == '1' && $currentTab === 'courses') {
-    echo '<pre style="background:#fff3cd;padding:12px;border:1px solid #ffeeba;margin-bottom:12px;">';
-    echo "DEBUG SQL: " . htmlspecialchars($dataSql) . "\n\n";
-    echo "Rows fetched: " . count($rows) . "\n";
-    echo "Sample (max 3):\n";
-    $sample = array_slice($rows, 0, 3);
-    foreach ($sample as $r) {
-        echo htmlspecialchars(var_export($r, true)) . "\n";
-    }
-    echo '</pre>';
-}
-
 $countStmt = $pdo->prepare($countSql);
 foreach ($searchParams as $param => $value) {
     $countStmt->bindValue($param, $value, PDO::PARAM_STR);
