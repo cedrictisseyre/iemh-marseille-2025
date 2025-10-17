@@ -1,0 +1,3 @@
+#!/bin/sh
+# Run DB sync after merge
+php scripts/sync_db.php || true
