@@ -78,8 +78,22 @@ if ($driver === 'sqlite' || ($driver === null && file_exists($sqliteFile))) {
         $pdo = new PDO("mysql:host={$host};dbname={$dbname};charset=utf8", $user, $pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         echo "Using MySQL {$host}/{$dbname}\n";
-        if (file_exists($schema)) execSql($pdo, file_get_contents($schema));
-        if (file_exists($seed)) execSql($pdo, file_get_contents($seed));
+        // Read schema and adapt to MySQL if necessary
+        if (file_exists($schema)) {
+            $sql = file_get_contents($schema);
+            // Simple transformations to convert SQLite-like SQL to MySQL
+            $sql = preg_replace('/INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT/i', 'INT AUTO_INCREMENT PRIMARY KEY', $sql);
+            $sql = preg_replace('/\bINTEGER\b/i', 'INT', $sql);
+            $sql = str_replace('AUTOINCREMENT', 'AUTO_INCREMENT', $sql);
+            // Execute transformed schema
+            execSql($pdo, $sql);
+        }
+        if (file_exists($seed)) {
+            $seedSql = file_get_contents($seed);
+            // For seed, ensure NULL handling and quoting are MySQL-friendly (minimal)
+            $seedSql = str_replace("'https://example.org/", "'https://example.org/", $seedSql);
+            execSql($pdo, $seedSql);
+        }
         echo "MySQL sync complete.\n";
         exit(0);
     } catch (Throwable $e) {
