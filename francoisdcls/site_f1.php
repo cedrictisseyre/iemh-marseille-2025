@@ -110,7 +110,11 @@ render_nav($navLinks);
   </ul>
 
   <div id="stats-globales" style="margin-top:2em;"></div>
-  <p style="margin-top:1em;">Consultez <a href="database/example_pdo_usage.php">un exemple d'utilisation PDO</a> pour voir une connexion sûre à la base de données.</p>
+  <p style="margin-top:1em;">
+    Consultez
+    <a href="database/example_pdo_usage.php">un exemple d'utilisation PDO</a>
+    pour voir une connexion sûre à la base de données.
+  </p>
 </main>
 
 <script src="assets/stats.js" defer></script>
