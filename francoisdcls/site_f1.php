@@ -109,6 +109,7 @@ $f = get_flash();
 
 <script src="assets/stats.js" defer></script>
 <script src="assets/actions.js" defer></script>
+<script src="assets/recherche.js" defer></script>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
 </html>
