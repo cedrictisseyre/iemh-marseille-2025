@@ -395,8 +395,22 @@ $totalRows = (int)$countStmt->fetchColumn();
     </header>
 
     <div class="container">
-        <div class="mountain-hero">
-            <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M0 90 L40 40 L80 70 L120 20 L160 60 L200 0 L200 100 L0 100 Z" fill="#0b5cff" opacity="0.08"/></svg>
+                <div class="mountain-hero">
+                        <svg viewBox="0 0 300 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <defs>
+                                <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
+                                    <stop offset="0" stop-color="#e8f4ff"/>
+                                    <stop offset="1" stop-color="#ffffff"/>
+                                </linearGradient>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#g2)" />
+                            <!-- mountains -->
+                            <path d="M0 120 L60 40 L120 100 L180 30 L240 100 L300 20 L300 140 L0 140 Z" fill="#dfeeff" />
+                            <!-- snowy peaks -->
+                            <path d="M52 48 L68 64 L56 66 Z" fill="#ffffff"/>
+                            <path d="M112 78 L126 92 L116 94 Z" fill="#ffffff"/>
+                            <path d="M176 38 L192 56 L180 58 Z" fill="#ffffff"/>
+                        </svg>
             <div class="hero-text">
                 <h2>Tableau de bord UTMB</h2>
                 <p class="small">Vue synthétique des données — triées, recherchables et exportables</p>
