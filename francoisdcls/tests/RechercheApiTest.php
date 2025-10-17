@@ -5,8 +5,8 @@ final class RechercheApiTest extends TestCase
 {
     public function testRechercheEndpointReturnsJson()
     {
-        // Start server in background is handled by other integration tests bootstrap
-        $url = 'http://127.0.0.1:8000/francoisdcls/services/recherche_pilotes.php?q=Vettel';
+    // Server docroot is francoisdcls/, so endpoint is under /services
+    $url = 'http://127.0.0.1:8000/services/recherche_pilotes.php?q=Vettel';
         $opts = ['http' => ['timeout' => 2]];
         $context = stream_context_create($opts);
         $body = @file_get_contents($url, false, $context);
