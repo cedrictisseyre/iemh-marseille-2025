@@ -1,12 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Utility to escape text for insertion
-    function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]; }); }
+    function esc(s)
+    {
+        return String(s).replace(/[&<>"']/g, function (c) {
+               return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]; }); }
 
     // Generic search handler for inputs with optional result container
-    function attachSearch(inputId, outputId, opts = {}) {
+    function attachSearch(inputId, outputId, opts = {})
+    {
         const input = document.getElementById(inputId);
         const output = document.getElementById(outputId);
-        if (!input || !output) return;
+        if (!input || !output) {
+            return;
+        }
 
         let timer = null;
         let activeIndex = -1;
@@ -23,12 +29,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Build query params
                 const params = new URLSearchParams();
                 params.set('q', q);
-                if (opts.type) params.set('type', opts.type);
-                if (opts.annee) params.set('annee', opts.annee);
+                if (opts.type) {
+                    params.set('type', opts.type);
+                }
+                if (opts.annee) {
+                    params.set('annee', opts.annee);
+                }
                 // Use secureFetch which injects CSRF header when available
                 secureFetch('services/recherche_pilotes.php?' + params.toString())
                     .then(r => {
-                        if (!r.ok) throw new Error('Network response not ok');
+                        if (!r.ok) {
+                            throw new Error('Network response not ok');
+                        }
                         return r.json();
                     })
                     .then(data => {
@@ -48,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             item.className = 'suggestion-item';
                             item.tabIndex = -1;
                             item.dataset.index = idx;
-                            item.dataset.id = p.pilote_id ?? p.ecurie_id ?? '';
-                            const label = p.type === 'ecurie' ? (p.ecurie_nom + ' (' + (p.ecurie_pays ?? '') + ')') : (p.prenom + ' ' + p.nom);
+                            item.dataset.id = p.pilote_id ?  ? p.ecurie_id ?  ? '';
+                            const label = p.type === 'ecurie' ? (p.ecurie_nom + ' (' + (p.ecurie_pays ?  ? '') + ')') : (p.prenom + ' ' + p.nom);
                             item.textContent = label;
                             item.addEventListener('click', function () {
                                 if (p.type === 'ecurie') {
@@ -79,18 +91,19 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             }
                         });
-                        function updateActive() {
-                            items.forEach((it, i) => {
-                                if (i === activeIndex) {
-                                    it.classList.add('active');
-                                    it.tabIndex = 0;
-                                    it.focus();
-                                } else {
-                                    it.classList.remove('active');
-                                    it.tabIndex = -1;
-                                }
-                            });
+                function updateActive()
+                {
+                    items.forEach((it, i) => {
+                        if (i === activeIndex) {
+                            it.classList.add('active');
+                            it.tabIndex = 0;
+                            it.focus();
+                        } else {
+                            it.classList.remove('active');
+                            it.tabIndex = -1;
                         }
+                    });
+                }
                     })
                     .catch(err => {
                         output.innerHTML = '<div>Erreur lors de la recherche.</div>';

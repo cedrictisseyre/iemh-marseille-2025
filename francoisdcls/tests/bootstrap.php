@@ -1,4 +1,5 @@
 <?php
+
 // Bootstrap for PHPUnit tests: create a temporary SQLite database for isolation.
 $dbFile = __DIR__ . '/../var/test_db.sqlite';
 @mkdir(dirname($dbFile), 0777, true);
@@ -26,23 +27,43 @@ global $pdo;
 // Start PHP built-in server for integration tests if not already running
 $host = '127.0.0.1';
 $port = 8000;
-$pidFile = __DIR__ . '/../var/test_server.pid';
+$varDir = __DIR__ . '/../var';
+$pidFile = $varDir . '/test_server.pid';
+$logFile = $varDir . '/test_server.log';
+@mkdir($varDir, 0777, true);
 if (!file_exists($pidFile)) {
     $docroot = realpath(__DIR__ . '/..');
-    $cmd = sprintf("php -S %s:%d -t %s > /dev/null 2>&1 & echo $!", $host, $port, $docroot);
+    // start server logging to var/test_server.log so CI can inspect it
+    $cmd = sprintf("php -S %s:%d -t %s > %s 2>&1 & echo $!", $host, $port, $docroot, $logFile);
     $output = [];
     exec($cmd, $output);
     if (count($output)) {
         $pid = (int)$output[0];
         file_put_contents($pidFile, $pid);
-        // give server a moment to start
-        usleep(200000);
+        // wait for server to accept connections (short timeout)
+        $maxWait = 5; // seconds
+        $started = false;
+        for ($i = 0; $i < $maxWait * 10; $i++) {
+            // try connecting
+            $fp = @fsockopen($host, $port, $errno, $errstr, 0.1);
+            if ($fp) {
+                fclose($fp);
+                $started = true;
+                break;
+            }
+            usleep(100000);
+        }
+        if (! $started) {
+            // leave logs for debugging but continue; tests may fail if server not started
+        }
     }
 }
 
 // Register shutdown to stop the server when PHP process ends
 register_shutdown_function(function () use ($pidFile) {
-    if (!file_exists($pidFile)) return;
+    if (!file_exists($pidFile)) {
+        return;
+    }
     $pid = (int)@file_get_contents($pidFile);
     if ($pid > 0) {
         // try to kill the process
@@ -50,4 +71,3 @@ register_shutdown_function(function () use ($pidFile) {
         @unlink($pidFile);
     }
 });
-

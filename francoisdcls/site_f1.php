@@ -8,8 +8,8 @@ $f = get_flash();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <?php
-    $meta_desc = 'Base de données Formule 1 — pilotes, écuries, participations et statistiques ('
-      . 'projet IEMH Marseille 2025).';
+    $meta_desc = 'Base de données Formule 1 — pilotes, écuries et participations.' .
+      ' Projet IEMH Marseille 2025.';
     ?>
   <meta name="description" content="<?= htmlspecialchars($meta_desc) ?>">
   <title>Base de données Formule 1</title>
@@ -45,28 +45,54 @@ $f = get_flash();
         $flash_type = htmlspecialchars($f['type']);
         $flash_msg = htmlspecialchars($f['message']);
         ?>
-    <div
-      class="flash flash-<?= $flash_type ?>"
-      style="padding:0.6em;border-radius:6px;margin-bottom:1em;background:#efe;color:#030;">
+        <?php
+        $flash_classes = 'flash flash-' . $flash_type;
+        $flash_style = 'padding:0.6em;border-radius:6px;margin-bottom:1em;';
+        $flash_style .= 'background:#efe;color:#030;';
+        ?>
+  <div class="<?= $flash_classes ?>" style="<?= $flash_style ?>">
         <?= $flash_msg ?>
-    </div>
+  </div>
   <?php endif; ?>
 
   <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
 
   <section aria-labelledby="search-label" style="margin-top:1em;">
     <h2 id="search-label">Recherche rapide de pilote</h2>
-    <form id="form-recherche-home" autocomplete="off" role="search">
-      <label for="input-recherche-home" class="visually-hidden">Rechercher un pilote par nom ou prénom</label>
-      <input type="search" id="input-recherche-home" placeholder="Rechercher un pilote..." aria-autocomplete="list" aria-controls="suggestions-list" />
+    <form
+      id="form-recherche-home"
+      autocomplete="off"
+      role="search"
+    >
+      <label
+        for="input-recherche-home"
+        class="visually-hidden"
+      >Rechercher un pilote par nom ou prénom</label>
+
+      <input
+        type="search"
+        id="input-recherche-home"
+        placeholder="Rechercher un pilote..."
+        aria-autocomplete="list"
+        aria-controls="suggestions-list"
+      />
+
       <label for="select-recherche-home-type" class="visually-hidden">Type</label>
       <select id="select-recherche-home-type" aria-label="Type de recherche">
         <option value="both">Pilote et écurie</option>
         <option value="pilote">Pilote</option>
         <option value="ecurie">Écurie</option>
       </select>
+
       <label for="input-recherche-home-annee" class="visually-hidden">Année</label>
-      <input type="number" id="input-recherche-home-annee" placeholder="Année (optionnel)" min="1900" max="2100" />
+      <input
+        type="number"
+        id="input-recherche-home-annee"
+        placeholder="Année (optionnel)"
+        min="1900"
+        max="2100"
+      />
+
       <div id="suggestions-list" role="listbox" aria-live="polite"></div>
     </form>
   </section>

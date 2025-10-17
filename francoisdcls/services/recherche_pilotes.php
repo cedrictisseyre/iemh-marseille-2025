@@ -16,7 +16,10 @@ $results = [];
 
 // Search pilots
 if ($type === 'pilote' || $type === 'both') {
-    $sql = "SELECT pilote_id, nom, prenom, 'pilote' AS _type FROM pilotes WHERE nom LIKE ? OR prenom LIKE ? ORDER BY nom, prenom LIMIT 20";
+    // Keep SQL lines short to satisfy PHPCS line-length rules
+    $sql = "SELECT pilote_id, nom, prenom, 'pilote' AS _type "
+         . "FROM pilotes WHERE nom LIKE ? OR prenom LIKE ? "
+         . "ORDER BY nom, prenom LIMIT 20";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(["%$q%", "%$q%"]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -28,7 +31,11 @@ if ($type === 'pilote' || $type === 'both') {
 
 // Search teams (ecuries)
 if ($type === 'ecurie' || $type === 'both') {
-    $sql = "SELECT ecurie_id, nom AS ecurie_nom, pays AS ecurie_pays, 'ecurie' AS _type FROM ecuries WHERE nom LIKE ? ORDER BY nom LIMIT 20";
+    // schema.sql defines the column as `nom_ecuries` and `siege`
+    // Build a shorter SQL string to avoid very long lines (PHPCS warning)
+    $sql = "SELECT ecurie_id, nom_ecuries AS ecurie_nom, "
+        . "siege AS ecurie_siege, 'ecurie' AS _type "
+        . "FROM ecuries WHERE nom_ecuries LIKE ? ORDER BY nom_ecuries LIMIT 20";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(["%$q%"]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -57,7 +64,9 @@ if ($annee !== null && ($type === 'pilote' || $type === 'both')) {
         $results = $filtered;
     } else {
         // No participations this year -> empty
-        $results = array_filter($results, function ($r) { return $r['type'] !== 'pilote'; });
+        $results = array_filter($results, function ($r) {
+            return $r['type'] !== 'pilote';
+        });
     }
 }
 
