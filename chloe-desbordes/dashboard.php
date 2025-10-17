@@ -163,23 +163,26 @@ function renderTable(array $rows, array $columns, string $tab): void {
                 $id = $row['id_coureur'];
                 $jpg = "assets/photos/{$id}.jpg";
                 $png = "assets/photos/{$id}.png";
+                $svg = "assets/photos/{$id}.svg";
                 $placeholder = 'https://via.placeholder.com/80?text=Photo';
                 if (file_exists(__DIR__ . '/' . $jpg)) {
                     $imgSrc = $jpg;
                 } elseif (file_exists(__DIR__ . '/' . $png)) {
                     $imgSrc = $png;
+                } elseif (file_exists(__DIR__ . '/' . $svg)) {
+                    $imgSrc = $svg;
                 } else {
                     $imgSrc = $placeholder;
                 }
-                $value = '<img src="' . htmlspecialchars($imgSrc) . '" alt="photo ' . htmlspecialchars($id) . '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;">';
+                $value = '<img src="' . $imgSrc . '" alt="photo ' . htmlspecialchars($id) . '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;">';
             }
-            $value = htmlspecialchars((string)$value);
-            // Si la valeur contient une balise img (pour __photo), éviter le double-escaping
+            // Si c'est la colonne photo on n'escape pas le HTML de l'<img>, sinon on échappe
             if ($col['key'] === '__photo') {
-                echo '<td>' . $value . '</td>';
+                $cellHtml = $value; // already contains an <img> or placeholder URL
             } else {
-                echo '<td>' . $value . '</td>';
+                $cellHtml = htmlspecialchars((string)$value);
             }
+            echo '<td>' . $cellHtml . '</td>';
         }
         echo '</tr>';
     }
