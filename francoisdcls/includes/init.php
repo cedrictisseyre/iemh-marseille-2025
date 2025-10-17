@@ -5,6 +5,10 @@
 
 function init_app(): void
 {
+    // Start output buffering early to avoid "headers already sent" issues
+    if (!ini_get('output_buffering')) {
+        ob_start();
+    }
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
