@@ -1,6 +1,9 @@
 # Ignore cached photos and temporary files
 francoisdcls/assets/photos_cache/
 
+# Test server logs and runtime var files
+francoisdcls/var/
+
 # Composer vendor (keep if you want vendor in repo; usually excluded)
 vendor/
 
