@@ -31,9 +31,10 @@ $tabsConfig = [
         'label'      => 'Courses',
         'title'      => 'Liste des courses',
         'link'       => 'pages/liste_courses.php',
-        'base_sql'   => 'SELECT id_course, nom, distance_km, denivele_m, date_course, lieu FROM courses',
+        // la table liste_courses.php utilise la colonne 'nom_course' -> on alias vers 'nom' pour garder l'UI cohérente
+        'base_sql'   => 'SELECT id_course, nom_course AS nom, distance_km, denivele_m, date_course, lieu FROM courses',
         'count_sql'  => 'SELECT COUNT(*) FROM courses',
-        'searchable' => ['nom', 'lieu'],
+        'searchable' => ['nom_course', 'lieu'],
         'order'      => 'ORDER BY date_course DESC',
         'columns'    => [
             ['label' => 'ID',             'key' => 'id_course', 'link' => false],
@@ -64,13 +65,15 @@ $tabsConfig = [
         'label'      => 'Points ITRA',
         'title'      => 'Liste des points ITRA',
         'link'       => 'pages/liste_points.php',
-        'base_sql'   => 'SELECT id_point, id_coureur, points FROM points_ITRA',
+        // liste_points.php sélectionne aussi nom/prenom et utilise 'annee' -> on l'inclut ici
+        'base_sql'   => 'SELECT p.id_point, p.id_coureur, p.points, p.annee FROM points_ITRA p',
         'count_sql'  => 'SELECT COUNT(*) FROM points_ITRA',
-        'searchable' => ['id_coureur', 'points'],
-        'order'      => 'ORDER BY points DESC',
+        'searchable' => ['p.id_coureur', 'p.points', 'p.annee'],
+        'order'      => 'ORDER BY p.points DESC',
         'columns'    => [
             ['label' => 'ID',         'key' => 'id_point',   'link' => false],
             ['label' => 'ID Coureur', 'key' => 'id_coureur', 'link' => true],
+            ['label' => 'Année',      'key' => 'annee',      'link' => false],
             ['label' => 'Points',     'key' => 'points',     'link' => false],
         ],
     ],
