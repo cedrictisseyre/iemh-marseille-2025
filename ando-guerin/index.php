@@ -231,16 +231,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <?php endif; ?>
                 <div class="row mt-4">
                     <div class="col-12 text-center">
-                        <?php if (file_exists(__DIR__ . '/assets/hero.jpg')): ?>
-                            <img src="assets/hero.jpg" alt="Bannière Mastère IHME" class="img-fluid rounded" style="max-height:420px; object-fit:cover;">
-                        <?php else: ?>
-                            <div class="alert alert-secondary">
-                                Image introuvable : place ton image dans <code>ando-guerin/assets/hero.jpg</code> pour l'afficher ici.<br>
-                                Exemple (depuis la machine hôte) :
-                                <pre class="mt-2">cp /chemin/vers/ton/image.jpg /workspace/ando-guerin/assets/hero.jpg</pre>
-                                Ou glisse-colle l'image dans le dossier <code>ando-guerin/assets</code> via l'explorateur de fichiers.
-                            </div>
-                        <?php endif; ?>
+                        <?php
+                            // Cherche automatiquement hero.(jpg|jpeg|png|webp|gif)
+                            $hero = null;
+                            $exts = ['jpg','jpeg','png','webp','gif'];
+                            foreach ($exts as $e) {
+                                $candidate = __DIR__ . '/assets/hero.' . $e;
+                                if (file_exists($candidate)) { $hero = 'assets/hero.' . $e; break; }
+                            }
+                        ?>
+                        <?php if ($hero): ?>
+                                <img src="<?= htmlspecialchars($hero) ?>" alt="Bannière Mastère IHME" class="img-fluid rounded" style="max-height:420px; object-fit:cover;">
+                            <?php else: ?>
+                                <div class="alert alert-secondary">
+                                    Image introuvable : place ton image dans <code>ando-guerin/assets/hero.png</code> (ou hero.jpg) pour l'afficher ici.<br>
+                                    Exemple (depuis la machine hôte) :
+                                    <pre class="mt-2">cp ~/Downloads/hero.png /workspace/ando-guerin/assets/hero.png</pre>
+                                    Ou glisse-colle l'image dans le dossier <code>ando-guerin/assets</code> via l'explorateur de fichiers.
+                                </div>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
