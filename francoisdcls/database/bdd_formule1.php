@@ -13,8 +13,11 @@ $password = getenv('FRANCOISDB_PASS') ?: 'INNnsk40374';
 // comportement précédent : utiliser SQLite si le fichier de test existe, sinon MySQL.
 $driver = getenv('FRANCOISDB_DRIVER') ?: null;
 
-// Respect existing $pdo (tests may provide a SQLite PDO via bootstrap)
-if (!isset($pdo) || !$pdo) {
+// Respect existing $pdo (tests may provide a SQLite PDO via bootstrap).
+// Some test bootstrap code may set $pdo in the global scope; prefer that.
+if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
+    $pdo = $GLOBALS['pdo'];
+} elseif (!isset($pdo) || !$pdo) {
     $sqliteFile = __DIR__ . '/../var/test_db.sqlite';
 
     // Helper to connect to sqlite
@@ -53,11 +56,32 @@ if (!isset($pdo) || !$pdo) {
         // Force mysql
         $pdo = $connectMysql();
     } else {
-        // Comportement par défaut : privilégier sqlite si le fichier existe
-        if (file_exists($sqliteFile)) {
+        // Comportement par défaut modifié : privilégier MySQL si possible,
+        // mais retomber sur SQLite si la connexion MySQL échoue et que
+        // le fichier de test existe.
+        $pdo = $connectMysql();
+        if ($pdo === null && file_exists($sqliteFile)) {
+            // MySQL non disponible, utiliser SQLite local si présent
             $pdo = $connectSqlite();
-        } else {
-            $pdo = $connectMysql();
         }
+    }
+}
+
+// Expose a get_pdo() helper for consumers that include this file directly.
+    if (!function_exists('get_pdo')) {
+    /**
+     * Return the shared PDO instance or null.
+     * @return \PDO|null
+     */
+    function get_pdo(): ?\PDO
+    {
+        if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof \PDO) {
+            return $GLOBALS['pdo'];
+        }
+        global $pdo;
+        if (isset($pdo) && $pdo instanceof \PDO) {
+            return $pdo;
+        }
+        return null;
     }
 }
