@@ -31,8 +31,8 @@ $tabsConfig = [
         'label'      => 'Courses',
         'title'      => 'Liste des courses',
         'link'       => 'pages/liste_courses.php',
-        // la table liste_courses.php utilise la colonne 'nom_course' -> on alias vers 'nom' pour garder l'UI cohérente
-        'base_sql'   => 'SELECT id_course, nom_course AS nom, distance_km, denivele_m, date_course, lieu FROM courses',
+    // alignement exact avec pages/liste_courses.php (SELECT * FROM courses) — on liste explicitement les colonnes
+    'base_sql'   => 'SELECT id_course, nom_course, distance_km, denivele_m, date_course, lieu FROM courses',
         'count_sql'  => 'SELECT COUNT(*) FROM courses',
         'searchable' => ['nom_course', 'lieu'],
         'order'      => 'ORDER BY date_course DESC',
@@ -65,8 +65,8 @@ $tabsConfig = [
         'label'      => 'Points ITRA',
         'title'      => 'Liste des points ITRA',
         'link'       => 'pages/liste_points.php',
-        // liste_points.php sélectionne aussi nom/prenom et utilise 'annee' -> on l'inclut ici
-        'base_sql'   => 'SELECT p.id_point, p.id_coureur, p.points, p.annee FROM points_ITRA p',
+    // Utiliser la même requête que pages/liste_points.php pour obtenir nom/prenom du coureur
+    'base_sql'   => 'SELECT p.*, c.nom, c.prenom FROM points_ITRA p JOIN coureurs_UTMB c ON p.id_coureur = c.id_coureur',
     'count_sql'  => 'SELECT COUNT(*) FROM points_ITRA p',
     // searchable doit utiliser les noms de colonnes (sans préfixe d'alias) pour fonctionner
     'searchable' => ['id_coureur', 'points', 'annee'],
@@ -76,6 +76,8 @@ $tabsConfig = [
             ['label' => 'ID Coureur', 'key' => 'id_coureur', 'link' => true],
             ['label' => 'Année',      'key' => 'annee',      'link' => false],
             ['label' => 'Points',     'key' => 'points',     'link' => false],
+            ['label' => 'Nom coureur','key' => 'nom',        'link' => false],
+            ['label' => 'Prénom',     'key' => 'prenom',     'link' => false],
         ],
     ],
 ];
@@ -119,18 +121,25 @@ function renderTable(array $rows, array $columns, string $tab): void {
         return;
     }
     // Colonnes dynamiques + colonnes reliées
+    // Si une configuration de colonnes est fournie, on l'utilise (labels + ordre). Sinon, on dérive depuis la première ligne.
     $dynamicColumns = [];
-    $firstRow = $rows[0];
-    foreach (array_keys($firstRow) as $colName) {
-        $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
+    if (!empty($columns)) {
+        foreach ($columns as $col) {
+            $dynamicColumns[] = ['label' => $col['label'], 'key' => $col['key'], 'link' => $col['link'] ?? false];
+        }
+    } else {
+        $firstRow = $rows[0];
+        foreach (array_keys($firstRow) as $colName) {
+            $dynamicColumns[] = ['label' => $colName, 'key' => $colName, 'link' => false];
+        }
     }
     // Ajout colonne liée pour courses : nombre de participations
     if ($tab === 'courses') {
         $dynamicColumns[] = ['label' => 'Nombre de participations', 'key' => '__participations', 'link' => false];
     }
-    // Ajout colonne liée pour points ITRA : nom du coureur
+    // Ajout colonne liée pour points ITRA : nom/prénom sont fournis par la jointure dans la requête
     if ($tab === 'points') {
-        $dynamicColumns[] = ['label' => 'Nom du coureur', 'key' => '__nom_coureur', 'link' => false];
+        // nous ne créons pas de colonne liée spéciale ici car 'nom' et 'prenom' sont retournés par la requête
     }
     echo '<table><thead><tr>';
     foreach ($dynamicColumns as $col) {
@@ -143,18 +152,11 @@ function renderTable(array $rows, array $columns, string $tab): void {
             $value = $row[$col['key']] ?? '';
             // Ajout des données reliées
             if ($col['key'] === '__participations' && isset($row['id_course'])) {
-                // Compter les participations pour cette course
+                // Compter les participations pour cette course (colonne liée)
                 $pdo2 = $GLOBALS['pdo'];
                 $stmt2 = $pdo2->prepare('SELECT COUNT(*) FROM participation WHERE id_course = ?');
                 $stmt2->execute([$row['id_course']]);
                 $value = $stmt2->fetchColumn();
-            }
-            if ($col['key'] === '__nom_coureur' && isset($row['id_coureur'])) {
-                $pdo2 = $GLOBALS['pdo'];
-                $stmt2 = $pdo2->prepare('SELECT nom, prenom FROM coureurs_UTMB WHERE id_coureur = ?');
-                $stmt2->execute([$row['id_coureur']]);
-                $c = $stmt2->fetch();
-                $value = $c ? ($c['nom'] . ' ' . $c['prenom']) : '';
             }
             $value = htmlspecialchars((string)$value);
             echo '<td>' . $value . '</td>';
