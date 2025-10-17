@@ -60,5 +60,4 @@ if (!isset($pdo) || !$pdo) {
             $pdo = $connectMysql();
         }
     }
-
 }
