@@ -17,9 +17,8 @@ $tabsConfig = [
         'base_sql'   => 'SELECT id_coureur, nom, prenom, nationalite, date_naissance, club FROM coureurs_UTMB',
         'count_sql'  => 'SELECT COUNT(*) FROM coureurs_UTMB',
         'searchable' => ['nom', 'prenom', 'nationalite', 'club'],
-        'order'      => 'ORDER BY nom ASC, prenom ASC',
+        'order'      => 'ORDER BY id_coureur ASC',
         'columns'    => [
-            ['label' => 'Photo',            'key' => '__photo',     'link' => false],
             ['label' => 'ID',               'key' => 'id_coureur', 'link' => false],
             ['label' => 'Nom',              'key' => 'nom',        'link' => true],
             ['label' => 'Prénom',           'key' => 'prenom',     'link' => false],
@@ -158,30 +157,7 @@ function renderTable(array $rows, array $columns, string $tab): void {
                 $stmt2->execute([$row['id_course']]);
                 $value = $stmt2->fetchColumn();
             }
-            // Rendu spécial pour photo
-            if ($col['key'] === '__photo' && isset($row['id_coureur'])) {
-                $id = $row['id_coureur'];
-                $jpg = "assets/photos/{$id}.jpg";
-                $png = "assets/photos/{$id}.png";
-                $svg = "assets/photos/{$id}.svg";
-                $placeholder = 'https://via.placeholder.com/80?text=Photo';
-                if (file_exists(__DIR__ . '/' . $jpg)) {
-                    $imgSrc = $jpg;
-                } elseif (file_exists(__DIR__ . '/' . $png)) {
-                    $imgSrc = $png;
-                } elseif (file_exists(__DIR__ . '/' . $svg)) {
-                    $imgSrc = $svg;
-                } else {
-                    $imgSrc = $placeholder;
-                }
-                $value = '<img src="' . $imgSrc . '" alt="photo ' . htmlspecialchars($id) . '" style="width:80px;height:80px;object-fit:cover;border-radius:6px;">';
-            }
-            // Si c'est la colonne photo on n'escape pas le HTML de l'<img>, sinon on échappe
-            if ($col['key'] === '__photo') {
-                $cellHtml = $value; // already contains an <img> or placeholder URL
-            } else {
-                $cellHtml = htmlspecialchars((string)$value);
-            }
+            $cellHtml = htmlspecialchars((string)$value);
             echo '<td>' . $cellHtml . '</td>';
         }
         echo '</tr>';
