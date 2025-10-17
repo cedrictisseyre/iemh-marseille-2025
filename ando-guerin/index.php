@@ -2,31 +2,46 @@
 // filepath: /workspace/ando-guerin/index.php
 require_once 'connexion.php';
 
-// Récupérer les jours et horaires pour l'emploi du temps
-$jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
-$horaires = $conn->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
+// Préparer des variables par défaut
+$jours = $horaires = $emploi = $profs = $eleves = [];
+$db_error = false;
 
-// Récupérer l'emploi du temps complet (jointure)
-$stmt = $conn->query('SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, " ", p.nom) AS professeur, s.nom AS salle
-    FROM emploi_temps et
-    JOIN matieres m ON et.matiere_id = m.id
-    LEFT JOIN professeurs p ON et.professeur_id = p.id
-    LEFT JOIN salles s ON et.salle_id = s.id');
-$emploi = [];
-foreach ($stmt as $row) {
-    $emploi[$row['jour_id']][$row['horaire_id']] = $row;
+// Si la connexion $conn n'existe pas, on affiche une erreur plus tard
+if (!isset($conn) || !($conn instanceof PDO)) {
+    $db_error = true;
+    error_log('Connexion PDO manquante ou invalide dans connexion.php');
+} else {
+    try {
+        // Récupérer les jours et horaires pour l'emploi du temps
+        $jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
+        $horaires = $conn->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
+
+        // Récupérer l'emploi du temps complet (jointure)
+        $stmt = $conn->query("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+            FROM emploi_temps et
+            JOIN matieres m ON et.matiere_id = m.id
+            LEFT JOIN professeurs p ON et.professeur_id = p.id
+            LEFT JOIN salles s ON et.salle_id = s.id");
+        $emploi = [];
+        foreach ($stmt as $row) {
+            $emploi[$row['jour_id']][$row['horaire_id']] = $row;
+        }
+
+        // Récupérer les professeurs et leurs matières
+        $profs = $conn->query("SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR ', ') AS matieres
+            FROM professeurs p
+            LEFT JOIN professeurs_matieres pm ON p.id = pm.professeur_id
+            LEFT JOIN matieres m ON pm.matiere_id = m.id
+            GROUP BY p.id, p.prenom, p.nom
+            ORDER BY p.nom")->fetchAll();
+
+        // Récupérer les élèves
+        $eleves = $conn->query('SELECT * FROM eleves ORDER BY nom, prenom')->fetchAll();
+    } catch (PDOException $e) {
+        error_log('Erreur BDD (index.php) : ' . $e->getMessage());
+        $db_error = true;
+    }
 }
-
-// Récupérer les professeurs et leurs matières
-$profs = $conn->query('SELECT p.id, p.prenom, p.nom, GROUP_CONCAT(m.nom SEPARATOR ", ") AS matieres
-    FROM professeurs p
-    LEFT JOIN professeurs_matieres pm ON p.id = pm.professeur_id
-    LEFT JOIN matieres m ON pm.matiere_id = m.id
-    GROUP BY p.id, p.prenom, p.nom
-    ORDER BY p.nom')->fetchAll();
-
-// Récupérer les élèves
-$eleves = $conn->query('SELECT * FROM eleves ORDER BY nom, prenom')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -153,6 +168,38 @@ $eleves = $conn->query('SELECT * FROM eleves ORDER BY nom, prenom')->fetchAll();
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+        // Synchronise les onglets Bootstrap avec le hash de l'URL
+        (function(){
+            const tabMap = {
+                '#accueil': 'accueil-tab',
+                '#edt': 'edt-tab',
+                '#profs': 'profs-tab',
+                '#eleves': 'eleves-tab'
+            };
+
+            function activateFromHash() {
+                const id = tabMap[location.hash];
+                if (!id) return;
+                const btn = document.getElementById(id);
+                if (btn) btn.click();
+            }
+
+            // On clique sur un onglet, met à jour le hash
+            Object.values(tabMap).forEach(tabId => {
+                const el = document.getElementById(tabId);
+                if (!el) return;
+                el.addEventListener('click', function(){
+                    const pair = Object.entries(tabMap).find(([k,v]) => v === tabId);
+                    if (pair) history.replaceState(null,'', pair[0]);
+                });
+            });
+
+            // activation initiale
+            if (location.hash) activateFromHash();
+            window.addEventListener('hashchange', activateFromHash);
+        })();
+        </script>
 </body>
 </html>

@@ -1,0 +1,2 @@
+# Ignore local DB credentials
+connexion.php
