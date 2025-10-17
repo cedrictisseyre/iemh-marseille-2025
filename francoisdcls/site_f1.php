@@ -12,6 +12,13 @@ $f = get_flash();
       ' Projet IEMH Marseille 2025.';
     ?>
   <meta name="description" content="<?= htmlspecialchars($meta_desc) ?>">
+  <link rel="canonical" href="https://example.org/francoisdcls/site_f1.php" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Base de données Formule 1" />
+  <meta property="og:description" content="<?= htmlspecialchars($meta_desc) ?>" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.org/francoisdcls/site_f1.php" />
+  <meta property="og:image" content="https://example.org/francoisdcls/assets/logo-f1.svg" />
   <title>Base de données Formule 1</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -22,6 +29,7 @@ $f = get_flash();
   <img
     src="assets/logo-f1.svg"
     alt="Logo F1"
+    loading="lazy"
     style="height:48px;vertical-align:middle;margin-right:1em;">
   <h1 style="display:inline-block;vertical-align:middle;">Base de données Formule 1</h1>
 </header>
@@ -56,6 +64,8 @@ $f = get_flash();
   <?php endif; ?>
 
   <p>Bienvenue sur le site de consultation des données F1 du projet IEMH Marseille 2025.</p>
+
+  <div id="evaluation-badge" style="float:right;margin-top:-2.5em;">Score: <span id="eval-score">—</span></div>
 
   <section aria-labelledby="search-label" style="margin-top:1em;">
     <h2 id="search-label">Recherche rapide de pilote</h2>
@@ -109,6 +119,8 @@ $f = get_flash();
 
 <script src="assets/stats.js" defer></script>
 <script src="assets/actions.js" defer></script>
+<script src="assets/recherche.js" defer></script>
+<script src="assets/eval.js" defer></script>
 <footer>Projet IEMH Marseille 2025</footer>
 </body>
 </html>

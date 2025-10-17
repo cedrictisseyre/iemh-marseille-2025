@@ -126,6 +126,12 @@ th { background: #eee; }
     border-color: #900;
 }
 
+/* Suggestions/autocomplete */
+.suggestions { border: 1px solid #ddd; background:#fff; border-radius:6px; padding:0.25rem; max-height:320px; overflow:auto; }
+.suggestion-item { padding:0.5rem; cursor:pointer; }
+.suggestion-item:hover, .suggestion-item.active { background:#f0f0f0; outline: none; }
+.suggestion-item:focus { outline: 2px solid #005a9c; }
+
 /* Skip link: hidden off-screen but visible on focus for keyboard users */
 .skip-link {
     position: absolute;

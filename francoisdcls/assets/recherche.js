@@ -29,14 +29,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Build query params
                 const params = new URLSearchParams();
                 params.set('q', q);
-                if (opts.type) {
+                // if selectors are provided, read their current values
+                if (opts.typeSelector) {
+                    const s = document.getElementById(opts.typeSelector);
+                    if (s) {
+                        params.set('type', s.value);
+                    }
+                } else if (opts.type) {
                     params.set('type', opts.type);
                 }
-                if (opts.annee) {
+                if (opts.anneeSelector) {
+                    const a = document.getElementById(opts.anneeSelector);
+                    if (a && a.value) {
+                        params.set('annee', a.value);
+                    }
+                } else if (opts.annee) {
                     params.set('annee', opts.annee);
                 }
                 // Use secureFetch which injects CSRF header when available
-                secureFetch('services/recherche_pilotes.php?' + params.toString())
+                const fetcher = (typeof secureFetch === 'function') ? secureFetch : (u => fetch(u));
+                fetcher('services/recherche_pilotes.php?' + params.toString())
                     .then(r => {
                         if (!r.ok) {
                             throw new Error('Network response not ok');
@@ -60,9 +72,20 @@ document.addEventListener('DOMContentLoaded', function () {
                             item.className = 'suggestion-item';
                             item.tabIndex = -1;
                             item.dataset.index = idx;
-                            item.dataset.id = p.pilote_id ?  ? p.ecurie_id ?  ? '';
-                            const label = p.type === 'ecurie' ? (p.ecurie_nom + ' (' + (p.ecurie_pays ?  ? '') + ')') : (p.prenom + ' ' + p.nom);
-                            item.textContent = label;
+                            // store id depending on type
+                            if (p.type === 'ecurie') {
+                                item.dataset.ecurieId = p.ecurie_id || '';
+                            } else {
+                                item.dataset.piloteId = p.pilote_id || '';
+                            }
+                            // build accessible label
+                            let label = '';
+                            if (p.type === 'ecurie') {
+                                label = (p.ecurie_nom || '') + (p.ecurie_siege ? ' (' + p.ecurie_siege + ')' : '');
+                            } else {
+                                label = ((p.prenom || '') + ' ' + (p.nom || '')).trim();
+                            }
+                            item.textContent = label || 'Entrée';
                             item.addEventListener('click', function () {
                                 if (p.type === 'ecurie') {
                                     window.location.href = 'pages/fiche_ecurie.php?id=' + encodeURIComponent(p.ecurie_id);

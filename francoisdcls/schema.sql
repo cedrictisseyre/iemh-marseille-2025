@@ -22,3 +22,11 @@ CREATE TABLE IF NOT EXISTS participations (
   FOREIGN KEY(pilote_id) REFERENCES pilotes(pilote_id),
   FOREIGN KEY(ecurie_id) REFERENCES ecuries(ecurie_id)
 );
+
+-- Table des championnats (titres remportés par les pilotes)
+CREATE TABLE IF NOT EXISTS championnats (
+  championnat_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  pilote_id INTEGER NOT NULL,
+  annee INTEGER NOT NULL,
+  FOREIGN KEY(pilote_id) REFERENCES pilotes(pilote_id)
+);
