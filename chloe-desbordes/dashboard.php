@@ -67,9 +67,10 @@ $tabsConfig = [
         'link'       => 'pages/liste_points.php',
         // liste_points.php sélectionne aussi nom/prenom et utilise 'annee' -> on l'inclut ici
         'base_sql'   => 'SELECT p.id_point, p.id_coureur, p.points, p.annee FROM points_ITRA p',
-        'count_sql'  => 'SELECT COUNT(*) FROM points_ITRA',
-        'searchable' => ['p.id_coureur', 'p.points', 'p.annee'],
-        'order'      => 'ORDER BY p.points DESC',
+    'count_sql'  => 'SELECT COUNT(*) FROM points_ITRA p',
+    // searchable doit utiliser les noms de colonnes (sans préfixe d'alias) pour fonctionner
+    'searchable' => ['id_coureur', 'points', 'annee'],
+    'order'      => 'ORDER BY points DESC',
         'columns'    => [
             ['label' => 'ID',         'key' => 'id_point',   'link' => false],
             ['label' => 'ID Coureur', 'key' => 'id_coureur', 'link' => true],
