@@ -230,53 +230,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </div>
                 <?php endif; ?>
                 <div class="row mt-4">
-                    <div class="col-md-4">
-                        <h5>Jours</h5>
-                        <ul class="list-group mb-3">
-                            <?php foreach ($jours as $jour): ?>
-                                <li class="list-group-item"><?= htmlspecialchars($jour['nom']) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <h5>Horaires</h5>
-                        <ul class="list-group mb-3">
-                            <?php foreach ($horaires as $horaire): ?>
-                                <li class="list-group-item">
-                                    <?= htmlspecialchars(substr($horaire['debut'],0,5)) ?> - <?= htmlspecialchars(substr($horaire['fin'],0,5)) ?>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>Matières</h5>
-                        <ul class="list-group mb-3">
-                            <?php $matieres = $conn->query('SELECT * FROM matieres ORDER BY nom')->fetchAll();
-                            foreach ($matieres as $matiere): ?>
-                                <li class="list-group-item"><?= htmlspecialchars($matiere['nom']) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <h5>Salles</h5>
-                        <ul class="list-group mb-3">
-                            <?php $salles = $conn->query('SELECT * FROM salles ORDER BY nom')->fetchAll();
-                            foreach ($salles as $salle): ?>
-                                <li class="list-group-item"><?= htmlspecialchars($salle['nom']) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>Professeurs</h5>
-                        <ul class="list-group mb-3">
-                            <?php foreach ($profs as $prof): ?>
-                                <li class="list-group-item">
-                                    <?= htmlspecialchars($prof['prenom'] . ' ' . $prof['nom']) ?> (<?= htmlspecialchars($prof['matieres']) ?>)
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <h5>Élèves</h5>
-                        <ul class="list-group mb-3">
-                            <?php foreach ($eleves as $eleve): ?>
-                                <li class="list-group-item"><?= htmlspecialchars($eleve['prenom'] . ' ' . $eleve['nom']) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
+                    <div class="col-12 text-center">
+                        <?php if (file_exists(__DIR__ . '/assets/hero.jpg')): ?>
+                            <img src="assets/hero.jpg" alt="Bannière Mastère IHME" class="img-fluid rounded" style="max-height:420px; object-fit:cover;">
+                        <?php else: ?>
+                            <div class="alert alert-secondary">
+                                Image introuvable : place ton image dans <code>ando-guerin/assets/hero.jpg</code> pour l'afficher ici.<br>
+                                Exemple (depuis la machine hôte) :
+                                <pre class="mt-2">cp /chemin/vers/ton/image.jpg /workspace/ando-guerin/assets/hero.jpg</pre>
+                                Ou glisse-colle l'image dans le dossier <code>ando-guerin/assets</code> via l'explorateur de fichiers.
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
