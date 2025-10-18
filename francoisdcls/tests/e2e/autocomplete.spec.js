@@ -14,15 +14,25 @@ test.describe('Autocomplete', () => {
     const suggestions = page.locator('#suggestions-list .suggest-item');
     await expect(suggestions.first()).toBeVisible({ timeout: 3000 });
 
-    // press ArrowDown to select first suggestion and then Enter
-    await page.keyboard.press('ArrowDown');
-    // The active item should have class active
-    const active = page.locator('#suggestions-list .suggest-item.active');
-    await expect(active).toHaveCount(1);
+    // Click the first suggestion and wait for navigation; this verifies the real redirect
+    const first = suggestions.first();
+    const meta = await first.evaluate(node => node.dataset);
+    // Click and wait for navigation
+    await Promise.all([
+      page.waitForNavigation({ timeout: 5000 }),
+      first.click(),
+    ]);
 
-    // Ensure pressing Enter triggers navigation (we can't follow navigation to external pages in CI reliably)
-    // Instead, check that the dataset contains piloteId or ecurieId
-    const data = await active.evaluate(node => node.dataset);
-    expect(data.type === 'pilote' || data.type === 'ecurie').toBeTruthy();
+    const url = page.url();
+    if (meta.type === 'pilote') {
+      expect(url).toContain('/pages/fiche_pilote.php');
+      expect(url).toMatch(/\bid=\d+/);
+    } else if (meta.type === 'ecurie') {
+      expect(url).toContain('/pages/fiche_ecurie.php');
+      expect(url).toMatch(/\bid=\d+/);
+    } else {
+      // Fallback: at least ensure we navigated away from the homepage
+      expect(url).not.toContain('site_f1.php');
+    }
   });
 });
