@@ -1,6 +1,10 @@
 <?php
 
 // Bootstrap for PHPUnit tests: create a temporary SQLite database for isolation.
+// Mark that we are running under tests so includes can avoid sending headers / starting sessions
+if (!defined('IN_TEST')) {
+    define('IN_TEST', true);
+}
 $dbFile = __DIR__ . '/../var/test_db.sqlite';
 @mkdir(dirname($dbFile), 0777, true);
 if (file_exists($dbFile)) {
@@ -8,6 +12,9 @@ if (file_exists($dbFile)) {
 }
 $pdo = new PDO('sqlite:' . $dbFile);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+// expose $pdo globally so includes that inspect $GLOBALS['pdo'] can use it
+$GLOBALS['pdo'] = $pdo;
 
 // Import schema and seed if present
 $schema = __DIR__ . '/../schema.sql';

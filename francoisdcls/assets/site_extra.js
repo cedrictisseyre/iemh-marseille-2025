@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     // fallback: request evaluation endpoint if present
     if (window.fetch) {
-      fetch('/francoisdcls/pages/evaluation.php').then(function (r) {
+      var base = (window.BASE_PATH || '');
+      fetch(base + '/pages/evaluation.php').then(function (r) {
         return r.text();
       }).then(function (t) {
         // try to parse a numeric score in the response

@@ -3,15 +3,16 @@
 // Navigation tabs for the F1 site. Adds an 'active' class based on the current URL.
 $current = $_SERVER['REQUEST_URI'] ?? '';
 
+// Build links relative to the configured base path to make the site portable
 $links = [
-  '/francoisdcls/site_f1.php' => 'Accueil',
-  '/francoisdcls/pages/liste_pilotes.php' => 'Pilotes',
-  '/francoisdcls/pages/liste_ecuries.php' => 'Écuries',
-  '/francoisdcls/pages/statistiques.php' => 'Statistiques',
-  '/francoisdcls/pages/recherche.php' => 'Recherche',
-  '/francoisdcls/pages/comparer_pilotes.php' => 'Comparer',
-  '/francoisdcls/pages/palmares_annee.php' => 'Palmarès',
-  '/francoisdcls/pages/pantheon_pilotes.php' => 'Panthéon',
+  base_path('site_f1.php') => 'Accueil',
+  base_path('pages/liste_pilotes.php') => 'Pilotes',
+  base_path('pages/liste_ecuries.php') => 'Écuries',
+  base_path('pages/statistiques.php') => 'Statistiques',
+  base_path('pages/recherche.php') => 'Recherche',
+  base_path('pages/comparer_pilotes.php') => 'Comparer',
+  base_path('pages/palmares_annee.php') => 'Palmarès',
+  base_path('pages/pantheon_pilotes.php') => 'Panthéon',
   // participation added via add-pilote / add-ecurie forms; no standalone page
 ];
 

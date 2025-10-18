@@ -1,9 +1,16 @@
 <?php
 
 header('Content-Type: application/json');
-require_once __DIR__ . '/../database/bdd_formule1.php';
-
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
+require_once __DIR__ . '/../database/bdd_formule1.php';
+$pdoLocal = get_pdo();
+if (!$pdoLocal) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Database unavailable']);
+    exit;
+}
+
+// use $pdoLocal below for DB operations
 $type = isset($_GET['type']) ? $_GET['type'] : 'both'; // 'pilote' | 'ecurie' | 'both'
 $annee = isset($_GET['annee']) && is_numeric($_GET['annee']) ? (int)$_GET['annee'] : null;
 
@@ -20,7 +27,7 @@ if ($type === 'pilote' || $type === 'both') {
     $sql = "SELECT pilote_id, nom, prenom, 'pilote' AS _type "
          . "FROM pilotes WHERE nom LIKE ? OR prenom LIKE ? "
          . "ORDER BY nom, prenom LIMIT 20";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $pdoLocal->prepare($sql);
     $stmt->execute(["%$q%", "%$q%"]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $r) {
@@ -36,7 +43,7 @@ if ($type === 'ecurie' || $type === 'both') {
     $sql = "SELECT ecurie_id, nom_ecuries AS ecurie_nom, "
         . "siege AS ecurie_siege, 'ecurie' AS _type "
         . "FROM ecuries WHERE nom_ecuries LIKE ? ORDER BY nom_ecuries LIMIT 20";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $pdoLocal->prepare($sql);
     $stmt->execute(["%$q%"]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $r) {
@@ -50,7 +57,7 @@ if ($annee !== null && ($type === 'pilote' || $type === 'both')) {
     // Keep only pilots who have a participation in that year
     $filtered = [];
     $sqlp = "SELECT pilote_id FROM participations WHERE annee = ?";
-    $stmtp = $pdo->prepare($sqlp);
+    $stmtp = $pdoLocal->prepare($sqlp);
     $stmtp->execute([$annee]);
     $pids = $stmtp->fetchAll(PDO::FETCH_COLUMN, 0);
     if ($pids) {

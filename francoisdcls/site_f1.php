@@ -13,13 +13,13 @@ $f = get_flash();
       ' Projet IEMH Marseille 2025.';
     ?>
   <meta name="description" content="<?= htmlspecialchars($meta_desc) ?>">
-  <link rel="canonical" href="https://example.org/francoisdcls/site_f1.php" />
+  <link rel="canonical" href="https://example.org<?= htmlspecialchars(base_path('site_f1.php')) ?>" />
   <!-- Open Graph -->
   <meta property="og:title" content="Base de données Formule 1" />
   <meta property="og:description" content="<?= htmlspecialchars($meta_desc) ?>" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://example.org/francoisdcls/site_f1.php" />
-  <meta property="og:image" content="https://example.org/francoisdcls/assets/logo-f1.svg" />
+  <meta property="og:url" content="https://example.org<?= htmlspecialchars(base_path('site_f1.php')) ?>" />
+  <meta property="og:image" content="https://example.org<?= htmlspecialchars(base_path('assets/logo-f1.svg')) ?>" />
   <title>Base de données Formule 1</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>

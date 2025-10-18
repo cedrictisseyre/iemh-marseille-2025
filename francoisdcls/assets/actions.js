@@ -111,8 +111,9 @@ async function populateQuickSelects()
         return;
     }
     try {
-        const pilotes = await fetchJSON('/francoisdcls/services/pilotes.php');
-        const ecuries = await fetchJSON('/francoisdcls/services/ecuries.php');
+        const base = (window.BASE_PATH || '');
+        const pilotes = await fetchJSON(base + '/services/pilotes.php');
+        const ecuries = await fetchJSON(base + '/services/ecuries.php');
         selPil.innerHTML = '<option value="">-- Choisir --</option>' + pilotes.map(p => ` < option value = "${p.pilote_id}" > ${p.prenom} ${p.nom} < / option > `).join('');
         selEcu.innerHTML = '<option value="">-- Choisir --</option>' + ecuries.map(e => ` < option value = "${e.ecurie_id}" > ${e.nom_ecuries} < / option > `).join('');
     } catch (err) {

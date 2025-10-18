@@ -60,5 +60,58 @@ function init_app(): void
     header('Content-Security-Policy: ' . $csp);
 }
 
+// Define a project-wide base path. Read from environment if provided to allow
+// flexible docroot choices. Default is '/francoisdcls' to preserve existing URLs
+// when serving from repo root. Use base_path() helper to access in PHP templates.
+if (!defined('FRANCOIS_BASE_PATH')) {
+    $envBase = getenv('FRANCOIS_BASE_PATH') ?: null;
+    if ($envBase) {
+        $base = rtrim($envBase, '/');
+    } else {
+        // Default to an empty base path so the app is portable when the
+        // document root is the `francoisdcls/` directory. Consumers may set
+        // FRANCOIS_BASE_PATH in env to '/francoisdcls' when serving from the
+        // repository root.
+        $base = '';
+    }
+    define('FRANCOIS_BASE_PATH', $base);
+}
+
+if (!function_exists('base_path')) {
+    function base_path(string $path = ''): string
+    {
+        $p = FRANCOIS_BASE_PATH;
+        if ($path === '' || $path === '/') {
+            return $p;
+        }
+        return $p . '/' . ltrim($path, '/');
+    }
+}
+
+// Ensure the canonical database connection is loaded for the site. All pages
+// under francoisdcls should use this single source of truth: database/bdd_formule1.php
+// which exposes a $pdo variable. We expose a helper get_pdo() to access it.
+try {
+    // Use require_once so multiple includes are safe.
+    require_once __DIR__ . '/../database/bdd_formule1.php';
+} catch (Throwable $e) {
+    // Don't fatal at include time; pages can decide how to handle missing DB.
+}
+
+if (!function_exists('get_pdo')) {
+    /**
+     * Return the shared PDO instance or null if unavailable.
+     * @return \PDO|null
+     */
+    function get_pdo(): ?\PDO
+    {
+        global $pdo;
+        if (isset($pdo) && $pdo instanceof \PDO) {
+            return $pdo;
+        }
+        return null;
+    }
+}
+
 // Helper simple pour les flash messages (utilisent $_SESSION)
 // Les helpers de flash existent dans includes/flash.php pour éviter les duplications

@@ -4,7 +4,8 @@
 require_once __DIR__ . '/init.php';
 require_once __DIR__ . '/csrf.php';
 // Initialisation de l'application (session + headers)
-if (function_exists('init_app')) {
+// Avoid running init_app() automatically during unit tests (IN_TEST)
+if (!defined('IN_TEST') && PHP_SAPI !== 'cli' && function_exists('init_app')) {
     init_app();
 }
 // Charger le helper flash (définit set_flash/get_flash)
@@ -14,11 +15,12 @@ if (function_exists('csrf_token')) {
     $csrf_for_js = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
     echo "<script>window.CSRF_TOKEN = '" . $csrf_for_js . "';</script>";
 }
-// Charger le helper JS pour les appels AJAX sécurisés (si présent)
-echo "<script src=\"/francoisdcls/assets/csrf.js\" defer></script>";
+// Expose the base path to JS and load the csrf helper from the base path
+echo "<script>window.BASE_PATH = '" . addslashes(FRANCOIS_BASE_PATH) . "';</script>";
+echo "<script src=\"" . htmlspecialchars(base_path('assets/csrf.js')) . "\" defer></script>";
 ?>
 <header>
-  <img src="/francoisdcls/assets/logo-f1.svg"
+    <img src="<?= htmlspecialchars(base_path('assets/logo-f1.svg')) ?>"
        alt="Logo F1"
        style="height:48px;vertical-align:middle;"
        aria-hidden="true">
