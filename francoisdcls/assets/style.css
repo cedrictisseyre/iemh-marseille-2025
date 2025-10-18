@@ -100,6 +100,16 @@ th { background: #eee; }
 .toast.success { background: #2b8a3e; }
 .toast.error { background: #b02a2a; }
 
+/* Stats skeleton / spinner */
+.stats-skeleton { display:flex; gap:1rem; align-items:center; padding:1rem; border:1px solid #eee; border-radius:8px; background:#fafafa; }
+.skeleton-avatar { width:56px; height:56px; border-radius:6px; background:linear-gradient(90deg,#eee,#f5f5f5,#eee); background-size:200% 100%; animation: shimmer 1.2s linear infinite; }
+.skeleton-line { height:12px; flex:1; border-radius:6px; background:linear-gradient(90deg,#eee,#f5f5f5,#eee); background-size:200% 100%; animation: shimmer 1.2s linear infinite; }
+.stats-loading { display:flex; gap:0.75rem; align-items:center; }
+.spinner { width:24px; height:24px; border:3px solid #eee; border-top-color:#b00; border-radius:50%; animation: spin 0.9s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shimmer { 0% { background-position:200% 0 } 100% { background-position:-200% 0 } }
+
 /* Tabs navigation */
 .tabs {
     margin: 1em 0 2em 0;

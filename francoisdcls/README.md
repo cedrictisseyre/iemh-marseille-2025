@@ -14,23 +14,16 @@ Ce projet propose un site web dynamique permettant de consulter des fiches d'inf
 - Services API REST (JSON) pour toutes les entités et stats
 
 ## Prérequis
-- PHP >= 8.0 avec extensions PDO et pdo_mysql
-- MySQL (local ou distant) avec une base contenant les tables nécessaires (pilotes, championnats, participations, etc.)
-- Serveur web (Apache, Nginx ou PHP built-in)
 
 ## Installation
 1. Cloner ce dépôt
 2. Configurer la connexion à la base dans `francoisdcls/database/bdd_formule1.php`
 3. Importer le schéma et les données MySQL si besoin (fichiers `schema.sql` et `seed.sql` fournis dans ce dossier)
-	- Exemple rapide (depuis la racine du projet) :
-
 ```sql
 CREATE DATABASE f1_demo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE f1_demo;
 SOURCE francoisdcls/schema.sql;
 SOURCE francoisdcls/seed.sql;
-```
-
 4. Lancer le serveur web ou utiliser `php -S localhost:8000` dans le dossier du projet
 
 
@@ -43,6 +36,21 @@ francoisdcls/
 ├── pages/          # Pages HTML/PHP (index.php, liste_pilotes.php, fiche_pilote.php, liste_ecuries.php, fiche_ecurie.php, statistiques.php, recherche.php, comparer_pilotes.php, palmares_annee.php, pantheon_pilotes.php)
 ├── services/       # Scripts PHP pour accès AJAX/API (pilotes.php, ecuries.php, championnats.php, participations.php, recherche_pilotes.php, stats_globales.php, fiche_pilote.php, pantheon_pilotes.php...)
 ```
+
+E2E tests (Playwright)
+-----------------------
+To run the E2E tests locally you'll need Node.js and Playwright.
+
+Install deps and run tests:
+
+```bash
+cd francoisdcls
+npm install
+npx playwright install --with-deps
+npm run test:e2e
+```
+
+The tests expect the dev server to be running at http://127.0.0.1:8000 (the PHPUnit test bootstrap starts such a server automatically).
 
 ## Utilisation
 - Accéder à `pages/index.php` pour la navigation principale
