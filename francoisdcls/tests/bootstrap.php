@@ -41,7 +41,10 @@ $logFile = $varDir . '/test_server.log';
 if (!file_exists($pidFile)) {
     $docroot = realpath(__DIR__ . '/..');
     // start server logging to var/test_server.log so CI can inspect it
-    $cmd = sprintf("php -S %s:%d -t %s > %s 2>&1 & echo $!", $host, $port, $docroot, $logFile);
+    // Force the test server to use the SQLite test database to avoid connecting
+    // to any external MySQL instance during tests. This sets the environment
+    // variable for the spawned server process only.
+    $cmd = sprintf("FRANCOISDB_DRIVER=sqlite php -S %s:%d -t %s > %s 2>&1 & echo $!", $host, $port, $docroot, $logFile);
     $output = [];
     exec($cmd, $output);
     if (count($output)) {

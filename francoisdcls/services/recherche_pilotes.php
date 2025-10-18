@@ -27,12 +27,17 @@ if ($type === 'pilote' || $type === 'both') {
     $sql = "SELECT pilote_id, nom, prenom, 'pilote' AS _type "
          . "FROM pilotes WHERE nom LIKE ? OR prenom LIKE ? "
          . "ORDER BY nom, prenom LIMIT 20";
-    $stmt = $pdoLocal->prepare($sql);
-    $stmt->execute(["%$q%", "%$q%"]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as $r) {
-        $r['type'] = 'pilote';
-        $results[] = $r;
+    try {
+        $stmt = $pdoLocal->prepare($sql);
+        $stmt->execute(["%$q%", "%$q%"]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $r) {
+            $r['type'] = 'pilote';
+            $results[] = $r;
+        }
+    } catch (\PDOException $e) {
+        // don't throw: log and continue so the endpoint returns a JSON array
+        error_log('recherche_pilotes: pilote query failed: ' . $e->getMessage());
     }
 }
 
@@ -43,12 +48,16 @@ if ($type === 'ecurie' || $type === 'both') {
     $sql = "SELECT ecurie_id, nom_ecuries AS ecurie_nom, "
         . "siege AS ecurie_siege, 'ecurie' AS _type "
         . "FROM ecuries WHERE nom_ecuries LIKE ? ORDER BY nom_ecuries LIMIT 20";
-    $stmt = $pdoLocal->prepare($sql);
-    $stmt->execute(["%$q%"]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($rows as $r) {
-        $r['type'] = 'ecurie';
-        $results[] = $r;
+    try {
+        $stmt = $pdoLocal->prepare($sql);
+        $stmt->execute(["%$q%"]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as $r) {
+            $r['type'] = 'ecurie';
+            $results[] = $r;
+        }
+    } catch (\PDOException $e) {
+        error_log('recherche_pilotes: ecurie query failed: ' . $e->getMessage());
     }
 }
 

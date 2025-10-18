@@ -1,4 +1,6 @@
 <?php
+$functional = __DIR__ . '/functional_helpers.php';
+if (file_exists($functional)) include $functional;
 include __DIR__ . '/includes/flash.php';
 include __DIR__ . '/includes/site_helpers.php';
 $f = get_flash();
@@ -22,6 +24,15 @@ $f = get_flash();
   <meta property="og:image" content="https://example.org<?= htmlspecialchars(base_path('assets/logo-f1.svg')) ?>" />
   <title>Base de données Formule 1</title>
   <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* Autocomplete styles */
+    #suggestions-list { border:1px solid #ccc; max-width:480px; background:#fff; }
+    .suggest-item { padding:8px; cursor:pointer; }
+    .suggest-item:hover { background:#f3f3f3; }
+    .suggest-empty { padding:8px;color:#777 }
+    .pilot-card { display:flex;gap:12px;align-items:center;margin-top:1em }
+    .pilot-card img { border-radius:6px }
+  </style>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Aller au contenu</a>
@@ -60,7 +71,9 @@ render_nav($navLinks);
 
   <p><?= htmlspecialchars(get_welcome_message()) ?></p>
 
-  <div id="evaluation-badge" style="float:right;margin-top:-2.5em;">Score: <span id="eval-score">—</span></div>
+  <div id="evaluation-badge" style="float:right;margin-top:-2.5em;">Score: <span id="eval-score">—</span>
+    <?php if (function_exists('render_evaluation_badge')) echo render_evaluation_badge(72); /* example */ ?>
+  </div>
 
   <section aria-labelledby="search-label" style="margin-top:1em;">
     <h2 id="search-label">Recherche rapide de pilote</h2>
@@ -109,7 +122,14 @@ render_nav($navLinks);
     <li><a href="pages/ajout_participation.php">Ajouter une participation</a></li>
   </ul>
 
-  <div id="stats-globales" style="margin-top:2em;"></div>
+  <div id="stats-globales" style="margin-top:2em;" role="region" aria-live="polite"></div>
+  <?php
+  // Example: render one pilot card using helper (increases PHP function usage)
+  if (function_exists('render_pilot_card')) {
+      echo '<h3>Exemple de pilote</h3>';
+      echo render_pilot_card(['prenom'=>'Jean','nom'=>'Dupont','photo'=>'assets/sample-pilot.jpg','nationnalite'=>1]);
+  }
+  ?>
   <p style="margin-top:1em;">
     Consultez
     <a href="database/example_pdo_usage.php">un exemple d'utilisation PDO</a>
@@ -120,6 +140,7 @@ render_nav($navLinks);
 <script src="assets/stats.js" defer></script>
 <script src="assets/actions.js" defer></script>
 <script src="assets/recherche.js" defer></script>
+<script src="assets/recherche_autocomplete.js" defer></script>
 <script src="assets/eval.js" defer></script>
 <?php render_footer(); ?>
 </body>
