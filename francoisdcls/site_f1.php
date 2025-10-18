@@ -122,7 +122,19 @@ render_nav($navLinks);
     <li><a href="pages/ajout_participation.php">Ajouter une participation</a></li>
   </ul>
 
-  <div id="stats-globales" style="margin-top:2em;" role="region" aria-live="polite"></div>
+  <div id="stats-globales" style="margin-top:2em;" role="region" aria-live="polite">
+    <div class="stats-skeleton" aria-hidden="true">
+      <div class="skeleton-avatar" aria-hidden="true"></div>
+      <div style="flex:1">
+        <div class="skeleton-line" style="width:60%" aria-hidden="true"></div>
+        <div style="height:8px"></div>
+        <div class="skeleton-line" style="width:40%" aria-hidden="true"></div>
+      </div>
+      <div class="stats-loading" aria-hidden="true">
+        <div class="spinner" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
   <?php
   // Example: render one pilot card using helper (increases PHP function usage)
   if (function_exists('render_pilot_card')) {
