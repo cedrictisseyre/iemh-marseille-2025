@@ -297,6 +297,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mastère IHME - Accueil</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Thème sombre bleu marine personnalisé */
+        :root{--navy:#0b2540;--muted:#d7e7f6}
+        body{
+            background: linear-gradient(180deg,var(--navy) 0%, #071828 100%);
+            color: var(--muted);
+        }
+        .container{background: rgba(255,255,255,0.02); padding:2rem; border-radius:8px;}
+        .nav-tabs .nav-link{color: rgba(255,255,255,0.85);} 
+        .nav-tabs .nav-link.active{background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.06);} 
+        h1, .card-title{color: #ffffff}
+        .card, .card-body{background: rgba(255,255,255,0.03); border: none; color: var(--muted)}
+        .table{background: rgba(255,255,255,0.02); color: #fff}
+        .table thead th{background: rgba(255,255,255,0.06); color:#fff; border-bottom:1px solid rgba(0,0,0,0.2)}
+        .table td, .table th{vertical-align: middle}
+        .btn-primary{background:#1f7bd6; border-color:#1668b6}
+        .btn-primary:hover{background:#1668b6}
+        .btn-success{background:#2aa65b; border-color:#238f4d}
+        input.form-control, select.form-select{background: rgba(255,255,255,0.03); color: var(--muted); border:1px solid rgba(255,255,255,0.06)}
+        input.form-control::placeholder{color: rgba(255,255,255,0.45)}
+        a{color:#9bc9ff}
+        .alert{background: rgba(255,255,255,0.03); color:var(--muted); border:1px solid rgba(255,255,255,0.04)}
+        /* responsive tweaks */
+        @media (max-width:768px){ .container{padding:1rem} }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
