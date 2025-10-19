@@ -322,6 +322,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         /* responsive tweaks */
         @media (max-width:768px){ .container{padding:1rem} }
     </style>
+    <style>
+        /* Ensure connected user name is readable on dark background */
+        .text-muted{ color: rgba(255,255,255,0.75) !important; }
+        .text-muted strong{ color: #ffffff !important; }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
