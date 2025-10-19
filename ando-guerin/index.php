@@ -14,6 +14,24 @@ if (!isset($conn) || !($conn instanceof PDO)) {
     $db_error = true;
     error_log('Connexion PDO manquante ou invalide dans connexion.php');
 } else {
+    // tenter de récupérer l'élève connecté (si session présente) avant de charger l'emploi
+    $current_eleve_name = null;
+    $current_eleve_id = null;
+    if (isset($_SESSION['user']['id'])) {
+        try {
+            $stmt_ce = $conn->prepare('SELECT id, prenom, nom FROM eleves WHERE user_id = :uid LIMIT 1');
+            $stmt_ce->execute([':uid' => $_SESSION['user']['id']]);
+            $ce = $stmt_ce->fetch();
+            if ($ce) {
+                $current_eleve_name = trim($ce['prenom'] . ' ' . $ce['nom']);
+                $current_eleve_id = $ce['id'];
+            }
+        } catch (PDOException $e) {
+            error_log('Erreur récupération élève connecté (pré-chargement) : ' . $e->getMessage());
+            // on continue sans élève
+        }
+    }
+
     try {
         // Récupérer les jours et horaires pour l'emploi du temps
         $jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
@@ -32,23 +50,19 @@ if (!isset($conn) || !($conn instanceof PDO)) {
 
         // Récupérer l'emploi du temps pour la semaine sélectionnée (jointure)
         $emploi = [];
-        // On ne montre plus le planning global : on affiche uniquement les entrées d'un élève connecté.
-        if ($current_eleve_id) {
-            try {
-                $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
-                    FROM emploi_temps et
-                    JOIN matieres m ON et.matiere_id = m.id
-                    LEFT JOIN professeurs p ON et.professeur_id = p.id
-                    LEFT JOIN salles s ON et.salle_id = s.id
-                    WHERE et.week_start = :ws AND et.eleve_id = :eid");
-                $stmt->execute([':ws' => $selected_week_start, ':eid' => $current_eleve_id]);
-                foreach ($stmt as $row) {
-                    $emploi[$row['jour_id']][$row['horaire_id']] = $row;
-                }
-            } catch (PDOException $e) {
-                error_log('EDT week_start filter failed for eleve: ' . $e->getMessage());
-                // en cas d'erreur, garder $emploi vide
+        try {
+            $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+                FROM emploi_temps et
+                JOIN matieres m ON et.matiere_id = m.id
+                LEFT JOIN professeurs p ON et.professeur_id = p.id
+                LEFT JOIN salles s ON et.salle_id = s.id
+                WHERE et.week_start = :ws");
+            $stmt->execute([':ws' => $selected_week_start]);
+            foreach ($stmt as $row) {
+                $emploi[$row['jour_id']][$row['horaire_id']] = $row;
             }
+        } catch (PDOException $e) {
+            error_log('EDT week_start load failed: ' . $e->getMessage());
         }
 
         // Récupérer les professeurs et leurs matières
@@ -70,23 +84,7 @@ if (!isset($conn) || !($conn instanceof PDO)) {
     }
 }
 
-// récupérer le nom/prénom de l'élève connecté (si disponible)
-$current_eleve_name = null;
-$current_eleve_id = null;
-if (isset($_SESSION['user']['id']) && !$db_error) {
-    try {
-        $stmt = $conn->prepare('SELECT id, prenom, nom FROM eleves WHERE user_id = :uid LIMIT 1');
-        $stmt->execute([':uid' => $_SESSION['user']['id']]);
-        $ce = $stmt->fetch();
-        if ($ce) {
-            $current_eleve_name = trim($ce['prenom'] . ' ' . $ce['nom']);
-            $current_eleve_id = $ce['id'];
-        }
-    } catch (PDOException $e) {
-        // ne pas bloquer l'affichage si la requête échoue
-        error_log('Erreur récupération élève connecté: ' . $e->getMessage());
-    }
-}
+// (le nom/id de l'élève connecté sont pré-calculés plus haut pour permettre le chargement de l'EDT)
 
 // --- Gestion simple de connexion/logout ---
 $login_error = '';
@@ -273,11 +271,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
 
-        // Insérer ou remplacer l'entrée emploi_temps (par élève)
-        // On suppose la table emploi_temps a les colonnes : eleve_id, week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id
-        $up = $conn->prepare('REPLACE INTO emploi_temps (eleve_id, week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:eid, :ws, :jid, :hid, :mid, :pid, :sid)');
+        // Insérer ou remplacer l'entrée emploi_temps (global, non lié à un élève)
+        // On utilise REPLACE INTO en s'appuyant sur l'index unique (week_start, jour_id, horaire_id)
+        $up = $conn->prepare('REPLACE INTO emploi_temps (week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:ws, :jid, :hid, :mid, :pid, :sid)');
         $up->execute([
-            ':eid' => $current_eleve_id ?: null,
             ':ws' => $week_start,
             ':jid' => $jour_id,
             ':hid' => $horaire_id,
@@ -424,11 +421,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <input type="date" name="week_start" id="week-start" class="form-control form-control-sm" value="<?= htmlspecialchars($selected_week_start) ?>">
                         <button class="btn btn-sm btn-primary" type="submit">Afficher</button>
                     </form>
-                    <?php if ($current_eleve_id): ?>
                         <button class="btn btn-sm btn-success" id="btn-add-edt">Ajouter un créneau</button>
-                    <?php else: ?>
-                        <button class="btn btn-sm btn-success" id="btn-add-edt" disabled title="Connecte-toi pour modifier ton emploi">Ajouter un créneau</button>
-                    <?php endif; ?>
                 </div>
                 <table class="table table-bordered">
                     <thead>
@@ -465,7 +458,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                                     <form method="post" id="form-edt">
                                                                         <input type="hidden" name="action" value="add_emploi">
                                                                         <input type="hidden" name="week_start" id="form-week-start" value="<?= htmlspecialchars($selected_week_start) ?>">
-                                                                        <input type="hidden" name="eleve_id" id="form-eleve-id" value="<?= htmlspecialchars($current_eleve_id) ?>">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Ajouter / Modifier un créneau</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -598,9 +590,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 const wk = document.getElementById('week-start');
                 const hidden = document.getElementById('form-week-start');
                 if (wk && hidden) hidden.value = wk.value || hidden.value;
-                // remplissage eleve_id
-                const eleveHidden = document.getElementById('form-eleve-id');
-                if (eleveHidden) eleveHidden.value = '<?= htmlspecialchars($current_eleve_id) ?>';
                 modal.show();
             }
 
@@ -623,9 +612,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 // si présence d'un premier jour on le met
                 const firstJour = form.jour_id && form.jour_id.options.length ? form.jour_id.options[0].value : null;
                 if (firstJour) form.jour_id.value = firstJour;
-                // set current eleve
-                const eleveHidden = document.getElementById('form-eleve-id');
-                if (eleveHidden) eleveHidden.value = '<?= htmlspecialchars($current_eleve_id) ?>';
                 modal.show();
             });
 
