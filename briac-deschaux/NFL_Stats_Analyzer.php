@@ -1,15 +1,24 @@
 <?php
+// NFL_stats_analyzer.php
+// Fichier principal autonome — toutes les fonctionnalités incluses.
+// Nécessite : config/database_connexion.php (PDO $pdo)
+
 include __DIR__ . '/config/database_connexion.php';
 
 // Page active
 $page = $_GET['page'] ?? 'joueurs';
 
-// Fonction pour générer le menu
+// Récupération de paramètres globaux (recherche, filtres)
+$recherche = $_GET['recherche'] ?? '';
+$filtre_poste = $_GET['poste'] ?? '';
+$filtre_team = $_GET['team'] ?? '';
+
+// Fonction nav
 function nav($active) {
     $tabs = [
         'joueurs' => 'Joueurs',
         'stats' => 'Statistiques',
-        'classement'=> 'Classement'
+        'classement' => 'Classement'
     ];
     echo '<div class="menu">';
     foreach ($tabs as $key => $label) {
@@ -24,6 +33,7 @@ function nav($active) {
 <head>
     <meta charset="UTF-8">
     <title>NFL Stats Analyzer</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/style_page.css">
 </head>
 <body>
@@ -35,13 +45,14 @@ function nav($active) {
         <h1>NFL STATS ANALYZER</h1>
     </div>
 
-    <!-- NAV MENU -->
+    <!-- NAV -->
     <?php nav($page); ?>
 
     <main>
     <?php if ($page === 'joueurs') : ?>
-        <!-- Formulaire d'ajout joueur -->
-        <div class="card magic-bento">
+
+        <!-- Ajouter un joueur (formulaire) -->
+        <div class="card magic-bento no-zoom">
             <h2>Ajouter un joueur</h2>
             <form method="post" action="services/add_player.php">
                 <input type="text" name="prenom" placeholder="Prénom" required>
@@ -51,7 +62,7 @@ function nav($active) {
                     <?php
                     $pos = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
                     foreach ($pos as $p) {
-                        echo "<option value='{$p['code']}'>{$p['libelle']} ({$p['code']})</option>";
+                        echo "<option value='".htmlspecialchars($p['code'], ENT_QUOTES)."'>".htmlspecialchars($p['libelle'], ENT_QUOTES)." ({$p['code']})</option>";
                     }
                     ?>
                 </select>
@@ -68,9 +79,9 @@ function nav($active) {
                         if ($t['conference'] !== $current_conf) {
                             if ($current_conf !== "") echo "</optgroup>";
                             $current_conf = $t['conference'];
-                            echo "<optgroup label='{$current_conf}'>";
+                            echo "<optgroup label='".htmlspecialchars($current_conf, ENT_QUOTES)."'>";
                         }
-                        echo "<option value='{$t['id_team']}'>{$t['nom_team']}</option>";
+                        echo "<option value='".(int)$t['id_team']."'>".htmlspecialchars($t['nom_team'], ENT_QUOTES)."</option>";
                     }
                     if ($current_conf !== "") echo "</optgroup>";
                     ?>
@@ -80,11 +91,14 @@ function nav($active) {
         </div>
 
         <!-- Recherche joueurs -->
-        <div class="card magic-bento">
+        <div class="card magic-bento no-zoom">
             <h2>Recherche joueur</h2>
-            <form method="get">
+            <form method="get" action="">
                 <input type="hidden" name="page" value="joueurs">
-                <input type="text" name="recherche" placeholder="Nom ou prénom">
+                <div class="autocomplete-container">
+                    <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search" value="<?php echo htmlspecialchars($recherche, ENT_QUOTES); ?>">
+                    <div class="autocomplete-suggestions"></div>
+                </div>
                 <button type="submit" class="shiny-button">Rechercher</button>
             </form>
         </div>
@@ -95,25 +109,32 @@ function nav($active) {
             <?php
             $where = "";
             $params = [];
-            if (!empty($_GET['recherche'])) {
-                $search = "%" . $_GET['recherche'] . "%";
+            if (!empty($recherche)) {
+                $search = "%$recherche%";
                 $where = "WHERE p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?";
                 $params = [$search, $search, $search, $search];
             }
-            $stmt = $pdo->prepare("SELECT p.*, t.nom_team, t.logo_url 
-                                   FROM player p 
-                                   JOIN team t ON p.id_team = t.id_team 
-                                   $where
-                                   ORDER BY p.nom");
+            $sql = "SELECT p.*, t.nom_team, t.logo_url 
+                    FROM player p 
+                    JOIN team t ON p.id_team = t.id_team 
+                    $where
+                    ORDER BY p.nom";
+            $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
             while ($pl = $stmt->fetch()) {
-                $experience = date('Y') - $pl['annee_debut'];
-                echo "<div class='card magic-bento scroll-animate'>
-                        <h3>{$pl['prenom']} {$pl['nom']}</h3>
-                        <p><strong>Poste:</strong> {$pl['poste']}</p>
-                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;'> {$pl['nom_team']}</p>
-                        <p><strong>Âge:</strong> {$pl['age']} ans</p>
-                        <p><strong>Taille:</strong> {$pl['taille_cm']} cm - <strong>Poids:</strong> {$pl['poids_kg']} kg</p>
+                $experience = date('Y') - (int)$pl['annee_debut'];
+                $prenom = htmlspecialchars($pl['prenom'], ENT_QUOTES);
+                $nom = htmlspecialchars($pl['nom'], ENT_QUOTES);
+                $poste = htmlspecialchars($pl['poste'], ENT_QUOTES);
+                $nom_team = htmlspecialchars($pl['nom_team'], ENT_QUOTES);
+                $logo = htmlspecialchars($pl['logo_url'] ?? '', ENT_QUOTES);
+
+                echo "<div class='card magic-bento zoomable scroll-animate'>
+                        <h3>{$prenom} {$nom}</h3>
+                        <p><strong>Poste:</strong> {$poste}</p>
+                        <p><strong>Équipe:</strong> <img src='{$logo}' alt='' style='width:30px;height:30px;vertical-align:middle;'> {$nom_team}</p>
+                        <p><strong>Âge:</strong> ".((int)$pl['age'])." ans</p>
+                        <p><strong>Taille:</strong> ".((int)$pl['taille_cm'])." cm - <strong>Poids:</strong> ".((int)$pl['poids_kg'])." kg</p>
                         <p><strong>Expérience:</strong> {$experience} ans</p>
                       </div>";
             }
@@ -122,20 +143,19 @@ function nav($active) {
 
     <?php elseif ($page === 'stats') : 
         $saison = date('Y'); ?>
-        <!-- Formulaire stats -->
-        <div class="card magic-bento">
+
+        <!-- Formulaire ajout stats -->
+        <div class="card magic-bento no-zoom">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
             <form method="post" action="services/add_stats.php">
-                <select name="id_player" required>
-                    <option value="">Sélectionner un joueur</option>
-                    <?php
-                    $players = $pdo->query("SELECT id_player, prenom, nom FROM player ORDER BY nom")->fetchAll();
-                    foreach ($players as $p) {
-                        echo "<option value='{$p['id_player']}'>{$p['prenom']} {$p['nom']}</option>";
-                    }
-                    ?>
-                </select>
-                <!-- Tous les champs stats -->
+                <!-- Autocomplétion pour joueur -->
+                <div class="autocomplete-container">
+                    <input type="text" id="playerStatsInput" placeholder="Nom ou prénom du joueur" class="autocomplete-player" required>
+                    <input type="hidden" name="id_player" id="playerStatsId" required>
+                    <div class="autocomplete-suggestions"></div>
+                </div>
+
+                <!-- Champs statistiques -->
                 <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
                 <input type="number" name="passing_tds" placeholder="TD passés" min="0">
                 <input type="number" name="interceptions" placeholder="Interceptions" min="0">
@@ -160,11 +180,14 @@ function nav($active) {
         </div>
 
         <!-- Recherche stats -->
-        <div class="card magic-bento">
+        <div class="card magic-bento no-zoom">
             <h2>Recherche stats joueur</h2>
-            <form method="get">
+            <form method="get" action="">
                 <input type="hidden" name="page" value="stats">
-                <input type="text" name="recherche" placeholder="Nom ou prénom">
+                <div class="autocomplete-container">
+                    <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search" value="<?php echo htmlspecialchars($recherche, ENT_QUOTES); ?>">
+                    <div class="autocomplete-suggestions"></div>
+                </div>
                 <button type="submit" class="shiny-button">Rechercher</button>
             </form>
         </div>
@@ -173,33 +196,42 @@ function nav($active) {
         <h2>Statistiques <?= $saison ?></h2>
         <div class="grid">
             <?php
+            $id_player = $_GET['id_player'] ?? '';
             $where = "WHERE s.saison = ?";
             $params = [$saison];
-            if (!empty($_GET['recherche'])) {
-                $search = "%" . $_GET['recherche'] . "%";
+            if (!empty($id_player)) {
+                $where .= " AND p.id_player = ?";
+                $params[] = $id_player;
+            } elseif (!empty($recherche)) {
+                $search = "%$recherche%";
                 $where .= " AND (p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?)";
-                $params = array_merge($params, [$search,$search,$search,$search]);
+                $params = array_merge($params, [$search, $search, $search, $search]);
             }
 
-            $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste, t.nom_team, t.logo_url 
-                                   FROM stats s 
-                                   JOIN player p ON s.id_player = p.id_player 
-                                   JOIN team t ON p.id_team = t.id_team
-                                   $where
-                                   ORDER BY p.nom");
+            $sql = "SELECT s.*, p.prenom, p.nom, p.poste, t.nom_team, t.logo_url
+                    FROM stats s
+                    JOIN player p ON s.id_player = p.id_player
+                    JOIN team t ON p.id_team = t.id_team
+                    $where
+                    ORDER BY p.nom";
+            $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 
             $has_stats = false;
             while ($st = $stmt->fetch()) {
                 $has_stats = true;
-                echo "<div class='card magic-bento scroll-animate'>
-                        <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
-                        {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
+                $prenom = htmlspecialchars($st['prenom'], ENT_QUOTES);
+                $nom = htmlspecialchars($st['nom'], ENT_QUOTES);
+                $poste = htmlspecialchars($st['poste'], ENT_QUOTES);
+                $logo = htmlspecialchars($st['logo_url'] ?? '', ENT_QUOTES);
+
+                echo "<div class='card magic-bento zoomable scroll-animate'>
+                        <h3><img src='{$logo}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> {$prenom} {$nom} ({$poste})</h3>";
                 foreach ($st as $key => $val) {
                     if (in_array($key, ['id_stat','id_player','prenom','nom','poste','saison','nom_team','logo_url'])) continue;
                     if ($val !== null && $val != 0) {
-                        $label = ucfirst(str_replace("_", " ", $key));
-                        echo "<p><strong>{$label}:</strong> {$val}</p>";
+                        $label = ucfirst(str_replace('_', ' ', $key));
+                        echo "<p><strong>{$label}:</strong> ".htmlspecialchars($val, ENT_QUOTES)."</p>";
                     }
                 }
                 echo "</div>";
@@ -208,18 +240,15 @@ function nav($active) {
             ?>
         </div>
 
-    <?php elseif ($page === 'classement') : 
-        $saison = date('Y');
-        $filtre_poste = $_GET['poste'] ?? '';
-        $filtre_team = $_GET['team'] ?? '';
-        ?>
+    <?php elseif ($page === 'classement') : ?>
+        <!-- Classement complet, code original -->
+        <h2>Classement (Totaux saison <?= date('Y') ?>)</h2>
 
         <!-- Filtres -->
-        <div class="card magic-bento">
+        <div class="card magic-bento no-zoom">
             <h2>Filtres Classement</h2>
-            <form method="get">
+            <form method="get" action="">
                 <input type="hidden" name="page" value="classement">
-
                 <label>Poste :</label>
                 <select name="poste">
                     <option value="">Tous</option>
@@ -227,7 +256,7 @@ function nav($active) {
                     $positions = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
                     foreach ($positions as $p) {
                         $sel = ($filtre_poste === $p['code']) ? "selected" : "";
-                        echo "<option value='{$p['code']}' $sel>{$p['libelle']} ({$p['code']})</option>";
+                        echo "<option value='".htmlspecialchars($p['code'], ENT_QUOTES)."' $sel>".htmlspecialchars($p['libelle'], ENT_QUOTES)." ({$p['code']})</option>";
                     }
                     ?>
                 </select>
@@ -242,10 +271,10 @@ function nav($active) {
                         if ($t['conference'] !== $current_conf) {
                             if ($current_conf !== "") echo "</optgroup>";
                             $current_conf = $t['conference'];
-                            echo "<optgroup label='{$current_conf}'>";
+                            echo "<optgroup label='".htmlspecialchars($current_conf, ENT_QUOTES)."'>";
                         }
                         $sel = ($filtre_team == $t['id_team']) ? "selected" : "";
-                        echo "<option value='{$t['id_team']}' $sel>{$t['nom_team']}</option>";
+                        echo "<option value='".(int)$t['id_team']."' $sel>".htmlspecialchars($t['nom_team'], ENT_QUOTES)."</option>";
                     }
                     if ($current_conf !== "") echo "</optgroup>";
                     ?>
@@ -256,10 +285,11 @@ function nav($active) {
         </div>
 
         <?php
-        // --- Classement TDs ---
+        $saison = date('Y');
+        // Classement TD par conférence
         $sql_conf = "
             SELECT p.prenom, p.nom, p.poste, t.conference,
-                   COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
+                   (COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0)) AS total_tds
             FROM player p
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
@@ -280,68 +310,90 @@ function nav($active) {
         if (count($conf_data) > 0) {
             echo "<h2>Classement par conférence (Total TDs)</h2>";
             $conf = '';
+            echo "<div class='grid'>";
             foreach ($conf_data as $row) {
                 if ($row['conference'] !== $conf) {
-                    if ($conf !== '') echo '</ol>';
                     $conf = $row['conference'];
-                    echo "<h3>{$conf}</h3><ol>";
+                    echo "</div>";
+                    echo "<h3 class='conference-title'>".htmlspecialchars($conf, ENT_QUOTES)."</h3>";
+                    echo "<div class='grid'>";
                 }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_tds']} TDs</li>";
+                $prenom = htmlspecialchars($row['prenom'], ENT_QUOTES);
+                $nom = htmlspecialchars($row['nom'], ENT_QUOTES);
+                $poste = htmlspecialchars($row['poste'], ENT_QUOTES);
+                $tds = (int)$row['total_tds'];
+
+                echo "<div class='card magic-bento no-zoom scroll-animate'>
+                        <h4>{$prenom} {$nom} ({$poste})</h4>
+                        <p><strong>Total TDs:</strong> {$tds}</p>
+                      </div>";
             }
-            echo '</ol>';
+            echo "</div>";
+        } else {
+            echo "<p>Aucun leader TD trouvé pour la saison.</p>";
         }
 
-        // --- Classement Plaquages ---
+        // Classement Plaquages par division
         $sql_div = "
             SELECT p.prenom, p.nom, p.poste, t.division,
                    COALESCE(SUM(s.tackles),0) AS total_plaquages
             FROM player p
             JOIN team t ON p.id_team = t.id_team
-            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
+            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison2
             WHERE 1=1";
 
-        $params = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
+        $params2 = [':saison2' => $saison];
+        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste2"; $params2[':poste2'] = $filtre_poste; }
+        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team2"; $params2[':team2'] = $filtre_team; }
 
         $sql_div .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.division
                       HAVING total_plaquages > 0
                       ORDER BY t.division, total_plaquages DESC";
 
         $stmt_div = $pdo->prepare($sql_div);
-        $stmt_div->execute($params);
+        $stmt_div->execute($params2);
         $div_data = $stmt_div->fetchAll();
 
         if (count($div_data) > 0) {
             echo "<h2>Classement par division (Plaquages)</h2>";
             $div = '';
+            echo "<div class='grid'>";
             foreach ($div_data as $row) {
                 if ($row['division'] !== $div) {
-                    if ($div !== '') echo '</ol>';
                     $div = $row['division'];
-                    echo "<h3>{$div}</h3><ol>";
+                    echo "</div>";
+                    echo "<h3 class='conference-title'>".htmlspecialchars($div, ENT_QUOTES)."</h3>";
+                    echo "<div class='grid'>";
                 }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
-            }
-            echo '</ol>';
-        }
-        ?>
+                $prenom = htmlspecialchars($row['prenom'], ENT_QUOTES);
+                $nom = htmlspecialchars($row['nom'], ENT_QUOTES);
+                $poste = htmlspecialchars($row['poste'], ENT_QUOTES);
+                $plaquages = (int)$row['total_plaquages'];
 
-    <?php endif; ?>
+                echo "<div class='card magic-bento no-zoom scroll-animate'>
+                        <h4>{$prenom} {$nom} ({$poste})</h4>
+                        <p><strong>Plaquages:</strong> {$plaquages}</p>
+                      </div>";
+            }
+            echo "</div>";
+        } else {
+            echo "<p>Aucun leader plaquages trouvé pour la saison.</p>";
+        }
+
+    endif; ?>
     </main>
 </div>
 
-<!-- Modal overlay pour agrandir les cartes -->
-<div class="card-modal-overlay" id="cardModalOverlay">
-    <div class="card-modal" id="cardModalContent"></div>
+<!-- Modal overlay pour zoom -->
+<div class="card-modal-overlay" id="cardModalOverlay" aria-hidden="true">
+    <div class="card-modal" id="cardModalContent" role="dialog" aria-modal="true"></div>
 </div>
 
 <footer>
-    <p>&copy; 2025 NFL Stats Analyzer - Projet académique</p>
+    <p>&copy; <?= date('Y') ?> NFL Stats Analyzer - Projet académique</p>
 </footer>
 
 <script>
-// SCROLL ANIMATION, MAGIC BENTO & MODAL ZOOM
 document.addEventListener('DOMContentLoaded', function() {
     // Scroll animation
     const elements = document.querySelectorAll('.scroll-animate');
@@ -350,23 +402,86 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
     elements.forEach(el => observer.observe(el));
 
-    // Modal click
+    // Modal zoom
     const overlay = document.getElementById('cardModalOverlay');
     const modalContent = document.getElementById('cardModalContent');
-
-    document.querySelectorAll('.card.magic-bento').forEach(card => {
+    document.querySelectorAll('.card.magic-bento.zoomable').forEach(card => {
         card.addEventListener('click', function() {
             modalContent.innerHTML = card.innerHTML;
             overlay.style.display = 'flex';
+            overlay.setAttribute('aria-hidden', 'false');
             setTimeout(() => modalContent.classList.add('show'), 10);
         });
     });
-
     overlay.addEventListener('click', function(e) {
-        if(e.target === overlay) {
+        if (e.target === overlay) {
             modalContent.classList.remove('show');
+            overlay.setAttribute('aria-hidden', 'true');
             setTimeout(() => overlay.style.display = 'none', 300);
         }
+    });
+
+    // Autocomplétion pour joueur stats
+    const playerInput = document.getElementById('playerStatsInput');
+    const playerId = document.getElementById('playerStatsId');
+    const suggestions = playerInput?.parentElement.querySelector('.autocomplete-suggestions');
+
+    if(playerInput) {
+        playerInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            if(val.length < 1){ suggestions.innerHTML=''; playerId.value=''; return; }
+            fetch('services/player_search.php?q='+encodeURIComponent(val))
+                .then(res=>res.json())
+                .then(data=>{
+                    suggestions.innerHTML='';
+                    data.forEach(player=>{
+                        const div=document.createElement('div');
+                        div.textContent=player.prenom+' '+player.nom;
+                        div.classList.add('suggestion-item');
+                        div.addEventListener('click', ()=>{
+                            playerInput.value=player.prenom+' '+player.nom;
+                            playerId.value=player.id_player;
+                            suggestions.innerHTML='';
+                        });
+                        suggestions.appendChild(div);
+                    });
+                }).catch(()=>{ suggestions.innerHTML=''; playerId.value=''; });
+        });
+
+        document.addEventListener('click', (e)=>{
+            if(!playerInput.contains(e.target) && !suggestions.contains(e.target)){
+                suggestions.innerHTML='';
+            }
+        });
+    }
+
+    // Autocomplétion pour recherche joueur/stats
+    document.querySelectorAll('.autocomplete-player-search').forEach(input=>{
+        const suggestionsContainer = input.parentElement.querySelector('.autocomplete-suggestions');
+        input.addEventListener('input', function() {
+            const val = this.value.trim();
+            if(val.length < 1){ suggestionsContainer.innerHTML=''; return; }
+            fetch('services/player_search.php?q='+encodeURIComponent(val))
+                .then(res=>res.json())
+                .then(data=>{
+                    suggestionsContainer.innerHTML='';
+                    data.forEach(player=>{
+                        const div=document.createElement('div');
+                        div.textContent=player.prenom+' '+player.nom;
+                        div.classList.add('suggestion-item');
+                        div.addEventListener('click', ()=>{
+                            input.value=player.prenom+' '+player.nom;
+                            suggestionsContainer.innerHTML='';
+                        });
+                        suggestionsContainer.appendChild(div);
+                    });
+                }).catch(()=>{ suggestionsContainer.innerHTML=''; });
+        });
+        document.addEventListener('click',(e)=>{
+            if(!input.contains(e.target) && !suggestionsContainer.contains(e.target)){
+                suggestionsContainer.innerHTML='';
+            }
+        });
     });
 });
 </script>
