@@ -1,92 +1,144 @@
+/* ---- BASE ---- */
 body {
-    font-family: "Segoe UI", sans-serif;
-    background-color: #f8fafc;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
     margin: 0;
-    color: #333;
+    padding: 0;
+    color: #1e293b;
 }
 
-header {
-    background-color: #013369;
-    color: #fff;
+.container {
+    max-width: 1100px;
+    margin: 2em auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 1.5em;
+}
+
+/* ---- HEADER ---- */
+.header {
     text-align: center;
-    padding: 1rem;
+    margin-bottom: 1em;
 }
 
-.logo {
-    width: 100px;
+.header-logo {
+    width: 200px;
+    height: auto;
+    display: inline-block;
 }
 
-nav {
+h1 {
+    text-align: center;
+    color: #0a2463;
+    margin-bottom: 0.5em;
+    font-size: 1.9em;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* ---- NAV MENU ---- */
+.menu {
     display: flex;
     justify-content: center;
-    background: #d50a0a;
+    margin-bottom: 1.5em;
+    gap: 0.6em;
 }
 
-nav a {
-    color: white;
+.menu a {
     text-decoration: none;
-    padding: 1rem;
-    transition: 0.2s;
+    padding: 0.6em 1em;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #0a2463;
+    background: #e2e8f0;
+    transition: all 0.15s ease;
 }
 
-nav a.active, nav a:hover {
-    background: #a30808;
+.menu a:hover {
+    background: #0a2463;
+    color: #fff;
 }
 
-main {
-    padding: 2rem;
+.menu a.active {
+    background: #ef4444;
+    color: #fff;
 }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.table th, .table td {
-    border: 1px solid #ccc;
-    padding: 0.75rem;
-    text-align: center;
-}
-
-.table th {
-    background: #eee;
-}
-
-.form-grid {
+/* ---- GRID CARDS ---- */
+.grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1em;
+    margin-top: 1em;
 }
 
-input, select, button {
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+.card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease-out;
 }
 
-button.btn {
-    background: #013369;
-    color: white;
+/* ---- FORM ---- */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em;
+    justify-content: center;
+    margin-top: 0.6em;
+}
+
+input,
+select,
+button {
+    font-size: 0.95em;
+    padding: 0.5em 0.8em;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #0a2463;
+}
+
+/* ---- SHIMMY BUTTON ---- */
+button {
+    background: #0a2463;
+    color: #fff;
+    border: none;
     cursor: pointer;
-    transition: 0.3s;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
 }
 
-button.btn:hover {
-    background: #0056b3;
+button:hover {
+    background: #ef4444;
+    transform: rotate(-3deg) translateX(2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-.alert {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    padding: 1rem;
-    border-radius: 5px;
-    background: #4caf50;
-    color: white;
+/* ---- FOOTER ---- */
+footer {
+    margin-top: 1.2em;
+    text-align: center;
+    font-size: 0.9em;
+    color: #64748b;
 }
 
-.alert.error {
-    background: #f44336;
+:focus {
+    outline: 3px solid #ef4444;
+    outline-offset: 2px;
+}
+
+/* ---- SCROLL ANIMATION ---- */
+.show {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
 }
