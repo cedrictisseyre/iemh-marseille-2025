@@ -29,10 +29,11 @@ function nav($active) {
 <body>
 <div class="container">
 
-    <!-- HEADER -->
-    <div class="header">
+    <!-- HEADER avec True Focus -->
+    <div class="header focus-container">
         <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" alt="Logo NFL" class="header-logo">
-        <h1>NFL STATS ANALYZER</h1>
+        <h1 class="focus-word" id="mainTitle">NFL STATS ANALYZER</h1>
+        <canvas class="focus-frame"></canvas>
     </div>
 
     <!-- NAV MENU -->
@@ -43,9 +44,9 @@ function nav($active) {
         <!-- Formulaire d'ajout joueur -->
         <div class="card magic-bento">
             <h2>Ajouter un joueur</h2>
-            <form method="post" action="services/add_player.php">
-                <input type="text" name="prenom" placeholder="Prénom" required>
-                <input type="text" name="nom" placeholder="Nom" class="autocomplete-player" required>
+            <form method="post" action="services/add_player.php" class="player-form">
+                <input type="text" name="prenom" placeholder="Prénom" required class="autocomplete-input" data-type="player">
+                <input type="text" name="nom" placeholder="Nom" required class="autocomplete-input" data-type="player">
                 <select name="poste" required>
                     <option value="">Sélectionner un poste</option>
                     <?php
@@ -82,11 +83,12 @@ function nav($active) {
         <!-- Recherche joueurs -->
         <div class="card magic-bento">
             <h2>Recherche joueur</h2>
-            <div class="autocomplete-container">
-                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search">
+            <form method="get" class="player-search">
+                <input type="hidden" name="page" value="joueurs">
+                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-input" data-type="search">
                 <div class="autocomplete-suggestions"></div>
-            </div>
-            <button type="submit" class="shiny-button" onclick="document.forms[0].submit()">Rechercher</button>
+                <button type="submit" class="shiny-button">Rechercher</button>
+            </form>
         </div>
 
         <!-- Liste des joueurs -->
@@ -108,7 +110,7 @@ function nav($active) {
             $stmt->execute($params);
             while ($pl = $stmt->fetch()) {
                 $experience = date('Y') - $pl['annee_debut'];
-                echo "<div class='card magic-bento scroll-animate'>
+                echo "<div class='card magic-bento scroll-animate player-card'>
                         <h3>{$pl['prenom']} {$pl['nom']}</h3>
                         <p><strong>Poste:</strong> {$pl['poste']}</p>
                         <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;'> {$pl['nom_team']}</p>
@@ -125,13 +127,10 @@ function nav($active) {
         <!-- Formulaire stats -->
         <div class="card magic-bento">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
-            <form method="post" action="services/add_stats.php">
-                <div class="autocomplete-container">
-                    <input type="text" name="id_player_name" placeholder="Nom du joueur" class="autocomplete-player">
-                    <input type="hidden" name="id_player">
-                    <div class="autocomplete-suggestions"></div>
-                </div>
-                <!-- Champs stats -->
+            <form method="post" action="services/add_stats.php" class="stats-form">
+                <input type="text" name="player_name" placeholder="Nom du joueur" class="autocomplete-input" data-type="stats">
+                <div class="autocomplete-suggestions"></div>
+                <!-- Tous les champs stats -->
                 <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
                 <input type="number" name="passing_tds" placeholder="TD passés" min="0">
                 <input type="number" name="interceptions" placeholder="Interceptions" min="0">
@@ -158,13 +157,13 @@ function nav($active) {
         <!-- Recherche stats -->
         <div class="card magic-bento">
             <h2>Recherche stats joueur</h2>
-            <div class="autocomplete-container">
-                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search">
+            <form method="get" class="stats-search">
+                <input type="hidden" name="page" value="stats">
+                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-input" data-type="search">
                 <div class="autocomplete-suggestions"></div>
-            </div>
-            <button type="submit" class="shiny-button" onclick="document.forms[0].submit()">Rechercher</button>
-        </div>
-
+                <button type="submit" class="shiny-button">Rechercher</button>
+            </form>
+       
         <!-- Affichage stats -->
         <h2>Statistiques <?= $saison ?></h2>
         <div class="grid">
@@ -188,7 +187,7 @@ function nav($active) {
             $has_stats = false;
             while ($st = $stmt->fetch()) {
                 $has_stats = true;
-                echo "<div class='card magic-bento scroll-animate'>
+                echo "<div class='card magic-bento scroll-animate stats-card'>
                         <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
                         {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
                 foreach ($st as $key => $val) {
@@ -215,6 +214,7 @@ function nav($active) {
             <h2>Filtres Classement</h2>
             <form method="get">
                 <input type="hidden" name="page" value="classement">
+
                 <label>Poste :</label>
                 <select name="poste">
                     <option value="">Tous</option>
@@ -326,7 +326,7 @@ function nav($active) {
     </main>
 </div>
 
-<!-- Modal overlay pour agrandir les cartes -->
+<!-- Modal overlay pour cartes joueurs/stats -->
 <div class="card-modal-overlay" id="cardModalOverlay">
     <div class="card-modal" id="cardModalContent"></div>
 </div>
@@ -335,6 +335,8 @@ function nav($active) {
     <p>&copy; 2025 NFL Stats Analyzer - Projet académique</p>
 </footer>
 
+<script src="js/autocomplete.js"></script>
+<script src="js/true-focus.js"></script>
 <script>
 // SCROLL ANIMATION, MAGIC BENTO & MODAL ZOOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -345,21 +347,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
     elements.forEach(el => observer.observe(el));
 
-    // Modal click pour cartes seulement
+    // Modal zoom pour cartes joueurs et stats seulement
     const overlay = document.getElementById('cardModalOverlay');
     const modalContent = document.getElementById('cardModalContent');
-
-    document.querySelectorAll('.card.magic-bento').forEach(card => {
-        // On ignore les formulaires pour ne pas zoomer
-        if (!card.querySelector('form')) {
-            card.addEventListener('click', function() {
-                modalContent.innerHTML = card.innerHTML;
-                overlay.style.display = 'flex';
-                setTimeout(() => modalContent.classList.add('show'), 10);
-            });
-        }
+    document.querySelectorAll('.player-card, .stats-card').forEach(card => {
+        card.addEventListener('click', function() {
+            modalContent.innerHTML = card.innerHTML;
+            overlay.style.display = 'flex';
+            setTimeout(() => modalContent.classList.add('show'), 10);
+        });
     });
-
     overlay.addEventListener('click', function(e) {
         if(e.target === overlay) {
             modalContent.classList.remove('show');
@@ -367,43 +364,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // --- Autocomplétion joueurs ---
-    const autocompleteInputs = document.querySelectorAll('.autocomplete-player, .autocomplete-player-search');
-    autocompleteInputs.forEach(input => {
-        const hiddenInput = input.closest('form')?.querySelector('input[type=hidden][name="id_player"]');
-        const suggestionsContainer = input.parentElement.querySelector('.autocomplete-suggestions');
-
-        input.addEventListener('input', function() {
-            const val = this.value.trim();
-            if (val.length < 1) {
-                suggestionsContainer.innerHTML = '';
-                return;
-            }
-            fetch('services/player_search.php?q=' + encodeURIComponent(val))
-                .then(res => res.json())
-                .then(data => {
-                    suggestionsContainer.innerHTML = '';
-                    data.forEach(player => {
-                        const div = document.createElement('div');
-                        div.textContent = player.prenom + ' ' + player.nom;
-                        div.dataset.id = player.id_player;
-                        div.classList.add('suggestion-item');
-                        div.addEventListener('click', () => {
-                            input.value = player.prenom + ' ' + player.nom;
-                            if (hiddenInput) hiddenInput.value = player.id_player;
-                            suggestionsContainer.innerHTML = '';
-                        });
-                        suggestionsContainer.appendChild(div);
-                    });
-                });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
-                suggestionsContainer.innerHTML = '';
-            }
-        });
-    });
+    // True Focus animation
+    initTrueFocus('#mainTitle');
 });
 </script>
 </body>
