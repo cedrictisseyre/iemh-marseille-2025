@@ -19,12 +19,25 @@ if (!isset($conn) || !($conn instanceof PDO)) {
         $jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
         $horaires = $conn->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
 
-        // Récupérer l'emploi du temps complet (jointure)
-        $stmt = $conn->query("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+        // déterminer la semaine sélectionnée (week_start = date du lundi)
+        $selected_week_start = null;
+        if (isset($_GET['week_start']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['week_start'])) {
+            $selected_week_start = $_GET['week_start'];
+        } else {
+            $d = new DateTime();
+            // obtenir le lundi de la semaine courante
+            $d->modify('monday this week');
+            $selected_week_start = $d->format('Y-m-d');
+        }
+
+        // Récupérer l'emploi du temps pour la semaine sélectionnée (jointure)
+        $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
             FROM emploi_temps et
             JOIN matieres m ON et.matiere_id = m.id
             LEFT JOIN professeurs p ON et.professeur_id = p.id
-            LEFT JOIN salles s ON et.salle_id = s.id");
+            LEFT JOIN salles s ON et.salle_id = s.id
+            WHERE et.week_start = :ws");
+        $stmt->execute([':ws' => $selected_week_start]);
         $emploi = [];
         foreach ($stmt as $row) {
             $emploi[$row['jour_id']][$row['horaire_id']] = $row;
@@ -224,6 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $prof_id = isset($_POST['prof_id']) ? intval($_POST['prof_id']) : null;
     $matiere_id = isset($_POST['matiere_id']) ? intval($_POST['matiere_id']) : null;
     $salle_nom = isset($_POST['salle_nom']) ? trim($_POST['salle_nom']) : '';
+    $week_start = isset($_POST['week_start']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_POST['week_start']) ? $_POST['week_start'] : $selected_week_start;
 
     try {
         $conn->beginTransaction();
@@ -264,8 +278,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         // Insérer ou remplacer l'entrée emploi_temps
         // On suppose la table emploi_temps a les colonnes : jour_id, horaire_id, matiere_id, professeur_id, salle_id
-        $up = $conn->prepare('REPLACE INTO emploi_temps (jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:jid, :hid, :mid, :pid, :sid)');
+        $up = $conn->prepare('REPLACE INTO emploi_temps (week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:ws, :jid, :hid, :mid, :pid, :sid)');
         $up->execute([
+            ':ws' => $week_start,
             ':jid' => $jour_id,
             ':hid' => $horaire_id,
             ':mid' => $matiere_id,
@@ -402,7 +417,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
             <div class="tab-pane fade" id="edt" role="tabpanel" aria-labelledby="edt-tab">
                 <h5>Emploi du temps</h5>
-                <div class="mb-2">
+                <div class="mb-2 d-flex align-items-center gap-2">
+                    <form method="get" id="week-form" class="d-flex align-items-center gap-2">
+                        <label class="form-label mb-0">Semaine (lundi)</label>
+                        <input type="date" name="week_start" id="week-start" class="form-control form-control-sm" value="<?= htmlspecialchars($selected_week_start) ?>">
+                        <button class="btn btn-sm btn-primary" type="submit">Afficher</button>
+                    </form>
                     <button class="btn btn-sm btn-success" id="btn-add-edt">Ajouter un créneau</button>
                 </div>
                 <table class="table table-bordered">
@@ -437,8 +457,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <div class="modal fade" id="modalEdt" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form method="post" id="form-edt">
-                                                <input type="hidden" name="action" value="add_emploi">
+                                                                    <form method="post" id="form-edt">
+                                                                        <input type="hidden" name="action" value="add_emploi">
+                                                                        <input type="hidden" name="week_start" id="form-week-start" value="<?= htmlspecialchars($selected_week_start) ?>">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Ajouter / Modifier un créneau</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -569,6 +590,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     if (prefill.debut) form.debut.value = prefill.debut;
                     if (prefill.fin) form.fin.value = prefill.fin;
                 }
+                // remplir week_start depuis le datepicker si présent
+                const wk = document.getElementById('week-start');
+                const hidden = document.getElementById('form-week-start');
+                if (wk && hidden) hidden.value = wk.value || hidden.value;
                 modal.show();
             }
 
