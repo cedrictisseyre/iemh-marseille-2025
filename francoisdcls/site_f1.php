@@ -117,11 +117,7 @@ $navLinks = [
     </form>
   </section>
 
-  <h3>Formulaires d'ajout</h3>
-  <ul>
-    <li><a href="pages/ajout_pilote.php">Ajouter un pilote</a></li>
-    <li><a href="pages/ajout_ecurie.php">Ajouter une écurie</a></li>
-  </ul>
+  <!-- Quick-add links removed from homepage per UI decision; forms remain available on their pages -->
 
   <div id="stats-globales" style="margin-top:2em;" role="region" aria-live="polite">
     <div class="stats-skeleton" aria-hidden="true">
