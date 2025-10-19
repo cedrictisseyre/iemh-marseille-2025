@@ -133,6 +133,22 @@ button:hover {
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
+/* ---- FILTERABLE SELECT ---- */
+.filterable-select {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+#playerFilter {
+    margin-bottom: 0.5em;
+    width: 80%;
+}
+#playerSelect {
+    width: 80%;
+    height: 150px;
+}
+
 /* ---- FOOTER ---- */
 footer {
     margin-top: 1.2em;
@@ -143,47 +159,53 @@ footer {
 
 :focus {
     outline: 3px solid #ef4444;
-    outline-offset: 2px;
 }
 
-/* ---- SCROLL ANIMATION ---- */
+/* ---- ANIMATIONS ---- */
 .scroll-animate {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(40px);
     transition: all 0.6s ease;
 }
-
 .scroll-animate.show {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* ---- MODAL CARD ---- */
+/* ---- MODAL ZOOM ---- */
 .card-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.4);
     display: none;
+    position: fixed;
+    z-index: 999;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    overflow-y: auto;
 }
 
 .card-modal {
-    background: #f8fafc;
-    border-radius: 12px;
+    background: white;
     padding: 2em;
-    max-width: 90%;
-    max-height: 90%;
-    overflow-y: auto;
-    transform: scale(0);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-radius: 12px;
+    width: 80%;
+    max-width: 700px;
+    transform: scale(0.5);
+    transition: transform 0.3s ease;
 }
 
 .card-modal.show {
-    transform: scale(2);
+    transform: scale(1);
+}
+
+/* ---- NO-ZOOM FORMS ---- */
+.no-zoom {
+    cursor: default;
+    pointer-events: auto;
+}
+.no-zoom:hover {
+    transform: none;
+    box-shadow: none;
+    background: #f8fafc;
 }
