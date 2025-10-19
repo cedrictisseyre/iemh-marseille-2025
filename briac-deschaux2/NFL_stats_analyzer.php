@@ -45,7 +45,7 @@ function nav($active) {
             <h2>Ajouter un joueur</h2>
             <form method="post" action="services/add_player.php">
                 <input type="text" name="prenom" placeholder="Prénom" required>
-                <input type="text" name="nom" placeholder="Nom" required>
+                <input type="text" name="nom" placeholder="Nom" class="autocomplete-player" required>
                 <select name="poste" required>
                     <option value="">Sélectionner un poste</option>
                     <?php
@@ -82,11 +82,11 @@ function nav($active) {
         <!-- Recherche joueurs -->
         <div class="card magic-bento">
             <h2>Recherche joueur</h2>
-            <form method="get">
-                <input type="hidden" name="page" value="joueurs">
-                <input type="text" name="recherche" placeholder="Nom ou prénom">
-                <button type="submit" class="shiny-button">Rechercher</button>
-            </form>
+            <div class="autocomplete-container">
+                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search">
+                <div class="autocomplete-suggestions"></div>
+            </div>
+            <button type="submit" class="shiny-button" onclick="document.forms[0].submit()">Rechercher</button>
         </div>
 
         <!-- Liste des joueurs -->
@@ -122,16 +122,16 @@ function nav($active) {
 
     <?php elseif ($page === 'stats') : 
         $saison = date('Y'); ?>
-        <!-- Formulaire stats avec autocomplétion -->
+        <!-- Formulaire stats -->
         <div class="card magic-bento">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
             <form method="post" action="services/add_stats.php">
                 <div class="autocomplete-container">
-                    <input type="text" id="playerSearch" placeholder="Écrire le nom du joueur" autocomplete="off" required>
-                    <input type="hidden" name="id_player" id="id_player">
-                    <div id="playerSuggestions" class="autocomplete-suggestions"></div>
+                    <input type="text" name="id_player_name" placeholder="Nom du joueur" class="autocomplete-player">
+                    <input type="hidden" name="id_player">
+                    <div class="autocomplete-suggestions"></div>
                 </div>
-                <!-- Tous les champs stats -->
+                <!-- Champs stats -->
                 <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
                 <input type="number" name="passing_tds" placeholder="TD passés" min="0">
                 <input type="number" name="interceptions" placeholder="Interceptions" min="0">
@@ -158,11 +158,11 @@ function nav($active) {
         <!-- Recherche stats -->
         <div class="card magic-bento">
             <h2>Recherche stats joueur</h2>
-            <form method="get">
-                <input type="hidden" name="page" value="stats">
-                <input type="text" name="recherche" placeholder="Nom ou prénom">
-                <button type="submit" class="shiny-button">Rechercher</button>
-            </form>
+            <div class="autocomplete-container">
+                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search">
+                <div class="autocomplete-suggestions"></div>
+            </div>
+            <button type="submit" class="shiny-button" onclick="document.forms[0].submit()">Rechercher</button>
         </div>
 
         <!-- Affichage stats -->
@@ -215,7 +215,6 @@ function nav($active) {
             <h2>Filtres Classement</h2>
             <form method="get">
                 <input type="hidden" name="page" value="classement">
-
                 <label>Poste :</label>
                 <select name="poste">
                     <option value="">Tous</option>
@@ -252,8 +251,7 @@ function nav($active) {
         </div>
 
         <?php
-        // Classements TD et Plaquages conservés comme dans le code original
-        // --- TDs par conférence ---
+        // --- Classement TDs ---
         $sql_conf = "
             SELECT p.prenom, p.nom, p.poste, t.conference,
                    COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
@@ -261,12 +259,15 @@ function nav($active) {
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
             WHERE 1=1";
+
         $params = [':saison' => $saison];
         if ($filtre_poste !== '') { $sql_conf .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
         if ($filtre_team !== '') { $sql_conf .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
+
         $sql_conf .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.conference
                        HAVING total_tds > 0
                        ORDER BY t.conference, total_tds DESC";
+
         $stmt_conf = $pdo->prepare($sql_conf);
         $stmt_conf->execute($params);
         $conf_data = $stmt_conf->fetchAll();
@@ -285,7 +286,7 @@ function nav($active) {
             echo '</ol>';
         }
 
-        // --- Plaquages par division ---
+        // --- Classement Plaquages ---
         $sql_div = "
             SELECT p.prenom, p.nom, p.poste, t.division,
                    COALESCE(SUM(s.tackles),0) AS total_plaquages
@@ -293,12 +294,15 @@ function nav($active) {
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
             WHERE 1=1";
+
         $params = [':saison' => $saison];
         if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
         if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
+
         $sql_div .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.division
                       HAVING total_plaquages > 0
                       ORDER BY t.division, total_plaquages DESC";
+
         $stmt_div = $pdo->prepare($sql_div);
         $stmt_div->execute($params);
         $div_data = $stmt_div->fetchAll();
@@ -341,16 +345,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
     elements.forEach(el => observer.observe(el));
 
-    // Modal click
+    // Modal click pour cartes seulement
     const overlay = document.getElementById('cardModalOverlay');
     const modalContent = document.getElementById('cardModalContent');
 
     document.querySelectorAll('.card.magic-bento').forEach(card => {
-        card.addEventListener('click', function() {
-            modalContent.innerHTML = card.innerHTML;
-            overlay.style.display = 'flex';
-            setTimeout(() => modalContent.classList.add('show'), 10);
-        });
+        // On ignore les formulaires pour ne pas zoomer
+        if (!card.querySelector('form')) {
+            card.addEventListener('click', function() {
+                modalContent.innerHTML = card.innerHTML;
+                overlay.style.display = 'flex';
+                setTimeout(() => modalContent.classList.add('show'), 10);
+            });
+        }
     });
 
     overlay.addEventListener('click', function(e) {
@@ -360,46 +367,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Autocomplétion pour stats
-    const input = document.getElementById('playerSearch');
-    const hidden = document.getElementById('id_player');
-    const suggestions = document.getElementById('playerSuggestions');
-    if(input){
-        let timeout = null;
+    // --- Autocomplétion joueurs ---
+    const autocompleteInputs = document.querySelectorAll('.autocomplete-player, .autocomplete-player-search');
+    autocompleteInputs.forEach(input => {
+        const hiddenInput = input.closest('form')?.querySelector('input[type=hidden][name="id_player"]');
+        const suggestionsContainer = input.parentElement.querySelector('.autocomplete-suggestions');
+
         input.addEventListener('input', function() {
-            const query = input.value.trim();
-            if (timeout) clearTimeout(timeout);
-            if (query.length < 1) {
-                suggestions.innerHTML = '';
-                hidden.value = '';
+            const val = this.value.trim();
+            if (val.length < 1) {
+                suggestionsContainer.innerHTML = '';
                 return;
             }
-            timeout = setTimeout(() => {
-                fetch(`services/search_player.php?q=${encodeURIComponent(query)}`)
+            fetch('services/player_search.php?q=' + encodeURIComponent(val))
                 .then(res => res.json())
                 .then(data => {
-                    suggestions.innerHTML = '';
+                    suggestionsContainer.innerHTML = '';
                     data.forEach(player => {
                         const div = document.createElement('div');
-                        div.className = 'suggestion';
-                        div.textContent = `${player.prenom} ${player.nom}`;
+                        div.textContent = player.prenom + ' ' + player.nom;
                         div.dataset.id = player.id_player;
+                        div.classList.add('suggestion-item');
                         div.addEventListener('click', () => {
-                            input.value = div.textContent;
-                            hidden.value = div.dataset.id;
-                            suggestions.innerHTML = '';
+                            input.value = player.prenom + ' ' + player.nom;
+                            if (hiddenInput) hiddenInput.value = player.id_player;
+                            suggestionsContainer.innerHTML = '';
                         });
-                        suggestions.appendChild(div);
+                        suggestionsContainer.appendChild(div);
                     });
                 });
-            }, 300);
         });
-        document.addEventListener('click', e => {
-            if (!e.target.closest('.autocomplete-container')) {
-                suggestions.innerHTML = '';
+
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                suggestionsContainer.innerHTML = '';
             }
         });
-    }
+    });
 });
 </script>
 </body>
