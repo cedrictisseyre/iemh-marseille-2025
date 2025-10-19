@@ -18,11 +18,30 @@ function render_header(string $title = 'Base de données Formule 1'): void
 /** Renders the main navigation as a list; accepts an array of ['href' => 'label'] */
 function render_nav(array $links = []): void
 {
-    echo "<nav aria-label=\"Navigation principale\">\n  <ul>\n";
+    // Canonical labels to ensure consistent tab names across pages
+    $canonical = [
+        'site_f1.php' => 'Accueil',
+        'pages/liste_pilotes.php' => 'Liste des pilotes',
+        'pages/liste_ecuries.php' => 'Liste des écuries',
+        'pages/statistiques.php' => 'Statistiques',
+        'pages/recherche.php' => 'Recherche de pilotes',
+        'pages/comparer_pilotes.php' => 'Comparer deux pilotes',
+        'pages/palmares_annee.php' => 'Palmarès par année',
+        'pages/pantheon_pilotes.php' => 'Champions du monde',
+        'pages/ajout_participation.php' => 'Ajouter une participation',
+    ];
+
+    // Render as styled tabs to match site-wide navigation
+    echo "<nav class=\"tabs\" aria-label=\"Navigation principale\">\n  <ul class=\"tabs-list\">\n";
+    $current = $_SERVER['REQUEST_URI'] ?? '';
     foreach ($links as $href => $label) {
         $hrefEsc = htmlspecialchars($href);
-        $labelEsc = htmlspecialchars($label);
-        echo "    <li><a href=\"{$hrefEsc}\">{$labelEsc}</a></li>\n";
+        // prefer canonical label when available (match by basename)
+        $base = basename($href);
+        $labelCanonical = $canonical[$href] ?? $canonical[$base] ?? $label;
+        $labelEsc = htmlspecialchars($labelCanonical);
+        $active = (strpos($current, $href) !== false || basename(parse_url($current, PHP_URL_PATH) ?: '') === basename($href)) ? 'active' : '';
+        echo "    <li><a href=\"{$hrefEsc}\" class=\"{$active}\">{$labelEsc}</a></li>\n";
     }
     echo "  </ul>\n</nav>\n";
 }
