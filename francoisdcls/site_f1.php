@@ -73,9 +73,7 @@ $navLinks = [
 
   <p><?= htmlspecialchars(get_welcome_message()) ?></p>
 
-  <div id="evaluation-badge" style="float:right;margin-top:-2.5em;">Score: <span id="eval-score">—</span>
-    <?php if (function_exists('render_evaluation_badge')) echo render_evaluation_badge(72); /* example */ ?>
-  </div>
+  <!-- Evaluation badge removed from homepage per request -->
 
   <section aria-labelledby="search-label" style="margin-top:1em;">
     <h2 id="search-label">Recherche rapide de pilote</h2>
@@ -150,7 +148,7 @@ $navLinks = [
 <script src="assets/actions.js" defer></script>
 <script src="assets/recherche.js" defer></script>
 <script src="assets/recherche_autocomplete.js" defer></script>
-<script src="assets/eval.js" defer></script>
+<!-- eval.js not loaded on homepage -->
 <script src="assets/tabs.js" defer></script>
 <?php render_footer(); ?>
 </body>
