@@ -154,6 +154,7 @@ render_nav($navLinks);
 <script src="assets/recherche.js" defer></script>
 <script src="assets/recherche_autocomplete.js" defer></script>
 <script src="assets/eval.js" defer></script>
+<script src="assets/tabs.js" defer></script>
 <?php render_footer(); ?>
 </body>
 </html>
