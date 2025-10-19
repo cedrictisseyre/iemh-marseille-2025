@@ -634,8 +634,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 form.addEventListener('submit', function(){
                     const wk = document.getElementById('form-week-start');
                     if (wk && wk.value) {
-                        // s'assurer que l'URL contiendra week_start pour le rechargement
-                        form.action = (form.action || '') + '#edt';
+                        // Ne pas utiliser form.action (shadowed par input[name=action])
+                        const current = form.getAttribute('action') || '';
+                        const sep = current.indexOf('?') === -1 ? '?' : '&';
+                        form.setAttribute('action', current + sep + 'week_start=' + encodeURIComponent(wk.value) + '#edt');
                     }
                 });
         })();
