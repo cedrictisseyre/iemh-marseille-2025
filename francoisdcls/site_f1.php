@@ -48,7 +48,7 @@ $navLinks = [
     'pages/comparer_pilotes.php' => 'Comparer deux pilotes',
     'pages/palmares_annee.php' => 'Palmarès par année',
     'pages/pantheon_pilotes.php' => 'Champions du monde',
-    'pages/ajout_participation.php' => 'Ajouter une participation',
+  // page ajout_participation purposely hidden from nav
 ];
 // render_nav is now called from includes/header.php by render_header();
 // if needed, pages can call render_nav() with custom links. We keep $navLinks
@@ -121,7 +121,6 @@ $navLinks = [
   <ul>
     <li><a href="pages/ajout_pilote.php">Ajouter un pilote</a></li>
     <li><a href="pages/ajout_ecurie.php">Ajouter une écurie</a></li>
-    <li><a href="pages/ajout_participation.php">Ajouter une participation</a></li>
   </ul>
 
   <div id="stats-globales" style="margin-top:2em;" role="region" aria-live="polite">

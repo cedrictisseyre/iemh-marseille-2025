@@ -37,7 +37,7 @@ function render_nav(array $links = []): void
         'pages/comparer_pilotes.php' => 'Comparer deux pilotes',
         'pages/palmares_annee.php' => 'Palmarès par année',
         'pages/pantheon_pilotes.php' => 'Champions du monde',
-        'pages/ajout_participation.php' => 'Ajouter une participation',
+        // 'pages/ajout_participation.php' removed from main nav; keep add functions elsewhere
     ];
 
     // Render as styled tabs to match site-wide navigation

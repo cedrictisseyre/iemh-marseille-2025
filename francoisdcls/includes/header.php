@@ -54,7 +54,7 @@ if (file_exists($sh)) {
         'pages/comparer_pilotes.php' => 'Comparer deux pilotes',
         'pages/palmares_annee.php' => 'Palmarès par année',
         'pages/pantheon_pilotes.php' => 'Champions du monde',
-        'pages/ajout_participation.php' => 'Ajouter une participation',
+        // 'pages/ajout_participation.php' intentionally excluded from main nav
     ];
     render_nav($navLinks);
 } else {
