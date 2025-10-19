@@ -31,13 +31,25 @@ if (!isset($conn) || !($conn instanceof PDO)) {
         }
 
         // Récupérer l'emploi du temps pour la semaine sélectionnée (jointure)
-        $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
-            FROM emploi_temps et
-            JOIN matieres m ON et.matiere_id = m.id
-            LEFT JOIN professeurs p ON et.professeur_id = p.id
-            LEFT JOIN salles s ON et.salle_id = s.id
-            WHERE et.week_start = :ws");
-        $stmt->execute([':ws' => $selected_week_start]);
+        try {
+            $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+                FROM emploi_temps et
+                JOIN matieres m ON et.matiere_id = m.id
+                LEFT JOIN professeurs p ON et.professeur_id = p.id
+                LEFT JOIN salles s ON et.salle_id = s.id
+                WHERE et.week_start = :ws");
+            $stmt->execute([':ws' => $selected_week_start]);
+        } catch (PDOException $e) {
+            // Si la colonne week_start n'existe pas ou autre erreur, retomber sur une requête sans filtre
+            error_log('EDT week_start filter failed, falling back: ' . $e->getMessage());
+            $stmt = $conn->query("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+                FROM emploi_temps et
+                JOIN matieres m ON et.matiere_id = m.id
+                LEFT JOIN professeurs p ON et.professeur_id = p.id
+                LEFT JOIN salles s ON et.salle_id = s.id");
+            // marquer qu'aucune semaine n'est sélectionnée
+            $selected_week_start = null;
+        }
         $emploi = [];
         foreach ($stmt as $row) {
             $emploi[$row['jour_id']][$row['horaire_id']] = $row;
