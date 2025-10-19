@@ -27,7 +27,8 @@ if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
             $pdoLocal->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdoLocal;
         } catch (PDOException $e) {
-            echo "Erreur de connexion SQLite : " . $e->getMessage();
+            // Log the error instead of echoing to avoid corrupting HTTP responses
+            error_log("Erreur de connexion SQLite : " . $e->getMessage());
             return null;
         }
     };
@@ -39,7 +40,8 @@ if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
             $pdoLocal->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdoLocal;
         } catch (PDOException $e) {
-            echo "Erreur de connexion MySQL : " . $e->getMessage();
+            // Log the error instead of echoing to avoid corrupting HTTP responses
+            error_log("Erreur de connexion MySQL : " . $e->getMessage());
             return null;
         }
     };
@@ -49,7 +51,8 @@ if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
         if (file_exists($sqliteFile)) {
             $pdo = $connectSqlite();
         } else {
-            echo "FRANCOISDB_DRIVER=sqlite mais le fichier $sqliteFile est introuvable.\n";
+            // Notify in logs instead of echoing
+            error_log("FRANCOISDB_DRIVER=sqlite mais le fichier $sqliteFile est introuvable.");
             $pdo = null;
         }
     } elseif ($driver === 'mysql') {
