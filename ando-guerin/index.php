@@ -42,13 +42,21 @@ if (!isset($conn) || !($conn instanceof PDO)) {
         } catch (PDOException $e) {
             // Si la colonne week_start n'existe pas ou autre erreur, retomber sur une requête sans filtre
             error_log('EDT week_start filter failed, falling back: ' . $e->getMessage());
-            $stmt = $conn->query("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
-                FROM emploi_temps et
-                JOIN matieres m ON et.matiere_id = m.id
-                LEFT JOIN professeurs p ON et.professeur_id = p.id
-                LEFT JOIN salles s ON et.salle_id = s.id");
-            // marquer qu'aucune semaine n'est sélectionnée
-            $selected_week_start = null;
+            if ($current_eleve_id) {
+                // pour un élève connecté : ne pas afficher le planning global — garder vide
+                $emploi = [];
+                // marquer qu'aucune semaine n'est sélectionnée
+                $selected_week_start = $selected_week_start; // inchangé
+            } else {
+                // comportement historique pour utilisateurs non-connectés
+                $stmt = $conn->query("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+                    FROM emploi_temps et
+                    JOIN matieres m ON et.matiere_id = m.id
+                    LEFT JOIN professeurs p ON et.professeur_id = p.id
+                    LEFT JOIN salles s ON et.salle_id = s.id");
+                // marquer qu'aucune semaine n'est sélectionnée
+                $selected_week_start = null;
+            }
         }
         $emploi = [];
         foreach ($stmt as $row) {
