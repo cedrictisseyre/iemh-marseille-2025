@@ -1,9 +1,16 @@
-/* ======== BASE STYLES ======== */
+/* =======================
+   RESET & BASE
+======================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    background-color: #0b0c10;
-    color: #fff;
+    background-color: #f8f8f8;
+    color: #222;
 }
 
 .container {
@@ -13,78 +20,236 @@ body {
     padding: 20px 0;
 }
 
+/* =======================
+   HEADER
+======================= */
 .header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .header-logo {
     width: 100px;
-    display: block;
-    margin: 0 auto 10px;
+    height: auto;
 }
 
-/* ======== NAV MENU ======== */
+/* =======================
+   TRUE FOCUS TITLE
+======================= */
+.focus-container {
+    position: relative;
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.focus-word {
+    position: relative;
+    font-size: 3rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: filter 0.3s ease, color 0.3s ease;
+}
+
+.focus-word.active {
+    filter: blur(0);
+}
+
+.focus-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    box-sizing: content-box;
+    border: none;
+}
+
+.corner {
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    border: 3px solid var(--border-color, #fff);
+    filter: drop-shadow(0px 0px 4px var(--border-color, #fff));
+    border-radius: 3px;
+    transition: none;
+}
+
+.top-left {
+    top: -10px;
+    left: -10px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.top-right {
+    top: -10px;
+    right: -10px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.bottom-left {
+    bottom: -10px;
+    left: -10px;
+    border-right: none;
+    border-top: none;
+}
+
+.bottom-right {
+    bottom: -10px;
+    right: -10px;
+    border-left: none;
+    border-top: none;
+}
+
+/* =======================
+   MENU NAV
+======================= */
 .menu {
     display: flex;
     justify-content: center;
+    margin-bottom: 30px;
     gap: 15px;
-    margin-bottom: 20px;
 }
 
 .menu a {
-    padding: 10px 20px;
     text-decoration: none;
-    color: #fff;
+    padding: 10px 20px;
     border-radius: 8px;
-    transition: transform 0.2s ease, background 0.3s ease;
+    background-color: #eee;
+    color: #222;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Shiny Button Effect */
-.shiny-button {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+.menu a.shiny-button:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+}
+
+.menu a.active {
+    background-color: #4285f4;
     color: #fff;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
 }
 
-.shiny-button:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-
-/* ======== CARDS & GRID ======== */
+/* =======================
+   CARDS & GRID
+======================= */
 .card {
-    background: #1f2833;
-    padding: 15px;
+    background-color: #fff;
+    padding: 20px;
     border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: default;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card.magic-bento:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    gap: 20px;
 }
 
-/* ======== SCROLL ANIMATION ======== */
+/* =======================
+   BUTTONS
+======================= */
+button.shiny-button {
+    background-color: #4285f4;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.shiny-button:hover {
+    background-color: #357ae8;
+    transform: scale(1.05);
+}
+
+/* =======================
+   MODAL
+======================= */
+.card-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.card-modal {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80%;
+    overflow-y: auto;
+    transform: scale(1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.card-modal.show {
+    transform: scale(1.1);
+}
+
+/* =======================
+   INPUTS
+======================= */
+input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+/* =======================
+   SUGGESTIONS AUTOCOMPLETE
+======================= */
+.suggestions-box {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #eee;
+}
+
+/* =======================
+   SCROLL ANIMATION
+======================= */
 .scroll-animate {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.5s ease-out;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 .scroll-animate.show {
@@ -92,123 +257,23 @@ body {
     transform: translateY(0);
 }
 
-/* ======== MODAL ZOOM ======== */
-.card-modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.card-modal {
-    background: #1f2833;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 90%;
-    max-height: 90%;
-    overflow: auto;
-    transform: scale(0.5);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.card-modal.show {
-    transform: scale(1);
-    opacity: 1;
-}
-
-/* ======== AUTOCOMPLETE DROPDOWN ======== */
-.autocomplete-suggestions {
-    position: absolute;
-    background: #1f2833;
-    border: 1px solid #444;
-    border-radius: 6px;
-    max-height: 150px;
-    overflow-y: auto;
-    z-index: 100;
-    width: 100%;
-}
-
-.autocomplete-suggestions div {
-    padding: 8px 10px;
+/* =======================
+   SPECIFIC CLASSES FOR CARDS
+======================= */
+.player-card {
     cursor: pointer;
 }
 
-.autocomplete-suggestions div:hover {
-    background-color: #2575fc;
+.stat-card {
+    cursor: pointer;
 }
 
-/* ======== TRUE FOCUS ======== */
-.focus-container {
-  position: relative;
-  display: flex;
-  gap: 1em;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.focus-word {
-  position: relative;
-  font-size: 3rem;
-  font-weight: 900;
-  cursor: pointer;
-  transition:
-    filter 0.3s ease,
-    color 0.3s ease;
-}
-
-.focus-word.active {
-  filter: blur(0);
-}
-
-.focus-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  box-sizing: content-box;
-  border: none;
-}
-
-.corner {
-  position: absolute;
-  width: 1rem;
-  height: 1rem;
-  border: 3px solid var(--border-color, #fff);
-  filter: drop-shadow(0px 0px 4px var(--border-color, #fff));
-  border-radius: 3px;
-  transition: none;
-}
-
-.top-left {
-  top: -10px;
-  left: -10px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.top-right {
-  top: -10px;
-  right: -10px;
-  border-left: none;
-  border-bottom: none;
-}
-
-.bottom-left {
-  bottom: -10px;
-  left: -10px;
-  border-right: none;
-  border-top: none;
-}
-
-.bottom-right {
-  bottom: -10px;
-  right: -10px;
-  border-left: none;
-  border-top: none;
+/* =======================
+   FOOTER
+======================= */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+    color: #555;
 }

@@ -29,11 +29,21 @@ function nav($active) {
 <body>
 <div class="container">
 
-    <!-- HEADER avec True Focus -->
-    <div class="header focus-container">
+    <!-- HEADER -->
+    <div class="header">
         <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" alt="Logo NFL" class="header-logo">
-        <h1 class="focus-word" id="mainTitle">NFL STATS ANALYZER</h1>
-        <canvas class="focus-frame"></canvas>
+        <!-- True Focus Animation -->
+        <div id="mainTitle" class="focus-container">
+            <span class="focus-word active">NFL</span>
+            <span class="focus-word">STATS</span>
+            <span class="focus-word">ANALYZER</span>
+            <div class="focus-frame">
+                <span class="corner top-left"></span>
+                <span class="corner top-right"></span>
+                <span class="corner bottom-left"></span>
+                <span class="corner bottom-right"></span>
+            </div>
+        </div>
     </div>
 
     <!-- NAV MENU -->
@@ -44,9 +54,9 @@ function nav($active) {
         <!-- Formulaire d'ajout joueur -->
         <div class="card magic-bento">
             <h2>Ajouter un joueur</h2>
-            <form method="post" action="services/add_player.php" class="player-form">
-                <input type="text" name="prenom" placeholder="Prénom" required class="autocomplete-input" data-type="player">
-                <input type="text" name="nom" placeholder="Nom" required class="autocomplete-input" data-type="player">
+            <form method="post" action="services/add_player.php" autocomplete="off">
+                <input type="text" name="prenom" id="prenom" placeholder="Prénom" required>
+                <input type="text" name="nom" id="nom" placeholder="Nom" required>
                 <select name="poste" required>
                     <option value="">Sélectionner un poste</option>
                     <?php
@@ -83,10 +93,10 @@ function nav($active) {
         <!-- Recherche joueurs -->
         <div class="card magic-bento">
             <h2>Recherche joueur</h2>
-            <form method="get" class="player-search">
+            <form method="get" autocomplete="off">
                 <input type="hidden" name="page" value="joueurs">
-                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-input" data-type="search">
-                <div class="autocomplete-suggestions"></div>
+                <input type="text" name="recherche" id="searchJoueur" placeholder="Nom ou prénom">
+                <div id="suggestionsJoueur" class="autocomplete-suggestions"></div>
                 <button type="submit" class="shiny-button">Rechercher</button>
             </form>
         </div>
@@ -127,29 +137,24 @@ function nav($active) {
         <!-- Formulaire stats -->
         <div class="card magic-bento">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
-            <form method="post" action="services/add_stats.php" class="stats-form">
-                <input type="text" name="player_name" placeholder="Nom du joueur" class="autocomplete-input" data-type="stats">
-                <div class="autocomplete-suggestions"></div>
-                <!-- Tous les champs stats -->
-                <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
-                <input type="number" name="passing_tds" placeholder="TD passés" min="0">
+            <form method="post" action="services/add_stats.php" autocomplete="off">
+                <input type="text" name="player_name" id="playerNameStats" placeholder="Nom ou prénom joueur" required>
+                <input type="hidden" name="id_player" id="idPlayerStats">
+                <div id="suggestionsStats" class="autocomplete-suggestions"></div>
+                <!-- Champs stats -->
+                <input type="number" name="yards_passe" placeholder="Yards passés" min="0">
+                <input type="number" name="td_passe" placeholder="TD passés" min="0">
                 <input type="number" name="interceptions" placeholder="Interceptions" min="0">
-                <input type="number" name="rushing_yards" placeholder="Yards course" min="0">
-                <input type="number" name="rushing_tds" placeholder="TD course" min="0">
+                <input type="number" name="yards_course" placeholder="Yards course" min="0">
+                <input type="number" name="td_course" placeholder="TD course" min="0">
                 <input type="number" name="receptions" placeholder="Réceptions" min="0">
-                <input type="number" name="receiving_yards" placeholder="Yards réception" min="0">
-                <input type="number" name="receiving_tds" placeholder="TD réception" min="0">
-                <input type="number" name="tackles" placeholder="Plaquages" min="0">
+                <input type="number" name="yards_reception" placeholder="Yards réception" min="0">
+                <input type="number" name="td_reception" placeholder="TD réception" min="0">
+                <input type="number" name="plaquages" placeholder="Plaquages" min="0">
                 <input type="number" step="0.1" name="sacks" placeholder="Sacks" min="0">
                 <input type="number" name="interceptions_def" placeholder="Interceptions déf" min="0">
-                <input type="number" name="field_goals_made" placeholder="Field Goals marqués" min="0">
-                <input type="number" name="field_goals_attempted" placeholder="Field Goals tentés" min="0">
-                <input type="number" name="extra_points_made" placeholder="Extra Points marqués" min="0">
-                <input type="number" name="extra_points_attempted" placeholder="Extra Points tentés" min="0">
+                <input type="number" name="fg_reussis" placeholder="Field Goals marqués" min="0">
                 <input type="number" name="punts" placeholder="Punts" min="0">
-                <input type="number" name="punt_yards" placeholder="Yards punts" min="0">
-                <input type="number" name="longest_punt" placeholder="Plus long punt" min="0">
-                <input type="number" name="inside_20" placeholder="Punts inside 20" min="0">
                 <button type="submit" class="shiny-button">Ajouter les stats</button>
             </form>
         </div>
@@ -157,13 +162,14 @@ function nav($active) {
         <!-- Recherche stats -->
         <div class="card magic-bento">
             <h2>Recherche stats joueur</h2>
-            <form method="get" class="stats-search">
+            <form method="get" autocomplete="off">
                 <input type="hidden" name="page" value="stats">
-                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-input" data-type="search">
-                <div class="autocomplete-suggestions"></div>
+                <input type="text" name="recherche" id="searchStats" placeholder="Nom ou prénom">
+                <div id="suggestionsStatsSearch" class="autocomplete-suggestions"></div>
                 <button type="submit" class="shiny-button">Rechercher</button>
             </form>
-       
+        </div>
+
         <!-- Affichage stats -->
         <h2>Statistiques <?= $saison ?></h2>
         <div class="grid">
@@ -187,7 +193,7 @@ function nav($active) {
             $has_stats = false;
             while ($st = $stmt->fetch()) {
                 $has_stats = true;
-                echo "<div class='card magic-bento scroll-animate stats-card'>
+                echo "<div class='card magic-bento scroll-animate stat-card'>
                         <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
                         {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
                 foreach ($st as $key => $val) {
@@ -202,7 +208,6 @@ function nav($active) {
             if (!$has_stats) echo "<p>Aucune statistique disponible pour cette saison.</p>";
             ?>
         </div>
-
     <?php elseif ($page === 'classement') : 
         $saison = date('Y');
         $filtre_poste = $_GET['poste'] ?? '';
@@ -254,7 +259,7 @@ function nav($active) {
         // --- Classement TDs ---
         $sql_conf = "
             SELECT p.prenom, p.nom, p.poste, t.conference,
-                   COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
+                   COALESCE(SUM(s.td_passe),0) + COALESCE(SUM(s.td_course),0) + COALESCE(SUM(s.td_reception),0) AS total_tds
             FROM player p
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
@@ -289,7 +294,7 @@ function nav($active) {
         // --- Classement Plaquages ---
         $sql_div = "
             SELECT p.prenom, p.nom, p.poste, t.division,
-                   COALESCE(SUM(s.tackles),0) AS total_plaquages
+                   COALESCE(SUM(s.plaquages),0) AS total_plaquages
             FROM player p
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
@@ -320,13 +325,11 @@ function nav($active) {
             }
             echo '</ol>';
         }
-        ?>
-
-    <?php endif; ?>
+    endif; ?>
     </main>
 </div>
 
-<!-- Modal overlay pour cartes joueurs/stats -->
+<!-- Modal overlay pour zoom cartes -->
 <div class="card-modal-overlay" id="cardModalOverlay">
     <div class="card-modal" id="cardModalContent"></div>
 </div>
@@ -335,10 +338,8 @@ function nav($active) {
     <p>&copy; 2025 NFL Stats Analyzer - Projet académique</p>
 </footer>
 
-<script src="js/autocomplete.js"></script>
-<script src="js/true-focus.js"></script>
+<!-- SCRIPTS JS -->
 <script>
-// SCROLL ANIMATION, MAGIC BENTO & MODAL ZOOM
 document.addEventListener('DOMContentLoaded', function() {
     // Scroll animation
     const elements = document.querySelectorAll('.scroll-animate');
@@ -347,16 +348,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.1 });
     elements.forEach(el => observer.observe(el));
 
-    // Modal zoom pour cartes joueurs et stats seulement
+    // Modal zoom uniquement sur cartes joueur/stat
     const overlay = document.getElementById('cardModalOverlay');
     const modalContent = document.getElementById('cardModalContent');
-    document.querySelectorAll('.player-card, .stats-card').forEach(card => {
+
+    document.querySelectorAll('.player-card, .stat-card').forEach(card => {
         card.addEventListener('click', function() {
             modalContent.innerHTML = card.innerHTML;
             overlay.style.display = 'flex';
             setTimeout(() => modalContent.classList.add('show'), 10);
         });
     });
+
     overlay.addEventListener('click', function(e) {
         if(e.target === overlay) {
             modalContent.classList.remove('show');
@@ -364,8 +367,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // True Focus animation
-    initTrueFocus('#mainTitle');
+    // --- Autocomplétion joueurs ---
+    const searchInputs = [
+        { inputId: 'searchJoueur', suggestionsId: 'suggestionsJoueur' },
+        { inputId: 'searchStats', suggestionsId: 'suggestionsStatsSearch' },
+        { inputId: 'playerNameStats', suggestionsId: 'suggestionsStats' }
+    ];
+
+    searchInputs.forEach(({inputId, suggestionsId}) => {
+        const input = document.getElementById(inputId);
+        const suggestionBox = document.getElementById(suggestionsId);
+
+        input.addEventListener('input', function() {
+            const val = this.value.trim();
+            if (!val) { suggestionBox.innerHTML = ''; return; }
+
+            fetch('services/search_player.php?q=' + encodeURIComponent(val))
+                .then(res => res.json())
+                .then(data => {
+                    suggestionBox.innerHTML = '';
+                    data.forEach(p => {
+                        const div = document.createElement('div');
+                        div.classList.add('suggestion-item');
+                        div.textContent = p.prenom + ' ' + p.nom;
+                        div.dataset.id = p.id_player;
+                        div.addEventListener('click', function() {
+                            input.value = this.textContent;
+                            const hiddenId = document.getElementById('idPlayerStats');
+                            if(hiddenId) hiddenId.value = this.dataset.id;
+                            suggestionBox.innerHTML = '';
+                        });
+                        suggestionBox.appendChild(div);
+                    });
+                });
+        });
+    });
 });
 </script>
 </body>
