@@ -75,11 +75,19 @@ if (!defined('FRANCOIS_BASE_PATH')) {
     if ($envBase) {
         $base = rtrim($envBase, '/');
     } else {
-        // Default to an empty base path so the app is portable when the
-        // document root is the `francoisdcls/` directory. Consumers may set
-        // FRANCOIS_BASE_PATH in env to '/francoisdcls' when serving from the
-        // repository root.
-        $base = '';
+        // Try to auto-detect a reasonable base path so the app works both
+        // when served from the repository root and when the document root
+        // is the `francoisdcls/` directory.
+        // If the current request script path contains the folder name,
+        // assume the app is mounted under that segment (common in dev).
+        $detected = '';
+        $script = $_SERVER['SCRIPT_NAME'] ?? ($_SERVER['REQUEST_URI'] ?? '');
+        // look for a literal '/francoisdcls' segment in the request path
+        if (strpos($script, '/francoisdcls/') !== false || preg_match('#/francoisdcls($|/)#', $script)) {
+            $detected = '/francoisdcls';
+        }
+        // default to empty (root) if nothing detected
+        $base = $detected;
     }
     define('FRANCOIS_BASE_PATH', $base);
 }

@@ -64,12 +64,22 @@
               // show loading
                 const old = panel.innerHTML;
                 panel.innerHTML = '<p>Chargement…</p>';
-          // build an absolute (root-relative) fetch URL using BASE_PATH to avoid
-          // resolving relative to the current document directory (fixes clicks
-          // when on /pages/* pages where relative hrefs would otherwise break)
-                const base = (window.BASE_PATH || '').replace(/\/$/, '');
-                const pathPart = href.startsWith('/') ? href : '/' + href;
-                const fetchUrl = (base || '') + pathPart;
+        // build an absolute (root-relative) fetch URL using BASE_PATH to avoid
+        // resolving relative to the current document directory. Use the
+        // URL constructor with a BASE_PATH-aware base so relative hrefs
+        // (including `../`) are resolved correctly whether the app is
+        // mounted at root or under a subpath like /francoisdcls.
+        const basePath = (window.BASE_PATH || '').replace(/\/$/, '');
+        const baseForUrl = location.origin + (basePath || '') + '/';
+        let fetchUrl;
+        try {
+          const resolved = new URL(href, baseForUrl);
+          fetchUrl = resolved.pathname + resolved.search + resolved.hash;
+        } catch (e) {
+          // fallback: try resolving relative to current location
+          const resolved2 = new URL(href, location.href);
+          fetchUrl = resolved2.pathname + resolved2.search + resolved2.hash;
+        }
                 try {
                   // debug: log what we are about to fetch (helps diagnose bad URLs)
                     try {
@@ -94,9 +104,9 @@
                                 return;
                         }
                         const html = await r.text();
-                        if (debugBox) {
-                            debugBox.textContent = 'ok: ' + fetchUrl + '\nlen=' + html.length;
-                        }
+            if (debugBox) {
+              debugBox.textContent = 'ok: ' + fetchUrl + '\nlen=' + html.length;
+            }
                         if (window.__francois_sanitize_html && typeof window.__francois_sanitize_html === 'function') {
                             panel.innerHTML = window.__francois_sanitize_html(html);
                         } else {
@@ -108,14 +118,22 @@
               // mark active link
                         links.forEach(l => l.classList.remove('active'));
                         a.classList.add('active');
-              // update history using normalized absolute path so popstate can match
-                        if (!skipPush) {
-                            try {
-                                const newUrl = normalizeHref(href);
-                                history.pushState({}, '', newUrl);
-                            } catch (e) {
-                            }
-                        }
+            // update history using the resolved absolute path so popstate
+            // can match. Use the same URL resolution as for fetchUrl.
+            if (!skipPush) {
+              try {
+                const resolvedForHistory = new URL(href, location.origin + (window.BASE_PATH || '') + '/');
+                const newUrl = resolvedForHistory.pathname + resolvedForHistory.search + resolvedForHistory.hash;
+                history.pushState({}, '', newUrl);
+              } catch (e) {
+                try {
+                  const fallback = new URL(href, location.href);
+                  history.pushState({}, '', fallback.pathname + fallback.search + fallback.hash);
+                } catch (e2) {
+                  // give up silently
+                }
+              }
+            }
                 } catch (err) {
                     console.error('Fetch error for', fetchUrl, err);
                     if (debugBox) {
