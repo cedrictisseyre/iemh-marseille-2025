@@ -1,6 +1,4 @@
 <?php
-// NFL_Stats_Analyzer.php (VERSION COMPLÈTE, fonctionnelle, avec autocomplétion et modal limité aux cartes)
-// Inclut la connexion PDO (config/database_connexion.php)
 include __DIR__ . '/config/database_connexion.php';
 
 // Page active
@@ -26,7 +24,6 @@ function nav($active) {
 <head>
     <meta charset="UTF-8">
     <title>NFL Stats Analyzer</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="css/style_page.css">
 </head>
 <body>
@@ -46,29 +43,25 @@ function nav($active) {
         <!-- Formulaire d'ajout joueur -->
         <div class="card magic-bento">
             <h2>Ajouter un joueur</h2>
-            <form method="post" action="services/add_player.php" autocomplete="off">
+            <form method="post" action="services/add_player.php">
                 <input type="text" name="prenom" placeholder="Prénom" required>
                 <input type="text" name="nom" placeholder="Nom" class="autocomplete-player" required>
                 <select name="poste" required>
                     <option value="">Sélectionner un poste</option>
                     <?php
-                    // Récupère les positions existantes
                     $pos = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
                     foreach ($pos as $p) {
                         echo "<option value='{$p['code']}'>{$p['libelle']} ({$p['code']})</option>";
                     }
                     ?>
                 </select>
-
                 <input type="number" name="age" placeholder="Âge" required>
                 <input type="number" name="taille_cm" placeholder="Taille (cm)" required>
                 <input type="number" name="poids_kg" placeholder="Poids (kg)" required>
                 <input type="number" name="annee_debut" placeholder="Année début (ex: 2019)" required>
-
                 <select name="id_team" required>
                     <option value="">Sélectionner une équipe</option>
                     <?php
-                    // Récupère les équipes et groupe par conférence
                     $teams = $pdo->query("SELECT id_team, nom_team, conference FROM team ORDER BY conference, nom_team")->fetchAll();
                     $current_conf = "";
                     foreach ($teams as $t) {
@@ -82,7 +75,6 @@ function nav($active) {
                     if ($current_conf !== "") echo "</optgroup>";
                     ?>
                 </select>
-
                 <button type="submit" class="shiny-button">Ajouter le joueur</button>
             </form>
         </div>
@@ -90,21 +82,17 @@ function nav($active) {
         <!-- Recherche joueurs -->
         <div class="card magic-bento">
             <h2>Recherche joueur</h2>
-            <form method="get" action="" autocomplete="off" class="player-search-form">
-                <input type="hidden" name="page" value="joueurs">
-                <div class="autocomplete-container" style="position:relative;">
-                    <input type="text" name="recherche" id="searchJoueur" placeholder="Nom ou prénom" class="autocomplete-player-search" value="<?php echo htmlspecialchars($_GET['recherche'] ?? ''); ?>">
-                    <div id="suggestionsJoueur" class="autocomplete-suggestions"></div>
-                </div>
-                <button type="submit" class="shiny-button">Rechercher</button>
-            </form>
+            <div class="autocomplete-container">
+                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search">
+                <div class="autocomplete-suggestions"></div>
+            </div>
+            <button type="submit" class="shiny-button" onclick="document.forms[0].submit()">Rechercher</button>
         </div>
 
         <!-- Liste des joueurs -->
         <h2>Liste des joueurs</h2>
         <div class="grid">
             <?php
-            // Prépare le filtre de recherche si présent
             $where = "";
             $params = [];
             if (!empty($_GET['recherche'])) {
@@ -112,18 +100,15 @@ function nav($active) {
                 $where = "WHERE p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?";
                 $params = [$search, $search, $search, $search];
             }
-
-            $sql = "SELECT p.*, t.nom_team, t.logo_url 
+            $stmt = $pdo->prepare("SELECT p.*, t.nom_team, t.logo_url 
                                    FROM player p 
                                    JOIN team t ON p.id_team = t.id_team 
                                    $where
-                                   ORDER BY p.nom";
-            $stmt = $pdo->prepare($sql);
+                                   ORDER BY p.nom");
             $stmt->execute($params);
             while ($pl = $stmt->fetch()) {
-                $experience = date('Y') - (int)$pl['annee_debut'];
-                // Card joueur (clic -> modal) ; class player-card pour modal
-                echo "<div class='card magic-bento scroll-animate player-card'>
+                $experience = date('Y') - $pl['annee_debut'];
+                echo "<div class='card magic-bento scroll-animate'>
                         <h3>{$pl['prenom']} {$pl['nom']}</h3>
                         <p><strong>Poste:</strong> {$pl['poste']}</p>
                         <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;'> {$pl['nom_team']}</p>
@@ -136,33 +121,28 @@ function nav($active) {
         </div>
 
     <?php elseif ($page === 'stats') : 
-        // Saison courante
-        $saison = date('Y');
-        ?>
+        $saison = date('Y'); ?>
         <!-- Formulaire stats -->
         <div class="card magic-bento">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
-            <!-- NOTE: add_stats.php que tu m'as fourni attend des noms FR (yards_passe, td_passe, etc.) -->
-            <form method="post" action="services/add_stats.php" autocomplete="off">
-                <div class="autocomplete-container" style="position:relative;">
-                    <input type="text" name="player_name" id="playerNameStats" placeholder="Nom ou prénom joueur" class="autocomplete-player" autocomplete="off">
-                    <input type="hidden" name="id_player" id="idPlayerStats">
-                    <div id="suggestionsStats" class="autocomplete-suggestions"></div>
+            <form method="post" action="services/add_stats.php">
+                <div class="autocomplete-container">
+                    <input type="text" name="id_player_name" placeholder="Nom du joueur" class="autocomplete-player">
+                    <input type="hidden" name="id_player">
+                    <div class="autocomplete-suggestions"></div>
                 </div>
-
-                <!-- Champs stats (les noms correspondent à add_stats.php fourni) -->
-                <input type="number" name="yards_passe" placeholder="Yards passés" min="0">
-                <input type="number" name="td_passe" placeholder="TD passés" min="0">
+                <!-- Champs stats -->
+                <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
+                <input type="number" name="passing_tds" placeholder="TD passés" min="0">
                 <input type="number" name="interceptions" placeholder="Interceptions" min="0">
-                <input type="number" name="yards_course" placeholder="Yards course" min="0">
-                <input type="number" name="td_course" placeholder="TD course" min="0">
+                <input type="number" name="rushing_yards" placeholder="Yards course" min="0">
+                <input type="number" name="rushing_tds" placeholder="TD course" min="0">
                 <input type="number" name="receptions" placeholder="Réceptions" min="0">
-                <input type="number" name="yards_reception" placeholder="Yards réception" min="0">
-                <input type="number" name="td_reception" placeholder="TD réception" min="0">
-                <input type="number" name="plaquages" placeholder="Plaquages" min="0">
+                <input type="number" name="receiving_yards" placeholder="Yards réception" min="0">
+                <input type="number" name="receiving_tds" placeholder="TD réception" min="0">
+                <input type="number" name="tackles" placeholder="Plaquages" min="0">
                 <input type="number" step="0.1" name="sacks" placeholder="Sacks" min="0">
                 <input type="number" name="interceptions_def" placeholder="Interceptions déf" min="0">
-                <!-- Kickers / Punters -->
                 <input type="number" name="field_goals_made" placeholder="Field Goals marqués" min="0">
                 <input type="number" name="field_goals_attempted" placeholder="Field Goals tentés" min="0">
                 <input type="number" name="extra_points_made" placeholder="Extra Points marqués" min="0">
@@ -171,7 +151,6 @@ function nav($active) {
                 <input type="number" name="punt_yards" placeholder="Yards punts" min="0">
                 <input type="number" name="longest_punt" placeholder="Plus long punt" min="0">
                 <input type="number" name="inside_20" placeholder="Punts inside 20" min="0">
-
                 <button type="submit" class="shiny-button">Ajouter les stats</button>
             </form>
         </div>
@@ -179,14 +158,11 @@ function nav($active) {
         <!-- Recherche stats -->
         <div class="card magic-bento">
             <h2>Recherche stats joueur</h2>
-            <form method="get" action="" autocomplete="off" class="stats-search-form">
-                <input type="hidden" name="page" value="stats">
-                <div class="autocomplete-container" style="position:relative;">
-                    <input type="text" name="recherche" id="searchStats" placeholder="Nom ou prénom" class="autocomplete-player-search" value="<?php echo htmlspecialchars($_GET['recherche'] ?? ''); ?>">
-                    <div id="suggestionsStatsSearch" class="autocomplete-suggestions"></div>
-                </div>
-                <button type="submit" class="shiny-button">Rechercher</button>
-            </form>
+            <div class="autocomplete-container">
+                <input type="text" name="recherche" placeholder="Nom ou prénom" class="autocomplete-player-search">
+                <div class="autocomplete-suggestions"></div>
+            </div>
+            <button type="submit" class="shiny-button" onclick="document.forms[0].submit()">Rechercher</button>
         </div>
 
         <!-- Affichage stats -->
@@ -201,20 +177,18 @@ function nav($active) {
                 $params = array_merge($params, [$search,$search,$search,$search]);
             }
 
-            $sql = "SELECT s.*, p.prenom, p.nom, p.poste, t.nom_team, t.logo_url 
+            $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste, t.nom_team, t.logo_url 
                                    FROM stats s 
                                    JOIN player p ON s.id_player = p.id_player 
                                    JOIN team t ON p.id_team = t.id_team
                                    $where
-                                   ORDER BY p.nom";
-            $stmt = $pdo->prepare($sql);
+                                   ORDER BY p.nom");
             $stmt->execute($params);
 
             $has_stats = false;
             while ($st = $stmt->fetch()) {
                 $has_stats = true;
-                // card stat clickable
-                echo "<div class='card magic-bento scroll-animate stat-card'>
+                echo "<div class='card magic-bento scroll-animate'>
                         <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
                         {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
                 foreach ($st as $key => $val) {
@@ -231,7 +205,6 @@ function nav($active) {
         </div>
 
     <?php elseif ($page === 'classement') : 
-        // --- Classement (identique à ton original) ---
         $saison = date('Y');
         $filtre_poste = $_GET['poste'] ?? '';
         $filtre_team = $_GET['team'] ?? '';
@@ -240,9 +213,8 @@ function nav($active) {
         <!-- Filtres -->
         <div class="card magic-bento">
             <h2>Filtres Classement</h2>
-            <form method="get" action="">
+            <form method="get">
                 <input type="hidden" name="page" value="classement">
-
                 <label>Poste :</label>
                 <select name="poste">
                     <option value="">Tous</option>
@@ -282,22 +254,22 @@ function nav($active) {
         // --- Classement TDs ---
         $sql_conf = "
             SELECT p.prenom, p.nom, p.poste, t.conference,
-                   COALESCE(SUM(s.td_passe),0) + COALESCE(SUM(s.td_course),0) + COALESCE(SUM(s.td_reception),0) AS total_tds
+                   COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
             FROM player p
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
             WHERE 1=1";
 
-        $params_conf = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_conf .= " AND p.poste = :poste"; $params_conf[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_conf .= " AND p.id_team = :team"; $params_conf[':team'] = $filtre_team; }
+        $params = [':saison' => $saison];
+        if ($filtre_poste !== '') { $sql_conf .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
+        if ($filtre_team !== '') { $sql_conf .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
 
         $sql_conf .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.conference
                        HAVING total_tds > 0
                        ORDER BY t.conference, total_tds DESC";
 
         $stmt_conf = $pdo->prepare($sql_conf);
-        $stmt_conf->execute($params_conf);
+        $stmt_conf->execute($params);
         $conf_data = $stmt_conf->fetchAll();
 
         if (count($conf_data) > 0) {
@@ -317,22 +289,22 @@ function nav($active) {
         // --- Classement Plaquages ---
         $sql_div = "
             SELECT p.prenom, p.nom, p.poste, t.division,
-                   COALESCE(SUM(s.plaquages),0) AS total_plaquages
+                   COALESCE(SUM(s.tackles),0) AS total_plaquages
             FROM player p
             JOIN team t ON p.id_team = t.id_team
             LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
             WHERE 1=1";
 
-        $params_div = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params_div[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params_div[':team'] = $filtre_team; }
+        $params = [':saison' => $saison];
+        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
+        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
 
         $sql_div .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.division
                       HAVING total_plaquages > 0
                       ORDER BY t.division, total_plaquages DESC";
 
         $stmt_div = $pdo->prepare($sql_div);
-        $stmt_div->execute($params_div);
+        $stmt_div->execute($params);
         $div_data = $stmt_div->fetchAll();
 
         if (count($div_data) > 0) {
@@ -349,12 +321,13 @@ function nav($active) {
             echo '</ol>';
         }
         ?>
+
     <?php endif; ?>
     </main>
 </div>
 
 <!-- Modal overlay pour agrandir les cartes -->
-<div class="card-modal-overlay" id="cardModalOverlay" style="display:none;">
+<div class="card-modal-overlay" id="cardModalOverlay">
     <div class="card-modal" id="cardModalContent"></div>
 </div>
 
@@ -363,32 +336,28 @@ function nav($active) {
 </footer>
 
 <script>
-/* JS : scroll animations, modal zoom (uniquement cartes) et autocomplétion dynamique. */
-
+// SCROLL ANIMATION, MAGIC BENTO & MODAL ZOOM
 document.addEventListener('DOMContentLoaded', function() {
-    // ------- Intersection Observer pour scroll-animate -------
+    // Scroll animation
     const elements = document.querySelectorAll('.scroll-animate');
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('show'); });
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1 });
     elements.forEach(el => observer.observe(el));
 
-    // ------- Modal zoom pour cartes (player-card + stat-card) -------
+    // Modal click pour cartes seulement
     const overlay = document.getElementById('cardModalOverlay');
     const modalContent = document.getElementById('cardModalContent');
 
-    // On attache l'événement seulement aux cartes spécifiques
-    document.querySelectorAll('.player-card, .stat-card').forEach(card => {
-        card.addEventListener('click', function(e) {
-            // Empêche le zoom si l'utilisateur clique sur un champ input dans la carte (sécurité)
-            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.closest('form'))) {
-                return;
-            }
-            modalContent.innerHTML = card.innerHTML;
-            overlay.style.display = 'flex';
-            // force a reflow then add class to animate if needed
-            setTimeout(() => modalContent.classList.add('show'), 10);
-        });
+    document.querySelectorAll('.card.magic-bento').forEach(card => {
+        // On ignore les formulaires pour ne pas zoomer
+        if (!card.querySelector('form')) {
+            card.addEventListener('click', function() {
+                modalContent.innerHTML = card.innerHTML;
+                overlay.style.display = 'flex';
+                setTimeout(() => modalContent.classList.add('show'), 10);
+            });
+        }
     });
 
     overlay.addEventListener('click', function(e) {
@@ -398,70 +367,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ------- Autocomplétion dynamique (via services/player_search.php) -------
-    // Input selectors: .autocomplete-player (form add stats), .autocomplete-player-search (search inputs)
+    // --- Autocomplétion joueurs ---
     const autocompleteInputs = document.querySelectorAll('.autocomplete-player, .autocomplete-player-search');
-
     autocompleteInputs.forEach(input => {
-        // cherche un input hidden id_player dans le même form si présent
-        const hiddenInput = input.closest('form')?.querySelector('input[type="hidden"][name="id_player"]');
-        // suggestions container (élément sibling .autocomplete-suggestions)
+        const hiddenInput = input.closest('form')?.querySelector('input[type=hidden][name="id_player"]');
         const suggestionsContainer = input.parentElement.querySelector('.autocomplete-suggestions');
 
-        // key debounce
-        let timer = null;
         input.addEventListener('input', function() {
-            clearTimeout(timer);
             const val = this.value.trim();
             if (val.length < 1) {
                 suggestionsContainer.innerHTML = '';
                 return;
             }
-            timer = setTimeout(() => {
-                fetch('services/player_search.php?q=' + encodeURIComponent(val))
-                    .then(res => {
-                        if (!res.ok) throw new Error('Erreur réseau');
-                        return res.json();
-                    })
-                    .then(data => {
-                        suggestionsContainer.innerHTML = '';
-                        if (!Array.isArray(data) || data.length === 0) {
-                            // optionnel : afficher "Aucun résultat"
-                            const none = document.createElement('div');
-                            none.className = 'suggestion-item';
-                            none.textContent = 'Aucun résultat';
-                            none.style.opacity = '0.6';
-                            suggestionsContainer.appendChild(none);
-                            return;
-                        }
-                        data.forEach(player => {
-                            const div = document.createElement('div');
-                            div.className = 'suggestion-item';
-                            div.textContent = player.prenom + ' ' + player.nom;
-                            div.dataset.id = player.id_player;
-                            div.addEventListener('click', function() {
-                                input.value = this.textContent;
-                                if (hiddenInput) hiddenInput.value = this.dataset.id;
-                                suggestionsContainer.innerHTML = '';
-                            });
-                            suggestionsContainer.appendChild(div);
+            fetch('services/player_search.php?q=' + encodeURIComponent(val))
+                .then(res => res.json())
+                .then(data => {
+                    suggestionsContainer.innerHTML = '';
+                    data.forEach(player => {
+                        const div = document.createElement('div');
+                        div.textContent = player.prenom + ' ' + player.nom;
+                        div.dataset.id = player.id_player;
+                        div.classList.add('suggestion-item');
+                        div.addEventListener('click', () => {
+                            input.value = player.prenom + ' ' + player.nom;
+                            if (hiddenInput) hiddenInput.value = player.id_player;
+                            suggestionsContainer.innerHTML = '';
                         });
-                    })
-                    .catch(err => {
-                        console.error('Autocomplétion erreur:', err);
+                        suggestionsContainer.appendChild(div);
                     });
-            }, 200); // debounce 200ms
+                });
         });
 
-        // fermer suggestions si clic en dehors
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', (e) => {
             if (!input.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                 suggestionsContainer.innerHTML = '';
             }
         });
     });
-
-}); // DOMContentLoaded
+});
 </script>
 </body>
 </html>

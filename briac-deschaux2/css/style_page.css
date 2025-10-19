@@ -1,243 +1,189 @@
-/* ==========================
-   STYLE GLOBAL - NFL Stats Analyzer
-   ========================== */
-
+/* ---- BASE ---- */
 body {
-  font-family: 'Poppins', Arial, sans-serif;
-  background-color: #f9fafb;
-  color: #222;
-  margin: 0;
-  padding: 0;
-  text-align: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
+    margin: 0;
+    padding: 0;
+    color: #1e293b;
 }
 
-/* -------- TITRE AVEC TRUE FOCUS -------- */
-.focus-container {
-  position: relative;
-  display: flex;
-  gap: 1em;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  margin: 40px 0;
+.container {
+    max-width: 1100px;
+    margin: 2em auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    padding: 1.5em;
 }
 
-.focus-word {
-  position: relative;
-  font-size: 3rem;
-  font-weight: 900;
-  cursor: pointer;
-  transition: filter 0.3s ease, color 0.3s ease;
+/* ---- HEADER ---- */
+.header {
+    text-align: center;
+    margin-bottom: 1em;
 }
 
-.focus-word.active {
-  filter: blur(0);
+.header-logo {
+    width: 200px;
+    height: auto;
+    display: inline-block;
 }
 
-.focus-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  box-sizing: content-box;
-  border: none;
+h1 {
+    text-align: center;
+    color: #0a2463;
+    margin-bottom: 0.5em;
+    font-size: 1.9em;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
-.corner {
-  position: absolute;
-  width: 1rem;
-  height: 1rem;
-  border: 3px solid var(--border-color, #ff4500);
-  filter: drop-shadow(0px 0px 4px var(--border-color, #ff4500));
-  border-radius: 3px;
-  transition: none;
+/* ---- NAV MENU ---- */
+.menu {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5em;
+    gap: 0.6em;
 }
 
-.top-left { top: -10px; left: -10px; border-right: none; border-bottom: none; }
-.top-right { top: -10px; right: -10px; border-left: none; border-bottom: none; }
-.bottom-left { bottom: -10px; left: -10px; border-right: none; border-top: none; }
-.bottom-right { bottom: -10px; right: -10px; border-left: none; border-top: none; }
-
-/* -------- STRUCTURE -------- */
-main {
-  width: 90%;
-  max-width: 1200px;
-  margin: 0 auto;
+.menu a {
+    text-decoration: none;
+    padding: 0.6em 1em;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #0a2463;
+    background: #e2e8f0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s;
 }
 
-section {
-  margin-top: 2rem;
+.menu a:hover {
+    background: #0a2463;
+    color: #fff;
+    transform: rotate(-3deg) translateX(2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
-/* -------- NAVIGATION -------- */
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
+.menu a.active {
+    background: #ef4444;
+    color: #fff;
 }
 
-nav button {
-  background: linear-gradient(90deg, #ff7a00, #ff4500);
-  border: none;
-  color: #fff;
-  font-weight: 600;
-  padding: 12px 25px;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease;
+/* ---- GRID CARDS ---- */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1em;
+    margin-top: 1em;
 }
 
-/* Effet Shiny Button */
-nav button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -75%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(120deg, rgba(255,255,255,0.6), rgba(255,255,255,0));
-  transform: skewX(-25deg);
-}
-
-nav button:hover::before {
-  left: 130%;
-  transition: all 0.75s;
-}
-
-nav button:hover {
-  transform: scale(1.05);
-}
-
-/* -------- FORMULAIRES -------- */
-form {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  margin-bottom: 30px;
-  transition: transform 0.3s ease;
-}
-
-form:hover {
-  transform: scale(1.02);
-}
-
-input, select {
-  width: 80%;
-  max-width: 400px;
-  padding: 10px;
-  margin: 8px 0;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
-}
-
-input:focus, select:focus {
-  border-color: #ff7a00;
-  outline: none;
-}
-
-/* Barre d'autocomplétion */
-.suggestions {
-  position: absolute;
-  width: 80%;
-  max-width: 400px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 0 0 8px 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  z-index: 1000;
-  text-align: left;
-}
-
-.suggestions div {
-  padding: 10px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.suggestions div:hover {
-  background-color: #ffefe5;
-}
-
-/* -------- CARTES JOUEURS ET STATS -------- */
 .card {
-  display: inline-block;
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-  margin: 15px;
-  padding: 20px;
-  width: 250px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    cursor: pointer;
 }
 
-/* Magic Bento hover effect */
-.card:hover {
-  transform: scale(1.05) rotate(0.5deg);
-  box-shadow: 0 10px 20px rgba(255, 122, 0, 0.25);
-  border: 2px solid #ff7a00;
+/* ---- MAGIC BENTO EFFECT ---- */
+.magic-bento {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.magic-bento:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    background: #f1f5f9;
 }
 
-/* Zoom effect when clicked */
-.card.expanded {
-  transform: scale(2);
-  z-index: 200;
-  position: relative;
-}
-
-/* -------- CLASSEMENT -------- */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 1rem;
-}
-
-table th, table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-table th {
-  background-color: #ff7a00;
-  color: white;
-  text-transform: uppercase;
-}
-
-table tr:nth-child(even) {
-  background-color: #f8f8f8;
-}
-
-/* -------- BOUTONS GÉNÉRAUX -------- */
-button.submit {
-  background: linear-gradient(90deg, #ff7a00, #ff4500);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-button.submit:hover {
-  transform: scale(1.05);
-}
-
-/* -------- RESPONSIVE -------- */
-@media (max-width: 768px) {
-  .card {
-    width: 90%;
-  }
-  input, select {
-    width: 90%;
-  }
-  nav {
+/* ---- FORM ---- */
+form {
+    display: flex;
     flex-wrap: wrap;
-  }
+    gap: 0.6em;
+    justify-content: center;
+    margin-top: 0.6em;
+}
+
+input,
+select,
+button {
+    font-size: 0.95em;
+    padding: 0.5em 0.8em;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+}
+
+input:focus,
+select:focus {
+    border-color: #0a2463;
+}
+
+button {
+    background: #0a2463;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    background: #ef4444;
+    transform: rotate(-3deg) translateX(2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* ---- FOOTER ---- */
+footer {
+    margin-top: 1.2em;
+    text-align: center;
+    font-size: 0.9em;
+    color: #64748b;
+}
+
+:focus {
+    outline: 3px solid #ef4444;
+    outline-offset: 2px;
+}
+
+/* ---- SCROLL ANIMATION ---- */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.scroll-animate.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ---- MODAL CARD ---- */
+.card-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.card-modal {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 2em;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    transform: scale(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card-modal.show {
+    transform: scale(2);
 }
