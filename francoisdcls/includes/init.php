@@ -52,6 +52,13 @@ function init_app(): void
     // En-têtes de sécurité recommandés
     header("X-Frame-Options: SAMEORIGIN");
     header("X-Content-Type-Options: nosniff");
+    // In development (built-in server) enable full error reporting to help debugging
+    $isDevServer = (PHP_SAPI === 'cli-server') || (getenv('FRANCOIS_DEBUG') === '1');
+    if ($isDevServer) {
+        error_reporting(E_ALL);
+        ini_set('display_errors', '1');
+        ini_set('display_startup_errors', '1');
+    }
     // CSP minimal (peut être renforcé selon les assets)
     $csp = "default-src 'self'; ";
     $csp .= "script-src 'self' 'unsafe-inline' 'unsafe-eval'; ";

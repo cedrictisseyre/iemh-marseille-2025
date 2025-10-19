@@ -20,6 +20,8 @@ echo "<script>window.BASE_PATH = '" . addslashes(FRANCOIS_BASE_PATH) . "';</scri
 echo "<script src=\"" . htmlspecialchars(base_path('assets/csrf.js')) . "\" defer></script>";
 // Load our site helper JS
 echo "<script src='" . htmlspecialchars(base_path('assets/site_functions.js')) . "' defer></script>";
+// Load tabs progressive-enhancement on all pages so nav works from anywhere
+echo "<script src='" . htmlspecialchars(base_path('assets/tabs.js')) . "' defer></script>";
 ?>
 <header>
     <img src="<?= htmlspecialchars(base_path('assets/logo-f1.svg')) ?>"

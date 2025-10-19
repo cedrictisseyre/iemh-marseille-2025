@@ -71,12 +71,12 @@ include __DIR__ . '/../includes/header.php'; ?>
   </form>
   <hr>
     <?php
-    $confirm_delete = 'return confirm("Supprimer ce pilote ? Cette action est irr\u00e9versible.")';
+  $confirm_delete = 'return confirm(' . json_encode('Supprimer ce pilote ? Cette action est irréversible.') . ');';
     $delete_action = '../services/supprimer_pilote.php';
     ?>
     <form method='post'
       action='<?= htmlspecialchars($delete_action) ?>'
-      onsubmit="<?= $confirm_delete ?>">
+      onsubmit='<?= $confirm_delete ?>'>
         <input type='hidden' name='pilote_id' value='<?= (int)$pilote['pilote_id'] ?>'>
         <?= csrf_field() ?>
         <button type='submit'
