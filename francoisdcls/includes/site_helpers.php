@@ -6,6 +6,15 @@
 /** Renders the page header (logo + title) */
 function render_header(string $title = 'Base de données Formule 1'): void
 {
+    // Prefer the centralized header include if present to keep one header per page
+    $headerPath = __DIR__ . '/header.php';
+    if (file_exists($headerPath)) {
+        // make $page_title available to the header include
+        $page_title = $title;
+        include_once $headerPath;
+        return;
+    }
+
     $logo = 'assets/logo-f1.svg';
     echo "<header>\n";
     $imgAttrs = 'alt="Logo F1" loading="lazy"';

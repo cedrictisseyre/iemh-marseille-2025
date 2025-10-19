@@ -50,7 +50,9 @@ $navLinks = [
     'pages/pantheon_pilotes.php' => 'Champions du monde',
     'pages/ajout_participation.php' => 'Ajouter une participation',
 ];
-render_nav($navLinks);
+// render_nav is now called from includes/header.php by render_header();
+// if needed, pages can call render_nav() with custom links. We keep $navLinks
+// here for compatibility but don't render it to avoid duplication.
 ?>
 
 <main id="main-content" role="main" class="container">

@@ -38,7 +38,30 @@ echo "<script src='" . htmlspecialchars(base_path('assets/site_functions.js')) .
     <?= $title ?>
   </h1>
 </header>
-<?php include __DIR__ . '/nav.php'; ?>
+<?php
+// Use the centralized render_nav helper to avoid duplicate navs across pages.
+// Ensure site_helpers is available and call render_nav with the shared links.
+$sh = __DIR__ . '/site_helpers.php';
+if (file_exists($sh)) {
+    include_once $sh;
+    // default links (kept in sync with other places)
+    $navLinks = [
+        'site_f1.php' => 'Accueil',
+        'pages/liste_pilotes.php' => 'Liste des pilotes',
+        'pages/liste_ecuries.php' => 'Liste des écuries',
+        'pages/statistiques.php' => 'Statistiques',
+        'pages/recherche.php' => 'Recherche de pilotes',
+        'pages/comparer_pilotes.php' => 'Comparer deux pilotes',
+        'pages/palmares_annee.php' => 'Palmarès par année',
+        'pages/pantheon_pilotes.php' => 'Champions du monde',
+        'pages/ajout_participation.php' => 'Ajouter une participation',
+    ];
+    render_nav($navLinks);
+} else {
+    // fallback: original nav include if helper missing
+    if (file_exists(__DIR__ . '/nav.php')) include __DIR__ . '/nav.php';
+}
+?>
 <?php if (function_exists('get_flash')) :
     $f = get_flash();
     if ($f) :
