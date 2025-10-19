@@ -448,8 +448,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="mb-2 d-flex align-items-center gap-2">
                     <form method="get" id="week-form" class="d-flex align-items-center gap-2">
                         <label class="form-label mb-0">Semaine (lundi)</label>
-                        <input type="date" name="week_start" id="week-start" class="form-control form-control-sm" value="<?= htmlspecialchars($selected_week_start) ?>">
-                        <button class="btn btn-sm btn-primary" type="submit">Afficher</button>
+                        <div class="form-control form-control-sm" style="width:150px; background:transparent; border:none; color:var(--muted);">Semaine : <?= htmlspecialchars($selected_week_start) ?></div>
                     </form>
                         <!-- EDT fixe : ajout de créneaux désactivé -->
                 </div>
