@@ -50,3 +50,10 @@ Pour tester et développer localement avec PHP, MySQL et phpMyAdmin :
 
 ## Licence
 Ce projet est à usage pédagogique uniquement.
+
+## Changelog (résumé des actions récentes)
+
+- 2025-10-19 : Nettoyage de fichiers de debug — suppression de `ando-guerin/test.php` et retrait des scripts temporaires identifiés dans `francoisdcls/devtools/` (si nécessaire).
+- Recommandation : ne pas committer le dossier `vendor/` dans le dépôt. Si tu veux garder les dépendances, c'est ok, mais il est préférable d'ajouter `vendor/` au `.gitignore` et d'utiliser `composer install` en CI ou localement.
+
+Si tu veux que j'applique un nettoyage plus large (suppression automatique de tous les `tmp_*.php` et fichiers de debug), demande-le explicitement et je le ferai après validation.
