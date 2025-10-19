@@ -40,6 +40,9 @@ if (!isset($conn) || !($conn instanceof PDO)) {
 
         // Récupérer les élèves
         $eleves = $conn->query('SELECT * FROM eleves ORDER BY nom, prenom')->fetchAll();
+        // Récupérer les matières et salles pour le formulaire EDT
+        $matieres = $conn->query('SELECT * FROM matieres ORDER BY nom')->fetchAll();
+        $salles = $conn->query('SELECT * FROM salles ORDER BY nom')->fetchAll();
     } catch (PDOException $e) {
         error_log('Erreur BDD (index.php) : ' . $e->getMessage());
         $db_error = true;
@@ -207,6 +210,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
 }
+
+// Ajouter / modifier une entrée emploi du temps
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_emploi') {
+    if ($db_error) {
+        // rediriger avec erreur simple
+        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '#edt');
+        exit;
+    }
+    $jour_id = isset($_POST['jour_id']) ? intval($_POST['jour_id']) : 0;
+    $debut = isset($_POST['debut']) ? trim($_POST['debut']) : '';
+    $fin = isset($_POST['fin']) ? trim($_POST['fin']) : '';
+    $prof_id = isset($_POST['prof_id']) ? intval($_POST['prof_id']) : null;
+    $matiere_id = isset($_POST['matiere_id']) ? intval($_POST['matiere_id']) : null;
+    $salle_nom = isset($_POST['salle_nom']) ? trim($_POST['salle_nom']) : '';
+
+    try {
+        $conn->beginTransaction();
+        // Trouver ou créer horaire (début/fin)
+        $stmt = $conn->prepare('SELECT id FROM horaires WHERE debut = :d AND fin = :f LIMIT 1');
+        $stmt->execute([':d' => $debut, ':f' => $fin]);
+        $h = $stmt->fetch();
+        if ($h) {
+            $horaire_id = $h['id'];
+        } else {
+            $ins = $conn->prepare('INSERT INTO horaires (debut, fin) VALUES (:d, :f)');
+            $ins->execute([':d' => $debut, ':f' => $fin]);
+            $horaire_id = $conn->lastInsertId();
+        }
+
+        // Si matière non fournie, erreur simple
+        if (!$matiere_id) {
+            // rollback et redirection
+            $conn->rollBack();
+            header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '#edt');
+            exit;
+        }
+
+        // Si salle fournie en nom, trouver ou créer
+        $salle_id = null;
+        if ($salle_nom !== '') {
+            $stmt = $conn->prepare('SELECT id FROM salles WHERE nom = :n LIMIT 1');
+            $stmt->execute([':n' => $salle_nom]);
+            $s = $stmt->fetch();
+            if ($s) {
+                $salle_id = $s['id'];
+            } else {
+                $ins = $conn->prepare('INSERT INTO salles (nom) VALUES (:n)');
+                $ins->execute([':n' => $salle_nom]);
+                $salle_id = $conn->lastInsertId();
+            }
+        }
+
+        // Insérer ou remplacer l'entrée emploi_temps
+        // On suppose la table emploi_temps a les colonnes : jour_id, horaire_id, matiere_id, professeur_id, salle_id
+        $up = $conn->prepare('REPLACE INTO emploi_temps (jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:jid, :hid, :mid, :pid, :sid)');
+        $up->execute([
+            ':jid' => $jour_id,
+            ':hid' => $horaire_id,
+            ':mid' => $matiere_id,
+            ':pid' => $prof_id ?: null,
+            ':sid' => $salle_id ?: null
+        ]);
+
+        $conn->commit();
+    } catch (PDOException $e) {
+        if ($conn->inTransaction()) $conn->rollBack();
+        error_log('Erreur add_emploi: ' . $e->getMessage());
+    }
+    // retourner vers l'onglet EDT
+    header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '#edt');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -327,6 +402,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
             <div class="tab-pane fade" id="edt" role="tabpanel" aria-labelledby="edt-tab">
                 <h5>Emploi du temps</h5>
+                <div class="mb-2">
+                    <button class="btn btn-sm btn-success" id="btn-add-edt">Ajouter un créneau</button>
+                </div>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -341,7 +419,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <tr>
                             <td><?= htmlspecialchars($jour['nom']) ?></td>
                             <?php foreach ($horaires as $horaire): ?>
-                                <td>
+                                                                <td class="edt-cell" data-jour-id="<?= htmlspecialchars($jour['id']) ?>" data-horaire-id="<?= htmlspecialchars($horaire['id']) ?>" data-debut="<?= htmlspecialchars($horaire['debut']) ?>" data-fin="<?= htmlspecialchars($horaire['fin']) ?>">
                                 <?php if (isset($emploi[$jour['id']][$horaire['id']])): 
                                     $e = $emploi[$jour['id']][$horaire['id']]; ?>
                                     <strong><?= htmlspecialchars($e['matiere']) ?></strong><br>
@@ -354,6 +432,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+
+                                <!-- Modal pour ajouter/éditer un créneau -->
+                                <div class="modal fade" id="modalEdt" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="post" id="form-edt">
+                                                <input type="hidden" name="action" value="add_emploi">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Ajouter / Modifier un créneau</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-2">
+                                                        <label class="form-label">Jour</label>
+                                                        <select name="jour_id" class="form-select" required>
+                                                            <?php foreach ($jours as $j): ?>
+                                                                <option value="<?= htmlspecialchars($j['id']) ?>"><?= htmlspecialchars($j['nom']) ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="row g-2">
+                                                        <div class="col">
+                                                            <label class="form-label">Début</label>
+                                                            <input type="time" name="debut" class="form-control" required>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="form-label">Fin</label>
+                                                            <input type="time" name="fin" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-2 mt-2">
+                                                        <label class="form-label">Professeur</label>
+                                                        <select name="prof_id" class="form-select">
+                                                            <option value="">-- aucun --</option>
+                                                            <?php foreach ($profs as $p): ?>
+                                                                <option value="<?= htmlspecialchars($p['id']) ?>"><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label class="form-label">Matière</label>
+                                                        <select name="matiere_id" class="form-select" required>
+                                                            <?php foreach ($matieres as $m): ?>
+                                                                <option value="<?= htmlspecialchars($m['id']) ?>"><?= htmlspecialchars($m['nom']) ?></option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <label class="form-label">Salle (libre)</label>
+                                                        <input type="text" name="salle_nom" class="form-control" placeholder="Ex: B201">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
             </div>
             <div class="tab-pane fade" id="profs" role="tabpanel" aria-labelledby="profs-tab">
                 <?php if (!empty($prof_add_error)): ?><div class="alert alert-danger"><?= htmlspecialchars($prof_add_error) ?></div><?php endif; ?>
@@ -414,6 +552,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             // activation initiale
             if (location.hash) activateFromHash();
             window.addEventListener('hashchange', activateFromHash);
+        })();
+        </script>
+        <script>
+        (function(){
+            // Ouvre le modal pour ajouter/éditer un créneau
+            const modalEl = document.getElementById('modalEdt');
+            const modal = modalEl ? new bootstrap.Modal(modalEl) : null;
+            const form = document.getElementById('form-edt');
+
+            function openModal(prefill){
+                if (!modal) return;
+                // remplir form
+                if (prefill) {
+                    if (prefill.jour_id) form.jour_id.value = prefill.jour_id;
+                    if (prefill.debut) form.debut.value = prefill.debut;
+                    if (prefill.fin) form.fin.value = prefill.fin;
+                }
+                modal.show();
+            }
+
+            // clic sur cellule
+            document.querySelectorAll('.edt-cell').forEach(td => {
+                td.style.cursor = 'pointer';
+                td.addEventListener('click', function(){
+                    const jour = td.getAttribute('data-jour-id');
+                    const debut = td.getAttribute('data-debut');
+                    const fin = td.getAttribute('data-fin');
+                    openModal({jour_id: jour, debut: debut, fin: fin});
+                });
+            });
+
+            // bouton ajouter
+            const btnAdd = document.getElementById('btn-add-edt');
+            if (btnAdd) btnAdd.addEventListener('click', function(){
+                // reset form
+                form.reset();
+                // si présence d'un premier jour on le met
+                const firstJour = form.jour_id && form.jour_id.options.length ? form.jour_id.options[0].value : null;
+                if (firstJour) form.jour_id.value = firstJour;
+                modal.show();
+            });
+
+            // soumission du formulaire : laisser le navigateur faire le POST (simple)
         })();
         </script>
 </body>
