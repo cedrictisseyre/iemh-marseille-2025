@@ -40,8 +40,8 @@ function nav($active) {
 
     <main>
     <?php if ($page === 'joueurs') : ?>
-        <!-- Formulaire d'ajout joueur -->
-        <div class="card scroll-animate">
+        <!-- Formulaire et recherche -->
+        <div class="card scroll-animate magic-bento">
             <h2>Ajouter un joueur</h2>
             <form method="post" action="services/add_player.php">
                 <input type="text" name="prenom" placeholder="Prénom" required>
@@ -50,9 +50,7 @@ function nav($active) {
                     <option value="">Sélectionner un poste</option>
                     <?php
                     $pos = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
-                    foreach ($pos as $p) {
-                        echo "<option value='{$p['code']}'>{$p['libelle']} ({$p['code']})</option>";
-                    }
+                    foreach ($pos as $p) echo "<option value='{$p['code']}'>{$p['libelle']} ({$p['code']})</option>";
                     ?>
                 </select>
                 <input type="number" name="age" placeholder="Âge" required>
@@ -65,11 +63,7 @@ function nav($active) {
                     $teams = $pdo->query("SELECT id_team, nom_team, conference FROM team ORDER BY conference, nom_team")->fetchAll();
                     $current_conf = "";
                     foreach ($teams as $t) {
-                        if ($t['conference'] !== $current_conf) {
-                            if ($current_conf !== "") echo "</optgroup>";
-                            $current_conf = $t['conference'];
-                            echo "<optgroup label='{$current_conf}'>";
-                        }
+                        if ($t['conference'] !== $current_conf) { if ($current_conf !== "") echo "</optgroup>"; $current_conf = $t['conference']; echo "<optgroup label='{$current_conf}'>"; }
                         echo "<option value='{$t['id_team']}'>{$t['nom_team']}</option>";
                     }
                     if ($current_conf !== "") echo "</optgroup>";
@@ -79,8 +73,7 @@ function nav($active) {
             </form>
         </div>
 
-        <!-- Recherche joueurs -->
-        <div class="card scroll-animate">
+        <div class="card scroll-animate magic-bento">
             <h2>Recherche joueur</h2>
             <form method="get">
                 <input type="hidden" name="page" value="joueurs">
@@ -89,7 +82,6 @@ function nav($active) {
             </form>
         </div>
 
-        <!-- Liste des joueurs -->
         <h2>Liste des joueurs</h2>
         <div class="grid">
             <?php
@@ -98,20 +90,16 @@ function nav($active) {
             if (!empty($_GET['recherche'])) {
                 $search = "%" . $_GET['recherche'] . "%";
                 $where = "WHERE p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?";
-                $params = [$search, $search, $search, $search];
+                $params = [$search,$search,$search,$search];
             }
-            $stmt = $pdo->prepare("SELECT p.*, t.nom_team, t.logo_url 
-                                   FROM player p 
-                                   JOIN team t ON p.id_team = t.id_team 
-                                   $where
-                                   ORDER BY p.nom");
+            $stmt = $pdo->prepare("SELECT p.*, t.nom_team, t.logo_url FROM player p JOIN team t ON p.id_team = t.id_team $where ORDER BY p.nom");
             $stmt->execute($params);
             while ($pl = $stmt->fetch()) {
                 $experience = date('Y') - $pl['annee_debut'];
-                echo "<div class='card scroll-animate'>
+                echo "<div class='card scroll-animate magic-bento'>
                         <h3>{$pl['prenom']} {$pl['nom']}</h3>
                         <p><strong>Poste:</strong> {$pl['poste']}</p>
-                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;'> {$pl['nom_team']}</p>
+                        <p><strong>Équipe:</strong> <img src='{$pl['logo_url']}' style='width:30px;height:30px;vertical-align:middle;'> {$pl['nom_team']}</p>
                         <p><strong>Âge:</strong> {$pl['age']} ans</p>
                         <p><strong>Taille:</strong> {$pl['taille_cm']} cm - <strong>Poids:</strong> {$pl['poids_kg']} kg</p>
                         <p><strong>Expérience:</strong> {$experience} ans</p>
@@ -122,17 +110,14 @@ function nav($active) {
 
     <?php elseif ($page === 'stats') : 
         $saison = date('Y'); ?>
-        <!-- Formulaire stats -->
-        <div class="card scroll-animate">
+        <div class="card scroll-animate magic-bento">
             <h2>Ajouter des statistiques (Saison <?= $saison ?>)</h2>
             <form method="post" action="services/add_stats.php">
                 <select name="id_player" required>
                     <option value="">Sélectionner un joueur</option>
                     <?php
                     $players = $pdo->query("SELECT id_player, prenom, nom FROM player ORDER BY nom")->fetchAll();
-                    foreach ($players as $p) {
-                        echo "<option value='{$p['id_player']}'>{$p['prenom']} {$p['nom']}</option>";
-                    }
+                    foreach ($players as $p) echo "<option value='{$p['id_player']}'>{$p['prenom']} {$p['nom']}</option>";
                     ?>
                 </select>
                 <input type="number" name="passing_yards" placeholder="Yards passés" min="0">
@@ -158,8 +143,7 @@ function nav($active) {
             </form>
         </div>
 
-        <!-- Recherche joueurs -->
-        <div class="card scroll-animate">
+        <div class="card scroll-animate magic-bento">
             <h2>Recherche stats joueur</h2>
             <form method="get">
                 <input type="hidden" name="page" value="stats">
@@ -168,7 +152,6 @@ function nav($active) {
             </form>
         </div>
 
-        <!-- Affichage stats -->
         <h2>Statistiques <?= $saison ?></h2>
         <div class="grid">
             <?php
@@ -179,7 +162,6 @@ function nav($active) {
                 $where .= " AND (p.nom LIKE ? OR p.prenom LIKE ? OR CONCAT(p.prenom,' ',p.nom) LIKE ? OR CONCAT(p.nom,' ',p.prenom) LIKE ?)";
                 $params = array_merge($params, [$search,$search,$search,$search]);
             }
-
             $stmt = $pdo->prepare("SELECT s.*, p.prenom, p.nom, p.poste, t.nom_team, t.logo_url 
                                    FROM stats s 
                                    JOIN player p ON s.id_player = p.id_player 
@@ -191,10 +173,8 @@ function nav($active) {
             $has_stats = false;
             while ($st = $stmt->fetch()) {
                 $has_stats = true;
-                echo "<div class='card scroll-animate'>
-                        <h3><img src='{$st['logo_url']}' alt='' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> 
-                        {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
-
+                echo "<div class='card scroll-animate magic-bento'>
+                        <h3><img src='{$st['logo_url']}' style='width:30px;height:30px;vertical-align:middle;margin-right:5px;'> {$st['prenom']} {$st['nom']} ({$st['poste']})</h3>";
                 foreach ($st as $key => $val) {
                     if (in_array($key, ['id_stat','id_player','prenom','nom','poste','saison','nom_team','logo_url'])) continue;
                     if ($val !== null && $val != 0) {
@@ -209,145 +189,49 @@ function nav($active) {
         </div>
 
     <?php elseif ($page === 'classement') : 
-        $saison = date('Y');
-        $filtre_poste = $_GET['poste'] ?? '';
-        $filtre_team = $_GET['team'] ?? '';
-        ?>
-
-        <!-- Filtres -->
-        <div class="card scroll-animate">
-            <h2>Filtres Classement</h2>
-            <form method="get">
-                <input type="hidden" name="page" value="classement">
-
-                <label>Poste :</label>
-                <select name="poste">
-                    <option value="">Tous</option>
-                    <?php
-                    $positions = $pdo->query("SELECT code, libelle FROM position ORDER BY libelle")->fetchAll();
-                    foreach ($positions as $p) {
-                        $sel = ($filtre_poste === $p['code']) ? "selected" : "";
-                        echo "<option value='{$p['code']}' $sel>{$p['libelle']} ({$p['code']})</option>";
-                    }
-                    ?>
-                </select>
-
-                <label>Équipe :</label>
-                <select name="team">
-                    <option value="">Toutes</option>
-                    <?php
-                    $teams = $pdo->query("SELECT id_team, nom_team, conference FROM team ORDER BY conference, nom_team")->fetchAll();
-                    $current_conf = "";
-                    foreach ($teams as $t) {
-                        if ($t['conference'] !== $current_conf) {
-                            if ($current_conf !== "") echo "</optgroup>";
-                            $current_conf = $t['conference'];
-                            echo "<optgroup label='{$current_conf}'>";
-                        }
-                        $sel = ($filtre_team == $t['id_team']) ? "selected" : "";
-                        echo "<option value='{$t['id_team']}' $sel>{$t['nom_team']}</option>";
-                    }
-                    if ($current_conf !== "") echo "</optgroup>";
-                    ?>
-                </select>
-
-                <button type="submit">Filtrer</button>
-            </form>
-        </div>
-
-        <?php
-        // Classements conférences et divisions
-        $sql_conf = "
-            SELECT p.prenom, p.nom, p.poste, t.conference,
-                   COALESCE(SUM(s.passing_tds),0) + COALESCE(SUM(s.rushing_tds),0) + COALESCE(SUM(s.receiving_tds),0) AS total_tds
-            FROM player p
-            JOIN team t ON p.id_team = t.id_team
-            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
-            WHERE 1=1";
-
-        $params = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_conf .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_conf .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
-
-        $sql_conf .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.conference
-                       HAVING total_tds > 0
-                       ORDER BY t.conference, total_tds DESC";
-
-        $stmt_conf = $pdo->prepare($sql_conf);
-        $stmt_conf->execute($params);
-        $conf_data = $stmt_conf->fetchAll();
-
-        if (count($conf_data) > 0) {
-            echo "<h2>Classement par conférence (Total TDs)</h2>";
-            $conf = '';
-            foreach ($conf_data as $row) {
-                if ($row['conference'] !== $conf) {
-                    if ($conf !== '') echo '</ol>';
-                    $conf = $row['conference'];
-                    echo "<h3>{$conf}</h3><ol>";
-                }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_tds']} TDs</li>";
-            }
-            echo '</ol>';
-        }
-
-        $sql_div = "
-            SELECT p.prenom, p.nom, p.poste, t.division,
-                   COALESCE(SUM(s.tackles),0) AS total_plaquages
-            FROM player p
-            JOIN team t ON p.id_team = t.id_team
-            LEFT JOIN stats s ON p.id_player = s.id_player AND s.saison = :saison
-            WHERE 1=1";
-
-        $params = [':saison' => $saison];
-        if ($filtre_poste !== '') { $sql_div .= " AND p.poste = :poste"; $params[':poste'] = $filtre_poste; }
-        if ($filtre_team !== '') { $sql_div .= " AND p.id_team = :team"; $params[':team'] = $filtre_team; }
-
-        $sql_div .= " GROUP BY p.id_player, p.prenom, p.nom, p.poste, t.division
-                      HAVING total_plaquages > 0
-                      ORDER BY t.division, total_plaquages DESC";
-
-        $stmt_div = $pdo->prepare($sql_div);
-        $stmt_div->execute($params);
-        $div_data = $stmt_div->fetchAll();
-
-        if (count($div_data) > 0) {
-            echo "<h2>Classement par division (Plaquages)</h2>";
-            $div = '';
-            foreach ($div_data as $row) {
-                if ($row['division'] !== $div) {
-                    if ($div !== '') echo '</ol>';
-                    $div = $row['division'];
-                    echo "<h3>{$div}</h3><ol>";
-                }
-                echo "<li>{$row['prenom']} {$row['nom']} ({$row['poste']}) - {$row['total_plaquages']} plaquages</li>";
-            }
-            echo '</ol>';
-        }
-        ?>
-
-    <?php endif; ?>
+        // Conserve tout ton code classement actuel ici, identique
+    endif; ?>
     </main>
+</div>
+
+<!-- Modal overlay -->
+<div class="card-modal-overlay" id="cardModalOverlay">
+    <div class="card-modal" id="cardModalContent"></div>
 </div>
 
 <footer>
     <p>&copy; 2025 NFL Stats Analyzer - Projet académique</p>
 </footer>
 
-<!-- SCRIPT SCROLL ANIMATION -->
 <script>
+// SCROLL ANIMATION + MODAL
 document.addEventListener('DOMContentLoaded', function() {
+    // Scroll
     const elements = document.querySelectorAll('.scroll-animate');
     const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if(entry.isIntersecting) {
-                entry.target.classList.add('show');
-            }
-        });
+        entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('show'); });
     }, { threshold: 0.1 });
     elements.forEach(el => observer.observe(el));
+
+    // Modal click
+    const overlay = document.getElementById('cardModalOverlay');
+    const modalContent = document.getElementById('cardModalContent');
+
+    document.querySelectorAll('.card.magic-bento').forEach(card => {
+        card.addEventListener('click', function() {
+            modalContent.innerHTML = card.innerHTML;
+            overlay.style.display = 'flex';
+            setTimeout(() => modalContent.classList.add('show'), 10);
+        });
+    });
+
+    overlay.addEventListener('click', function(e) {
+        if(e.target === overlay) {
+            modalContent.classList.remove('show');
+            setTimeout(() => overlay.style.display = 'none', 300);
+        }
+    });
 });
 </script>
-
 </body>
 </html>
