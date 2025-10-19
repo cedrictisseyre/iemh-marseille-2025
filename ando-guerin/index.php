@@ -37,10 +37,16 @@ if (!isset($conn) || !($conn instanceof PDO)) {
         $jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
         $horaires = $conn->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
 
-        // Forcer l'affichage sur la semaine courante (lundi)
-        $d = new DateTime();
-        $d->modify('monday this week');
-        $selected_week_start = $d->format('Y-m-d');
+        // déterminer la semaine sélectionnée (week_start = date du lundi)
+        $selected_week_start = null;
+        if (isset($_GET['week_start']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['week_start'])) {
+            $selected_week_start = $_GET['week_start'];
+        } else {
+            $d = new DateTime();
+            // obtenir le lundi de la semaine courante
+            $d->modify('monday this week');
+            $selected_week_start = $d->format('Y-m-d');
+        }
 
         // Récupérer l'emploi du temps pour la semaine sélectionnée (jointure)
         $emploi = [];
@@ -442,7 +448,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="mb-2 d-flex align-items-center gap-2">
                     <form method="get" id="week-form" class="d-flex align-items-center gap-2">
                         <label class="form-label mb-0">Semaine (lundi)</label>
-                        <div class="form-control form-control-sm" style="width:150px;"><?= htmlspecialchars($selected_week_start) ?></div>
+                        <input type="date" name="week_start" id="week-start" class="form-control form-control-sm" value="<?= htmlspecialchars($selected_week_start) ?>">
+                        <button class="btn btn-sm btn-primary" type="submit">Afficher</button>
                     </form>
                         <!-- EDT fixe : ajout de créneaux désactivé -->
                 </div>
