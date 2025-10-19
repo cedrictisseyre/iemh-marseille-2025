@@ -1,48 +1,34 @@
 <?php
-declare(strict_types=1);
+session_start();
 
-/**
- * services/helpers.php
- * Fonctions utilitaires : CSRF simple, logging applicatif.
- */
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+// ✅ Protection CSRF
+function csrf_token(): string {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
 }
 
-/**
- * Retourne le token CSRF de session (génère si absent)
- */
-function csrf_token(): string
-{
-    if (empty($_SESSION['_csrf_token'])) {
-        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['_csrf_token'];
+function validate_csrf(): bool {
+    return isset($_POST['csrf_token'], $_SESSION['csrf_token']) &&
+           hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
 }
 
-/**
- * Valide un token CSRF
- */
-function validate_csrf(?string $token): bool
-{
-    if (!is_string($token) || $token === '') {
-        return false;
-    }
-    if (empty($_SESSION['_csrf_token'])) {
-        return false;
-    }
-    return hash_equals($_SESSION['_csrf_token'], $token);
+// ✅ Fonctions pour récupérer les données
+function fetch_positions(PDO $pdo): array {
+    return $pdo->query("SELECT id, code, libelle FROM position ORDER BY libelle")->fetchAll();
 }
 
-/**
- * Logger applicatif basique (logs/app.log)
- */
-function app_log(string $message): void
-{
-    $logFile = __DIR__ . '/../logs/app.log';
-    if (!is_dir(dirname($logFile))) {
-        @mkdir(dirname($logFile), 0750, true);
-    }
-    error_log(date('[Y-m-d H:i:s] ') . $message . PHP_EOL, 3, $logFile);
+function fetch_teams(PDO $pdo): array {
+    return $pdo->query("SELECT id_team, nom_team, conference FROM team ORDER BY conference, nom_team")->fetchAll();
 }
+
+function fetch_players(PDO $pdo): array {
+    $sql = "SELECT p.*, t.nom_team, pos.libelle AS position_name
+            FROM player p
+            LEFT JOIN team t ON p.id_team = t.id_team
+            LEFT JOIN position pos ON p.position_id = pos.id
+            ORDER BY t.nom_team, p.nom";
+    return $pdo->query($sql)->fetchAll();
+}
+?>

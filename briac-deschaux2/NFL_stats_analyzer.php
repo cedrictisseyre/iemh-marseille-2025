@@ -1,30 +1,8 @@
 <?php
-declare(strict_types=1);
-
 require_once __DIR__ . '/config/database_connexion.php';
 require_once __DIR__ . '/services/helpers.php';
 
-// Page active (whitelist)
-$allowed_pages = ['joueurs', 'stats', 'classement'];
 $page = $_GET['page'] ?? 'joueurs';
-if (!in_array($page, $allowed_pages, true)) {
-    $page = 'joueurs';
-}
-
-// Fonction pour générer le menu
-function nav(string $active): void {
-    $tabs = [
-        'joueurs' => 'Joueurs',
-        'stats' => 'Statistiques',
-        'classement'=> 'Classement'
-    ];
-    echo '<div class="menu">';
-    foreach ($tabs as $key => $label) {
-        $class = ($active === $key) ? 'active' : '';
-        echo "<a href='?page=$key' class='$class'>$label</a>";
-    }
-    echo '</div>';
-}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -34,31 +12,40 @@ function nav(string $active): void {
     <link rel="stylesheet" href="css/style_page.css">
 </head>
 <body>
-<div class="container">
+<header>
+    <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" alt="NFL Logo" class="logo">
+    <h1>NFL STATS ANALYZER</h1>
+</header>
 
-    <!-- HEADER -->
-    <div class="header">
-        <img src="https://logos-world.net/wp-content/uploads/2021/09/NFL-Logo.png" alt="Logo NFL" class="header-logo">
-        <h1>NFL STATS ANALYZER</h1>
-    </div>
+<nav>
+    <a href="?page=joueurs" class="<?= $page === 'joueurs' ? 'active' : '' ?>">Joueurs</a>
+    <a href="?page=stats" class="<?= $page === 'stats' ? 'active' : '' ?>">Statistiques</a>
+    <a href="?page=classement" class="<?= $page === 'classement' ? 'active' : '' ?>">Classement</a>
+</nav>
 
-    <!-- NAV MENU -->
-    <?php nav($page); ?>
+<main>
+    <?php
+    $file = __DIR__ . "/views/{$page}.php";
+    if (file_exists($file)) {
+        include $file;
+    } else {
+        echo "<p>Page non trouvée.</p>";
+    }
+    ?>
+</main>
 
-    <main>
-        <?php
-        // inclure la page correspondante (fichiers dans /pages)
-        $pageFile = __DIR__ . "/pages/{$page}.php";
-        if (file_exists($pageFile)) {
-            include $pageFile;
-        } else {
-            echo "<p>Page introuvable.</p>";
-        }
-        ?>
-    </main>
-</div>
 <footer>
-    <p>&copy; <?= date('Y') ?> NFL Stats Analyzer - Projet académique</p>
+    <p>&copy; 2025 NFL Stats Analyzer — Projet universitaire</p>
 </footer>
+
+<script>
+function showMessage(msg, type='success') {
+    const div = document.createElement('div');
+    div.className = `alert ${type}`;
+    div.textContent = msg;
+    document.body.prepend(div);
+    setTimeout(() => div.remove(), 3000);
+}
+</script>
 </body>
 </html>
