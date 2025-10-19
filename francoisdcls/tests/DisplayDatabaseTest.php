@@ -46,7 +46,9 @@ final class DisplayDatabaseTest extends TestCase
         $displayedLastNames = array_map('trim', $m[1] ?? []);
 
         // Build expected last name list from DB
-        $expectedLastNames = array_map(function ($r) { return trim((string)$r['nom']); }, $dbPilotes);
+        $expectedLastNames = array_map(function ($r) {
+            return trim((string)$r['nom']);
+        }, $dbPilotes);
 
         // The sets should be equal (order may vary); compare as sorted arrays
         sort($expectedLastNames);

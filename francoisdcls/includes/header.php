@@ -61,7 +61,9 @@ if (file_exists($sh)) {
     render_nav($navLinks);
 } else {
     // fallback: original nav include if helper missing
-    if (file_exists(__DIR__ . '/nav.php')) include __DIR__ . '/nav.php';
+    if (file_exists(__DIR__ . '/nav.php')) {
+        include __DIR__ . '/nav.php';
+    }
 }
 ?>
 <?php if (function_exists('get_flash')) :

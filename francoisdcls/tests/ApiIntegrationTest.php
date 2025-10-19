@@ -13,8 +13,8 @@ class ApiIntegrationTest extends TestCase
     public static function setUpBeforeClass(): void
     {
     // Use the repository root as docroot so requests to /francoisdcls/... resolve
-    $repoRoot = realpath(__DIR__ . '/../../');
-    $docRoot = escapeshellarg($repoRoot ?: getcwd());
+        $repoRoot = realpath(__DIR__ . '/../../');
+        $docRoot = escapeshellarg($repoRoot ?: getcwd());
         $started = false;
         $startPort = 8081;
         $endPort = 8090;
@@ -30,7 +30,11 @@ class ApiIntegrationTest extends TestCase
             $bound = false;
             for ($i = 0; $i < 30; $i++) {
                 $fp = @fsockopen('127.0.0.1', $port, $errno, $errstr, 0.1);
-                if ($fp) { fclose($fp); $bound = true; break; }
+                if ($fp) {
+                    fclose($fp);
+                    $bound = true;
+                    break;
+                }
                 usleep(100000);
             }
 
@@ -48,7 +52,10 @@ class ApiIntegrationTest extends TestCase
             $httpOk = false;
             if ($page !== false && isset($http_response_header) && is_array($http_response_header)) {
                 foreach ($http_response_header as $hdr) {
-                    if (preg_match('#^HTTP/\d+\.\d+\s+200#', $hdr)) { $httpOk = true; break; }
+                    if (preg_match('#^HTTP/\d+\.\d+\s+200#', $hdr)) {
+                        $httpOk = true;
+                        break;
+                    }
                 }
             }
 
@@ -83,7 +90,7 @@ class ApiIntegrationTest extends TestCase
 
     public function testApiAjoutPiloteRejectsWithoutCsrfHeader(): void
     {
-    $url = self::$baseUrl . '/francoisdcls/services/api_ajout_pilote.php';
+        $url = self::$baseUrl . '/francoisdcls/services/api_ajout_pilote.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, ['prenom' => 'E2E', 'nom' => 'Test']);
@@ -98,7 +105,7 @@ class ApiIntegrationTest extends TestCase
 
     public function testApiAjoutPiloteAcceptsWithCsrfHeader(): void
     {
-    $pageUrl = self::$baseUrl . '/francoisdcls/pages/ajout_pilote.php';
+        $pageUrl = self::$baseUrl . '/francoisdcls/pages/ajout_pilote.php';
         $ch = curl_init($pageUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, true);
@@ -112,7 +119,7 @@ class ApiIntegrationTest extends TestCase
             return;
         }
 
-    $url = self::$baseUrl . '/francoisdcls/services/api_ajout_pilote.php';
+        $url = self::$baseUrl . '/francoisdcls/services/api_ajout_pilote.php';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, ['prenom' => 'E2E', 'nom' => 'Accept']);

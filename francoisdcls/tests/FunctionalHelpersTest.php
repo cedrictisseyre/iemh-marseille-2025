@@ -18,7 +18,7 @@ final class FunctionalHelpersTest extends TestCase
     {
         require_once __DIR__ . '/../functional_helpers.php';
         $this->assertEquals('France', nationality_label(1));
-    $this->assertEquals('Autre', nationality_label(999));
+        $this->assertEquals('Autre', nationality_label(999));
         $this->assertEquals('01/01/2020', format_date_fr('2020-01-01'));
     }
 

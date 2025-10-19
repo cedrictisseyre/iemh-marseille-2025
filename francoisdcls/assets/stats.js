@@ -1,13 +1,17 @@
 (function () {
     'use strict';
 
-    function number(v) {
+    function number(v)
+    {
         return (typeof v === 'number') ? v.toLocaleString() : (v || '0');
     }
 
-    function renderStats(data) {
+    function renderStats(data)
+    {
         var container = document.getElementById('stats-globales');
-        if (!container) return;
+        if (!container) {
+            return;
+        }
         // Accessible heading id referenced from the region
         var titleId = 'stats-title';
         var h = document.createElement('h2');
@@ -38,9 +42,12 @@
         container.setAttribute('aria-labelledby', titleId);
     }
 
-    function renderError(msg) {
+    function renderError(msg)
+    {
         var container = document.getElementById('stats-globales');
-        if (!container) return;
+        if (!container) {
+            return;
+        }
         container.innerHTML = '';
         var err = document.createElement('div');
         err.className = 'error';
@@ -73,7 +80,9 @@
         // Fallback to plain fetch
         fetch(url, { credentials: 'same-origin' })
             .then(function (r) {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
+                if (!r.ok) {
+                    throw new Error('HTTP ' + r.status);
+                }
                 return r.json();
             })
             .then(function (data) {

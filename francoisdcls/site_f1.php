@@ -1,6 +1,8 @@
 <?php
 $functional = __DIR__ . '/functional_helpers.php';
-if (file_exists($functional)) include $functional;
+if (file_exists($functional)) {
+    include $functional;
+}
 include __DIR__ . '/includes/flash.php';
 include __DIR__ . '/includes/site_helpers.php';
 $f = get_flash();
@@ -132,11 +134,11 @@ $navLinks = [
   </div>
   <?php
   // Example: render one pilot card using helper (increases PHP function usage)
-  if (function_exists('render_pilot_card')) {
-      echo '<h3>Exemple de pilote</h3>';
-      echo render_pilot_card(['prenom'=>'Jean','nom'=>'Dupont','photo'=>'assets/sample-pilot.jpg','nationnalite'=>1]);
-  }
-  ?>
+    if (function_exists('render_pilot_card')) {
+        echo '<h3>Exemple de pilote</h3>';
+        echo render_pilot_card(['prenom' => 'Jean','nom' => 'Dupont','photo' => 'assets/sample-pilot.jpg','nationnalite' => 1]);
+    }
+    ?>
   <p style="margin-top:1em;">
     Consultez
     <a href="database/example_pdo_usage.php">un exemple d'utilisation PDO</a>

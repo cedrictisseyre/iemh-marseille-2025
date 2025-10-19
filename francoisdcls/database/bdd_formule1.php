@@ -71,7 +71,7 @@ if (isset($GLOBALS['pdo']) && $GLOBALS['pdo'] instanceof PDO) {
 }
 
 // Expose a get_pdo() helper for consumers that include this file directly.
-    if (!function_exists('get_pdo')) {
+if (!function_exists('get_pdo')) {
     /**
      * Return the shared PDO instance or null.
      * @return \PDO|null

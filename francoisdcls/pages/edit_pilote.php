@@ -71,7 +71,7 @@ include __DIR__ . '/../includes/header.php'; ?>
   </form>
   <hr>
     <?php
-  $confirm_delete = 'return confirm(' . json_encode('Supprimer ce pilote ? Cette action est irréversible.') . ');';
+    $confirm_delete = 'return confirm(' . json_encode('Supprimer ce pilote ? Cette action est irréversible.') . ');';
     $delete_action = '../services/supprimer_pilote.php';
     ?>
     <form method='post'

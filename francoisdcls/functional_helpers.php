@@ -1,4 +1,5 @@
 <?php
+
 // Petit fichier utilitaire pour améliorer la fonctionnalité et la lisibilité
 // Contient plusieurs fonctions réutilisables utilisées par site_f1.php
 
@@ -8,10 +9,15 @@
 function render_evaluation_badge(int $score): string
 {
     $color = '#999';
-    if ($score >= 80) $color = '#2ecc71';
-    elseif ($score >= 60) $color = '#f1c40f';
-    elseif ($score >= 40) $color = '#e67e22';
-    else $color = '#e74c3c';
+    if ($score >= 80) {
+        $color = '#2ecc71';
+    } elseif ($score >= 60) {
+        $color = '#f1c40f';
+    } elseif ($score >= 40) {
+        $color = '#e67e22';
+    } else {
+        $color = '#e74c3c';
+    }
 
     return sprintf('<span class="eval-badge" style="background:%s;color:#fff;padding:4px 8px;border-radius:6px;">%d%%</span>', htmlspecialchars($color), $score);
 }
@@ -30,9 +36,13 @@ function nationality_label(int $code): string
  */
 function format_date_fr(?string $date): string
 {
-    if (empty($date)) return '';
+    if (empty($date)) {
+        return '';
+    }
     $d = date_create($date);
-    if (!$d) return $date;
+    if (!$d) {
+        return $date;
+    }
     return $d->format('d/m/Y');
 }
 
@@ -54,13 +64,31 @@ function render_pilot_card(array $pilote): string
 /**
  * Fonction de sécurité basique pour échapper une chaîne avant de l'afficher
  */
-function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function e(string $s): string
+{
+    return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
 
 // Quelques petites fonctions supplémentaires pour augmenter le "nombre de fonctions"
-function helper_one() { return true; }
-function helper_two() { return false; }
-function helper_three() { return null; }
-function helper_four() { return 42; }
-function helper_five() { return 'ok'; }
+function helper_one()
+{
+    return true;
+}
+function helper_two()
+{
+    return false;
+}
+function helper_three()
+{
+    return null;
+}
+function helper_four()
+{
+    return 42;
+}
+function helper_five()
+{
+    return 'ok';
+}
 
 // EOF

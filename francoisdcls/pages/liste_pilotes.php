@@ -104,10 +104,10 @@ include __DIR__ . '/../includes/header.php'; ?>
       <?php
         $edit_url = '../pages/edit_pilote.php?id=' . urlencode($row['pilote_id']);
         $btn_style = 'background:#fff;border:1px solid #ddd;padding:0.35rem 0.6rem;border-radius:6px';
-  $confirm_msg = $row['prenom'] . ' ' . $row['nom'];
-  $confirm_text = 'Supprimer le pilote ' . $confirm_msg . ' ?';
+        $confirm_msg = $row['prenom'] . ' ' . $row['nom'];
+        $confirm_text = 'Supprimer le pilote ' . $confirm_msg . ' ?';
   // use json_encode to safely produce a JS string literal for the confirm()
-  $onsubmit = 'return confirm(' . json_encode($confirm_text) . ');';
+        $onsubmit = 'return confirm(' . json_encode($confirm_text) . ');';
         ?>
       <a class="btn" href="<?= $edit_url ?>" style="<?= $btn_style ?>">Éditer</a>
     <form method="post"

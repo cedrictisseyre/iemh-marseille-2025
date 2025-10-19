@@ -49,7 +49,7 @@ function cached_image_url(string $remoteUrl): ?string
     $filename = $hash . $ext;
     $localPath = $cacheDir . '/' . $filename;
   // Public path uses the configured base path to remain portable
-  $publicPath = base_path('assets/photos_cache/' . $filename);
+    $publicPath = base_path('assets/photos_cache/' . $filename);
 
   // si déjà en cache et non vide, renvoyer
     if (file_exists($localPath) && filesize($localPath) > 100) {
