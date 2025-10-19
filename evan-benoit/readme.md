@@ -8,7 +8,7 @@ Il est prévu pour être utilisé avec PHP et peut être lié à un projet GitHu
 ## ⚠️ Usage
 
 Ce site est exclusivement destiné au **gérant de la société de coaching** et aux **coachs** pour gérer les séances, les clients et le suivi de masse corporelle.  
-Il **n’est pas destiné au grand public** ni aux **clients**.
+Il **n’est pas destiné au grand public** ni aux **clients**, d'où la nécessité de remplir l'identifiant (evan-benoit) et le mot de passe (coach1234) lorsque l'on accède au site pour la première fois depuis un navigateur. 
 
 ---
 
