@@ -242,8 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         exit;
     }
     $jour_id = isset($_POST['jour_id']) ? intval($_POST['jour_id']) : 0;
-    $debut = isset($_POST['debut']) ? trim($_POST['debut']) : '';
-    $fin = isset($_POST['fin']) ? trim($_POST['fin']) : '';
+    $horaire_id = isset($_POST['horaire_id']) ? intval($_POST['horaire_id']) : 0;
     $prof_id = isset($_POST['prof_id']) ? intval($_POST['prof_id']) : null;
     $matiere_id = isset($_POST['matiere_id']) ? intval($_POST['matiere_id']) : null;
     $salle_nom = isset($_POST['salle_nom']) ? trim($_POST['salle_nom']) : '';
@@ -251,18 +250,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     try {
         $conn->beginTransaction();
-        // Trouver ou créer horaire (début/fin)
-        $stmt = $conn->prepare('SELECT id FROM horaires WHERE debut = :d AND fin = :f LIMIT 1');
-        $stmt->execute([':d' => $debut, ':f' => $fin]);
-        $h = $stmt->fetch();
-        if ($h) {
-            $horaire_id = $h['id'];
-        } else {
-            $ins = $conn->prepare('INSERT INTO horaires (debut, fin) VALUES (:d, :f)');
-            $ins->execute([':d' => $debut, ':f' => $fin]);
-            $horaire_id = $conn->lastInsertId();
-        }
-
         // Si matière non fournie, erreur simple
         if (!$matiere_id) {
             // rollback et redirection
@@ -304,8 +291,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($conn->inTransaction()) $conn->rollBack();
         error_log('Erreur add_emploi: ' . $e->getMessage());
     }
-    // retourner vers l'onglet EDT
-    header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?') . '#edt');
+    // retourner vers l'onglet EDT (conserver week_start pour voir immédiatement le créneau)
+    $base = strtok($_SERVER['REQUEST_URI'], '?');
+    $qs = '';
+    if (!empty($week_start)) $qs = '?week_start=' . urlencode($week_start);
+    header('Location: ' . $base . $qs . '#edt');
     exit;
 }
 ?>
@@ -489,16 +479,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
-                                                    <div class="row g-2">
-                                                        <div class="col">
-                                                            <label class="form-label">Début</label>
-                                                            <input type="time" name="debut" class="form-control" required>
-                                                        </div>
-                                                        <div class="col">
-                                                            <label class="form-label">Fin</label>
-                                                            <input type="time" name="fin" class="form-control" required>
-                                                        </div>
-                                                    </div>
+                                                                                <div class="mb-2">
+                                                                                    <label class="form-label">Horaire</label>
+                                                                                    <select name="horaire_id" id="form-horaire-id" class="form-select" required>
+                                                                                        <?php foreach ($horaires as $h): ?>
+                                                                                            <option value="<?= htmlspecialchars($h['id']) ?>"><?= htmlspecialchars(substr($h['debut'],0,5) . ' - ' . substr($h['fin'],0,5)) ?></option>
+                                                                                        <?php endforeach; ?>
+                                                                                    </select>
+                                                                                </div>
                                                     <div class="mb-2 mt-2">
                                                         <label class="form-label">Professeur</label>
                                                         <select name="prof_id" class="form-select">
@@ -619,11 +607,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             // clic sur cellule
             document.querySelectorAll('.edt-cell').forEach(td => {
                 td.style.cursor = 'pointer';
-                td.addEventListener('click', function(){
+                    td.addEventListener('click', function(){
                     const jour = td.getAttribute('data-jour-id');
-                    const debut = td.getAttribute('data-debut');
-                    const fin = td.getAttribute('data-fin');
-                    openModal({jour_id: jour, debut: debut, fin: fin});
+                    const hid = td.getAttribute('data-horaire-id');
+                    openModal({jour_id: jour, horaire_id: hid});
                 });
             });
 
@@ -642,7 +629,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 modal.show();
             });
 
-            // soumission du formulaire : laisser le navigateur faire le POST (simple)
+                // soumission du formulaire : laisser le navigateur faire le POST (simple)
+                // conserver week_start dans la redirection après soumission
+                form.addEventListener('submit', function(){
+                    const wk = document.getElementById('form-week-start');
+                    if (wk && wk.value) {
+                        // s'assurer que l'URL contiendra week_start pour le rechargement
+                        form.action = (form.action || '') + '#edt';
+                    }
+                });
         })();
         </script>
 </body>
