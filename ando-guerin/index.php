@@ -14,41 +14,49 @@ if (!isset($conn) || !($conn instanceof PDO)) {
     $db_error = true;
     error_log('Connexion PDO manquante ou invalide dans connexion.php');
 } else {
+    // tenter de récupérer l'élève connecté (si session présente) avant de charger l'emploi
+    $current_eleve_name = null;
+    $current_eleve_id = null;
+    if (isset($_SESSION['user']['id'])) {
+        try {
+            $stmt_ce = $conn->prepare('SELECT id, prenom, nom FROM eleves WHERE user_id = :uid LIMIT 1');
+            $stmt_ce->execute([':uid' => $_SESSION['user']['id']]);
+            $ce = $stmt_ce->fetch();
+            if ($ce) {
+                $current_eleve_name = trim($ce['prenom'] . ' ' . $ce['nom']);
+                $current_eleve_id = $ce['id'];
+            }
+        } catch (PDOException $e) {
+            error_log('Erreur récupération élève connecté (pré-chargement) : ' . $e->getMessage());
+            // on continue sans élève
+        }
+    }
+
     try {
         // Récupérer les jours et horaires pour l'emploi du temps
         $jours = $conn->query('SELECT * FROM jours ORDER BY id')->fetchAll();
         $horaires = $conn->query('SELECT * FROM horaires ORDER BY id')->fetchAll();
 
-        // déterminer la semaine sélectionnée (week_start = date du lundi)
-        $selected_week_start = null;
-        if (isset($_GET['week_start']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $_GET['week_start'])) {
-            $selected_week_start = $_GET['week_start'];
-        } else {
-            $d = new DateTime();
-            // obtenir le lundi de la semaine courante
-            $d->modify('monday this week');
-            $selected_week_start = $d->format('Y-m-d');
-        }
+        // Forcer l'affichage sur la semaine courante (lundi)
+        $d = new DateTime();
+        $d->modify('monday this week');
+        $selected_week_start = $d->format('Y-m-d');
 
         // Récupérer l'emploi du temps pour la semaine sélectionnée (jointure)
         $emploi = [];
-        // On ne montre plus le planning global : on affiche uniquement les entrées d'un élève connecté.
-        if ($current_eleve_id) {
-            try {
-                $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
-                    FROM emploi_temps et
-                    JOIN matieres m ON et.matiere_id = m.id
-                    LEFT JOIN professeurs p ON et.professeur_id = p.id
-                    LEFT JOIN salles s ON et.salle_id = s.id
-                    WHERE et.week_start = :ws AND et.eleve_id = :eid");
-                $stmt->execute([':ws' => $selected_week_start, ':eid' => $current_eleve_id]);
-                foreach ($stmt as $row) {
-                    $emploi[$row['jour_id']][$row['horaire_id']] = $row;
-                }
-            } catch (PDOException $e) {
-                error_log('EDT week_start filter failed for eleve: ' . $e->getMessage());
-                // en cas d'erreur, garder $emploi vide
+        try {
+            $stmt = $conn->prepare("SELECT et.jour_id, et.horaire_id, m.nom AS matiere, CONCAT(p.prenom, ' ', p.nom) AS professeur, s.nom AS salle
+                FROM emploi_temps et
+                JOIN matieres m ON et.matiere_id = m.id
+                LEFT JOIN professeurs p ON et.professeur_id = p.id
+                LEFT JOIN salles s ON et.salle_id = s.id
+                WHERE et.week_start = :ws");
+            $stmt->execute([':ws' => $selected_week_start]);
+            foreach ($stmt as $row) {
+                $emploi[$row['jour_id']][$row['horaire_id']] = $row;
             }
+        } catch (PDOException $e) {
+            error_log('EDT week_start load failed: ' . $e->getMessage());
         }
 
         // Récupérer les professeurs et leurs matières
@@ -70,23 +78,7 @@ if (!isset($conn) || !($conn instanceof PDO)) {
     }
 }
 
-// récupérer le nom/prénom de l'élève connecté (si disponible)
-$current_eleve_name = null;
-$current_eleve_id = null;
-if (isset($_SESSION['user']['id']) && !$db_error) {
-    try {
-        $stmt = $conn->prepare('SELECT id, prenom, nom FROM eleves WHERE user_id = :uid LIMIT 1');
-        $stmt->execute([':uid' => $_SESSION['user']['id']]);
-        $ce = $stmt->fetch();
-        if ($ce) {
-            $current_eleve_name = trim($ce['prenom'] . ' ' . $ce['nom']);
-            $current_eleve_id = $ce['id'];
-        }
-    } catch (PDOException $e) {
-        // ne pas bloquer l'affichage si la requête échoue
-        error_log('Erreur récupération élève connecté: ' . $e->getMessage());
-    }
-}
+// (le nom/id de l'élève connecté sont pré-calculés plus haut pour permettre le chargement de l'EDT)
 
 // --- Gestion simple de connexion/logout ---
 $login_error = '';
@@ -273,11 +265,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             }
         }
 
-        // Insérer ou remplacer l'entrée emploi_temps (par élève)
-        // On suppose la table emploi_temps a les colonnes : eleve_id, week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id
-        $up = $conn->prepare('REPLACE INTO emploi_temps (eleve_id, week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:eid, :ws, :jid, :hid, :mid, :pid, :sid)');
+        // Insérer ou remplacer l'entrée emploi_temps (global, non lié à un élève)
+        // On utilise REPLACE INTO en s'appuyant sur l'index unique (week_start, jour_id, horaire_id)
+        $up = $conn->prepare('REPLACE INTO emploi_temps (week_start, jour_id, horaire_id, matiere_id, professeur_id, salle_id) VALUES (:ws, :jid, :hid, :mid, :pid, :sid)');
         $up->execute([
-            ':eid' => $current_eleve_id ?: null,
             ':ws' => $week_start,
             ':jid' => $jour_id,
             ':hid' => $horaire_id,
@@ -421,14 +412,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="mb-2 d-flex align-items-center gap-2">
                     <form method="get" id="week-form" class="d-flex align-items-center gap-2">
                         <label class="form-label mb-0">Semaine (lundi)</label>
-                        <input type="date" name="week_start" id="week-start" class="form-control form-control-sm" value="<?= htmlspecialchars($selected_week_start) ?>">
-                        <button class="btn btn-sm btn-primary" type="submit">Afficher</button>
+                        <div class="form-control form-control-sm" style="width:150px;"><?= htmlspecialchars($selected_week_start) ?></div>
                     </form>
-                    <?php if ($current_eleve_id): ?>
-                        <button class="btn btn-sm btn-success" id="btn-add-edt">Ajouter un créneau</button>
-                    <?php else: ?>
-                        <button class="btn btn-sm btn-success" id="btn-add-edt" disabled title="Connecte-toi pour modifier ton emploi">Ajouter un créneau</button>
-                    <?php endif; ?>
+                        <!-- EDT fixe : ajout de créneaux désactivé -->
                 </div>
                 <table class="table table-bordered">
                     <thead>
@@ -458,65 +444,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </tbody>
                 </table>
 
-                                <!-- Modal pour ajouter/éditer un créneau -->
-                                <div class="modal fade" id="modalEdt" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                                                    <form method="post" id="form-edt">
-                                                                        <input type="hidden" name="action" value="add_emploi">
-                                                                        <input type="hidden" name="week_start" id="form-week-start" value="<?= htmlspecialchars($selected_week_start) ?>">
-                                                                        <input type="hidden" name="eleve_id" id="form-eleve-id" value="<?= htmlspecialchars($current_eleve_id) ?>">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Ajouter / Modifier un créneau</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-2">
-                                                        <label class="form-label">Jour</label>
-                                                        <select name="jour_id" class="form-select" required>
-                                                            <?php foreach ($jours as $j): ?>
-                                                                <option value="<?= htmlspecialchars($j['id']) ?>"><?= htmlspecialchars($j['nom']) ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                                                <div class="mb-2">
-                                                                                    <label class="form-label">Horaire</label>
-                                                                                    <select name="horaire_id" id="form-horaire-id" class="form-select" required>
-                                                                                        <?php foreach ($horaires as $h): ?>
-                                                                                            <option value="<?= htmlspecialchars($h['id']) ?>"><?= htmlspecialchars(substr($h['debut'],0,5) . ' - ' . substr($h['fin'],0,5)) ?></option>
-                                                                                        <?php endforeach; ?>
-                                                                                    </select>
-                                                                                </div>
-                                                    <div class="mb-2 mt-2">
-                                                        <label class="form-label">Professeur</label>
-                                                        <select name="prof_id" class="form-select">
-                                                            <option value="">-- aucun --</option>
-                                                            <?php foreach ($profs as $p): ?>
-                                                                <option value="<?= htmlspecialchars($p['id']) ?>"><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-2">
-                                                        <label class="form-label">Matière</label>
-                                                        <select name="matiere_id" class="form-select" required>
-                                                            <?php foreach ($matieres as $m): ?>
-                                                                <option value="<?= htmlspecialchars($m['id']) ?>"><?= htmlspecialchars($m['nom']) ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-2">
-                                                        <label class="form-label">Salle (libre)</label>
-                                                        <input type="text" name="salle_nom" class="form-control" placeholder="Ex: B201">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- EDT fixe : modal d'ajout supprimé -->
             </div>
             <div class="tab-pane fade" id="profs" role="tabpanel" aria-labelledby="profs-tab">
                 <?php if (!empty($prof_add_error)): ?><div class="alert alert-danger"><?= htmlspecialchars($prof_add_error) ?></div><?php endif; ?>
@@ -581,65 +509,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </script>
         <script>
         (function(){
-            // Ouvre le modal pour ajouter/éditer un créneau
-            const modalEl = document.getElementById('modalEdt');
-            const modal = modalEl ? new bootstrap.Modal(modalEl) : null;
-            const form = document.getElementById('form-edt');
-
-            function openModal(prefill){
-                if (!modal) return;
-                // remplir form
-                if (prefill) {
-                    if (prefill.jour_id) form.jour_id.value = prefill.jour_id;
-                    if (prefill.debut) form.debut.value = prefill.debut;
-                    if (prefill.fin) form.fin.value = prefill.fin;
-                }
-                // remplir week_start depuis le datepicker si présent
-                const wk = document.getElementById('week-start');
-                const hidden = document.getElementById('form-week-start');
-                if (wk && hidden) hidden.value = wk.value || hidden.value;
-                // remplissage eleve_id
-                const eleveHidden = document.getElementById('form-eleve-id');
-                if (eleveHidden) eleveHidden.value = '<?= htmlspecialchars($current_eleve_id) ?>';
-                modal.show();
-            }
-
-            // clic sur cellule
-            document.querySelectorAll('.edt-cell').forEach(td => {
-                td.style.cursor = 'pointer';
-                    td.addEventListener('click', function(){
-                    const jour = td.getAttribute('data-jour-id');
-                    const hid = td.getAttribute('data-horaire-id');
-                    openModal({jour_id: jour, horaire_id: hid});
-                });
-            });
-
-            // bouton ajouter
-            const btnAdd = document.getElementById('btn-add-edt');
-            if (btnAdd) btnAdd.addEventListener('click', function(){
-                if (btnAdd.disabled) return; // non connecté
-                // reset form
-                form.reset();
-                // si présence d'un premier jour on le met
-                const firstJour = form.jour_id && form.jour_id.options.length ? form.jour_id.options[0].value : null;
-                if (firstJour) form.jour_id.value = firstJour;
-                // set current eleve
-                const eleveHidden = document.getElementById('form-eleve-id');
-                if (eleveHidden) eleveHidden.value = '<?= htmlspecialchars($current_eleve_id) ?>';
-                modal.show();
-            });
-
-                // soumission du formulaire : laisser le navigateur faire le POST (simple)
-                // conserver week_start dans la redirection après soumission
-                form.addEventListener('submit', function(){
-                    const wk = document.getElementById('form-week-start');
-                    if (wk && wk.value) {
-                        // Ne pas utiliser form.action (shadowed par input[name=action])
-                        const current = form.getAttribute('action') || '';
-                        const sep = current.indexOf('?') === -1 ? '?' : '&';
-                        form.setAttribute('action', current + sep + 'week_start=' + encodeURIComponent(wk.value) + '#edt');
-                    }
-                });
+            // EDT fixe : suppression du script de gestion du modal d'ajout
         })();
         </script>
 </body>
